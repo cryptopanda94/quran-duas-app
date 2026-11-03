@@ -1,0 +1,20 @@
+{
+  "appId": "com.cryptopanda94.quranduas",
+  "appName": "Quran & Duas",
+  "webDir": "www",
+  "backgroundColor": "#f7f3ea",
+  "ios": {
+    "contentInset": "never",
+    "allowsLinkPreview": false
+  },
+  "android": {
+    "allowMixedContent": false
+  },
+  "plugins": {
+    "LocalNotifications": {
+      "smallIcon": "ic_stat_notify",
+      "iconColor": "#1f6f5c",
+      "sound": "azan_short.wav"
+    }
+  }
+}
