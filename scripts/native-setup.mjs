@@ -74,6 +74,8 @@ async function setupIOS() {
   addKey('UIBackgroundModes', '<array>\n\t\t<string>audio</string>\n\t</array>');
   addKey('NSMotionUsageDescription', '<string>The Qibla compass uses your phone\'s motion sensors to show which way to face.</string>');
   addKey('ITSAppUsesNonExemptEncryption', '<false/>');
+  // home-screen name with a proper (escaped) ampersand
+  p = p.replace(/(<key>CFBundleDisplayName<\/key>\s*<string>)[^<]*(<\/string>)/, '$1Quran &amp; Duas$2');
   writeFileSync(plist, p);
   ok('Info.plist: background audio, compass permission text');
 
@@ -118,6 +120,8 @@ function setupAndroid() {
   const addStr = (name, val) => { if (!s.includes(`name="${name}"`)) s = s.replace('</resources>', `    <string name="${name}">${val}</string>\n</resources>`); };
   addStr('widget_prayer_desc', 'Next prayer time with a countdown');
   addStr('widget_ayah_desc', 'Ayah of the day in Arabic and English');
+  s = s.replace(/(<string name="app_name">)[^<]*(<\/string>)/, '$1Quran &amp; Duas$2')
+       .replace(/(<string name="title_activity_main">)[^<]*(<\/string>)/, '$1Quran &amp; Duas$2');
   writeFileSync(strings, s);
 
   // 4. Manifest: widgets + permissions
