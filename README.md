@@ -31,9 +31,11 @@ npm run build:web
 npx cap add ios
 npx cap add android
 npm run native:setup
+npm run assets
 npx cap sync
 ```
 
+`npm run assets` puts the maroon & gold app icon and splash screen into both apps.
 `native:setup` will say one thing is still to do by hand: adding the iOS widget. Do the iPhone steps below.
 
 ---
