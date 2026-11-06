@@ -41,25 +41,7 @@ jobs:
             -destination 'generic/platform=iOS Simulator' \
             CODE_SIGNING_ALLOWED=NO build | tail -n 60
 
-      - name: Archive for App Store
-        if: env.HAS_ASC == 'true'
-        env:
-          ASC_KEY_ID: ${{ secrets.ASC_KEY_ID }}
-          ASC_ISSUER_ID: ${{ secrets.ASC_ISSUER_ID }}
-          ASC_KEY_P8: ${{ secrets.ASC_KEY_P8 }}
-        run: |
-          set -o pipefail
-          KEY="$RUNNER_TEMP/AuthKey.p8"; printf '%s\n' "$ASC_KEY_P8" > "$KEY"
-          AUTH=(-allowProvisioningUpdates -authenticationKeyPath "$KEY" -authenticationKeyID "$ASC_KEY_ID" -authenticationKeyIssuerID "$ASC_ISSUER_ID")
-          xcodebuild -project ios/App/App.xcodeproj -scheme App \
-            -configuration Release -destination 'generic/platform=iOS' \
-            -archivePath "$RUNNER_TEMP/App.xcarchive" "${AUTH[@]}" archive 2>&1 | grep -vE '^\s*$' | tail -n 40 || {
-            echo "::warning::Development signing failed, retrying with Apple Distribution identity"
-            xcodebuild -project ios/App/App.xcodeproj -scheme App \
-              -configuration Release -destination 'generic/platform=iOS' \
-              -archivePath "$RUNNER_TEMP/App.xcarchive" "${AUTH[@]}" \
-              CODE_SIGN_IDENTITY="Apple Distribution" archive 2>&1 | tail -n 40; }
-      - name: Sign and upload to TestFlight
+      - name: Signing certificate + App Store profiles
         if: env.HAS_ASC == 'true'
         env:
           APPLE_TEAM_ID: ${{ secrets.APPLE_TEAM_ID }}
@@ -67,16 +49,36 @@ jobs:
           ASC_ISSUER_ID: ${{ secrets.ASC_ISSUER_ID }}
           ASC_KEY_P8: ${{ secrets.ASC_KEY_P8 }}
         run: |
+          printf '%s\n' "$ASC_KEY_P8" > "$RUNNER_TEMP/AuthKey.p8"
+          export ASC_KEY_PATH="$RUNNER_TEMP/AuthKey.p8" KEYCHAIN="$RUNNER_TEMP/ci.keychain-db" KEYCHAIN_PW="$(uuidgen)"
+          export OUT_PLIST="$RUNNER_TEMP/ExportOptions.plist"
+          security create-keychain -p "$KEYCHAIN_PW" "$KEYCHAIN"
+          security set-keychain-settings -lut 21600 "$KEYCHAIN"
+          security unlock-keychain -p "$KEYCHAIN_PW" "$KEYCHAIN"
+          security list-keychains -d user -s "$KEYCHAIN" $(security list-keychains -d user | tr -d '"')
+          ruby scripts/asc-sign.rb
+          security find-identity -v -p codesigning "$KEYCHAIN"
+      - name: Archive
+        if: env.HAS_ASC == 'true'
+        run: |
           set -o pipefail
-          KEY="$RUNNER_TEMP/AuthKey.p8"; printf '%s\n' "$ASC_KEY_P8" > "$KEY"
-          cp native/ios/ExportOptions.plist "$RUNNER_TEMP/ExportOptions.plist"
-          /usr/libexec/PlistBuddy -c "Add :teamID string $APPLE_TEAM_ID" "$RUNNER_TEMP/ExportOptions.plist"
+          xcodebuild -project ios/App/App.xcodeproj -scheme App \
+            -configuration Release -destination 'generic/platform=iOS' \
+            -archivePath "$RUNNER_TEMP/App.xcarchive" archive 2>&1 | tail -n 40
+      - name: Upload to TestFlight
+        if: env.HAS_ASC == 'true'
+        env:
+          ASC_KEY_ID: ${{ secrets.ASC_KEY_ID }}
+          ASC_ISSUER_ID: ${{ secrets.ASC_ISSUER_ID }}
+        run: |
+          set -o pipefail
           xcodebuild -exportArchive -archivePath "$RUNNER_TEMP/App.xcarchive" \
             -exportPath "$RUNNER_TEMP/export" -exportOptionsPlist "$RUNNER_TEMP/ExportOptions.plist" \
-            -allowProvisioningUpdates \
-            -authenticationKeyPath "$KEY" -authenticationKeyID "$ASC_KEY_ID" \
-            -authenticationKeyIssuerID "$ASC_ISSUER_ID" | tail -n 80
-          rm -f "$KEY"
+            -authenticationKeyPath "$RUNNER_TEMP/AuthKey.p8" -authenticationKeyID "$ASC_KEY_ID" \
+            -authenticationKeyIssuerID "$ASC_ISSUER_ID" 2>&1 | tail -n 40
+      - name: Clean up
+        if: always()
+        run: rm -f "$RUNNER_TEMP/AuthKey.p8"; security delete-keychain "$RUNNER_TEMP/ci.keychain-db" 2>/dev/null || true
 
   android:
     runs-on: ubuntu-latest
