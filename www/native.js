@@ -21,7 +21,6 @@
     builtin: { ch: 'azan', name: 'Azan (Shia)', file: 'azan_short.wav' },
     mecca:   { ch: 'azan_mecca', name: 'Azan (Mecca)', file: 'azan_mecca_short.wav' },
     medina:  { ch: 'azan_medina', name: 'Azan (Medina)', file: 'azan_medina_short.wav' },
-    chime:   { ch: 'prayer_chime', name: 'Prayer time (chime)', file: null },
   };
   const soundFor = (k) => SOUNDS[(window.QX && QX.slotFor(k))] || SOUNDS.builtin;
   let alertsOn = store.get('nativeAlerts', false);
