@@ -1,0 +1,36 @@
+name: Check App Store Connect key
+on: workflow_dispatch
+jobs:
+  check:
+    runs-on: macos-latest
+    steps:
+      - name: Check key
+        env:
+          ASC_KEY_ID: ${{ secrets.ASC_KEY_ID }}
+          ASC_ISSUER_ID: ${{ secrets.ASC_ISSUER_ID }}
+          ASC_KEY_P8: ${{ secrets.ASC_KEY_P8 }}
+          APPLE_TEAM_ID: ${{ secrets.APPLE_TEAM_ID }}
+        run: |
+          echo "Key ID length: ${#ASC_KEY_ID}   Issuer ID length: ${#ASC_ISSUER_ID}   Team ID length: ${#APPLE_TEAM_ID}"
+          echo "Issuer looks like UUID: $( [[ "$ASC_ISSUER_ID" =~ ^[0-9a-f-]{36}$ ]] && echo yes || echo NO )"
+          printf '%s\n' "$ASC_KEY_P8" > key.p8
+          echo "p8 lines: $(wc -l < key.p8)  first: $(head -1 key.p8)  last: $(grep -v '^$' key.p8 | tail -1)"
+          ruby -ropenssl -rjson -rbase64 -rnet/http -e '
+            key = OpenSSL::PKey::EC.new(File.read("key.p8"))
+            b64 = ->(s){ Base64.urlsafe_encode64(s).delete("=") }
+            h = b64.(JSON.dump(alg: "ES256", kid: ENV["ASC_KEY_ID"].strip, typ: "JWT"))
+            now = Time.now.to_i
+            p = b64.(JSON.dump(iss: ENV["ASC_ISSUER_ID"].strip, iat: now, exp: now + 600, aud: "appstoreconnect-v1"))
+            der = key.sign(OpenSSL::Digest::SHA256.new, "#{h}.#{p}")
+            asn = OpenSSL::ASN1.decode(der)
+            sig = asn.value.map { |i| i.value.to_s(2).rjust(32, "\x00")[-32,32] }.join
+            jwt = "#{h}.#{p}.#{b64.(sig)}"
+            %w[/v1/apps /v1/bundleIds?limit=10 /v1/certificates /v1/devices?limit=5].each do |path|
+              uri = URI("https://api.appstoreconnect.apple.com#{path}")
+              r = Net::HTTP.start(uri.host, 443, use_ssl: true) { |x| x.get(uri, "Authorization" => "Bearer #{jwt}") }
+              body = JSON.parse(r.body) rescue {}
+              names = (body["data"] || []).map { |d| a = d["attributes"]; a["bundleId"] || a["identifier"] || a["certificateType"] || a["name"] }
+              err = (body["errors"] || []).map { |e| e["detail"] }.join(" | ")
+              puts "#{path}: HTTP #{r.code} #{names.inspect} #{err}"
+            end'
+          rm key.p8
