@@ -10,13 +10,25 @@ function noJump(){$('jumpBtn').style.display='none'}
 
 /* ================= DUAS ================= */
 const LIST=[
-  {id:'ayat-kursi',name:'Ayat ul Kursi',ur:'آیت الکرسی',sub:'Al-Baqarah 2:255–257',mark:'آ'},
-  {id:'ziyarat-ashura',key:'G4',sub:'Ziyarat of Imam Husain (a.s.)',mark:'ع'},
-  {id:'ziyarat-waritha',user:'waritha',sub:'With Ali Akbar, Shuhada, Abbas, Imam Reza & Imam Zamana (a.s.)',mark:'و'},
-  {id:'dua-e-ahad',user:'ahad',sub:'Covenant with Imam al-Mahdi (a.t.f.s.) · every morning',mark:'ع'},
-  {id:'dua-tawassul',key:'E24',sub:'Recited especially on Tuesday nights',mark:'ت'},
-  {id:'dua-nudba',key:'E34',sub:'Friday mornings & Eids',mark:'ن'},
-  {id:'ziyarat-warith',key:'G6',sub:'Mafatih al-Jinan text, line-by-line Urdu',mark:'و'},
+  {id:'ayat-kursi',name:'Ayat ul Kursi',ur:'آیت الکرسی',sub:'Al-Baqarah 2:255–257',mark:'آ',grp:'d'},
+  {id:'dua-e-ahad',user:'ahad',grp:'d',sub:'Covenant with Imam al-Mahdi (a.t.f.s.) · every morning',mark:'ع'},
+  {id:'dua-kumayl',user:'kumayl',grp:'d',sub:'Taught by Imam Ali (a.s.) · Thursday nights',mark:'ک'},
+  {id:'dua-tawassul',key:'E24',grp:'d',sub:'Recited especially on Tuesday nights',mark:'ت'},
+  {id:'dua-nudba',key:'E34',grp:'d',sub:'Friday mornings & Eids',mark:'ن'},
+  {id:'dua-faraj',user:'faraj-ilahi',grp:'d',sub:'Taught by Imam al-Mahdi (a.t.f.s.) · for relief',mark:'ف'},
+  {id:'dua-imam-zamana',user:'faraj-kun',grp:'d',sub:'For Imam al-Mahdi (a.t.f.s.) · after every prayer',mark:'ف'},
+  {id:'hadees-kisa',user:'kisa',grp:'d',sub:'Narrated by Bibi Fatima (s.a.)',mark:'ح'},
+  {id:'dua-mujeer',user:'mujeer',grp:'d',sub:'13th–15th Ramadan · for forgiveness & relief',mark:'م'},
+  {id:'dua-alqamah',user:'alqamah',grp:'d',sub:'Recited after Ziyarat Ashura',mark:'ع'},
+  {id:'ziyarat-ashura',key:'G4',grp:'z',sub:'Ziyarat of Imam Husain (a.s.)',mark:'ع'},
+  {id:'ziyarat-waritha',user:'waritha',grp:'z',sub:'With Ali Akbar, Shuhada, Abbas, Imam Reza & Imam Zamana (a.s.)',mark:'و'},
+  {id:'ziyarat-warith',key:'G6',grp:'z',sub:'Mafatih al-Jinan text, line-by-line Urdu',mark:'و'},
+  {id:'ziyarat-arbaeen',user:'arbaeen',grp:'z',sub:'20th Safar · Imam Husain (a.s.)',mark:'ا'},
+  {id:'ziyarat-nahiya',user:'nahiya',grp:'z',sub:'Ziyarat of Imam Husain (a.s.) by Imam al-Mahdi (a.t.f.s.)',mark:'ن'},
+  {id:'ziyarat-aale-yasin',user:'aleyasin',grp:'z',sub:'Ziyarat of Imam al-Mahdi (a.t.f.s.)',mark:'ی'},
+  {id:'ziyarat-jamia-kabeera',user:'jamia-kabeera',grp:'z',sub:'Taught by Imam Ali al-Naqi (a.s.) · for all Imams',mark:'ج'},
+  {id:'ziyarat-jamia-sagheera',user:'jamia-sagheera',grp:'z',sub:'Short ziyarat for all the Imams (a.s.)',mark:'ج'},
+  {id:'ziyarat-jamia-aimma',user:'jamia-aimma',grp:'z',sub:'Comprehensive ziyarat for all the Imams (a.s.)',mark:'ج'},
 ];
 const UD=JSON.parse(document.getElementById('udata').textContent);
 LIST.forEach(d=>{if(d.key){d.name=DU[d.key].name;d.ur=DU[d.key].nameUr}if(d.user){d.name=UD[d.user].name;d.ur=UD[d.user].nameUr}});
@@ -24,8 +36,9 @@ LIST.find(x=>x.id==='ziyarat-warith').name='Ziyarat Warith (Mafatih)';
 function renderDuas(){
   setHeader('Duas &amp; Ziyarat',false);
   app.innerHTML=`<div class="hero"><div class="ar" style="font-family:IndoPak,serif">اَدْعِيَه وَ زِيَارَات</div><p>Shia Ithna Ashari duas &amp; ziyarat · Arabic, English &amp; Urdu</p></div>
-   <div class="list" style="margin-top:14px">${LIST.map(d=>`<a class="item dua-item" href="#dua-${d.id}"><div class="num"><span>${d.mark}</span></div>
-     <div class="t"><b>${esc(d.name)}</b><small>${esc(d.sub)}</small></div><div class="ar" style="font-family:'Noto Nastaliq Urdu',serif;font-size:15px;line-height:2">${d.ur}</div></a>`).join('')}</div>
+   ${[['d','Duas','اَدْعِيَه'],['z','Ziyarat','زِيَارَات']].map(([g,gn,ga])=>`<div class="dgrp"><b>${gn}</b><span>${ga}</span></div>
+   <div class="list">${LIST.filter(d=>d.grp===g).map(d=>`<a class="item dua-item" href="#dua-${d.id}"><div class="num"><span>${d.mark}</span></div>
+     <div class="t"><b>${esc(d.name)}</b><small>${esc(d.sub)}</small></div><div class="ar" style="font-family:'Noto Nastaliq Urdu',serif;font-size:15px;line-height:2">${d.ur}</div></a>`).join('')}</div>`).join('')}
    <div class="foot">Texts from Mafatih al-Jinan as published in the open-source Shia Companion app (Urdu: Mafatih-style translation).<br>Ayat ul Kursi from the Quran text in this app.</div>`;
 }
 const cleanMd=s=>s.replace(/\[([^\]]+)\]\([^)]+\)/g,'$1').replace(/^##\s*/gm,'').replace(/\*\*/g,'');
@@ -44,6 +57,8 @@ function renderDua(id){
     U.items.forEach(it=>{
       if(it.head){h+=tlBox(pend);pend=it.tl||'';h+=`<div class="uhead">${esc(it.head)}</div>`;return}
       if(it.note){h+=`<div class="unote">${esc(it.note)}</div>`;return}
+      if(it.enb){h+=`<div class="v-en tbox enb"><b>English</b>${esc(it.enb).replace(/\n\n/g,'<br><br>')}</div>`;return}
+      if(!it.en){h+=`<div class="uv uvc"><div class="v-ar">${it.ar}</div></div>`;return}
       h+=`<div class="uv"><div class="v-ar">${it.ar}</div><div class="v-en tbox">${esc(it.en)}</div>${it.ur?`<div class="v-ur tbox urbox">${esc(it.ur)}</div>`:''}</div>`;
     });
     h+=tlBox(pend);
@@ -364,7 +379,7 @@ const DAILY=[[94,5,6],[13,28,28],[2,286,286],[2,153,153],[65,3,3],[39,53,53],[2,
  [11,6,6],[28,88,88],[16,97,97],[3,92,92],[2,177,177],[4,36,36],[18,10,10],[27,62,62],[35,15,15],[89,27,30]];
 function dayIndex(){const d=new Date();return Math.floor((Date.UTC(d.getFullYear(),d.getMonth(),d.getDate()))/864e5)}
 function ayahOfDay(){const [s,a,b]=DAILY[dayIndex()%DAILY.length];return{s,a,b}}
-const WEEK_DUAS={2:['dua-tawassul'],4:['ziyarat-warith'],5:['dua-nudba']};
+const WEEK_DUAS={2:['dua-tawassul'],4:['dua-kumayl','ziyarat-warith'],5:['dua-nudba']};
 function renderToday(){
   setHeader('Today',false);
   const now=new Date();let dstr='';try{dstr=now.toLocaleDateString([], {weekday:'long',day:'numeric',month:'long'})}catch(e){}
