@@ -8,6 +8,8 @@ on:
 jobs:
   ios:
     runs-on: macos-latest
+    env:
+      HAS_ASC: ${{ secrets.ASC_KEY_P8 != '' && secrets.APPLE_TEAM_ID != '' }}
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
@@ -24,17 +26,51 @@ jobs:
       - run: npm run native:setup
       - run: npx capacitor-assets generate --ios
       - run: npx cap sync ios
+      - name: Add widget target + App Group
+        env:
+          APPLE_TEAM_ID: ${{ secrets.APPLE_TEAM_ID }}
+          BUILD_NUMBER: ${{ github.run_number }}
+        run: |
+          sudo gem install xcodeproj --no-document
+          ruby scripts/ios-widget-target.rb
       - name: Build for simulator (no signing)
         run: |
+          set -o pipefail
           xcodebuild -project ios/App/App.xcodeproj -scheme App \
             -sdk iphonesimulator -configuration Debug \
             -destination 'generic/platform=iOS Simulator' \
-            CODE_SIGNING_ALLOWED=NO build | tail -n 80
-          exit ${PIPESTATUS[0]}
-      - name: Type-check widget code (iOS 17+)
+            CODE_SIGNING_ALLOWED=NO build | tail -n 60
+
+      - name: Archive for App Store
+        if: env.HAS_ASC == 'true'
+        env:
+          APPLE_TEAM_ID: ${{ secrets.APPLE_TEAM_ID }}
         run: |
-          xcrun -sdk iphonesimulator swiftc -typecheck -parse-as-library \
-            -target arm64-apple-ios17.0-simulator native/ios/QuranWidget/QuranWidgetBundle.swift
+          set -o pipefail
+          xcodebuild -project ios/App/App.xcodeproj -scheme App \
+            -configuration Release -destination 'generic/platform=iOS' \
+            -archivePath "$RUNNER_TEMP/App.xcarchive" \
+            CODE_SIGN_STYLE=Manual CODE_SIGN_IDENTITY=- CODE_SIGNING_REQUIRED=NO \
+            PROVISIONING_PROFILE_SPECIFIER= DEVELOPMENT_TEAM="$APPLE_TEAM_ID" \
+            archive | tail -n 60
+      - name: Sign and upload to TestFlight
+        if: env.HAS_ASC == 'true'
+        env:
+          APPLE_TEAM_ID: ${{ secrets.APPLE_TEAM_ID }}
+          ASC_KEY_ID: ${{ secrets.ASC_KEY_ID }}
+          ASC_ISSUER_ID: ${{ secrets.ASC_ISSUER_ID }}
+          ASC_KEY_P8: ${{ secrets.ASC_KEY_P8 }}
+        run: |
+          set -o pipefail
+          KEY="$RUNNER_TEMP/AuthKey.p8"; printf '%s\n' "$ASC_KEY_P8" > "$KEY"
+          cp native/ios/ExportOptions.plist "$RUNNER_TEMP/ExportOptions.plist"
+          /usr/libexec/PlistBuddy -c "Add :teamID string $APPLE_TEAM_ID" "$RUNNER_TEMP/ExportOptions.plist"
+          xcodebuild -exportArchive -archivePath "$RUNNER_TEMP/App.xcarchive" \
+            -exportPath "$RUNNER_TEMP/export" -exportOptionsPlist "$RUNNER_TEMP/ExportOptions.plist" \
+            -allowProvisioningUpdates \
+            -authenticationKeyPath "$KEY" -authenticationKeyID "$ASC_KEY_ID" \
+            -authenticationKeyIssuerID "$ASC_ISSUER_ID" | tail -n 80
+          rm -f "$KEY"
 
   android:
     runs-on: ubuntu-latest
