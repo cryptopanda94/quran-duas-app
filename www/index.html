@@ -118,6 +118,8 @@ input[type=range]{accent-color:var(--accent);width:150px}
 .tabbar a svg{width:23px;height:23px;stroke:currentColor;fill:none;stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round}
 .tabbar a.on{color:var(--accent)}
 /* duas */
+.trtog{display:inline-flex;align-items:center;gap:10px;padding:8px 14px;border-radius:999px;border:1px solid var(--line);background:var(--card);font-size:15px;font-weight:500;color:var(--ink)}.trtog b{font-weight:600;min-width:24px;text-align:left;color:var(--muted)}.trtog.on b{color:var(--accent)}
+.trtog .sw{width:40px;height:24px;border-radius:12px;background:var(--line);position:relative;transition:background .2s}.trtog .sw::after{content:"";position:absolute;top:3px;left:3px;width:18px;height:18px;border-radius:50%;background:#fff;box-shadow:0 1px 3px rgba(0,0,0,.25);transition:left .2s}.trtog.on .sw{background:var(--accent)}.trtog.on .sw::after{left:19px}
 .dgrp{display:flex;align-items:baseline;justify-content:space-between;margin:20px 2px 8px}.dgrp b{font-size:13px;letter-spacing:.08em;text-transform:uppercase;color:var(--gold)}.dgrp span{font-family:IndoPak,serif;color:var(--muted);font-size:18px}
 .uvc{padding:6px 0 2px}.enb{text-align:left;line-height:1.7;margin:4px 6px 14px}.enb b{display:block;font-size:12px;letter-spacing:.06em;text-transform:uppercase;margin-bottom:6px;color:var(--accent)}
 .dua-item .num{transform:none;border-radius:12px;font-family:IndoPak,serif;font-size:18px}
@@ -344,7 +346,7 @@ const $=id=>document.getElementById(id), app=$('app');
 /* storage (safe) */
 const store={get(k,d){try{const v=localStorage.getItem('qr_'+k);return v==null?d:JSON.parse(v)}catch(e){return d}},
              set(k,v){try{localStorage.setItem('qr_'+k,JSON.stringify(v))}catch(e){}}};
-const S={arSize:store.get('arSize',30),tr:store.get('tr','both'),
+const S={arSize:store.get('arSize',30),tr:store.get('tr','en'),
          theme:store.get('theme',(window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches)?'dark':'light'),
          marks:store.get('marks',[]),showTr:store.get('showTr',true),enSize:store.get('enSize',16),rules:store.get('rules',true),font:store.get('font','indopak'),ensrc:store.get('ensrc2','alt'),rec:store.get('rec','alafasy'),last:store.get('last',null),tab:'surahs',q:''};
 
@@ -373,6 +375,8 @@ function applySettings(){
   $('trSw').classList.toggle('on',S.showTr);$('ruleSw').classList.toggle('on',S.rules);
   [...$('fontSeg').children].forEach(b=>b.classList.toggle('on',b.dataset.v===S.font));
   [...$('enSeg').children].forEach(b=>b.classList.toggle('on',b.dataset.v===S.tr));
+  document.querySelectorAll('[data-trtog]').forEach(b=>{const on=S.tr!=='off';b.classList.toggle('on',on);b.setAttribute('aria-checked',on);b.querySelector('b').textContent=on?'On':'Off'});
+  if(S.tr!=='off')store.set('trLast',S.tr);
   [...$('thSeg').children].forEach(b=>b.classList.toggle('on',b.dataset.v===S.theme));
 }
 
@@ -506,7 +510,7 @@ function readbar(kind,arg){
   const c=(k,v,label)=>`<button class="chip${S[k]===v?' on':''}" data-set="${k}" data-v="${v}">${label}</button>`;
   const trLabel={off:'Arabic only',en:'English',ur:'اردو',both:'English + اردو'}[S.tr];
   let h=`<div class="readbar"><div class="aa">
-    <button class="btn pri" data-open="settings"><svg viewBox="0 0 24 24" style="width:18px;height:18px;stroke:currentColor;fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 1 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 1 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 1 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 1 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg> Settings</button></div>`;
+    <button class="trtog${S.tr==='off'?'':' on'}" data-trtog role="switch" aria-checked="${S.tr!=='off'}"><span>Translation</span><i class="sw"></i><b>${S.tr==='off'?'Off':'On'}</b></button></div>`;
   if(kind==='quran'){
     h+=`<div class="rrow"><span class="rl">Recitation · Mishary Alafasy</span>
       <button class="listen" data-a2="playsurah">${icon.play.replace('<svg','<svg style="width:16px;height:16px;stroke:currentColor;fill:none;stroke-width:1.8"')} Play surah</button>
@@ -514,7 +518,8 @@ function readbar(kind,arg){
   }
   return h+'</div>';
 }
-document.addEventListener('click',e=>{if(e.target.closest('[data-open=settings]'))openSheet('setSheet')});
+document.addEventListener('click',e=>{if(e.target.closest('[data-open=settings]'))openSheet('setSheet');
+  if(e.target.closest('[data-trtog]')){if(S.tr==='off')S.tr=store.get('trLast','en');else{store.set('trLast',S.tr);S.tr='off'}store.set('tr',S.tr);applySettings()}});
 document.addEventListener('click',e=>{
   const b=e.target.closest('[data-set]');if(!b)return;
   const k=b.dataset.set,v=b.dataset.v;
