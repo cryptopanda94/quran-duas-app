@@ -44,15 +44,21 @@ jobs:
       - name: Archive for App Store
         if: env.HAS_ASC == 'true'
         env:
-          APPLE_TEAM_ID: ${{ secrets.APPLE_TEAM_ID }}
+          ASC_KEY_ID: ${{ secrets.ASC_KEY_ID }}
+          ASC_ISSUER_ID: ${{ secrets.ASC_ISSUER_ID }}
+          ASC_KEY_P8: ${{ secrets.ASC_KEY_P8 }}
         run: |
           set -o pipefail
+          KEY="$RUNNER_TEMP/AuthKey.p8"; printf '%s\n' "$ASC_KEY_P8" > "$KEY"
+          AUTH=(-allowProvisioningUpdates -authenticationKeyPath "$KEY" -authenticationKeyID "$ASC_KEY_ID" -authenticationKeyIssuerID "$ASC_ISSUER_ID")
           xcodebuild -project ios/App/App.xcodeproj -scheme App \
             -configuration Release -destination 'generic/platform=iOS' \
-            -archivePath "$RUNNER_TEMP/App.xcarchive" \
-            CODE_SIGN_STYLE=Manual CODE_SIGN_IDENTITY=- CODE_SIGNING_REQUIRED=NO \
-            PROVISIONING_PROFILE_SPECIFIER= DEVELOPMENT_TEAM="$APPLE_TEAM_ID" \
-            archive | tail -n 60
+            -archivePath "$RUNNER_TEMP/App.xcarchive" "${AUTH[@]}" archive 2>&1 | grep -vE '^\s*$' | tail -n 40 || {
+            echo "::warning::Development signing failed, retrying with Apple Distribution identity"
+            xcodebuild -project ios/App/App.xcodeproj -scheme App \
+              -configuration Release -destination 'generic/platform=iOS' \
+              -archivePath "$RUNNER_TEMP/App.xcarchive" "${AUTH[@]}" \
+              CODE_SIGN_IDENTITY="Apple Distribution" archive 2>&1 | tail -n 40; }
       - name: Sign and upload to TestFlight
         if: env.HAS_ASC == 'true'
         env:
