@@ -35,8 +35,10 @@ csr.sign(key, OpenSSL::Digest::SHA256.new)
 cert = api(jwt, :post, '/v1/certificates', data: { type: 'certificates',
   attributes: { certificateType: 'DISTRIBUTION', csrContent: csr.to_pem } })['data']
 x509 = OpenSSL::X509::Certificate.new(Base64.decode64(cert['attributes']['certificateContent']))
-p12 = OpenSSL::PKCS12.create('ci', 'dist', key, x509)
-File.binwrite('/tmp/dist.p12', p12.to_der)
+# package with macOS's own (LibreSSL) openssl so `security` can read the legacy-format .p12
+File.write('/tmp/dist.key', key.to_pem); File.write('/tmp/dist.crt', x509.to_pem)
+system('/usr/bin/openssl pkcs12 -export -inkey /tmp/dist.key -in /tmp/dist.crt -name dist -passout pass:ci -out /tmp/dist.p12') or abort('p12 failed')
+File.delete('/tmp/dist.key', '/tmp/dist.crt')
 kc, pw = ENV['KEYCHAIN'], ENV['KEYCHAIN_PW']
 system("security import /tmp/dist.p12 -k #{kc} -P ci -T /usr/bin/codesign -T /usr/bin/security") or abort('import failed')
 system("security set-key-partition-list -S apple-tool:,apple:,codesign: -s -k #{pw} #{kc} >/dev/null") or abort('partition list failed')
