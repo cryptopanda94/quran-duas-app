@@ -16,14 +16,24 @@
 
   /* ---------------- Azan notifications ---------------- */
   const DAYS_AHEAD = 6;           // 6 days x 5 prayers = 30 (iOS allows 64 pending)
-  const CHANNEL = 'azan';
+  // one Android channel per sound (a channel's sound can't change once created)
+  const SOUNDS = {
+    builtin: { ch: 'azan', name: 'Azan (Shia)', file: 'azan_short.wav' },
+    mecca:   { ch: 'azan_mecca', name: 'Azan (Mecca)', file: 'azan_mecca_short.wav' },
+    medina:  { ch: 'azan_medina', name: 'Azan (Medina)', file: 'azan_medina_short.wav' },
+    chime:   { ch: 'prayer_chime', name: 'Prayer time (chime)', file: null },
+  };
+  const soundFor = (k) => SOUNDS[(window.QX && QX.slotFor(k))] || SOUNDS.builtin;
   let alertsOn = store.get('nativeAlerts', false);
 
   async function ensureChannel() {
     if (platform !== 'android') return;
     try {
-      await LN.createChannel({ id: CHANNEL, name: 'Azan', description: 'Azan at prayer times',
-        importance: 5, visibility: 1, sound: 'azan_short.wav', vibration: true });
+      for (const s of Object.values(SOUNDS)) {
+        const c = { id: s.ch, name: s.name, description: 'Prayer time alerts', importance: 5, visibility: 1, vibration: true };
+        if (s.file) c.sound = s.file;
+        await LN.createChannel(c);
+      }
     } catch (e) { console.warn('channel', e); }
   }
 
@@ -40,6 +50,7 @@
     if (!QX) return;
     await cancelAll();
     if (!alertsOn || !QX.LOC) return;
+    await ensureChannel();
     const now = Date.now(), list = [], seen = new Set();
     for (let d = 0; d < DAYS_AHEAD; d++) {
       const T = QX.timesFor(QX.LOC, new Date(now + d * 864e5));
@@ -53,8 +64,8 @@
           title: `${n} · ${u}`,
           body: `It's time for ${n} prayer — ${QX.LOC.name}`,
           schedule: { at: new Date(at), allowWhileIdle: true },
-          sound: 'azan_short.wav',
-          channelId: CHANNEL,
+          ...(soundFor(k).file ? { sound: soundFor(k).file } : {}),
+          channelId: soundFor(k).ch,
           extra: { k, n },
         });
       });

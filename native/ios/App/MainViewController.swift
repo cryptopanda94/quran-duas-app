@@ -20,13 +20,15 @@ class MainViewController: CAPBridgeViewController {
     /// The azan clip ships inside the web folder, so copy it there once.
     static func installAzanSound() {
         let fm = FileManager.default
-        guard let src = Bundle.main.url(forResource: "azan_short", withExtension: "wav", subdirectory: "public"),
-              let lib = fm.urls(for: .libraryDirectory, in: .userDomainMask).first else { return }
+        guard let lib = fm.urls(for: .libraryDirectory, in: .userDomainMask).first else { return }
         let dir = lib.appendingPathComponent("Sounds", isDirectory: true)
-        let dst = dir.appendingPathComponent("azan_short.wav")
-        if fm.fileExists(atPath: dst.path) { return }
         try? fm.createDirectory(at: dir, withIntermediateDirectories: true)
-        try? fm.copyItem(at: src, to: dst)
+        for name in ["azan_short", "azan_mecca_short", "azan_medina_short"] {
+            guard let src = Bundle.main.url(forResource: name, withExtension: "wav", subdirectory: "public") else { continue }
+            let dst = dir.appendingPathComponent(name + ".wav")
+            if fm.fileExists(atPath: dst.path) { continue }
+            try? fm.copyItem(at: src, to: dst)
+        }
     }
 
     override func webViewConfiguration(for instanceConfiguration: InstanceConfiguration) -> WKWebViewConfiguration {

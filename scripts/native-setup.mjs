@@ -111,7 +111,7 @@ function setupAndroid() {
   const res = join(main, 'res');
   for (const d of ['layout', 'xml', 'drawable']) copyDir(join(nat, 'android', 'res', d), join(res, d));
   mkdirSync(join(res, 'raw'), { recursive: true });
-  copyFileSync(join(nat, 'shared', 'azan_short.wav'), join(res, 'raw', 'azan_short.wav'));
+  for (const f of readdirSync(join(nat, 'shared'))) if (f.endsWith('.wav')) copyFileSync(join(nat, 'shared', f), join(res, 'raw', f));
   ok('widget layouts, notification icon, azan sound');
 
   // 3. Strings

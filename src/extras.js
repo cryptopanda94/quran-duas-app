@@ -127,15 +127,17 @@ const fmt=(loc,dt)=>{try{return dt.toLocaleTimeString([], {timeZone:loc.tz,hour:
 let LOC=store.get('loc',null);
 const ALERTS=Object.assign({fajr:true,dhuhr:true,asr:true,maghrib:true,isha:true},store.get('alerts',{}));
 let armed=false,ticker=null,audioCtx=null,playing=null,fired=store.get('fired',{});
-const SLOTS=[['builtin','Shia Azan','Built in · Ammal-e-Namaz recording'],['najaf','Najaf','Imam Ali (a.s.) shrine'],['karbala','Karbala','Imam Husain (a.s.) shrine'],['kazmain','Kazmain','Imam Kadhim & Imam Jawad (a.s.) shrine'],['samarra','Samarra','Askariyain (a.s.) shrine'],['mecca','Mecca','Masjid al-Haram'],['medina','Medina','Masjid an-Nabawi'],['custom','My own recording','']];
-const AZ={builtin:{url:document.getElementById('azdata').dataset.src||('data:audio/mpeg;base64,'+document.getElementById('azdata').textContent.trim()),name:'Shia Azan (Ammal-e-Namaz)',fixed:true}};
+const SLOTS=[['builtin','Shia Azan','Ammal-e-Namaz recording'],['mecca','Mecca','Masjid al-Haram'],['medina','Medina','Masjid an-Nabawi']];
+const AZ={builtin:{url:document.getElementById('azdata').dataset.src||('data:audio/mpeg;base64,'+document.getElementById('azdata').textContent.trim()),name:'Shia Azan (Ammal-e-Namaz)',fixed:true},
+  mecca:{url:'azan_mecca.mp3',name:'Mecca azan',fixed:true},medina:{url:'azan_medina.mp3',name:'Medina azan',fixed:true}};
+const AZOK=v=>v==='chime'||!!AZ[v];
 let azFajr=store.get('azFajr','builtin'), azOther=store.get('azOther','builtin'), azTarget='fajr';
+if(!AZOK(azFajr)){azFajr='builtin';store.set('azFajr',azFajr)} if(!AZOK(azOther)){azOther='builtin';store.set('azOther',azOther)}
 function idb(){return new Promise((res,rej)=>{try{const r=indexedDB.open('quranapp',1);r.onupgradeneeded=()=>r.result.createObjectStore('f');r.onsuccess=()=>res(r.result);r.onerror=()=>rej(r.error)}catch(e){rej(e)}})}
 async function idbPut(key,val){const db=await idb();return new Promise((res,rej)=>{const tx=db.transaction('f','readwrite');val==null?tx.objectStore('f').delete(key):tx.objectStore('f').put(val,key);tx.oncomplete=res;tx.onerror=()=>rej(tx.error)})}
 async function idbGet(key){try{const db=await idb();return await new Promise(res=>{const q=db.transaction('f').objectStore('f').get(key);q.onsuccess=()=>res(q.result||null);q.onerror=()=>res(null)})}catch(e){return null}}
 (async()=>{
   const old=await idbGet('azan'); if(old&&!(await idbGet('azan:custom'))){try{await idbPut('azan:custom',old);await idbPut('azan',null)}catch(e){}}
-  for(const [k] of SLOTS){if(k==='builtin')continue;const r=await idbGet('azan:'+k);if(r)AZ[k]={url:URL.createObjectURL(r.blob),name:r.name}}
   if(location.hash==='#prayer')renderPrayer();
 })();
 
@@ -228,7 +230,6 @@ function renderPrayer(){
          <div style="flex:1;min-width:0"><b>${n}</b><small>${have?(k==='chime'||AZ[k].fixed?sub:'✓ '+esc(AZ[k].name)):(sub?sub+' · ':'')+'Tap to add a recording'}</small></div>
          ${have?`<button class="btn azplay" data-play="${k}" aria-label="Play ${n}">▶</button>`:''}${AZ[k]&&!AZ[k].fixed?`<button class="btn" data-del="${k}" aria-label="Remove ${n}">✕</button>`:''}
          ${have?'':`<input type="file" accept="audio/*" data-add="${k}" hidden>`}</div>`}).join('')}</div>
-     <div class="hint" style="margin-top:10px">Note: the Haram in Mecca and Masjid an-Nabawi in Medina call the Sunni adhan (without “Ash-hadu anna Aliyyan Waliyyullah” and “Hayya ʿala khayr al-ʿamal”).</div>
    </div>
    <div class="foot">Method: Shia Ithna Ashari (Jafari, Leva Institute Qum) — Fajr 16°, Maghrib 4°, Isha 14°, midnight = halfway from sunset to Fajr.<br>Times may differ by a few minutes from your local mosque's timetable.</div>`;
   updateNext();

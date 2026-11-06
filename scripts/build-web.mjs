@@ -53,6 +53,8 @@ mkdirSync(join(www, 'fonts'), { recursive: true });
 writeFileSync(join(www, 'index.html'), t);
 copyFileSync(join(src, 'native.js'), join(www, 'native.js'));
 copyFileSync(join(src, 'azan.mp3'), join(www, 'azan.mp3'));
-copyFileSync(join(root, 'native', 'shared', 'azan_short.wav'), join(www, 'azan_short.wav')); // iOS notification sound source
+for (const f of readdirSync(src)) if (/^azan_.+\.mp3$/.test(f)) copyFileSync(join(src, f), join(www, f));   // full azans
+for (const f of readdirSync(join(root, 'native', 'shared'))) if (f.endsWith('.wav'))                     // iOS notification sound sources
+  copyFileSync(join(root, 'native', 'shared', f), join(www, f));
 for (const f of readdirSync(join(src, 'fonts'))) copyFileSync(join(src, 'fonts', f), join(www, 'fonts', f));
 console.log(`www/ built (${(Buffer.byteLength(t) / 1e6).toFixed(1)} MB index.html)`);
