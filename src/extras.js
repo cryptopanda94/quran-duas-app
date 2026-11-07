@@ -487,7 +487,6 @@ function renderToday(){
   app.innerHTML=`<div class="hero" style="padding-top:18px"><p style="font-size:13px;letter-spacing:.08em;text-transform:uppercase">${esc(dstr)}</p>
      ${ht?`<a href="#calendar" style="display:block;margin-top:4px"><b style="font-size:17px;color:var(--accent)">${hijriStr(ht)}</b> <span style="font-family:'Noto Nastaliq Urdu',serif;color:var(--muted)">${ht.d} ${HMU[ht.m-1]}</span></a>`:''}</div>
    ${tev.map(e=>`<a class="ev ${e[1]===1?'joy':e[1]===0?'grief':'other'}" href="#calendar" style="display:block"><div class="evd">Today</div><div class="evt">${esc(e[2]).replace(/\n+/g,'<br>')}</div></a>`).join('')}
-   ${dediHTML()}
    ${pr}
    <div class="tcard ayah-card">
      <div class="tlabel">Ayah of the day · ${esc(META[A.s-1][1])} ${ref}</div>
@@ -500,6 +499,7 @@ function renderToday(){
    ${HFMT?`<div class="tcard tcal" id="tcal"></div>`:''}
    <div class="tlabel" style="margin:18px 4px 8px">For today</div>
    <div class="list">${todays.map(id=>{const d=LIST.find(x=>x.id===id);return d?`<a class="item dua-item" href="#dua-${d.id}"><div class="t"><b>${esc(d.name)}</b><small>${esc(d.sub)}</small></div></a>`:''}).join('')}</div>
+   ${dediHTML()}
    ${window.NH?`<div class="card hint" style="margin-top:16px"><b style="color:var(--ink)">Widgets:</b> add the Next Prayer and Ayah of the Day widgets to your home or lock screen — touch and hold an empty spot, tap <b>+</b> (iPhone) or <b>Widgets</b> (Android), and search “Quran & Duas”.</div>`:`<div class="card hint" style="margin-top:16px"><b style="color:var(--ink)">Widgets:</b> lock-screen and home-screen widgets need an app installed from the App Store, so this web app can't add one. This Today page shows the same things — next prayer and the ayah of the day.</div>`}`;
   if($('tcal'))todayCal();
   $('ayPlay').onclick=()=>{Q.playVerse(A.s,A.a)};
