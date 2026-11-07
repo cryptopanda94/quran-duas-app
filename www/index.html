@@ -288,7 +288,8 @@ body.playing .wrap{padding-bottom:180px}
 .prow{display:flex;gap:6px;margin-top:14px}
 .pc{flex:1;min-width:0;text-align:center;background:rgba(255,255,255,.12);border-radius:12px;padding:8px 1px}
 .pc small{display:block;font-size:11px;opacity:.85}
-.pc b{font-size:12.5px;font-weight:600;font-variant-numeric:tabular-nums;white-space:nowrap;letter-spacing:-.2px}
+.pc b{display:block;font-size:13px;font-weight:600;font-variant-numeric:tabular-nums;white-space:nowrap;letter-spacing:-.2px;overflow:hidden;text-overflow:clip}
+.pc b i{display:block;font-style:normal;font-size:10px;font-weight:600;opacity:.85;margin-top:1px}
 .pc.nx{background:#fff;color:var(--pcnx,var(--fill,var(--accent)))}
 .ayah-card{background:linear-gradient(170deg,color-mix(in srgb,var(--gold) 14%,var(--card)),var(--card))}
 .ayah-card .v-ar{background-image:none!important}
@@ -1235,7 +1236,7 @@ function renderToday(){
   if(LOC){const T=timesFor(LOC,now),np=nextPrayer();
     pr=`<a class="tcard prayer-card" href="#prayer"><div class="tlabel">${esc(LOC.name)}</div>
       <div class="tbig">${np?np.n:''} <span>${np?fmt(LOC,np.t):''}</span></div><div class="tsub" id="todayCd"></div>
-      <div class="prow">${PR.filter(p=>p[3]).map(([k,n])=>`<div class="pc${np&&np.k===k?' nx':''}"><small>${n}</small><b>${fmt(LOC,T[k])}</b></div>`).join('')}</div></a>`;
+      <div class="prow">${PR.filter(p=>p[3]).map(([k,n])=>`<div class="pc${np&&np.k===k?' nx':''}"><small>${n}</small><b>${fmt(LOC,T[k]).replace(/\s*([AaPp]\.?\s?[Mm]\.?)$/,'<i>$1</i>')}</b></div>`).join('')}</div></a>`;
   } else pr=`<a class="tcard" href="#prayer"><div class="tlabel">Prayer times</div><div class="tsub">Choose your city to see today's prayer times and azan alerts ›</div></a>`;
   const last=Q.S.last;
   const dow=now.getDay(), todays=['dua-e-ahad',...(WEEK_DUAS[dow]||[]),'ziyarat-ashura','ziyarat-waritha'];

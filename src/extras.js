@@ -479,7 +479,7 @@ function renderToday(){
   if(LOC){const T=timesFor(LOC,now),np=nextPrayer();
     pr=`<a class="tcard prayer-card" href="#prayer"><div class="tlabel">${esc(LOC.name)}</div>
       <div class="tbig">${np?np.n:''} <span>${np?fmt(LOC,np.t):''}</span></div><div class="tsub" id="todayCd"></div>
-      <div class="prow">${PR.filter(p=>p[3]).map(([k,n])=>`<div class="pc${np&&np.k===k?' nx':''}"><small>${n}</small><b>${fmt(LOC,T[k])}</b></div>`).join('')}</div></a>`;
+      <div class="prow">${PR.filter(p=>p[3]).map(([k,n])=>`<div class="pc${np&&np.k===k?' nx':''}"><small>${n}</small><b>${fmt(LOC,T[k]).replace(/\s*([AaPp]\.?\s?[Mm]\.?)$/,'<i>$1</i>')}</b></div>`).join('')}</div></a>`;
   } else pr=`<a class="tcard" href="#prayer"><div class="tlabel">Prayer times</div><div class="tsub">Choose your city to see today's prayer times and azan alerts ›</div></a>`;
   const last=Q.S.last;
   const dow=now.getDay(), todays=['dua-e-ahad',...(WEEK_DUAS[dow]||[]),'ziyarat-ashura','ziyarat-waritha'];
