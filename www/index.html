@@ -120,6 +120,10 @@ input[type=range]{accent-color:var(--accent);width:150px}
 /* duas */
 .trtog{display:inline-flex;align-items:center;gap:10px;padding:8px 14px;border-radius:999px;border:1px solid var(--line);background:var(--card);font-size:15px;font-weight:500;color:var(--ink)}.trtog b{font-weight:600;min-width:24px;text-align:left;color:var(--muted)}.trtog.on b{color:var(--accent)}
 .trtog .sw{width:40px;height:24px;border-radius:12px;background:var(--line);position:relative;transition:background .2s}.trtog .sw::after{content:"";position:absolute;top:3px;left:3px;width:18px;height:18px;border-radius:50%;background:#fff;box-shadow:0 1px 3px rgba(0,0,0,.25);transition:left .2s}.trtog.on .sw{background:var(--accent)}.trtog.on .sw::after{left:19px}
+.qstat{font-size:19px;font-weight:600;color:var(--ink);margin:10px 0 2px;min-height:28px}.qstat.ok{color:var(--accent)}
+.dial.aligned #roseAll circle{fill:color-mix(in srgb,var(--accent) 16%,var(--bg))}
+.dtop{position:sticky;top:0;z-index:5;background:var(--bg);padding:14px 0 10px;display:flex;flex-direction:column;gap:10px}
+.dseg{display:grid;grid-template-columns:1fr 1fr}.dseg button{padding:10px;font-size:15px;font-weight:600}
 .dgrp{display:flex;align-items:baseline;justify-content:space-between;margin:20px 2px 8px}.dgrp b{font-size:13px;letter-spacing:.08em;text-transform:uppercase;color:var(--gold)}.dgrp span{font-family:IndoPak,serif;color:var(--muted);font-size:18px}
 .uvc{padding:6px 0 2px}.enb{text-align:left;line-height:1.7;margin:4px 6px 14px}.enb b{display:block;font-size:12px;letter-spacing:.06em;text-transform:uppercase;margin-bottom:6px;color:var(--accent)}
 .dua-item .num{transform:none;border-radius:12px;font-family:IndoPak,serif;font-size:18px}
@@ -651,13 +655,27 @@ const LIST=[
 const UD=JSON.parse(document.getElementById('udata').textContent);
 LIST.forEach(d=>{if(d.key){d.name=DU[d.key].name;d.ur=DU[d.key].nameUr}if(d.user){d.name=UD[d.user].name;d.ur=UD[d.user].nameUr}});
 LIST.find(x=>x.id==='ziyarat-warith').name='Ziyarat Warith (Mafatih)';
+let dTab=store.get('dTab','d'), dQ='';
 function renderDuas(){
   setHeader('Duas &amp; Ziyarat',false);
-  app.innerHTML=`<div class="hero"><div class="ar" style="font-family:IndoPak,serif">اَدْعِيَه وَ زِيَارَات</div><p>Shia Ithna Ashari duas &amp; ziyarat · Arabic, English &amp; Urdu</p></div>
-   ${[['d','Duas','اَدْعِيَه'],['z','Ziyarat','زِيَارَات']].map(([g,gn,ga])=>`<div class="dgrp"><b>${gn}</b><span>${ga}</span></div>
-   <div class="list">${LIST.filter(d=>d.grp===g).map(d=>`<a class="item dua-item" href="#dua-${d.id}"><div class="num"><span>${d.mark}</span></div>
-     <div class="t"><b>${esc(d.name)}</b><small>${esc(d.sub)}</small></div><div class="ar" style="font-family:'Noto Nastaliq Urdu',serif;font-size:15px;line-height:2">${d.ur}</div></a>`).join('')}</div>`).join('')}
+  app.innerHTML=`<div class="dtop">
+     <div class="seg dseg"><button data-g="d" class="${dTab==='d'?'on':''}">Duas</button><button data-g="z" class="${dTab==='z'?'on':''}">Ziyarat</button></div>
+     <input class="inp" id="dq" type="search" placeholder="Search duas &amp; ziyarat" value="${esc(dQ)}" autocomplete="off">
+   </div>
+   <div class="list" id="dlist"></div>
    <div class="foot">Texts from Mafatih al-Jinan as published in the open-source Shia Companion app (Urdu: Mafatih-style translation).<br>Ayat ul Kursi from the Quran text in this app.</div>`;
+  const norm=x=>(x||'').toLowerCase().replace(/[^a-z0-9\u0600-\u06ff]+/g,' ').trim();
+  const draw=()=>{
+    const q=norm(dQ);
+    const items=q?LIST.filter(d=>norm(d.name+' '+d.sub+' '+d.ur+' '+d.id).includes(q)):LIST.filter(d=>d.grp===dTab);
+    $('dlist').innerHTML=items.map(d=>`<a class="item dua-item" href="#dua-${d.id}"><div class="num"><span>${d.mark}</span></div>
+      <div class="t"><b>${esc(d.name)}</b><small>${esc(d.sub)}</small></div><div class="ar" style="font-family:'Noto Nastaliq Urdu',serif;font-size:15px;line-height:2">${d.ur}</div></a>`).join('')
+      ||'<div class="hint" style="padding:20px 4px;text-align:center">Nothing found — try another name (e.g. Kumayl, Ashura, Kisa).</div>';
+    app.querySelectorAll('.dseg button').forEach(b=>b.classList.toggle('on',!q&&b.dataset.g===dTab));
+  };
+  app.querySelectorAll('.dseg button').forEach(b=>b.onclick=()=>{dTab=b.dataset.g;store.set('dTab',dTab);dQ='';$('dq').value='';draw()});
+  $('dq').oninput=e=>{dQ=e.target.value;draw()};
+  draw();
 }
 const cleanMd=s=>s.replace(/\[([^\]]+)\]\([^)]+\)/g,'$1').replace(/^##\s*/gm,'').replace(/\*\*/g,'');
 function verseHTML(ar,tr,en,ur,end){
@@ -938,7 +956,7 @@ function renderQibla(){
   app.innerHTML=`
    <div class="card loc" style="margin-top:16px"><b>📍 ${esc(LOC.name)}</b><button class="btn" id="chg">Change</button></div>
    <div class="card" style="text-align:center">
-     <svg class="dial" viewBox="0 0 300 300">
+     <svg class="dial" id="qDial" viewBox="0 0 300 300">
        <g id="roseAll" style="transition:transform .15s ease-out;transform-origin:150px 150px">
        <circle cx="150" cy="150" r="134" fill="var(--bg)" stroke="var(--line)" stroke-width="2"/>${ticks}
        ${['N','E','S','W'].map((t,i)=>`<text x="150" y="58" text-anchor="middle" font-size="18" font-weight="600" fill="${t==='N'?'#c0392b':'var(--muted)'}" transform="rotate(${i*90} 150 150)" font-family="Inter,sans-serif">${t}</text>`).join('')}
@@ -951,10 +969,12 @@ function renderQibla(){
        <circle cx="150" cy="150" r="7" fill="var(--accent)"/>
        ${window.NH?'<path d="M150 4 L158 18 L142 18 Z" fill="var(--ink)"/>':''}
      </svg>
-     <div class="qdeg">${b.toFixed(1)}° <span style="font-size:20px;color:var(--muted)">${card}</span></div>
-     <div class="hint">clockwise from true North · Makkah is ${Math.round(km).toLocaleString()} km away</div>
+     ${window.NH?`<div id="qStatus" class="qstat">Hold your phone flat…</div>
+     <button class="btn pri" id="qStart" style="margin:6px 0 4px" hidden>Try again</button>
+     <div class="hint">Qibla ${b.toFixed(1)}° ${card} from true North · Makkah ${Math.round(km).toLocaleString()} km</div>`:`<div class="qdeg">${b.toFixed(1)}° <span style="font-size:20px;color:var(--muted)">${card}</span></div>
+     <div class="hint">clockwise from true North · Makkah is ${Math.round(km).toLocaleString()} km away</div>`}
    </div>
-   ${window.NH?`<div class="card" style="text-align:center"><div id="qStatus" class="hint" style="font-size:15px">Starting compass… hold your phone flat.</div><button class="btn pri" id="qStart" style="margin-top:10px" hidden>Start live compass</button></div>`:`<div class="card hint"><b style="color:var(--ink)">How to use it:</b> open your phone's Compass app, turn until it reads <b>${Math.round(b)}°</b> — you're then facing the Qibla. (A web page can't read your phone's compass sensor, so this dial doesn't turn by itself.)</div>`}`;
+   ${window.NH?'':`<div class="card hint"><b style="color:var(--ink)">How to use it:</b> open your phone's Compass app, turn until it reads <b>${Math.round(b)}°</b> — you're then facing the Qibla. (A web page can't read your phone's compass sensor, so this dial doesn't turn by itself.)</div>`}`;
   if(window.NH){$('qStart').onclick=()=>NH.startCompass(b);setTimeout(()=>{if($('roseAll'))NH.startCompass(b)},150)}
   $('chg').onclick=()=>{editing=true;renderQibla()};
 }

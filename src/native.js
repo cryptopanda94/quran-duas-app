@@ -146,11 +146,12 @@
   try { AppP.getInfo().then((i) => { appBuild = i.version + ' (' + i.build + ')'; }).catch(() => {}); } catch (e) {}
   async function startCompass(bearing) {
     const status = () => document.getElementById('qStatus');
-    const diag = { src: '', n: 0, err: '', acc: null, tru: null };
+    const diag = { src: '', n: 0, err: '', acc: null, tru: null }; const t0 = Date.now();
     const showDiag = () => {
       let el = document.getElementById('qDiag');
       const card = status() && status().parentNode;
       if (!el && card) { el = document.createElement('div'); el.id = 'qDiag'; el.style.cssText = 'font-size:11px;color:var(--muted);margin-top:10px;font-family:ui-monospace,monospace'; card.appendChild(el); }
+      if (el) el.style.display = (diag.err || (diag.n === 0 && Date.now() - t0 > 4000)) ? '' : 'none';
       if (el) el.textContent = `${platform} ${appBuild} · ${diag.src || '…'} · readings ${diag.n}` + (diag.acc != null ? ` · ±${Math.round(diag.acc)}°` : '') + (diag.tru != null ? (diag.tru ? ' · true N' : ' · magnetic N') : '') + (diag.err ? ` · ${diag.err}` : '');
     };
     const diagTimer = setInterval(() => { if (!document.getElementById('qStatus')) clearInterval(diagTimer); else showDiag(); }, 500);
@@ -166,9 +167,14 @@
       if (shown == null) shown = -h; else { let d = (-h - shown) % 360; if (d > 180) d -= 360; if (d < -180) d += 360; shown += d; }
       r.style.transform = `rotate(${shown}deg)`;
       const diff = ((bearing - h + 540) % 360) - 180;
-      st.innerHTML = Math.abs(diff) < 5
-        ? '<b style="color:var(--accent);font-size:17px">✓ You are facing the Qibla</b>'
-        : `Turn <b>${diff > 0 ? 'right' : 'left'}</b> ${Math.round(Math.abs(diff))}°`;
+      const ok = Math.abs(diff) < 5;
+      st.classList.toggle('ok', ok);
+      st.textContent = ok ? '✓ You are facing the Qibla' : `Turn ${diff > 0 ? 'right' : 'left'} ${Math.round(Math.abs(diff))}°`;
+      const dial = document.getElementById('qDial');
+      if (dial && dial.classList.contains('aligned') !== ok) {
+        dial.classList.toggle('aligned', ok);
+        if (ok && navigator.vibrate) try { navigator.vibrate(40); } catch (e) {}
+      }
     };
     let stop = () => {};
     const onHash = () => stop();
