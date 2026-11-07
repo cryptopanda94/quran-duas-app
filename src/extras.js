@@ -159,8 +159,11 @@ const SLOTS=[['builtin','Shia Azan','Ammal-e-Namaz recording'],['mecca','Mecca',
 const AZ={builtin:{url:document.getElementById('azdata').dataset.src||('data:audio/mpeg;base64,'+document.getElementById('azdata').textContent.trim()),name:'Shia Azan (Ammal-e-Namaz)',fixed:true},
   mecca:{url:'azan_mecca.mp3',name:'Mecca azan',fixed:true},medina:{url:'azan_medina.mp3',name:'Medina azan',fixed:true}};
 const AZOK=v=>!!AZ[v];
-let azFajr=store.get('azFajr','builtin'), azOther=store.get('azOther','builtin'), azTarget='fajr';
-if(!AZOK(azFajr)){azFajr='builtin';store.set('azFajr',azFajr)} if(!AZOK(azOther)){azOther='builtin';store.set('azOther',azOther)}
+const AZK=[['fajr','Fajr'],['dhuhr','Dhuhr'],['asr','Asr'],['maghrib','Maghrib'],['isha','Isha']];
+const AZP=(()=>{const f=store.get('azFajr','builtin'),o=store.get('azOther','builtin'),m=store.get('azPer',{}),r={};
+  for(const [k] of AZK){const v=m[k]||(k==='fajr'?f:o);r[k]=AZOK(v)?v:'builtin'}return r})();
+let azTarget='fajr';
+const setAz=(k,v)=>{AZP[k]=v;store.set('azPer',AZP)};
 function idb(){return new Promise((res,rej)=>{try{const r=indexedDB.open('quranapp',1);r.onupgradeneeded=()=>r.result.createObjectStore('f');r.onsuccess=()=>res(r.result);r.onerror=()=>rej(r.error)}catch(e){rej(e)}})}
 async function idbPut(key,val){const db=await idb();return new Promise((res,rej)=>{const tx=db.transaction('f','readwrite');val==null?tx.objectStore('f').delete(key):tx.objectStore('f').put(val,key);tx.oncomplete=res;tx.onerror=()=>rej(tx.error)})}
 async function idbGet(key){try{const db=await idb();return await new Promise(res=>{const q=db.transaction('f').objectStore('f').get(key);q.onsuccess=()=>res(q.result||null);q.onerror=()=>res(null)})}catch(e){return null}}
@@ -178,7 +181,7 @@ function chime(){ // gentle synthesized bell, repeated
     osc.connect(g).connect(ctx.destination);osc.start(t0);osc.stop(t0+1.6);nodes.push(osc)})});
   return{stop(){nodes.forEach(n=>{try{n.stop()}catch(e){}})}};
 }
-function slotFor(k){const v=k==='fajr'?azFajr:azOther;return AZ[v]?v:'builtin'}
+function slotFor(k){const v=AZP[k]||AZP.dhuhr;return AZ[v]?v:'builtin'}
 function playAlert(name,k){
   stopAlert();const slot=k&&k.startsWith('slot:')?k.slice(5):slotFor(k);
   $('alertTxt').textContent=k&&k.startsWith('slot:')?`Playing: ${name}`:`It's time for ${name} prayer · ${LOC?LOC.name:''}`;$('alertbar').classList.add('show');
@@ -282,9 +285,10 @@ function renderPrayer(){
    </div>
    <div class="card">
      <div style="display:flex;align-items:center;gap:10px;margin-bottom:10px"><b style="flex:1">Choose azan</b>
-       <div class="seg"><button data-tgt="fajr" class="${azTarget==='fajr'?'on':''}">Fajr</button><button data-tgt="other" class="${azTarget==='other'?'on':''}">Other prayers</button></div></div>
-     <div class="hint" style="margin-bottom:6px">Tap an azan to use it for ${azTarget==='fajr'?'<b>Fajr</b>':'<b>Dhuhr, Asr, Maghrib &amp; Isha</b>'}. ▶ plays it.</div>
-     <div class="azlist">${SLOTS.map(([k,n,sub])=>{const have=k==='chime'||AZ[k],sel=(azTarget==='fajr'?azFajr:azOther)===k;
+</div>
+     <div class="seg azseg">${AZK.map(([k,n])=>`<button data-tgt="${k}" class="${azTarget===k?'on':''}">${n}</button>`).join('')}</div>
+     <div class="hint" style="margin:8px 0 6px">Tap an azan to use it for <b>${AZK.find(x=>x[0]===azTarget)[1]}</b>. ▶ plays it.<br>${AZK.map(([k,n])=>`<span class="azsum">${n}: ${(SLOTS.find(x=>x[0]===AZP[k])||SLOTS[0])[1]}</span>`).join(' ')}</div>
+     <div class="azlist">${SLOTS.map(([k,n,sub])=>{const have=AZ[k],sel=AZP[azTarget]===k;
        return `<div class="azrow${sel?' sel':''}${have?'':' off'}" data-pick="${k}" role="radio" aria-checked="${sel}" tabindex="0">
          <span class="azdot"></span>
          <div style="flex:1;min-width:0"><b>${n}</b><small>${have?(k==='chime'||AZ[k].fixed?sub:'✓ '+esc(AZ[k].name)):(sub?sub+' · ':'')+'Tap to add a recording'}</small></div>
@@ -305,16 +309,16 @@ function renderPrayer(){
   app.querySelectorAll('[data-add]').forEach(inp=>inp.onchange=async e=>{const f=e.target.files[0];if(!f)return;const k=inp.dataset.add;
     if(AZ[k])URL.revokeObjectURL(AZ[k].url);AZ[k]={url:URL.createObjectURL(f),name:f.name};
     try{await idbPut('azan:'+k,{blob:f,name:f.name})}catch(err){toast('Saved for this visit only')}
-    if(azTarget==='fajr'){azFajr=k;store.set('azFajr',k)}else{azOther=k;store.set('azOther',k)}renderPrayer()});
+    setAz(azTarget,k);renderPrayer()});
   app.querySelectorAll('[data-play]').forEach(b=>b.onclick=e=>{e.stopPropagation();const k=b.dataset.play;playAlert(SLOTS.find(x=>x[0]===k)[1]+' azan','slot:'+k)});
   app.querySelectorAll('[data-tgt]').forEach(b=>b.onclick=()=>{azTarget=b.dataset.tgt;renderPrayer()});
   app.querySelectorAll('[data-pick]').forEach(r=>{const pick=()=>{const k=r.dataset.pick;
       if(!AZ[k]){r.querySelector('[data-add]').click();return}
-      if(azTarget==='fajr'){azFajr=k;store.set('azFajr',k)}else{azOther=k;store.set('azOther',k)}
+      setAz(azTarget,k);
       window.NH&&NH.refresh&&NH.refresh();renderPrayer()};
     r.onclick=e=>{if(e.target.closest('button,input'))return;pick()};r.onkeydown=e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();pick()}}});
   app.querySelectorAll('[data-del]').forEach(b=>b.onclick=async e=>{e.stopPropagation();const k=b.dataset.del;stopAlert();if(AZ[k])URL.revokeObjectURL(AZ[k].url);delete AZ[k];
-    if(azFajr===k){azFajr='builtin';store.set('azFajr','builtin')}if(azOther===k){azOther='builtin';store.set('azOther','builtin')}
+    for(const [p] of AZK)if(AZP[p]===k)setAz(p,'builtin');
     try{await idbPut('azan:'+k,null)}catch(e){}renderPrayer()});
 }
 

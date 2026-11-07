@@ -11,9 +11,10 @@ const rd = (p) => readFileSync(join(src, p), 'utf8');
 const json = (p) => rd(p).replace(/<\//g, '<\\/');
 
 // Full-quality recitation (Mishary Alafasy, 64 kbps, one file per surah) streamed by the app.
-const AUDIO_BASE = 'https://github.com/Mohamedd-Ashraf/quran-surah-reciter-audio/releases/download/surah-reciter-ar.alafasy/';
-const timings = JSON.parse(rd('data/timings.json'));
-const aud = JSON.stringify(timings.map((a, i) => ({ p: [[AUDIO_BASE + String(i + 1).padStart(3, '0') + '.mp3', 0]], a })));
+// Recitation audio: Alafasy (AAC) served from this repo's GitHub Pages (gh-pages branch, /audio).
+// GitHub *release* downloads are labelled application/octet-stream, which iPhones refuse to stream.
+const AUDIO_BASE = 'https://cryptopanda94.github.io/quran-duas-app/audio/';
+const aud = JSON.stringify(JSON.parse(rd('data/aud16.json')).map((x) => ({ p: x.p.map(([n, c]) => [AUDIO_BASE + n, c]), a: x.a })));
 
 let t = rd('template.html');
 const must = (from, to) => {
