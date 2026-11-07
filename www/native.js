@@ -141,8 +141,18 @@
 
   /* ---------------- Live Qibla compass ---------------- */
   let stopCompass = null;
+  let appBuild = '';
+  try { AppP.getInfo().then((i) => { appBuild = i.version + ' (' + i.build + ')'; }).catch(() => {}); } catch (e) {}
   async function startCompass(bearing) {
     const status = () => document.getElementById('qStatus');
+    const diag = { src: '', n: 0, err: '', acc: null, tru: null };
+    const showDiag = () => {
+      let el = document.getElementById('qDiag');
+      const card = status() && status().parentNode;
+      if (!el && card) { el = document.createElement('div'); el.id = 'qDiag'; el.style.cssText = 'font-size:11px;color:var(--muted);margin-top:10px;font-family:ui-monospace,monospace'; card.appendChild(el); }
+      if (el) el.textContent = `${platform} ${appBuild} · ${diag.src || '…'} · readings ${diag.n}` + (diag.acc != null ? ` · ±${Math.round(diag.acc)}°` : '') + (diag.tru != null ? (diag.tru ? ' · true N' : ' · magnetic N') : '') + (diag.err ? ` · ${diag.err}` : '');
+    };
+    const diagTimer = setInterval(() => { if (!document.getElementById('qStatus')) clearInterval(diagTimer); else showDiag(); }, 500);
     const rose = () => document.getElementById('roseAll');
     if (stopCompass) stopCompass();
     const btn = document.getElementById('qStart'); if (btn) btn.hidden = true;
@@ -167,15 +177,24 @@
       // iOS: read the heading from Core Location (works without any web permission prompt)
       let sub = null;
       try {
-        sub = await WB.addListener('heading', (d) => { if (d && typeof d.h === 'number') show(d.h); });
+        diag.src = 'native';
+        sub = await WB.addListener('heading', (d) => { diag.n++; if (d) { diag.acc = d.acc; diag.tru = d.true; } if (d && typeof d.h === 'number') show(d.h); });
         await WB.startHeading();
       } catch (e) {
+        diag.err = String((e && e.message) || e).slice(0, 80);
         if (sub) sub.remove();
         status().textContent = 'Compass not available on this device.';
         const rb = document.getElementById('qStart'); if (rb) rb.hidden = false;
         window.removeEventListener('hashchange', onHash); return;
       }
-      stop = () => { try { sub && sub.remove(); WB.stopHeading(); } catch (e) {} window.removeEventListener('hashchange', onHash); stopCompass = null; };
+      // fallback: if Core Location sends nothing within 3 s, also listen to the web view's compass events
+      const onO = (e) => { if (typeof e.webkitCompassHeading === 'number') { diag.n++; diag.src = 'native+web'; show(e.webkitCompassHeading); } };
+      setTimeout(async () => {
+        if (got || !document.getElementById('qStatus')) return;
+        try { if (typeof DeviceOrientationEvent !== 'undefined' && DeviceOrientationEvent.requestPermission) { const r = await DeviceOrientationEvent.requestPermission(); if (r !== 'granted') diag.err = 'motion permission: ' + r; } } catch (e) { diag.err = 'motion: ' + String((e && e.message) || e).slice(0, 60); }
+        window.addEventListener('deviceorientation', onO);
+      }, 3000);
+      stop = () => { try { sub && sub.remove(); WB.stopHeading(); } catch (e) {} window.removeEventListener('deviceorientation', onO); window.removeEventListener('hashchange', onHash); stopCompass = null; };
     } else {
       const onO = (e) => {
         let h = null;
