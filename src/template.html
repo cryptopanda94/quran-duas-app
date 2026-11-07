@@ -19,9 +19,16 @@
 [data-theme=black]{--bg:#000;--card:#0c0f11;--ink:#ebe8e1;--muted:#8d8a83;--line:#22272b;--accent:#6fd3b5;--accent-soft:#11302a;--gold:#d4b06a;--hl:#2a2614;--rule:#2e353a}
 [data-theme=maroon]{--bg:#2e0a11;--card:#43121c;--ink:#f6e7c8;--muted:#d1ad86;--line:#5e2230;--accent:#e3b257;--accent-soft:#5a2a1c;--gold:#e8bd62;--hl:#5c2a17;--rule:#7a3a3f}
 [data-theme=maroon] body{background:radial-gradient(ellipse 120% 70% at 50% 0%,#5a1724 0%,#2e0a11 60%) fixed}
-[data-theme=royal]{--bg:#12161a;--card:#1a2026;--ink:#ece6da;--muted:#9a9488;--line:#2a323a;--accent:#e2b65e;--fill:#8a2236;--accent-soft:#3a1a22;--gold:#e2b65e;--hl:#3a1a22;--rule:#3a444d}
+[data-theme=royal]{--vbg:linear-gradient(160deg,#3d1622,#22121a);--vline:#4e1f2c;--bg:#12161a;--card:#1a2026;--ink:#ece6da;--muted:#9a9488;--line:#2a323a;--accent:#e2b65e;--fill:#8a2236;--accent-soft:#3a1a22;--gold:#e2b65e;--hl:#3a1a22;--rule:#3a444d}
 [data-theme=royal] :is(.continue,.tab.on,.verse.playing .ref,.seg button.on,.jumpbox button,.btn.pri,.next,.alertbar,.chip.on,.listen,.pbar #pPlay,.prayer-card){color:#f6dc95}
 [data-theme=royal] .qs .sfoot .sdone{color:#1a1408}
+[data-theme=violet]{--bg:#14111c;--card:#1d1828;--ink:#efe9f7;--muted:#a79db8;--line:#2e2640;--accent:#c9aaff;--fill:#6a42b0;--accent-soft:#2c2145;--gold:#e2b65e;--hl:#33264f;--rule:#3d3354;--vbg:linear-gradient(160deg,#2c2048,#1b1629);--vline:#3a2d58}
+[data-theme=violet] :is(.continue,.tab.on,.verse.playing .ref,.seg button.on,.jumpbox button,.btn.pri,.next,.alertbar,.chip.on,.listen,.pbar #pPlay,.prayer-card){color:#f6efff}
+[data-theme=violet] .qs .sfoot .sdone{color:#1a1408}
+[data-theme=sky]{--bg:#e8f2fa;--card:#f7fbff;--ink:#15314a;--muted:#5a7590;--line:#cddfee;--accent:#1d6fb0;--fill:#2378c0;--accent-soft:#d5e7f7;--gold:#b98326;--hl:#fff1c9;--rule:#b9cfe2;--vbg:linear-gradient(180deg,#ffffff,#f1f7fc);--vline:#d3e3f1}
+:is([data-theme=royal],[data-theme=violet],[data-theme=sky]) :is(.verse,.dverse){background:var(--vbg);border:1px solid var(--vline);border-radius:16px;padding:16px 14px;margin:12px 0}
+:is([data-theme=royal],[data-theme=violet],[data-theme=sky]) .verse.playing{box-shadow:0 0 0 2px var(--gold)}
+[data-theme=sky] .ayah-card{background:linear-gradient(170deg,#dcebf8,var(--card))}
 [data-theme=dark]{
   --bg:#12161a;--card:#1a2026;--ink:#ece6da;--muted:#9a9488;--line:#2a323a;
   --accent:#5cc2a3;--accent-soft:#1d3530;--gold:#d4b06a;--hl:#2e2a1b;--rule:#3a444d;
@@ -310,7 +317,7 @@ body.playing .wrap{padding-bottom:180px}
 .qs .clist i{width:24px;height:24px;border-radius:6px;border:2px solid var(--line);flex:none;display:grid;place-items:center}
 .qs .clist button.on i{background:var(--gold);border-color:var(--gold)}
 .qs .clist button.on i::after{content:"";width:6px;height:11px;border:solid var(--card);border-width:0 2.5px 2.5px 0;transform:translateY(-1px) rotate(45deg)}
-.qs .themes{margin-top:8px;flex-wrap:nowrap;justify-content:space-between;gap:4px}
+.qs .themes{margin-top:8px;display:grid;grid-template-columns:repeat(5,1fr);gap:12px 4px}
 .qs .themes .sw{flex:1;min-width:0;font-size:11.5px}
 .qs .themes .sw i{width:42px;height:42px;font-size:14px}
 .qs .srow .ssub{display:block;font-size:13px;color:var(--muted);margin-top:2px}
@@ -363,6 +370,8 @@ body.playing .wrap{padding-bottom:180px}
       <button class="sw" data-v="sepia"><i style="background:#f2e6cf;color:#3a2a1a">Aa</i>Sepia</button>
       <button class="sw" data-v="dark"><i style="background:#12161a;color:#ece6da">Aa</i>Dark</button>
       <button class="sw" data-v="black"><i style="background:#000;color:#ebe8e1">Aa</i>Black</button>
+      <button class="sw" data-v="sky"><i style="background:#e8f2fa;color:#1d6fb0;border-color:#9cc3e4">Aa</i>Sky</button>
+      <button class="sw" data-v="violet"><i style="background:linear-gradient(160deg,#2c2048,#14111c);color:#c9aaff;border-color:#6a42b0">Aa</i>Violet</button>
       <button class="sw" data-v="royal"><i style="background:#12161a;color:#e2b65e;border-color:#8a2236">Aa</i>Royal</button>
       <button class="sw" data-v="maroon"><i style="background:radial-gradient(circle at 50% 30%,#8a2a36,#3a0d14);color:#e8bd62">Aa</i>Maroon</button>
     </div>
