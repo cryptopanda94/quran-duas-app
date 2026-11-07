@@ -19,6 +19,26 @@ public class PrayerWidget extends AppWidgetProvider {
     }
 
     @Override
+    public void onAppWidgetOptionsChanged(Context ctx, AppWidgetManager m, int id, android.os.Bundle o) {
+        updateAll(ctx, m, new int[]{ id });
+    }
+
+    /** Up to 5 upcoming prayers, one per line: "Maghrib    5:45 PM" */
+    static String list(Context ctx, JSONObject data, long now) {
+        org.json.JSONArray a = data.optJSONArray("prayers");
+        if (a == null) return "";
+        StringBuilder sb = new StringBuilder(); int n = 0;
+        for (int i = 0; i < a.length() && n < 5; i++) {
+            JSONObject p = a.optJSONObject(i); if (p == null) continue;
+            long t = (long) p.optDouble("t", 0); if (t <= now) continue;
+            if (n > 0) sb.append('\n');
+            sb.append(n == 0 ? "▸ " : "   ").append(p.optString("n")).append("   ").append(WidgetData.time(ctx, t));
+            n++;
+        }
+        return sb.toString();
+    }
+
+    @Override
     public void onReceive(Context ctx, Intent intent) {
         super.onReceive(ctx, intent);
         if (WidgetData.ACTION_REFRESH.equals(intent.getAction())) WidgetData.refreshAll(ctx);
@@ -49,6 +69,10 @@ public class PrayerWidget extends AppWidgetProvider {
                 v.setChronometer(R.id.wp_countdown, SystemClock.elapsedRealtime() + (t - now), "in %s", true);
                 if (android.os.Build.VERSION.SDK_INT >= 24) v.setChronometerCountDown(R.id.wp_countdown, true);
                 v.setTextViewText(R.id.wp_city, data.optString("loc"));
+                int h = m.getAppWidgetOptions(id).getInt(AppWidgetManager.OPTION_APPWIDGET_MIN_HEIGHT, 0);
+                boolean tall = h >= 200;
+                v.setTextViewText(R.id.wp_list, tall ? list(ctx, data, now) : "");
+                v.setViewVisibility(R.id.wp_list, tall ? View.VISIBLE : View.GONE);
             }
             m.updateAppWidget(id, v);
         }

@@ -12,7 +12,7 @@
         android:layout_height="wrap_content"
         android:text="NEXT PRAYER"
         android:textColor="#CCFFFFFF"
-        android:textSize="11sp"
+        android:textSize="12sp"
         android:textStyle="bold"
         android:letterSpacing="0.08" />
 
@@ -26,7 +26,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textColor="#FFFFFF"
-            android:textSize="24sp"
+            android:textSize="32sp"
             android:textStyle="bold" />
         <TextView
             android:id="@+id/wp_urdu"
@@ -34,7 +34,7 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
             android:textColor="#DDFFFFFF"
-            android:textSize="15sp" />
+            android:textSize="19sp" />
     </LinearLayout>
 
     <TextView
@@ -42,14 +42,26 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textColor="#FFFFFF"
-        android:textSize="17sp" />
+        android:textSize="23sp"
+        android:textStyle="bold" />
 
     <Chronometer
         android:id="@+id/wp_countdown"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textColor="#E6FFFFFF"
-        android:textSize="13sp" />
+        android:textSize="15sp" />
+
+    <TextView
+        android:id="@+id/wp_list"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:visibility="gone"
+        android:lineSpacingExtra="6dp"
+        android:fontFeatureSettings="tnum"
+        android:textColor="#FFFFFF"
+        android:textSize="17sp" />
 
     <TextView
         android:id="@+id/wp_city"
@@ -59,5 +71,5 @@
         android:ellipsize="end"
         android:maxLines="1"
         android:textColor="#B3FFFFFF"
-        android:textSize="11sp" />
+        android:textSize="12sp" />
 </LinearLayout>

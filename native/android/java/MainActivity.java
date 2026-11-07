@@ -1,5 +1,10 @@
 package com.cryptopanda94.quranduas;
 
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
+import android.media.AudioAttributes;
+import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 
 import com.getcapacitor.BridgeActivity;
@@ -8,6 +13,34 @@ public class MainActivity extends BridgeActivity {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         registerPlugin(WidgetBridgePlugin.class);   // app -> widgets data
+        createAzanChannels();
         super.onCreate(savedInstanceState);
+    }
+
+    /**
+     * Azan channels use the ALARM audio stream, so the azan plays even when the phone is on silent / vibrate
+     * (like an alarm clock). Created here first, so the JS side (same ids) can't create them as normal
+     * notification sounds. Android never changes a channel's sound after it is made.
+     */
+    private void createAzanChannels() {
+        if (Build.VERSION.SDK_INT < 26) return;
+        NotificationManager nm = getSystemService(NotificationManager.class);
+        if (nm == null) return;
+        String[][] sounds = { {"azan", "Azan", "azan_short"}, {"azan_mecca", "Azan (Mecca)", "azan_mecca_short"}, {"azan_medina", "Azan (Medina)", "azan_medina_short"} };
+        AudioAttributes aa = new AudioAttributes.Builder()
+            .setUsage(AudioAttributes.USAGE_ALARM)
+            .setContentType(AudioAttributes.CONTENT_TYPE_SONIFICATION)
+            .build();
+        for (String[] s : sounds) for (int v = 1; v >= 0; v--) {
+            String id = s[0] + "_v" + v;
+            if (nm.getNotificationChannel(id) != null) continue;
+            NotificationChannel ch = new NotificationChannel(id, s[1] + (v == 1 ? "" : " · no vibration"), NotificationManager.IMPORTANCE_HIGH);
+            ch.setDescription("Prayer time alerts");
+            ch.setSound(Uri.parse("android.resource://" + getPackageName() + "/raw/" + s[2]), aa);
+            ch.enableVibration(v == 1);
+            if (v == 1) ch.setVibrationPattern(new long[]{0, 600, 300, 600});
+            ch.setLockscreenVisibility(android.app.Notification.VISIBILITY_PUBLIC);
+            nm.createNotificationChannel(ch);
+        }
     }
 }
