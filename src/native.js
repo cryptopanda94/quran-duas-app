@@ -5,6 +5,7 @@
   if (!C || !C.isNativePlatform || !C.isNativePlatform()) return;
 
   const platform = C.getPlatform(); // 'ios' | 'android'
+  try { console.log('QD headers ' + JSON.stringify((C.PluginHeaders || []).map((h) => h.name))); } catch (e) {}
   const LN = C.registerPlugin('LocalNotifications');
   const WB = C.registerPlugin('WidgetBridge');
   const AppP = C.registerPlugin('App');

@@ -9,6 +9,7 @@ import Capacitor
 class MainViewController: CAPBridgeViewController {
 
     override func capacitorDidLoad() {
+        NSLog("QD: MainViewController.capacitorDidLoad bridge=%@", bridge == nil ? "nil" : "ok")
         bridge?.registerPluginInstance(WidgetBridgePlugin())
         let session = AVAudioSession.sharedInstance()
         try? session.setCategory(.playback, mode: .spokenAudio, options: [])

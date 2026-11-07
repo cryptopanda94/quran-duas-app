@@ -23,6 +23,8 @@ public class WidgetBridgePlugin: CAPPlugin, CAPBridgedPlugin, CLLocationManagerD
     /// Must match the App Group you add to BOTH the App and the QuranWidget targets in Xcode.
     static let appGroup = "group.com.cryptopanda94.quranduas"
 
+    public override func load() { NSLog("QD: WidgetBridgePlugin loaded") }
+
     @objc func update(_ call: CAPPluginCall) {
         guard let data = call.getString("data") else {
             call.reject("missing data")

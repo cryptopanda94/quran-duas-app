@@ -1,0 +1,41 @@
+name: iOS simulator check
+on: workflow_dispatch
+jobs:
+  sim:
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with: { node-version: 22 }
+      - name: Use newest Xcode
+        run: |
+          X=$(ls -d /Applications/Xcode_26*.app 2>/dev/null | sort -V | tail -1); sudo xcode-select -s "$X"
+      - run: npm install && npm run build:web && npx cap add ios && npm run native:setup && npx cap sync ios
+      - run: sudo gem install xcodeproj --no-document && ruby scripts/ios-widget-target.rb
+      - name: Storyboard + config
+        run: |
+          grep -n "customClass\|customModule" ios/App/App/Base.lproj/Main.storyboard
+          cat ios/App/App/capacitor.config.json; echo; ls ios/App/App/public | head -30
+      - name: Build for simulator
+        run: |
+          set -o pipefail
+          xcodebuild -project ios/App/App.xcodeproj -scheme App -sdk iphonesimulator -configuration Debug \
+            -destination 'generic/platform=iOS Simulator' -derivedDataPath build CODE_SIGNING_ALLOWED=NO build | tail -5
+      - name: Run and capture log
+        run: |
+          UDID=$(xcrun simctl list devices available -j | python3 -c "import json,sys;d=json.load(sys.stdin)['devices'];print([x['udid'] for k,v in d.items() if 'iOS' in k for x in v if 'iPhone' in x['name']][-1])")
+          xcrun simctl boot $UDID; sleep 20
+          APP=$(ls -d build/Build/Products/Debug-iphonesimulator/App.app)
+          xcrun simctl install $UDID "$APP"
+          (xcrun simctl launch --console-pty $UDID com.cryptopanda94.quranduas > launch.log 2>&1 &)
+          (xcrun simctl spawn $UDID log stream --style compact --predicate 'eventMessage CONTAINS "QD" OR eventMessage CONTAINS "Unknown class" OR eventMessage CONTAINS "WidgetBridge"' > os.log 2>&1 &)
+          sleep 40
+          xcrun simctl io $UDID screenshot shot.png || true
+          echo "===== app stdout"; grep -iE "QD|WidgetBridge|not implemented|error|⚡️" launch.log | head -80
+          echo "===== os log"; head -60 os.log
+      - uses: actions/upload-artifact@v4
+        with:
+          name: sim
+          path: |
+            shot.png
+            launch.log
