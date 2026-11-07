@@ -54,7 +54,9 @@ else
   puts '  ✓ QuranWidgetExtension target already present'
 end
 
-app_ver = app.build_configurations.first.build_settings['MARKETING_VERSION'] || '1.0'
+# App Store version shown to users. Bump for each App Store release.
+app_ver = ENV['APP_VERSION'] || '1.1'
+app.build_configurations.each { |c| c.build_settings['MARKETING_VERSION'] = app_ver }
 widget.build_configurations.each do |c|
   s = c.build_settings
   s['PRODUCT_BUNDLE_IDENTIFIER'] = "#{BUNDLE}.QuranWidget"
