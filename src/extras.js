@@ -66,7 +66,7 @@ function renderDua(id){
   if(d.user){
     const U=UD[d.user];h+=readbar('dua',null);
     const tlBox=t=>t?`<div class="v-tr tlbox"><b>Transliteration</b>${esc(t).replace(/\n\n/g,'<br><br>')}</div>`:'';
-    let pend=U.tl0;
+    let pend=U.tl0;h+='<div class="dbody">';
     U.items.forEach(it=>{
       if(it.head){h+=tlBox(pend);pend=it.tl||'';h+=`<div class="uhead">${esc(it.head)}</div>`;return}
       if(it.note){h+=`<div class="unote">${esc(it.note)}</div>`;return}
@@ -74,18 +74,19 @@ function renderDua(id){
       if(!it.en){h+=`<div class="uv uvc"><div class="v-ar">${it.ar}</div></div>`;return}
       h+=`<div class="uv"><div class="v-ar">${it.ar}</div><div class="v-en tbox">${esc(it.en)}</div>${it.ur?`<div class="v-ur tbox urbox">${esc(it.ur)}</div>`:''}</div>`;
     });
-    h+=tlBox(pend);
+    h+=tlBox(pend);h+='</div>';
     app.innerHTML=h;return true;
   }
   if(d.id==='ayat-kursi'){
     h+=readbar('dua',false);
-    h+=`<div class="bism">${BISMX()}</div>`;
+    h+=`<div class="bism">${BISMX()}</div><div class="dbody">`;
     for(const v of [255,256,257]) h+=verseHTML(ARX()[1][v-1],'',EN[1][v-1],UR[1][v-1],endMark(v));
-    h+=`<div class="nav-surah"><a href="#surah-2-255">Open in Quran (2:255) ›</a></div>`;
+    h+=`</div><div class="nav-surah"><a href="#surah-2-255">Open in Quran (2:255) ›</a></div>`;
   } else {
     const D=DU[d.key], useAlt=!!D.alt, after=useAlt?D.alt.after:{}, para=useAlt&&D.alt.style==='para';
     h+=readbar('dua',D.alt?D.alt.label:null);
     if(D.merits) h+=`<details class="merits"><summary>About &amp; merits</summary><div>${esc(cleanMd(D.merits))}</div></details>`;
+    h+='<div class="dbody">';
     if(useAlt&&D.alt.style==='own'){
       const segs=D.segs,L=D.alt.lines,noteH=s=>`<div class="note${s.h?' h':''}">${esc(s.note)}${s.ur?`<span class="nur">${esc(s.ur)}</span>`:''}</div>`;
       let ptr=0;
@@ -103,6 +104,7 @@ function renderDua(id){
       : (para?verseHTML(s.ar,s.tr,'',s.ur)+(after[i]?`<div class="v-en v-enp">${esc(after[i])}</div>`:'')
              :verseHTML(s.ar,s.tr,useAlt?(after[i]||''):s.en,s.ur))).join('');
   }
+  if(d.id!=='ayat-kursi')h+='</div>';
   app.innerHTML=h;
   return true;
 }

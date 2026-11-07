@@ -17,7 +17,7 @@
 [data-theme=white]{--bg:#ffffff;--card:#f8f8f6;--ink:#1d1d1b;--muted:#6f6f6a;--line:#e6e6e1;--accent:#1f6f5c;--accent-soft:#e6f0ec;--gold:#a8822f;--hl:#fff4cc;--rule:#d2d2cc}
 [data-theme=sepia]{--bg:#f2e6cf;--card:#f9f0de;--ink:#3a2a1a;--muted:#7d6549;--line:#dfcca9;--accent:#2a8c78;--accent-soft:#dcebe2;--gold:#8f6a2a;--hl:#fde9a8;--rule:#bfa57c}
 [data-theme=black]{--bg:#000;--card:#0c0f11;--ink:#ebe8e1;--muted:#8d8a83;--line:#22272b;--accent:#6fd3b5;--accent-soft:#11302a;--gold:#d4b06a;--hl:#2a2614;--rule:#2e353a}
-[data-theme=maroon]{--bg:#2e0a11;--card:#43121c;--ink:#f6e7c8;--muted:#d1ad86;--line:#5e2230;--accent:#e3b257;--accent-soft:#5a2a1c;--gold:#e8bd62;--hl:#5c2a17;--rule:#7a3a3f}
+[data-theme=maroon]{--pcnx:#7a1d2e;--bg:#2e0a11;--card:#43121c;--ink:#f6e7c8;--muted:#d1ad86;--line:#5e2230;--accent:#e3b257;--accent-soft:#5a2a1c;--gold:#e8bd62;--hl:#5c2a17;--rule:#7a3a3f}
 [data-theme=maroon] body{background:radial-gradient(ellipse 120% 70% at 50% 0%,#5a1724 0%,#2e0a11 60%) fixed}
 [data-theme=royal]{--vbg:linear-gradient(160deg,#3d1622,#22121a);--vline:#4e1f2c;--bg:#12161a;--card:#1a2026;--ink:#ece6da;--muted:#9a9488;--line:#2a323a;--accent:#e2b65e;--fill:#8a2236;--accent-soft:#3a1a22;--gold:#e2b65e;--hl:#3a1a22;--rule:#3a444d}
 [data-theme=royal] :is(.continue,.tab.on,.verse.playing .ref,.seg button.on,.jumpbox button,.btn.pri,.next,.alertbar,.chip.on,.listen,.pbar #pPlay,.prayer-card){color:#f6dc95}
@@ -26,8 +26,8 @@
 [data-theme=violet] :is(.continue,.tab.on,.verse.playing .ref,.seg button.on,.jumpbox button,.btn.pri,.next,.alertbar,.chip.on,.listen,.pbar #pPlay,.prayer-card){color:#f6efff}
 [data-theme=violet] .qs .sfoot .sdone{color:#1a1408}
 [data-theme=sky]{--bg:#e8f2fa;--card:#f7fbff;--ink:#15314a;--muted:#5a7590;--line:#cddfee;--accent:#1d6fb0;--fill:#2378c0;--accent-soft:#d5e7f7;--gold:#b98326;--hl:#fff1c9;--rule:#b9cfe2;--vbg:linear-gradient(180deg,#ffffff,#f1f7fc);--vline:#d3e3f1}
-:is([data-theme=royal],[data-theme=violet],[data-theme=sky],[data-theme=navy],[data-theme=lavender],[data-theme=emerald]) :is(.verse,.dverse){background:var(--vbg);border:1px solid var(--vline);border-radius:16px;padding:16px 14px;margin:12px 0}
-:is([data-theme=royal],[data-theme=violet],[data-theme=sky],[data-theme=navy],[data-theme=lavender],[data-theme=emerald]) .verse.playing{box-shadow:0 0 0 2px var(--gold)}
+:is([data-theme=royal],[data-theme=violet],[data-theme=sky],[data-theme=navy],[data-theme=lavender],[data-theme=emerald]) :is(.verse,.dbody){background:var(--vbg);border:1px solid var(--vline);border-radius:16px;padding:16px 14px;margin:12px 0}
+:is([data-theme=royal],[data-theme=violet],[data-theme=sky],[data-theme=navy],[data-theme=lavender],[data-theme=emerald]) .verse.playing{box-shadow:0 0 0 2px var(--gold);background:linear-gradient(160deg,color-mix(in srgb,var(--gold) 22%,transparent),transparent 70%),var(--vbg)}
 [data-theme=sky] .ayah-card{background:linear-gradient(170deg,#dcebf8,var(--card))}
 [data-theme=navy]{--bg:#0b1426;--card:#111d35;--ink:#eaf0fa;--muted:#9aa9c2;--line:#22324f;--accent:#e2b65e;--fill:#1f4e8c;--accent-soft:#1a2c4d;--gold:#e2b65e;--hl:#1d3358;--rule:#2b3e60;--vbg:linear-gradient(160deg,#16294a,#0f1a30);--vline:#263a5e}
 [data-theme=navy] :is(.continue,.tab.on,.verse.playing .ref,.seg button.on,.jumpbox button,.btn.pri,.next,.alertbar,.chip.on,.listen,.pbar #pPlay,.prayer-card){color:#f6dc95}
@@ -36,10 +36,14 @@
 [data-theme=lavender] body{background:radial-gradient(ellipse 120% 60% at 50% 0%,#E4D2FF 0%,#F2E9FF 55%) fixed}
 [data-theme=lavender] .prayer-card{background:linear-gradient(160deg,#6A2FC8,#25134D)}
 [data-theme=lavender] .ayah-card{background:linear-gradient(170deg,#E9DCFF,var(--card))}
-[data-theme=emerald]{--bg:#051F20;--card:#0B2B26;--ink:#DAF1DE;--muted:#8EB69B;--line:#1d4239;--accent:#8EB69B;--fill:#235347;--accent-soft:#163832;--gold:#B9DBC2;--hl:#163832;--rule:#235347;--vbg:linear-gradient(160deg,#163832,#0B2B26);--vline:#235347}
-[data-theme=emerald] body{background:radial-gradient(ellipse 120% 60% at 50% 0%,#0f3a33 0%,#051F20 60%) fixed}
-[data-theme=emerald] :is(.continue,.tab.on,.verse.playing .ref,.seg button.on,.jumpbox button,.btn.pri,.next,.alertbar,.chip.on,.listen,.pbar #pPlay,.prayer-card){color:#DAF1DE}
-[data-theme=emerald] .prayer-card{background:linear-gradient(160deg,#235347,#0B2B26)}
+[data-theme=emerald]{--bg:#051F20;--card:#0B2B26;--ink:#F4F0E2;--muted:#8EB69B;--line:#1d4239;--accent:#E3C07A;--fill:#235347;--accent-soft:#163832;--gold:#E3C07A;--hl:#1b4038;--rule:#2b5a4c;--pcnx:#0B2B26;--vbg:linear-gradient(160deg,#163832 0%,#0E302A 55%,#0B2B26 100%);--vline:#2d5a4b}
+[data-theme=emerald] body{background:radial-gradient(ellipse 120% 55% at 50% 0%,#12443a 0%,#051F20 62%) fixed}
+[data-theme=emerald] :is(.continue,.tab.on,.verse.playing .ref,.seg button.on,.jumpbox button,.btn.pri,.next,.alertbar,.chip.on,.listen,.pbar #pPlay){color:#F3DFA6}
+[data-theme=emerald] .prayer-card{background:linear-gradient(150deg,#2f6a5b 0%,#235347 45%,#0B2B26 100%);color:#F4F0E2;box-shadow:inset 0 0 0 1px rgba(227,192,122,.25)}
+[data-theme=emerald] .prayer-card .tbig{color:#F3DFA6}
+[data-theme=emerald] .v-en,[data-theme=emerald] .v-ur{color:#DAF1DE}
+[data-theme=emerald] .v-tr{color:#8EB69B}
+[data-theme=emerald] .ayah-card{background:linear-gradient(170deg,#163832,#0B2B26);box-shadow:inset 0 0 0 1px rgba(227,192,122,.18)}
 [data-theme=emerald] .qs .sfoot .sdone{color:#051F20}
 [data-theme=dark]{
   --bg:#12161a;--card:#1a2026;--ink:#ece6da;--muted:#9a9488;--line:#2a323a;
@@ -261,7 +265,7 @@ body.playing .wrap{padding-bottom:180px}
 
 .uv{padding:14px 0 6px}
 .uv .v-ar{text-align:center;margin:0 auto 10px}
-.tbox{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:16px 18px;text-align:center;margin:0 6px 10px}
+.tbox{text-align:center;margin:0 6px 12px;padding:2px 10px}
 .urbox{direction:rtl;text-align:center!important}
 .unote{text-align:center;font-size:calc(var(--en-size) + 1px);line-height:1.6;padding:14px 10px;color:var(--ink)}
 .uhead{text-align:center;font-weight:700;letter-spacing:.04em;text-transform:uppercase;color:var(--accent);font-size:15px;margin:30px 0 4px;padding-top:18px;border-top:1px solid var(--line)}
@@ -279,7 +283,7 @@ body.playing .wrap{padding-bottom:180px}
 .pc{flex:1;min-width:0;text-align:center;background:rgba(255,255,255,.12);border-radius:12px;padding:8px 1px}
 .pc small{display:block;font-size:11px;opacity:.85}
 .pc b{font-size:12.5px;font-weight:600;font-variant-numeric:tabular-nums;white-space:nowrap;letter-spacing:-.2px}
-.pc.nx{background:#fff;color:var(--accent)}
+.pc.nx{background:#fff;color:var(--pcnx,var(--fill,var(--accent)))}
 .ayah-card{background:linear-gradient(170deg,color-mix(in srgb,var(--gold) 14%,var(--card)),var(--card))}
 .ayah-card .v-ar{background-image:none!important}
 .tact{display:flex;gap:8px;justify-content:center;flex-wrap:wrap;margin-top:12px}
@@ -345,6 +349,7 @@ body.playing .wrap{padding-bottom:180px}
 .qs .sfoot button{padding:10px 14px;font-size:16px;font-weight:600;color:var(--ink)}
 .qs .sfoot .sdone{background:var(--gold);color:#fff;border-radius:12px;padding:11px 22px}
 :is([data-theme=dark],[data-theme=black],[data-theme=maroon]) .qs .sfoot .sdone{color:#1a1408}
+body .ayah-card .v-en{display:block!important}
 </style>
 </head>
 <body>
@@ -385,7 +390,7 @@ body.playing .wrap{padding-bottom:180px}
       <button class="sw" data-v="black"><i style="background:#000;color:#ebe8e1">Aa</i>Black</button>
       <button class="sw" data-v="sky"><i style="background:#e8f2fa;color:#1d6fb0;border-color:#9cc3e4">Aa</i>Sky</button>
       <button class="sw" data-v="lavender"><i style="background:linear-gradient(160deg,#F2E9FF,#D1B8FF);color:#6A2FC8;border-color:#9D71E8">Aa</i>Lavender</button>
-      <button class="sw" data-v="emerald"><i style="background:linear-gradient(160deg,#235347,#051F20);color:#DAF1DE;border-color:#8EB69B">Aa</i>Emerald</button>
+      <button class="sw" data-v="emerald"><i style="background:linear-gradient(160deg,#235347,#051F20);color:#E3C07A;border-color:#E3C07A">Aa</i>Emerald</button>
       <button class="sw" data-v="navy"><i style="background:linear-gradient(160deg,#16294a,#0b1426);color:#e2b65e;border-color:#1f4e8c">Aa</i>Navy</button>
       <button class="sw" data-v="violet"><i style="background:linear-gradient(160deg,#2c2048,#14111c);color:#c9aaff;border-color:#6a42b0">Aa</i>Violet</button>
       <button class="sw" data-v="royal"><i style="background:#12161a;color:#e2b65e;border-color:#8a2236">Aa</i>Royal</button>
