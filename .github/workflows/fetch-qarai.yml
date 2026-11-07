@@ -1,0 +1,26 @@
+name: Fetch Qarai translation
+on: workflow_dispatch
+permissions:
+  contents: write
+jobs:
+  fetch:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Download en.qarai (Tanzil, via alquran.cloud)
+        run: |
+          curl -sSf https://api.alquran.cloud/v1/quran/en.qarai -o /tmp/q.json
+          python3 - <<'PY'
+          import json
+          d=json.load(open('/tmp/q.json'))['data']
+          print(d['edition'])
+          out=[]
+          for s in d['surahs']:
+              out.append('\n'.join(' '.join(a['text'].split()) for a in s['ayahs']))
+          assert len(out)==114
+          n=sum(len(x.split('\n')) for x in out); print('verses',n); assert n==6236
+          json.dump({'source':'Sayyid Ali Quli Qarai, via Tanzil.net (non-commercial use with attribution)','e':out},open('src/data/en_qarai.json','w'),ensure_ascii=False)
+          PY
+      - run: |
+          git config user.name "github-actions"; git config user.email "actions@github.com"
+          git add src/data/en_qarai.json && git commit -m "Add Qarai English translation (Tanzil) [skip ci]" && git push
