@@ -63,7 +63,7 @@ widget.build_configurations.each do |c|
   s['GENERATE_INFOPLIST_FILE']   = 'NO'
   s['CODE_SIGN_ENTITLEMENTS']    = 'QuranWidget/QuranWidget.entitlements'
   s['SWIFT_VERSION']             = '5.0'
-  s['TARGETED_DEVICE_FAMILY']    = '1,2'
+  s['TARGETED_DEVICE_FAMILY']    = '1'
   s['IPHONEOS_DEPLOYMENT_TARGET']= '17.0'
   s['SKIP_INSTALL']              = 'YES'
   s['MARKETING_VERSION']         = app_ver
@@ -76,6 +76,7 @@ build = ENV['BUILD_NUMBER'].to_s.strip
 [app, widget].each do |t|
   t.build_configurations.each do |c|
     s = c.build_settings
+    s['TARGETED_DEVICE_FAMILY'] = '1'   # iPhone only (no iPad screenshots needed for the App Store)
     unless team.empty?
       s['DEVELOPMENT_TEAM'] = team
       s['CODE_SIGN_STYLE']  = 'Automatic'
