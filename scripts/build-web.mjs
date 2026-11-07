@@ -41,6 +41,7 @@ must('</body>', '<script src="capacitor.js"></script>\n<script src="native.js"><
 t = t
   .replace('__DATA__', json('data/data.json'))
   .replace('__ENQ__', json('data/en_qarai.json'))
+  .replace('__URX__', JSON.stringify({ jawadi: JSON.parse(rd('data/ur_jawadi.json')).e, najafi: JSON.parse(rd('data/ur_najafi.json')).e }).replace(/<\//g, '<\\/'))
   .replace('__TL__', json('data/translit.json'))
   .replace('__AUD__', aud)
   .replace('__AUDS__', auds)
@@ -50,7 +51,7 @@ t = t
   .replace('__EVENTS__', json('data/events.json'))
   .replace('__EXTRAS__', rd('extras.js'));
 
-for (const p of ['__DATA__', '__ENQ__', '__TL__', '__AUD__', '__AUDS__', '__DUAS__', '__UDUAS__', '__CITIES__', '__EVENTS__', '__EXTRAS__', '__FONT__', '__AZAN__'])
+for (const p of ['__DATA__', '__ENQ__', '__URX__', '__TL__', '__AUD__', '__AUDS__', '__DUAS__', '__UDUAS__', '__CITIES__', '__EVENTS__', '__EXTRAS__', '__FONT__', '__AZAN__'])
   if (t.includes(p)) throw new Error('build-web: placeholder left unfilled: ' + p);
 
 rmSync(www, { recursive: true, force: true });

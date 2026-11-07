@@ -306,6 +306,7 @@ body.playing .wrap{padding-bottom:180px}
 .qs .clist button.on i{background:var(--gold);border-color:var(--gold)}
 .qs .clist button.on i::after{content:"";width:6px;height:11px;border:solid var(--card);border-width:0 2.5px 2.5px 0;transform:translateY(-1px) rotate(45deg)}
 .qs .themes{margin-top:8px}
+.qs .srow .ssub{display:block;font-size:13px;color:var(--muted);margin-top:2px}
 .qs .rlist{display:flex;flex-direction:column;gap:8px;margin:4px 0 6px}
 .qs .rlist button{display:flex;align-items:center;gap:14px;min-height:60px;padding:10px 16px;border-radius:14px;background:var(--bg);text-align:left;color:var(--ink);border:2px solid transparent}
 .qs .rlist button.on{border-color:var(--gold)}
@@ -335,14 +336,16 @@ body.playing .wrap{padding-bottom:180px}
   <div class="spane on" data-p="ar">
     <div class="pill" id="fontSeg"><button data-v="madani">Uthmani</button><button data-v="indopak">IndoPak</button></div>
     <div class="srow"><span>Font size</span><div class="stepper"><button data-step="ar" data-d="-4" aria-label="Smaller Arabic">—</button><b id="arLvl"></b><button data-step="ar" data-d="4" aria-label="Larger Arabic">+</button></div></div>
-    <div class="srow"><span>Lines under Arabic</span><button class="switch" id="ruleSw" aria-label="Lines under Arabic"></button></div>
+    <div class="srow"><span>Lines under Arabic<small class="ssub">Ruled lines like a printed mushaf</small></span><button class="switch" id="ruleSw" aria-label="Lines under Arabic"></button></div>
     <div class="shead">Reciter</div>
     <div class="rlist" id="recList"></div>
   </div>
   <div class="spane" data-p="tr">
     <div class="pill" id="enSeg"><button data-v="off">Off</button><button data-v="en">English</button><button data-v="ur">اردو</button><button data-v="both">Both</button></div>
-    <div class="shead">English</div>
-    <div class="clist" id="enTSeg"><button data-v="sahih"><i></i>Saheeh International</button><button data-v="qarai"><i></i>Ali Quli Qarai</button></div>
+    <div class="shead" data-lang="en">English</div>
+    <div class="clist" data-lang="en" id="enTSeg"><button data-v="sahih"><i></i>Saheeh International</button><button data-v="qarai"><i></i>Ali Quli Qarai</button></div>
+    <div class="shead" data-lang="ur">Urdu</div>
+    <div class="clist" data-lang="ur" id="urTSeg"><button data-v="junagarhi"><i></i>Maulana Muhammad Junagarhi</button><button data-v="jawadi"><i></i>Allama Zeeshan Haider Jawadi</button><button data-v="najafi"><i></i>Shaykh Muhammad Hussain Najafi</button></div>
     <div class="srow"><span>Font size</span><div class="stepper"><button data-step="en" data-d="-1" aria-label="Smaller translation">—</button><b id="enLvl"></b><button data-step="en" data-d="1" aria-label="Larger translation">+</button></div></div>
     <div class="srow"><span>Transliteration</span><button class="switch" id="trSw" aria-label="Transliteration"></button></div>
   </div>
@@ -367,7 +370,7 @@ body.playing .wrap{padding-bottom:180px}
   <button id="pPrev" aria-label="Previous verse"><svg viewBox="0 0 24 24"><path d="M18 6l-8 6 8 6zM6 6v12"/></svg></button>
   <button id="pPlay" aria-label="Play or pause"></button>
   <button id="pNext" aria-label="Next verse"><svg viewBox="0 0 24 24"><path d="M6 6l8 6-8 6zM18 6v12"/></svg></button>
-  <div class="pt" id="pGo" style="cursor:pointer"><span id="pTitle"></span><small>Mishary Alafasy</small></div>
+  <div class="pt" id="pGo" style="cursor:pointer"><span id="pTitle"></span><small id="pRec">Mishary Alafasy</small></div>
   <button class="tg" id="pRep" aria-label="Repeat this verse">Repeat</button>
   <button class="tg" id="pCont" aria-label="Continue to next surah">Auto</button>
   <button id="pClose" aria-label="Close player"><svg viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></svg></button>
@@ -388,6 +391,7 @@ body.playing .wrap{padding-bottom:180px}
 
 <script id="qdata" type="application/json">__DATA__</script>
 <script id="enqdata" type="application/json">__ENQ__</script>
+<script id="urxdata" type="application/json">__URX__</script>
 <script id="tldata" type="application/json">__TL__</script>
 <script id="auddata" type="application/json">__AUD__</script>
 <script id="audsdata" type="application/json">__AUDS__</script>
@@ -395,7 +399,7 @@ body.playing .wrap{padding-bottom:180px}
 (function(){
 const D=JSON.parse(document.getElementById('qdata').textContent);
 const META=D.m, JUZ=D.j, BISM=D.b, WU=D.w.map(s=>s.split('\n')), WB=D.wb, TL=JSON.parse(document.getElementById('tldata').textContent).map(s=>s.split('\n'));
-let EN;const AR=D.a.map(s=>s.split('\n')), EN_S=D.e.map(s=>s.split('\n')), EN_Q=JSON.parse(document.getElementById('enqdata').textContent).e.map(s=>s.split('\n')), UR=D.u.map(s=>s.split('\n')), CL=D.c.map(s=>s.split('\n'));
+let EN,UR;const AR=D.a.map(s=>s.split('\n')), EN_S=D.e.map(s=>s.split('\n')), EN_Q=JSON.parse(document.getElementById('enqdata').textContent).e.map(s=>s.split('\n')), UR_J=D.u.map(s=>s.split('\n')),URX=JSON.parse(document.getElementById('urxdata').textContent), CL=D.c.map(s=>s.split('\n'));
 const $=id=>document.getElementById(id), app=$('app');
 
 /* storage (safe) */
@@ -403,9 +407,10 @@ const store={get(k,d){try{const v=localStorage.getItem('qr_'+k);return v==null?d
              set(k,v){try{localStorage.setItem('qr_'+k,JSON.stringify(v))}catch(e){}}};
 const S={arSize:store.get('arSize',40),tr:store.get('tr','off'),
          theme:store.get('theme','sepia'),
-         marks:store.get('marks',[]),showTr:store.get('showTr',false),enSize:store.get('enSize',16),rules:store.get('rules',false),font:store.get('font','indopak'),ensrc:store.get('ensrc2','alt'),rec:store.get('rec','alafasy'),enT:store.get('enT','sahih'),last:store.get('last',null),tab:'surahs',q:''};
+         marks:store.get('marks',[]),showTr:store.get('showTr',false),enSize:store.get('enSize',16),rules:store.get('rules',false),font:store.get('font','indopak'),ensrc:store.get('ensrc2','alt'),rec:store.get('rec','alafasy'),urT:store.get('urT','junagarhi'),enT:store.get('enT','sahih'),last:store.get('last',null),tab:'surahs',q:''};
 
 EN=S.enT==='qarai'?EN_Q:EN_S;
+const urFor=k=>URX[k]?(URX[k].sp||(URX[k].sp=URX[k].map(x=>x.split('\n')))):UR_J;UR=urFor(S.urT);
 const arNum=n=>String(n).replace(/\d/g,d=>'٠١٢٣٤٥٦٧٨٩'[d]);
 const esc=s=>s.replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
 const typeName=t=>t==='m'?'Meccan':'Medinan';
@@ -430,7 +435,7 @@ function applySettings(){
   document.body.classList.toggle('no-rule',!S.rules);
   $('trSw').classList.toggle('on',S.showTr);$('ruleSw').classList.toggle('on',S.rules);
   [...$('fontSeg').children].forEach(b=>b.classList.toggle('on',b.dataset.v===S.font));
-  [...$('enSeg').children].forEach(b=>b.classList.toggle('on',b.dataset.v===S.tr));[...$('enTSeg').children].forEach(b=>b.classList.toggle('on',b.dataset.v===S.enT));
+  [...$('enSeg').children].forEach(b=>b.classList.toggle('on',b.dataset.v===S.tr));[...$('enTSeg').children].forEach(b=>b.classList.toggle('on',b.dataset.v===S.enT));[...$('urTSeg').children].forEach(b=>b.classList.toggle('on',b.dataset.v===S.urT));document.querySelectorAll('#setSheet [data-lang]').forEach(x=>x.style.display=(S.tr==='both'||S.tr===x.dataset.lang)?'':'none');
   document.querySelectorAll('[data-trtog]').forEach(b=>{const on=S.tr!=='off';b.classList.toggle('on',on);b.setAttribute('aria-checked',on);b.querySelector('b').textContent=on?'On':'Off'});
   if(S.tr!=='off')store.set('trLast',S.tr);
   [...$('thSeg').children].forEach(b=>b.classList.toggle('on',b.dataset.v===S.theme));
@@ -560,7 +565,7 @@ function showBar(){
   $('pbar').classList.add('show');document.body.classList.add('playing');
   $('pTitle').textContent=`${META[P.s-1][1]} · ${P.s}:${P.v}`;
   $('pRep').classList.toggle('on',P.repeat);$('pCont').classList.toggle('on',P.cont);
-  try{if('mediaSession' in navigator){navigator.mediaSession.metadata=new MediaMetadata({title:`${META[P.s-1][1]} ${P.s}:${P.v}`,artist:'Mishary Alafasy'});
+  try{if('mediaSession' in navigator){navigator.mediaSession.metadata=new MediaMetadata({title:`${META[P.s-1][1]} ${P.s}:${P.v}`,artist:recName()});
     navigator.mediaSession.setActionHandler('nexttrack',()=>stepVerse(1));navigator.mediaSession.setActionHandler('previoustrack',()=>stepVerse(-1))}}catch(e){}
 }
 function markPlaying(scroll){
@@ -665,10 +670,11 @@ $('trSw').onclick=()=>{S.showTr=!S.showTr;store.set('showTr',S.showTr);applySett
 $('ruleSw').onclick=()=>{S.rules=!S.rules;store.set('rules',S.rules);applySettings()};
 $('setDone').onclick=()=>closeSheets();
 function drawRecs(){$('recList').innerHTML=RECS.map(([k,n,t])=>`<button data-v="${k}" class="${k===S.rec?'on':''}"><i></i><span><b>${n}</b><small>${t}</small></span></button>`).join('')}
-drawRecs();
-$('recList').onclick=e=>{const b=e.target.closest('button');if(!b||b.dataset.v===S.rec)return;stopPlayer();S.rec=b.dataset.v;store.set('rec',S.rec);AUD=AUD_ALL[S.rec];P.srcS=0;P.part=-1;P.s=0;drawRecs();rerender()};
+drawRecs();$('pRec').textContent=recName();
+$('recList').onclick=e=>{const b=e.target.closest('button');if(!b||b.dataset.v===S.rec)return;stopPlayer();S.rec=b.dataset.v;store.set('rec',S.rec);AUD=AUD_ALL[S.rec];P.srcS=0;P.part=-1;P.s=0;drawRecs();$('pRec').textContent=recName();rerender()};
 $('sTabs').onclick=e=>{const b=e.target.closest('button');if(!b)return;[...$('sTabs').children].forEach(x=>x.classList.toggle('on',x===b));document.querySelectorAll('#setSheet .spane').forEach(p=>p.classList.toggle('on',p.dataset.p===b.dataset.p))};
-$('setReset').onclick=()=>{Object.assign(S,{theme:'sepia',font:'indopak',arSize:40,tr:'off',enT:'sahih',enSize:16,showTr:false,rules:false});['theme','font','arSize','tr','enT','enSize','showTr','rules'].forEach(k=>store.set(k,S[k]));EN=EN_S;rerender()};
+$('setReset').onclick=()=>{Object.assign(S,{theme:'sepia',font:'indopak',arSize:40,tr:'off',enT:'sahih',urT:'junagarhi',enSize:16,showTr:false,rules:false});['theme','font','arSize','tr','enT','urT','enSize','showTr','rules'].forEach(k=>store.set(k,S[k]));EN=EN_S;UR=UR_J;rerender()};
+$('urTSeg').onclick=e=>{const b=e.target.closest('button');if(!b)return;S.urT=b.dataset.v;store.set('urT',S.urT);UR=urFor(S.urT);rerender()};
 $('enTSeg').onclick=e=>{const b=e.target.closest('button');if(!b)return;S.enT=b.dataset.v;store.set('enT',S.enT);EN=S.enT==='qarai'?EN_Q:EN_S;rerender()};
 $('enSeg').onclick=e=>{const b=e.target.closest('button');if(!b)return;S.tr=b.dataset.v;store.set('tr',S.tr);applySettings()};
 $('thSeg').onclick=e=>{const b=e.target.closest('button');if(!b)return;S.theme=b.dataset.v;store.set('theme',S.theme);applySettings()};
