@@ -74,6 +74,7 @@ async function setupIOS() {
   addKey('UIBackgroundModes', '<array>\n\t\t<string>audio</string>\n\t</array>');
   addKey('NSMotionUsageDescription', '<string>The Qibla compass uses your phone\'s motion sensors to show which way to face.</string>');
   addKey('ITSAppUsesNonExemptEncryption', '<false/>');
+  addKey('NSAlarmKitUsageDescription', '<string>Plays the azan at each prayer time, even when your iPhone is on silent.</string>');
   addKey('NSLocationWhenInUseUsageDescription', '<string>Your location sets your prayer times automatically and lets the Qibla compass point from true north.</string>');
   // home-screen name with a proper (escaped) ampersand
   p = p.replace(/(<key>CFBundleDisplayName<\/key>\s*<string>)[^<]*(<\/string>)/, '$1Quran &amp; Duas$2');

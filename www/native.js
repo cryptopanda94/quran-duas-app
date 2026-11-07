@@ -19,7 +19,7 @@
   const DAYS_AHEAD = 12;          // 12 days x 5 prayers = 60 (iOS allows 64 pending)
   // one Android channel per sound (a channel's sound can't change once created)
   const SOUNDS = {
-    builtin: { ch: 'azan', name: 'Azan (Shia)', file: 'azan_short.wav' },
+    builtin: { ch: 'azan', name: 'Azan', file: 'azan_short.wav' },
     mecca:   { ch: 'azan_mecca', name: 'Azan (Mecca)', file: 'azan_mecca_short.wav' },
     medina:  { ch: 'azan_medina', name: 'Azan (Medina)', file: 'azan_medina_short.wav' },
   };
@@ -47,7 +47,20 @@
     } catch (e) { console.warn('channel', e); }
   }
 
+  // iOS 26+: azan as a real alarm (AlarmKit) so it rings on silent. null = not available
+  let alarmState = null;
+  async function alarmReady(ask) {
+    if (platform !== 'ios' || !WB.alarmStatus) return false;
+    try {
+      let s = await WB.alarmStatus();
+      if (!s.supported) return false;
+      if (s.state === 'prompt' && ask) s = await WB.alarmRequest();
+      alarmState = s.state;
+      return s.state === 'granted';
+    } catch (e) { console.warn('alarm', e); return false; }
+  }
   async function cancelAll() {
+    if (platform === 'ios') { try { await WB.alarmSchedule({ items: [] }); } catch (e) {} }
     try {
       const p = await LN.getPending();
       if (p && p.notifications && p.notifications.length)
@@ -80,6 +93,12 @@
         });
       });
     }
+    // Sound on + alarms allowed (iOS 26+): ring like an alarm, even on silent — next 7 days
+    if (prefs().sound && await alarmReady(false)) {
+      const items = list.filter((n) => n.schedule.at.getTime() < now + 7 * 864e5)
+        .map((n) => ({ at: n.schedule.at.getTime(), title: n.title, sound: soundFor(n.extra.k).file }));
+      try { const r = await WB.alarmSchedule({ items }); if (r && r.scheduled) return; } catch (e) { console.warn('alarms', e); }
+    }
     if (list.length) {
       try { await LN.schedule({ notifications: list }); } catch (e) { console.warn('schedule', e); }
     }
@@ -105,6 +124,7 @@
       }
     } catch (e) { console.warn('perm', e); }
     alertsOn = true; store.set('nativeAlerts', true);
+    await alarmReady(true);
     await ensureChannel();
     await schedule();
     toast('Azan notifications on');

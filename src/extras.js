@@ -160,8 +160,8 @@ const fmt=(loc,dt)=>{try{return dt.toLocaleTimeString([], {timeZone:loc.tz,hour:
 let LOC=store.get('loc',null);
 const ALERTS=Object.assign({fajr:true,dhuhr:true,asr:true,maghrib:true,isha:true},store.get('alerts',{}));
 let armed=false,ticker=null,audioCtx=null,playing=null,fired=store.get('fired',{});
-const SLOTS=[['builtin','Shia Azan','Ammal-e-Namaz recording'],['mecca','Mecca','Masjid al-Haram'],['medina','Medina','Masjid an-Nabawi']];
-const AZ={builtin:{url:document.getElementById('azdata').dataset.src||('data:audio/mpeg;base64,'+document.getElementById('azdata').textContent.trim()),name:'Shia Azan (Ammal-e-Namaz)',fixed:true},
+const SLOTS=[['builtin','Azan','Ammal-e-Namaz recording'],['mecca','Mecca','Masjid al-Haram'],['medina','Medina','Masjid an-Nabawi']];
+const AZ={builtin:{url:document.getElementById('azdata').dataset.src||('data:audio/mpeg;base64,'+document.getElementById('azdata').textContent.trim()),name:'Azan (Ammal-e-Namaz)',fixed:true},
   mecca:{url:'azan_mecca.mp3',name:'Mecca azan',fixed:true},medina:{url:'azan_medina.mp3',name:'Medina azan',fixed:true}};
 const AZOK=v=>!!AZ[v];
 const AZK=[['fajr','Fajr'],['dhuhr','Dhuhr'],['asr','Asr'],['maghrib','Maghrib'],['isha','Isha']];
@@ -289,7 +289,7 @@ function renderPrayer(){
      <div style="display:flex;align-items:center;gap:10px;margin-bottom:10px"><b style="flex:1">Azan alerts</b>
        <button class="btn${(window.NH?NH.alertsOn():armed)?'':' pri'}" id="arm">${(window.NH?NH.alertsOn():armed)?'Turn off':'Turn on alerts'}</button></div>
      ${(window.NH?NH.alertsOn():armed)?`<div class="aprefs">
-        <button class="arow" data-pref="alertSound"><span><b>🔊 Sound</b><small>Plays the azan you chose for each prayer</small></span><i class="sw${store.get('alertSound',true)?' on':''}"></i></button>
+        <button class="arow" data-pref="alertSound"><span><b>🔊 Sound</b><small>${window.NH&&NH.platform==='ios'?'Plays the azan you chose, like an alarm — even when your iPhone is on silent':'Plays the azan you chose for each prayer'}</small></span><i class="sw${store.get('alertSound',true)?' on':''}"></i></button>
         <button class="arow" data-pref="alertVib"><span><b>📳 Vibrate</b><small>${window.NH&&NH.platform==='ios'?'With sound on, vibration follows your iPhone\'s Sounds &amp; Haptics settings':'Vibrates when the alert arrives'}</small></span><i class="sw${store.get('alertVib',true)?' on':''}"></i></button>
         <div class="hint" style="margin-top:8px">✓ Alerts on for ${esc(LOC.name)} — at the exact time of each prayer you've belled above, even when the app is closed.</div>
       </div>`:`<div class="hint">Get an alert at the time of every salah for your location, with the azan you choose below.</div>`}

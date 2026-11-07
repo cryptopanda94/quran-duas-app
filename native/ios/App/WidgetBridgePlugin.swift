@@ -3,6 +3,14 @@ import UIKit
 import Capacitor
 import WidgetKit
 import CoreLocation
+import SwiftUI
+#if canImport(AlarmKit)
+import AlarmKit
+import ActivityKit
+
+@available(iOS 26.0, *)
+struct AzanAlarmMeta: AlarmMetadata {}
+#endif
 
 /// JS: Capacitor.registerPlugin('WidgetBridge').update({ data: '<json>' })
 /// Saves the next prayer times + ayah of the day where the widgets can read them,
@@ -16,7 +24,10 @@ public class WidgetBridgePlugin: CAPPlugin, CAPBridgedPlugin, CLLocationManagerD
         CAPPluginMethod(name: "startHeading", returnType: CAPPluginReturnPromise),
         CAPPluginMethod(name: "stopHeading", returnType: CAPPluginReturnPromise),
         CAPPluginMethod(name: "getLocation", returnType: CAPPluginReturnPromise),
-        CAPPluginMethod(name: "setIcon", returnType: CAPPluginReturnPromise)
+        CAPPluginMethod(name: "setIcon", returnType: CAPPluginReturnPromise),
+        CAPPluginMethod(name: "alarmStatus", returnType: CAPPluginReturnPromise),
+        CAPPluginMethod(name: "alarmRequest", returnType: CAPPluginReturnPromise),
+        CAPPluginMethod(name: "alarmSchedule", returnType: CAPPluginReturnPromise)
     ]
     private var locCalls: [CAPPluginCall] = []
     private var lm: CLLocationManager?
@@ -26,6 +37,65 @@ public class WidgetBridgePlugin: CAPPlugin, CAPBridgedPlugin, CLLocationManagerD
     static let appGroup = "group.com.cryptopanda94.quranduas"
 
     public override func load() { NSLog("QD: WidgetBridgePlugin loaded") }
+
+    // MARK: Azan alarms (AlarmKit, iOS 26+): ring even when the phone is on silent or in Focus
+
+    @objc func alarmStatus(_ call: CAPPluginCall) {
+        #if canImport(AlarmKit)
+        if #available(iOS 26.0, *) {
+            let s = AlarmManager.shared.authorizationState
+            call.resolve(["supported": true, "state": s == .authorized ? "granted" : (s == .denied ? "denied" : "prompt")])
+            return
+        }
+        #endif
+        call.resolve(["supported": false, "state": "unsupported"])
+    }
+
+    @objc func alarmRequest(_ call: CAPPluginCall) {
+        #if canImport(AlarmKit)
+        if #available(iOS 26.0, *) {
+            Task {
+                do {
+                    let s = try await AlarmManager.shared.requestAuthorization()
+                    call.resolve(["state": s == .authorized ? "granted" : "denied"])
+                } catch { call.reject(error.localizedDescription) }
+            }
+            return
+        }
+        #endif
+        call.resolve(["state": "unsupported"])
+    }
+
+    /// items: [{ at: epoch ms, title: String, sound: "azan_short.wav" }] — replaces all alarms this app scheduled
+    @objc func alarmSchedule(_ call: CAPPluginCall) {
+        #if canImport(AlarmKit)
+        if #available(iOS 26.0, *) {
+            let items = call.getArray("items", JSObject.self) ?? []
+            Task {
+                let mgr = AlarmManager.shared
+                for a in ((try? mgr.alarms) ?? []) { try? mgr.cancel(id: a.id) }
+                var n = 0
+                for it in items {
+                    guard let ms = it["at"] as? Double, let title = it["title"] as? String else { continue }
+                    let alert = AlarmPresentation.Alert(
+                        title: LocalizedStringResource(stringLiteral: title),
+                        stopButton: AlarmButton(text: "Stop", textColor: .white, systemImageName: "stop.circle"))
+                    let attrs = AlarmAttributes<AzanAlarmMeta>(presentation: AlarmPresentation(alert: alert), metadata: AzanAlarmMeta(), tintColor: Color(red: 0.89, green: 0.71, blue: 0.37))
+                    let snd: AlertConfiguration.AlertSound
+                    if let f = it["sound"] as? String, !f.isEmpty { snd = .named(f) } else { snd = .default }
+                    let cfg = AlarmManager.AlarmConfiguration<AzanAlarmMeta>(
+                        schedule: .fixed(Date(timeIntervalSince1970: ms / 1000)), attributes: attrs, sound: snd)
+                    do { _ = try await mgr.schedule(id: UUID(), configuration: cfg); n += 1 }
+                    catch { NSLog("QD: alarm schedule failed \(error)") }
+                }
+                NSLog("QD: scheduled \(n) azan alarms")
+                call.resolve(["scheduled": n])
+            }
+            return
+        }
+        #endif
+        call.resolve(["scheduled": 0])
+    }
 
     /// Switch the home-screen icon to match the theme. name nil/"" = the main icon.
     @objc func setIcon(_ call: CAPPluginCall) {
