@@ -1,5 +1,7 @@
 # Quran & Duas — iPhone and Android app
 
+**© 2026 Syed Muhammad Wajih Ali. All rights reserved.** This code may not be copied, modified or distributed without written permission. See [LICENSE](LICENSE).
+
 Shia Quran & Duas app: Quran with Indo-Pak / Madani script, English & Urdu translation and transliteration,
 full Quran recitation (Mishary Alafasy), duas & ziyarat (Ashura, Waritha, Ahad, Tawassul, Nudba, Ayat ul Kursi),
 Shia Ithna Ashari prayer times with azan notifications, live Qibla compass, Shia calendar, and
