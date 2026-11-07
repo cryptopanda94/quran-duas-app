@@ -46,8 +46,7 @@ function renderDuas(){
   const draw=()=>{
     const q=norm(dQ);
     const items=q?LIST.filter(d=>norm(d.name+' '+d.sub+' '+d.ur+' '+d.id).includes(q)):LIST.filter(d=>d.grp===dTab);
-    $('dlist').innerHTML=items.map(d=>`<a class="item dua-item" href="#dua-${d.id}"><div class="num"><span>${d.mark}</span></div>
-      <div class="t"><b>${esc(d.name)}</b><small>${esc(d.sub)}</small></div><div class="ar" style="font-family:'Noto Nastaliq Urdu',serif;font-size:15px;line-height:2">${d.ur}</div></a>`).join('')
+    $('dlist').innerHTML=items.map(d=>`<a class="item dua-item" href="#dua-${d.id}"><div class="t"><b>${esc(d.name)}</b><small>${esc(d.sub)}</small></div><div class="ar" style="font-family:'Noto Nastaliq Urdu',serif;font-size:15px;line-height:2">${d.ur}</div></a>`).join('')
       ||'<div class="hint" style="padding:20px 4px;text-align:center">Nothing found — try another name (e.g. Kumayl, Ashura, Kisa).</div>';
     app.querySelectorAll('.dseg button').forEach(b=>b.classList.toggle('on',!q&&b.dataset.g===dTab));
   };
