@@ -3,9 +3,13 @@ import SwiftUI
 
 // Shared with the app through the App Group (see WidgetBridgePlugin.swift).
 private let appGroup = "group.com.cryptopanda94.quranduas"
-private let brand = Color(red: 0.12, green: 0.44, blue: 0.36)          // #1f6f5c
-private let cream = Color(red: 0.97, green: 0.95, blue: 0.92)          // #f7f3ea
-private let gold  = Color(red: 0.69, green: 0.54, blue: 0.24)          // #b08a3e
+private let brand = Color(red: 0.14, green: 0.47, blue: 0.75)          // #2378c0 (Sky)
+private let deep  = Color(red: 0.06, green: 0.25, blue: 0.41)          // #0f3f68
+private let cream = Color(red: 0.97, green: 0.98, blue: 1.0)           // #f7fbff
+private let ink   = Color(red: 0.08, green: 0.19, blue: 0.29)          // #15314a
+private let gold  = Color(red: 0.73, green: 0.51, blue: 0.15)          // #b98326
+private let skyGrad = LinearGradient(colors: [brand, deep], startPoint: .topLeading, endPoint: .bottomTrailing)
+private let paleGrad = LinearGradient(colors: [Color.white, Color(red: 0.91, green: 0.95, blue: 0.98)], startPoint: .top, endPoint: .bottom)
 
 // MARK: - Data written by the app
 
@@ -29,9 +33,9 @@ private let timeFmt: DateFormatter = { let f = DateFormatter(); f.timeStyle = .s
 
 extension View {
     /// iOS 17+ requires every widget (lock screen ones too) to declare its background.
-    @ViewBuilder func widgetBackground(_ color: Color, accessory: Bool = false) -> some View {
+    @ViewBuilder func widgetBackground<B: ShapeStyle>(_ color: B, accessory: Bool = false) -> some View {
         if #available(iOSApplicationExtension 17.0, *) {
-            self.containerBackground(for: .widget) { accessory ? Color.clear : color }
+            self.containerBackground(for: .widget) { if accessory { Color.clear } else { Rectangle().fill(color) } }
         } else if accessory {
             self
         } else {
@@ -54,6 +58,7 @@ struct PrayerEntry: TimelineEntry {
     let next: WPrayer?
     let loc: String
     let hijri: String
+    var list: [WPrayer] = []
 }
 
 struct PrayerProvider: TimelineProvider {
@@ -81,7 +86,8 @@ struct PrayerProvider: TimelineProvider {
         let times = [now] + ps.map { $0.date }.filter { $0 > now }
         return times.prefix(15).map { d in
             PrayerEntry(date: d, next: ps.first { $0.date > d.addingTimeInterval(1) },
-                        loc: p.loc, hijri: p.hijri ?? "")
+                        loc: p.loc, hijri: p.hijri ?? "",
+                        list: Array(ps.filter { $0.date > d.addingTimeInterval(1) }.prefix(5)))
         }
     }
 }
@@ -91,7 +97,29 @@ struct PrayerWidgetView: View {
     let entry: PrayerEntry
 
     var body: some View {
-        content.widgetBackground(entry.next == nil ? cream : brand, accessory: isAccessory(family))
+        content.widgetBackground(skyGrad, accessory: isAccessory(family))
+    }
+
+    private func row(_ p: WPrayer, big: Bool) -> some View {
+        let isNext = p.t == entry.next?.t
+        return HStack {
+            Text(p.n).font(.system(size: big ? 19 : 15, weight: isNext ? .bold : .medium))
+            Spacer(minLength: 4)
+            Text(timeFmt.string(from: p.date)).font(.system(size: big ? 19 : 15, weight: isNext ? .bold : .medium)).monospacedDigit()
+        }
+        .foregroundColor(isNext ? deep : .white)
+        .padding(.horizontal, 10).padding(.vertical, big ? 7 : 4)
+        .background(RoundedRectangle(cornerRadius: 9).fill(isNext ? Color.white : Color.white.opacity(0.12)))
+    }
+
+    private func nextBlock(_ n: WPrayer, nameSize: CGFloat, timeSize: CGFloat) -> some View {
+        VStack(alignment: .leading, spacing: 2) {
+            Text("NEXT PRAYER").font(.system(size: 11, weight: .bold)).foregroundColor(.white.opacity(0.8))
+            Text(n.n).font(.system(size: nameSize, weight: .bold)).foregroundColor(.white).minimumScaleFactor(0.7).lineLimit(1)
+            Text(timeFmt.string(from: n.date)).font(.system(size: timeSize, weight: .semibold)).foregroundColor(.white).monospacedDigit()
+            HStack(spacing: 3) { Text("in"); Text(n.date, style: .relative) }
+                .font(.system(size: 13)).foregroundColor(.white.opacity(0.9)).lineLimit(1)
+        }
     }
 
     @ViewBuilder var content: some View {
@@ -100,29 +128,44 @@ struct PrayerWidgetView: View {
             case .accessoryInline:
                 Text("\(n.n) \(timeFmt.string(from: n.date))")
             case .accessoryRectangular:
-                VStack(alignment: .leading, spacing: 1) {
-                    Text("NEXT PRAYER").font(.caption2).opacity(0.8)
-                    Text("\(n.n)  \(timeFmt.string(from: n.date))").font(.headline)
-                    Text(n.date, style: .relative).font(.caption)
+                VStack(alignment: .leading, spacing: 0) {
+                    Text("\(n.n)  \(timeFmt.string(from: n.date))").font(.system(size: 17, weight: .bold))
+                    Text(n.date, style: .relative).font(.system(size: 14))
+                    Text(entry.loc).font(.system(size: 11)).opacity(0.75).lineLimit(1)
+                }
+            case .systemMedium:
+                HStack(spacing: 12) {
+                    VStack(alignment: .leading, spacing: 0) {
+                        nextBlock(n, nameSize: 30, timeSize: 22)
+                        Spacer(minLength: 0)
+                        Text(entry.loc).font(.system(size: 11)).foregroundColor(.white.opacity(0.75)).lineLimit(1)
+                    }.frame(maxWidth: .infinity, alignment: .leading)
+                    VStack(spacing: 3) { ForEach(entry.list, id: \.t) { row($0, big: false) } }
+                        .frame(maxWidth: .infinity)
+                }
+            case .systemLarge:
+                VStack(alignment: .leading, spacing: 10) {
+                    HStack {
+                        Text(entry.loc).font(.system(size: 13, weight: .semibold)).lineLimit(1)
+                        Spacer()
+                        Text(entry.hijri).font(.system(size: 13)).lineLimit(1)
+                    }.foregroundColor(.white.opacity(0.85))
+                    nextBlock(n, nameSize: 40, timeSize: 26)
+                    VStack(spacing: 6) { ForEach(entry.list, id: \.t) { row($0, big: true) } }
+                    Spacer(minLength: 0)
                 }
             default:
-                VStack(alignment: .leading, spacing: 3) {
-                    Text("NEXT PRAYER").font(.caption2).bold().foregroundColor(.white.opacity(0.8))
-                    Text(n.n).font(.title2).bold().foregroundColor(.white)
-                    Text(n.u).font(.subheadline).foregroundColor(.white.opacity(0.85))
-                    Text(timeFmt.string(from: n.date)).font(.headline).foregroundColor(.white)
-                    HStack(spacing: 3) {
-                        Text("in").font(.caption)
-                        Text(n.date, style: .relative).font(.caption)
-                    }.foregroundColor(.white.opacity(0.9))
+                VStack(alignment: .leading, spacing: 0) {
+                    nextBlock(n, nameSize: 30, timeSize: 22)
                     Spacer(minLength: 0)
-                    Text(entry.loc).font(.caption2).foregroundColor(.white.opacity(0.75)).lineLimit(1)
+                    Text(n.u).font(.system(size: 18)).foregroundColor(.white.opacity(0.85))
+                    Text(entry.loc).font(.system(size: 11)).foregroundColor(.white.opacity(0.75)).lineLimit(1)
                 }
                 .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topLeading)
             }
         } else {
             Text(isAccessory(family) ? "Open Quran & Duas" : "Open Quran & Duas and choose your city")
-                .font(.caption).multilineTextAlignment(.center)
+                .font(.system(size: 15, weight: .medium)).foregroundColor(isAccessory(family) ? .primary : .white).multilineTextAlignment(.center)
         }
     }
 }
@@ -139,9 +182,9 @@ struct PrayerWidget: Widget {
     }
     private var prayerFamilies: [WidgetFamily] {
         if #available(iOSApplicationExtension 16.0, *) {
-            return [.systemSmall, .accessoryRectangular, .accessoryInline]
+            return [.systemSmall, .systemMedium, .systemLarge, .accessoryRectangular, .accessoryInline]
         }
-        return [.systemSmall]
+        return [.systemSmall, .systemMedium, .systemLarge]
     }
 }
 
@@ -183,7 +226,7 @@ struct AyahWidgetView: View {
     let entry: AyahEntry
 
     var body: some View {
-        content.widgetBackground(cream, accessory: isAccessory(family))
+        content.widgetBackground(paleGrad, accessory: isAccessory(family))
     }
 
     @ViewBuilder var content: some View {
@@ -191,28 +234,29 @@ struct AyahWidgetView: View {
             switch family {
             case .accessoryRectangular:
                 VStack(alignment: .leading, spacing: 1) {
-                    Text(a.ref).font(.caption2).opacity(0.8)
-                    Text(a.en).font(.caption).lineLimit(3)
+                    Text(a.ref).font(.system(size: 12, weight: .semibold)).opacity(0.8)
+                    Text(a.en).font(.system(size: 14)).lineLimit(3)
                 }
             default:
-                VStack(alignment: .leading, spacing: 6) {
-                    Text("AYAH OF THE DAY · \(a.ref.uppercased())").font(.caption2).bold().foregroundColor(gold).lineLimit(1)
-                    Text(a.ar).font(.system(size: family == .systemLarge ? 24 : 19))
-                        .multilineTextAlignment(.trailing)
-                        .frame(maxWidth: .infinity, alignment: .trailing)
+                let large = family == .systemLarge
+                VStack(alignment: .center, spacing: large ? 12 : 6) {
+                    Text("AYAH OF THE DAY · \(a.ref.uppercased())").font(.system(size: 11, weight: .bold)).foregroundColor(gold).lineLimit(1)
+                    Text(a.ar).font(.system(size: large ? 34 : 26, weight: .medium))
+                        .multilineTextAlignment(.center)
                         .environment(\.layoutDirection, .rightToLeft)
-                        .lineLimit(family == .systemLarge ? 5 : 2)
-                        .foregroundColor(Color(red: 0.16, green: 0.15, blue: 0.13))
-                    Text(a.en).font(.footnote)
-                        .lineLimit(family == .systemLarge ? 8 : 3)
-                        .foregroundColor(Color(red: 0.25, green: 0.23, blue: 0.2))
+                        .lineLimit(large ? 6 : 2).minimumScaleFactor(0.6)
+                        .foregroundColor(ink)
+                    Text(a.en).font(.system(size: large ? 18 : 15))
+                        .multilineTextAlignment(.center)
+                        .lineLimit(large ? 8 : 3).minimumScaleFactor(0.75)
+                        .foregroundColor(ink.opacity(0.85))
                     Spacer(minLength: 0)
                 }
-                .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topLeading)
+                .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .top)
             }
         } else {
             Text("Open Quran & Duas once to load today's ayah")
-                .font(.caption).multilineTextAlignment(.center)
+                .font(.system(size: 15)).multilineTextAlignment(.center)
         }
     }
 }
