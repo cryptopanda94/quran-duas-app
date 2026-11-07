@@ -14,6 +14,8 @@ const json = (p) => rd(p).replace(/<\//g, '<\\/');
 // Recitation audio: Alafasy (AAC) served from this repo's GitHub Pages (gh-pages branch, /audio).
 // GitHub *release* downloads are labelled application/octet-stream, which iPhones refuse to stream.
 const AUDIO_BASE = 'https://cryptopanda94.github.io/quran-duas-app/audio/';
+const audsPath = join(src, 'data', 'aud_sudais.json');
+const auds = existsSync(audsPath) ? JSON.stringify(JSON.parse(readFileSync(audsPath, 'utf8')).map((x) => ({ p: x.p.map(([n, c]) => [AUDIO_BASE + n, c]), a: x.a }))) : 'null';
 const aud = JSON.stringify(JSON.parse(rd('data/aud16.json')).map((x) => ({ p: x.p.map(([n, c]) => [AUDIO_BASE + n, c]), a: x.a })));
 
 let t = rd('template.html');
@@ -41,13 +43,14 @@ t = t
   .replace('__ENQ__', json('data/en_qarai.json'))
   .replace('__TL__', json('data/translit.json'))
   .replace('__AUD__', aud)
+  .replace('__AUDS__', auds)
   .replace('__DUAS__', json('data/duas.json'))
   .replace('__UDUAS__', json('data/userduas.json'))
   .replace('__CITIES__', json('data/cities.json'))
   .replace('__EVENTS__', json('data/events.json'))
   .replace('__EXTRAS__', rd('extras.js'));
 
-for (const p of ['__DATA__', '__ENQ__', '__TL__', '__AUD__', '__DUAS__', '__UDUAS__', '__CITIES__', '__EVENTS__', '__EXTRAS__', '__FONT__', '__AZAN__'])
+for (const p of ['__DATA__', '__ENQ__', '__TL__', '__AUD__', '__AUDS__', '__DUAS__', '__UDUAS__', '__CITIES__', '__EVENTS__', '__EXTRAS__', '__FONT__', '__AZAN__'])
   if (t.includes(p)) throw new Error('build-web: placeholder left unfilled: ' + p);
 
 rmSync(www, { recursive: true, force: true });
