@@ -41,7 +41,7 @@ function renderDuas(){
      <input class="inp" id="dq" type="search" placeholder="Search duas &amp; ziyarat" value="${esc(dQ)}" autocomplete="off">
    </div>
    <div class="list" id="dlist"></div>
-   <div class="foot">Texts from Mafatih al-Jinan as published in the open-source Shia Companion app (Urdu: Mafatih-style translation).<br>Ayat ul Kursi from the Quran text in this app.</div>`;
+`;
   const norm=x=>(x||'').toLowerCase().replace(/[^a-z0-9\u0600-\u06ff]+/g,' ').trim();
   const draw=()=>{
     const q=norm(dQ);
@@ -75,7 +75,6 @@ function renderDua(id){
       h+=`<div class="uv"><div class="v-ar">${it.ar}</div><div class="v-en tbox">${esc(it.en)}</div>${it.ur?`<div class="v-ur tbox urbox">${esc(it.ur)}</div>`:''}</div>`;
     });
     h+=tlBox(pend);
-    h+=`<div class="foot">Arabic, English &amp; transliteration: your text (Divine Pearls).${d.user==='waritha'?' Urdu (where available): Mafatih al-Jinan.':''}</div>`;
     app.innerHTML=h;return true;
   }
   if(d.id==='ayat-kursi'){
@@ -98,7 +97,6 @@ function renderDua(id){
         h+=verseHTML(ar,last?S2.tr:'',en,last?S2.ur:'');
       });
       for(;ptr<segs.length;ptr++){const s2=segs[ptr];h+=s2.note!=null?noteH(s2):verseHTML(s2.ar,s2.tr,s2.en,s2.ur)}
-      h+=`<div class="foot">Arabic &amp; English: Imam al-Asr Masjid (your text). Urdu, transliteration &amp; instructions: Mafatih al-Jinan.</div>`;
     } else
     h+=D.segs.map((s,i)=>s.note!=null
       ? `<div class="note${s.h?' h':''}">${esc(s.note)}${s.ur?`<span class="nur">${esc(s.ur)}</span>`:''}</div>`
@@ -365,6 +363,10 @@ function renderQibla(){
      <div class="hint">Qibla ${b.toFixed(1)}° ${card} from true North · Makkah ${Math.round(km).toLocaleString()} km</div>`:`<div class="qdeg">${b.toFixed(1)}° <span style="font-size:20px;color:var(--muted)">${card}</span></div>
      <div class="hint">clockwise from true North · Makkah is ${Math.round(km).toLocaleString()} km away</div>`}
    </div>
+   <div class="card dedi"><div class="dstar">✦</div>
+     <div class="dar">اَللّٰهُمَّ عَجِّلْ لِوَلِيِّكَ الْفَرَج</div>
+     <p>This app is lovingly dedicated to <b style="white-space:nowrap">Imam-e-Zamana (a.t.f.s.)</b>, the Master of our Time.</p>
+     <p class="dsub">Every time you turn towards the Kaaba, remember that he is waiting for us too. Please pray for his reappearance 🤍</p></div>
    ${window.NH?'':`<div class="card hint"><b style="color:var(--ink)">How to use it:</b> open your phone's Compass app, turn until it reads <b>${Math.round(b)}°</b> — you're then facing the Qibla. (A web page can't read your phone's compass sensor, so this dial doesn't turn by itself.)</div>`}`;
   if(window.NH){$('qStart').onclick=()=>NH.startCompass(b);setTimeout(()=>{if($('roseAll'))NH.startCompass(b)},150)}
   $('chg').onclick=()=>{editing=true;renderQibla()};
@@ -422,7 +424,7 @@ function renderCalendar(){
    <div class="card" style="margin-top:16px"><b>Moon-sighting adjustment</b>
      <div class="hint" style="margin:4px 0 10px">Islamic months start with the sighting of the new moon, so your local Shia centre may be a day ahead of or behind this calendar. Adjust it to match.</div>
      <div class="sizer"><button id="hM">−1</button><div style="flex:1;text-align:center;font-weight:600">${hAdj>0?'+':''}${hAdj} day${Math.abs(hAdj)===1?'':'s'} · today is ${hijriStr(hijriToday())}</div><button id="hP">+1</button></div></div>
-   <div class="foot">Occasions from the open-source Shia Companion app. Some dates have more than one narration and appear on each.</div>`;
+`;
   $('cPrev').onclick=()=>{calStart=monthStart(new Date(calStart.getFullYear(),calStart.getMonth(),calStart.getDate()-1));calSel=null;renderCalendar()};
   $('cNext').onclick=()=>{calStart=monthStart(new Date(calStart.getFullYear(),calStart.getMonth(),calStart.getDate()+32));calSel=null;renderCalendar()};
   app.querySelectorAll('[data-cd]').forEach(b=>b.onclick=()=>{calSel=calSel===b.dataset.cd?null:b.dataset.cd;renderCalendar()});
