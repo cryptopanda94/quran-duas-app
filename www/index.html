@@ -132,6 +132,7 @@ input[type=range]{accent-color:var(--accent);width:150px}
 .arow .sw,.trtog .sw{width:44px;height:26px;border-radius:13px;background:var(--line);position:relative;flex:none;transition:background .2s}
 .arow .sw::after{content:"";position:absolute;top:3px;left:3px;width:20px;height:20px;border-radius:50%;background:#fff;box-shadow:0 1px 3px rgba(0,0,0,.25);transition:left .2s}
 .arow .sw.on{background:var(--accent)}.arow .sw.on::after{left:21px}
+.tcal .cday{aspect-ratio:1/1;justify-content:flex-start;padding-top:5px}.tcal .cday b{font-size:14px;line-height:1.2}.tcal .cday small{font-size:9px;line-height:1.2}.tcal .cday i{bottom:3px;width:5px;height:5px}.tcalev{margin-top:10px}
 .dgrp{display:flex;align-items:baseline;justify-content:space-between;margin:20px 2px 8px}.dgrp b{font-size:13px;letter-spacing:.08em;text-transform:uppercase;color:var(--gold)}.dgrp span{font-family:IndoPak,serif;color:var(--muted);font-size:18px}
 .uvc{padding:6px 0 2px}.enb{text-align:left;line-height:1.7;margin:4px 6px 14px}.enb b{display:block;font-size:12px;letter-spacing:.06em;text-transform:uppercase;margin-bottom:6px;color:var(--accent)}
 .dua-item .num{transform:none;border-radius:12px;font-family:IndoPak,serif;font-size:18px}
@@ -1060,6 +1061,27 @@ function renderCalendar(){
   $('hM').onclick=()=>setAdj(hAdj-1);$('hP').onclick=()=>setAdj(hAdj+1);
 }
 
+/* month grid on the Today screen */
+let tSel=null;
+function todayCal(){
+  const el=$('tcal');if(!el)return;
+  const st=monthStart(new Date()),h0=hijri(...civ(st)),days=[];let d=new Date(st);
+  for(let i=0;i<31;i++){const h=hijri(...civ(d));if(h.m!==h0.m)break;days.push({dt:new Date(d),h});d=new Date(d.getFullYear(),d.getMonth(),d.getDate()+1)}
+  const today=civ(new Date()).join('-');
+  if(!tSel){const nx=days.find(x=>civ(x.dt).join('-')>=today&&eventsOn(x.h).length);tSel=nx?civ(nx.dt).join('-'):today}
+  const g0=days[0].dt,g1=days[days.length-1].dt;
+  const gm=`${g0.toLocaleDateString([], {month:'short'})} – ${g1.toLocaleDateString([], {month:'short',year:'numeric'})}`;
+  const cells=Array(st.getDay()).fill('<div></div>').concat(days.map(x=>{const ev=eventsOn(x.h),k=civ(x.dt).join('-');
+    const cls=ev.length?(ev.some(e=>e[1]===0)?' grief':ev.some(e=>e[1]===1)?' joy':' other'):'';
+    return `<button class="cday${cls}${k===today?' today':''}${tSel===k?' sel':''}" data-td="${k}"><b>${x.h.d}</b><small>${x.dt.getDate()}</small>${ev.length?'<i></i>':''}</button>`}));
+  const sel=days.find(x=>civ(x.dt).join('-')===tSel);
+  const evs=sel?eventsOn(sel.h):[];
+  el.innerHTML=`<div style="display:flex;align-items:center"><div style="flex:1"><div class="tlabel">${HM[h0.m-1]} ${h0.y}</div><small class="hint">${gm}</small></div><a href="#calendar" class="btn" style="font-size:13px;padding:7px 11px">Full calendar ›</a></div>
+    <div class="calgrid" style="margin-top:10px">${['S','M','T','W','T','F','S'].map(w=>`<div class="wd">${w}</div>`).join('')}${cells.join('')}</div>
+    ${sel?`<div class="tcalev">${evs.length?evs.map(e=>`<div class="ev ${e[1]===1?'joy':e[1]===0?'grief':'other'}"><div class="evd">${sel.h.d} ${HM[sel.h.m-1]} · ${sel.dt.toLocaleDateString([], {weekday:'short',day:'numeric',month:'short'})}${civ(sel.dt).join('-')===today?' · today':''}</div><div class="evt">${esc(evTitle(e))}</div></div>`).join(''):`<div class="hint" style="padding:8px 2px">${sel.h.d} ${HM[sel.h.m-1]} · no listed occasion</div>`}</div>`:''}`;
+  el.querySelectorAll('[data-td]').forEach(b=>b.onclick=()=>{tSel=b.dataset.td;todayCal()});
+}
+
 /* ================= TODAY / AYAH OF THE DAY ================= */
 // Hand-picked verses (surah, first verse, last verse) – shown one per day, same for everyone on a given date.
 const DAILY=[[94,5,6],[13,28,28],[2,286,286],[2,153,153],[65,3,3],[39,53,53],[2,186,186],[3,139,139],[9,40,40],[20,114,114],
@@ -1099,11 +1121,11 @@ function renderToday(){
      <div class="tact"><button class="listen" id="ayPlay">${Q.icon?'':''}▶ Listen</button><a class="btn" href="#surah-${A.s}-${A.a}">Open in Quran</a><button class="btn" id="ayCopy">Copy</button></div>
    </div>
    ${last?`<a class="continue" href="#surah-${last.s}-${last.v}"><div style="flex:1"><small>Continue reading</small><b>${esc(META[last.s-1][1])} · Verse ${last.v}</b></div>›</a>`:''}
-   ${up.length?`<a class="tcard" href="#calendar"><div class="tlabel" style="display:flex">Coming up<span style="margin-left:auto;text-transform:none;letter-spacing:0">Calendar ›</span></div>
-     ${up.map(x=>`<div class="upr"><i class="${x.e[1]===1?'joy':x.e[1]===0?'grief':'other'}"></i><div style="flex:1"><b>${esc(evTitle(x.e))}</b><small>${x.h.d} ${HM[x.h.m-1]} · ${x.dt.toLocaleDateString([], {weekday:'short',day:'numeric',month:'short'})} · in ${x.i} day${x.i===1?'':'s'}</small></div></div>`).join('')}</a>`:''}
+   ${HFMT?`<div class="tcard tcal" id="tcal"></div>`:''}
    <div class="tlabel" style="margin:18px 4px 8px">For today</div>
-   <div class="list">${todays.map(id=>{const d=LIST.find(x=>x.id===id);return d?`<a class="item dua-item" href="#dua-${d.id}"><div class="num"><span>${d.mark}</span></div><div class="t"><b>${esc(d.name)}</b><small>${esc(d.sub)}</small></div></a>`:''}).join('')}</div>
+   <div class="list">${todays.map(id=>{const d=LIST.find(x=>x.id===id);return d?`<a class="item dua-item" href="#dua-${d.id}"><div class="t"><b>${esc(d.name)}</b><small>${esc(d.sub)}</small></div></a>`:''}).join('')}</div>
    ${window.NH?`<div class="card hint" style="margin-top:16px"><b style="color:var(--ink)">Widgets:</b> add the Next Prayer and Ayah of the Day widgets to your home or lock screen — touch and hold an empty spot, tap <b>+</b> (iPhone) or <b>Widgets</b> (Android), and search “Quran & Duas”.</div>`:`<div class="card hint" style="margin-top:16px"><b style="color:var(--ink)">Widgets:</b> lock-screen and home-screen widgets need an app installed from the App Store, so this web app can't add one. This Today page shows the same things — next prayer and the ayah of the day.</div>`}`;
+  if($('tcal'))todayCal();
   $('ayPlay').onclick=()=>{Q.playVerse(A.s,A.a)};
   $('ayCopy').onclick=()=>{const t=`${vs.map(v=>Q.ARX()[A.s-1][v-1]).join(' ')}\n\n${en}\n\n${ur}\n— Quran ${ref} (${META[A.s-1][1]})`;
     try{navigator.clipboard.writeText(t).then(()=>toast('Ayah copied'),()=>toast('Copy not allowed here'))}catch(e){toast('Copy not allowed here')}};
