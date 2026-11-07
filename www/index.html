@@ -325,6 +325,7 @@ body.playing .wrap{padding-bottom:180px}
 .qs .clist i{width:24px;height:24px;border-radius:6px;border:2px solid var(--line);flex:none;display:grid;place-items:center}
 .qs .clist button.on i{background:var(--gold);border-color:var(--gold)}
 .qs .clist button.on i::after{content:"";width:6px;height:11px;border:solid var(--card);border-width:0 2.5px 2.5px 0;transform:translateY(-1px) rotate(45deg)}
+.qs.ctx-dua :is([data-lang],.shead-rec,#recList){display:none!important}
 .qs .themes{margin-top:8px;display:grid;grid-template-columns:repeat(5,1fr);gap:12px 4px}
 .qs .themes .sw{flex:1;min-width:0;font-size:11.5px}
 .qs .themes .sw i{width:42px;height:42px;font-size:14px}
@@ -359,7 +360,7 @@ body.playing .wrap{padding-bottom:180px}
     <div class="pill" id="fontSeg"><button data-v="madani">Uthmani</button><button data-v="indopak">IndoPak</button></div>
     <div class="srow"><span>Font size</span><div class="stepper"><button data-step="ar" data-d="-4" aria-label="Smaller Arabic">—</button><b id="arLvl"></b><button data-step="ar" data-d="4" aria-label="Larger Arabic">+</button></div></div>
     <div class="srow"><span>Lines under Arabic<small class="ssub">Ruled lines like a printed mushaf</small></span><button class="switch" id="ruleSw" aria-label="Lines under Arabic"></button></div>
-    <div class="shead">Reciter</div>
+    <div class="shead shead-rec">Reciter</div>
     <div class="rlist" id="recList"></div>
   </div>
   <div class="spane" data-p="tr">
@@ -467,7 +468,7 @@ function applySettings(){
   if(S.tr!=='off')store.set('trLast',S.tr);
   [...$('thSeg').children].forEach(b=>b.classList.toggle('on',b.dataset.v===S.theme));
   $('arLvl').textContent=Math.round((S.arSize-20)/4)+1;$('enLvl').textContent=S.enSize-11;
-  const pe=$('prevEn');pe.textContent=S.tr==='ur'?UR[0][0]:EN[0][0];pe.style.display=S.tr==='off'?'none':'';pe.style.fontFamily=S.tr==='ur'?"'Noto Nastaliq Urdu',serif":'';pe.dir=S.tr==='ur'?'rtl':'ltr';
+  const pe=$('prevEn');pe.textContent=S.tr==='ur'?UR[0][0]:EN[0][0];pe.style.display=S.tr==='off'?'none':'';pe.style.fontFamily=S.tr==='ur'?"'Noto Nastaliq Urdu',serif":'';pe.dir=S.tr==='ur'?'rtl':'ltr';if(location.hash.startsWith('#dua-'))ctxSettings();
 }
 
 /* ---------- Home ---------- */
@@ -680,7 +681,25 @@ function route(){
   if(m&&+m[1]>=1&&+m[1]<=114)renderSurah(+m[1],m[2]?Math.min(+m[2],META[+m[1]-1][4]):0);
   else{renderHome();window.scrollTo(0,0)}
 }
-function openSheet(id){$('sheetBg').classList.add('open');$(id).classList.add('open')}
+function openSheet(id){if(id==='setSheet')ctxSettings();$('sheetBg').classList.add('open');$(id).classList.add('open')}
+/* Settings adapt to the page: on a dua/ziyarat page only show what that text actually has */
+function ctxSettings(){
+  const sh=$('setSheet');if(!sh)return;
+  const h=location.hash.slice(1),dua=h.startsWith('dua-')&&h!=='dua-ayat-kursi',app=$('app');
+  const has=c=>!!app.querySelector(c);
+  const av=dua?{en:has('.v-en'),ur:has('.v-ur'),tl:has('.v-tr')}:{en:true,ur:true,tl:true};
+  sh.classList.toggle('ctx-dua',dua);
+  const vis={off:true,en:av.en,ur:av.ur,both:av.en&&av.ur};
+  [...$('enSeg').children].forEach(b=>b.style.display=vis[b.dataset.v]?'':'none');
+  $('enSeg').style.display=(av.en||av.ur)?'':'none';
+  $('trSw').closest('.srow').style.display=av.tl?'':'none';
+  const pa=sh.querySelector('.sprev .v-ar'),pe=$('prevEn');
+  if(dua){const a=app.querySelector('.dverse .v-ar,.uv .v-ar');pa.innerHTML=a?a.innerHTML:'';
+    const t=S.tr==='off'?null:app.querySelector((S.tr==='ur'||(S.tr==='both'&&!av.en))?'.v-ur':'.v-en');
+    pe.textContent=t?t.textContent.replace(/^(English)/,''):'';pe.style.display=t?'':'none';pe.dir=t&&t.classList.contains('v-ur')?'rtl':'ltr';pe.style.fontFamily=t&&t.classList.contains('v-ur')?"'Noto Nastaliq Urdu',serif":''}
+  else{pa.textContent='بِسْمِ اللّٰهِ الرَّحْمٰنِ الرَّحِيْمِ';pe.textContent=S.tr==='ur'?UR[0][0]:EN[0][0];pe.style.display=S.tr==='off'?'none':'';pe.style.fontFamily=S.tr==='ur'?"'Noto Nastaliq Urdu',serif":'';pe.dir=S.tr==='ur'?'rtl':'ltr'}
+  $('enLvl').closest('.srow').style.display=(av.en||av.ur)?'':'none';
+}
 function closeSheets(){document.querySelectorAll('.sheet,.sheet-bg').forEach(x=>x.classList.remove('open'))}
 $('backBtn').onclick=()=>{const c=location.hash.slice(1);location.hash=/^dua-/.test(c)?'duas':c==='calendar'?'today':'home'};
 $('setBtn').onclick=()=>openSheet('setSheet');
