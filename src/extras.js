@@ -321,7 +321,7 @@ function renderQibla(){
    <div class="card loc" style="margin-top:16px"><b>📍 ${esc(LOC.name)}</b><button class="btn" id="chg">Change</button></div>
    <div class="card" style="text-align:center">
      <svg class="dial" viewBox="0 0 300 300">
-       <g id="roseAll" style="transition:transform .25s linear;transform-origin:150px 150px">
+       <g id="roseAll" style="transition:transform .15s ease-out;transform-origin:150px 150px">
        <circle cx="150" cy="150" r="134" fill="var(--bg)" stroke="var(--line)" stroke-width="2"/>${ticks}
        ${['N','E','S','W'].map((t,i)=>`<text x="150" y="58" text-anchor="middle" font-size="18" font-weight="600" fill="${t==='N'?'#c0392b':'var(--muted)'}" transform="rotate(${i*90} 150 150)" font-family="Inter,sans-serif">${t}</text>`).join('')}
        <g transform="rotate(${b.toFixed(1)} 150 150)">
@@ -336,8 +336,8 @@ function renderQibla(){
      <div class="qdeg">${b.toFixed(1)}° <span style="font-size:20px;color:var(--muted)">${card}</span></div>
      <div class="hint">clockwise from true North · Makkah is ${Math.round(km).toLocaleString()} km away</div>
    </div>
-   ${window.NH?`<div class="card" style="text-align:center"><div id="qStatus" class="hint" style="font-size:15px">Hold your phone flat, then tap Start.</div><button class="btn pri" id="qStart" style="margin-top:10px">Start live compass</button></div>`:`<div class="card hint"><b style="color:var(--ink)">How to use it:</b> open your phone's Compass app, turn until it reads <b>${Math.round(b)}°</b> — you're then facing the Qibla. (A web page can't read your phone's compass sensor, so this dial doesn't turn by itself.)</div>`}`;
-  if(window.NH)$('qStart').onclick=()=>NH.startCompass(b);
+   ${window.NH?`<div class="card" style="text-align:center"><div id="qStatus" class="hint" style="font-size:15px">Starting compass… hold your phone flat.</div><button class="btn pri" id="qStart" style="margin-top:10px" hidden>Start live compass</button></div>`:`<div class="card hint"><b style="color:var(--ink)">How to use it:</b> open your phone's Compass app, turn until it reads <b>${Math.round(b)}°</b> — you're then facing the Qibla. (A web page can't read your phone's compass sensor, so this dial doesn't turn by itself.)</div>`}`;
+  if(window.NH){$('qStart').onclick=()=>NH.startCompass(b);setTimeout(()=>{if($('roseAll'))NH.startCompass(b)},150)}
   $('chg').onclick=()=>{editing=true;renderQibla()};
 }
 

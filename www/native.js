@@ -172,6 +172,7 @@
       } catch (e) {
         if (sub) sub.remove();
         status().textContent = 'Compass not available on this device.';
+        const rb = document.getElementById('qStart'); if (rb) rb.hidden = false;
         window.removeEventListener('hashchange', onHash); return;
       }
       stop = () => { try { sub && sub.remove(); WB.stopHeading(); } catch (e) {} window.removeEventListener('hashchange', onHash); stopCompass = null; };

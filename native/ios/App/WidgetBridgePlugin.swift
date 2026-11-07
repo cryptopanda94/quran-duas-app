@@ -50,7 +50,7 @@ public class WidgetBridgePlugin: CAPPlugin, CAPBridgedPlugin, CLLocationManagerD
             let m = self.lm ?? CLLocationManager()
             self.lm = m
             m.delegate = self
-            m.headingFilter = 1
+            m.headingFilter = 0.5
             m.headingOrientation = .portrait
             m.desiredAccuracy = kCLLocationAccuracyKilometer
             self.headingOn = true
