@@ -354,7 +354,7 @@ const $=id=>document.getElementById(id), app=$('app');
 /* storage (safe) */
 const store={get(k,d){try{const v=localStorage.getItem('qr_'+k);return v==null?d:JSON.parse(v)}catch(e){return d}},
              set(k,v){try{localStorage.setItem('qr_'+k,JSON.stringify(v))}catch(e){}}};
-const S={arSize:store.get('arSize',30),tr:store.get('tr','en'),
+const S={arSize:store.get('arSize',30),tr:store.get('tr','off'),
          theme:store.get('theme',(window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches)?'dark':'light'),
          marks:store.get('marks',[]),showTr:store.get('showTr',true),enSize:store.get('enSize',16),rules:store.get('rules',true),font:store.get('font','indopak'),ensrc:store.get('ensrc2','alt'),rec:store.get('rec','alafasy'),last:store.get('last',null),tab:'surahs',q:''};
 
@@ -376,7 +376,7 @@ function applySettings(){
   document.documentElement.dataset.theme=S.theme;
   document.documentElement.style.setProperty('--ar-size',S.arSize+'px');
   document.body.classList.toggle('hide-en',!(S.tr==='en'||S.tr==='both'));document.body.classList.toggle('hide-ur',!(S.tr==='ur'||S.tr==='both'));
-  document.body.classList.toggle('hide-tr',!S.showTr);document.body.classList.toggle('font-madani',S.font==='madani');
+  document.body.classList.toggle('hide-tr',!S.showTr||S.tr==='off');document.body.classList.toggle('font-madani',S.font==='madani');
   $('arSize').value=S.arSize;$('enSize').value=S.enSize;
   document.documentElement.style.setProperty('--en-size',S.enSize+'px');
   document.body.classList.toggle('no-rule',!S.rules);
