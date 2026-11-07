@@ -27,11 +27,13 @@ jobs:
           xcrun simctl boot $UDID; sleep 20
           APP=$(ls -d build/Build/Products/Debug-iphonesimulator/App.app)
           xcrun simctl install $UDID "$APP"
-          (xcrun simctl launch --console-pty $UDID com.cryptopanda94.quranduas > launch.log 2>&1 &)
+          xcrun simctl launch --console $UDID com.cryptopanda94.quranduas > launch.log 2>&1 &
+          LP=$!
           (xcrun simctl spawn $UDID log stream --style compact --predicate 'eventMessage CONTAINS "QD" OR eventMessage CONTAINS "Unknown class" OR eventMessage CONTAINS "WidgetBridge"' > os.log 2>&1 &)
           sleep 40
           xcrun simctl io $UDID screenshot shot.png || true
-          echo "===== app stdout"; grep -iE "QD|WidgetBridge|not implemented|error|⚡️" launch.log | head -80
+          kill $LP 2>/dev/null || true
+          echo "===== app stdout"; grep -iE "QD|WidgetBridge|not implemented|error" launch.log | head -60; echo "(lines: $(wc -l < launch.log))"; head -30 launch.log
           echo "===== os log"; head -60 os.log
       - uses: actions/upload-artifact@v4
         with:

@@ -244,6 +244,7 @@
     });
   } catch (e) {}
 
+  setTimeout(() => { try { WB.stopHeading().then(() => console.log('QD WB ok')).catch((e) => console.log('QD WB fail ' + ((e && e.message) || e))); } catch (e) { console.log('QD WB throw ' + e); } }, 1500);
   const boot = () => setTimeout(async () => { await ensureChannel(); refresh(); window.QX && QX.autoLocate && QX.autoLocate(false); }, 800);
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', boot); else boot();
 })();
