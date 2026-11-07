@@ -309,6 +309,9 @@ body.playing .wrap{padding-bottom:180px}
   <div class="prev"><div class="v-ar">بِسْمِ اللّٰهِ الرَّحْمٰنِ الرَّحِيْمِ</div></div>
   <div class="sec">Translation</div>
   <div class="seg" id="enSeg" style="display:inline-flex;flex-wrap:wrap"><button data-v="off">Arabic only</button><button data-v="en">English</button><button data-v="ur">اردو</button><button data-v="both">Both</button></div>
+  <div class="sec">English translation</div>
+  <div class="seg" id="enTSeg" style="display:inline-flex;flex-wrap:wrap"><button data-v="sahih">Saheeh International</button><button data-v="qarai">Ali Quli Qarai</button></div>
+  <div class="hint" style="font-size:12px;margin-top:6px">Qarai translation via Tanzil.net</div>
   <div class="sec">Translation text size</div>
   <div class="sizer"><button data-step="en" data-d="-1" aria-label="Smaller translation">A−</button><input type="range" id="enSize" min="12" max="26" step="1"><button data-step="en" data-d="1" aria-label="Larger translation">A+</button></div>
   <div class="row" style="margin-top:12px"><span><b style="font-weight:600">Transliteration</b><br><small class="hint">Show the Arabic in English letters (Quran &amp; duas)</small></span><button class="switch" id="trSw" aria-label="Transliteration"></button></div>
@@ -343,13 +346,14 @@ body.playing .wrap{padding-bottom:180px}
 <script id="azdata" type="text/plain">__AZAN__</script>
 
 <script id="qdata" type="application/json">__DATA__</script>
+<script id="enqdata" type="application/json">__ENQ__</script>
 <script id="tldata" type="application/json">__TL__</script>
 <script id="auddata" type="application/json">__AUD__</script>
 <script>
 (function(){
 const D=JSON.parse(document.getElementById('qdata').textContent);
 const META=D.m, JUZ=D.j, BISM=D.b, WU=D.w.map(s=>s.split('\n')), WB=D.wb, TL=JSON.parse(document.getElementById('tldata').textContent).map(s=>s.split('\n'));
-const AR=D.a.map(s=>s.split('\n')), EN=D.e.map(s=>s.split('\n')), UR=D.u.map(s=>s.split('\n')), CL=D.c.map(s=>s.split('\n'));
+let EN;const AR=D.a.map(s=>s.split('\n')), EN_S=D.e.map(s=>s.split('\n')), EN_Q=JSON.parse(document.getElementById('enqdata').textContent).e.map(s=>s.split('\n')), UR=D.u.map(s=>s.split('\n')), CL=D.c.map(s=>s.split('\n'));
 const $=id=>document.getElementById(id), app=$('app');
 
 /* storage (safe) */
@@ -357,8 +361,9 @@ const store={get(k,d){try{const v=localStorage.getItem('qr_'+k);return v==null?d
              set(k,v){try{localStorage.setItem('qr_'+k,JSON.stringify(v))}catch(e){}}};
 const S={arSize:store.get('arSize',40),tr:store.get('tr','off'),
          theme:store.get('theme','sepia'),
-         marks:store.get('marks',[]),showTr:store.get('showTr',false),enSize:store.get('enSize',16),rules:store.get('rules',false),font:store.get('font','indopak'),ensrc:store.get('ensrc2','alt'),rec:store.get('rec','alafasy'),last:store.get('last',null),tab:'surahs',q:''};
+         marks:store.get('marks',[]),showTr:store.get('showTr',false),enSize:store.get('enSize',16),rules:store.get('rules',false),font:store.get('font','indopak'),ensrc:store.get('ensrc2','alt'),rec:store.get('rec','alafasy'),enT:store.get('enT','sahih'),last:store.get('last',null),tab:'surahs',q:''};
 
+EN=S.enT==='qarai'?EN_Q:EN_S;
 const arNum=n=>String(n).replace(/\d/g,d=>'٠١٢٣٤٥٦٧٨٩'[d]);
 const esc=s=>s.replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
 const typeName=t=>t==='m'?'Meccan':'Medinan';
@@ -383,7 +388,7 @@ function applySettings(){
   document.body.classList.toggle('no-rule',!S.rules);
   $('trSw').classList.toggle('on',S.showTr);$('ruleSw').classList.toggle('on',S.rules);
   [...$('fontSeg').children].forEach(b=>b.classList.toggle('on',b.dataset.v===S.font));
-  [...$('enSeg').children].forEach(b=>b.classList.toggle('on',b.dataset.v===S.tr));
+  [...$('enSeg').children].forEach(b=>b.classList.toggle('on',b.dataset.v===S.tr));[...$('enTSeg').children].forEach(b=>b.classList.toggle('on',b.dataset.v===S.enT));
   document.querySelectorAll('[data-trtog]').forEach(b=>{const on=S.tr!=='off';b.classList.toggle('on',on);b.setAttribute('aria-checked',on);b.querySelector('b').textContent=on?'On':'Off'});
   if(S.tr!=='off')store.set('trLast',S.tr);
   [...$('thSeg').children].forEach(b=>b.classList.toggle('on',b.dataset.v===S.theme));
@@ -610,6 +615,7 @@ $('fontSeg').onclick=e=>{const b=e.target.closest('button');if(!b)return;S.font=
 $('trSw').onclick=()=>{S.showTr=!S.showTr;store.set('showTr',S.showTr);applySettings()};
 $('ruleSw').onclick=()=>{S.rules=!S.rules;store.set('rules',S.rules);applySettings()};
 $('setDone').onclick=()=>closeSheets();
+$('enTSeg').onclick=e=>{const b=e.target.closest('button');if(!b)return;S.enT=b.dataset.v;store.set('enT',S.enT);EN=S.enT==='qarai'?EN_Q:EN_S;applySettings();const y=window.scrollY;route();window.scrollTo(0,y)};
 $('enSeg').onclick=e=>{const b=e.target.closest('button');if(!b)return;S.tr=b.dataset.v;store.set('tr',S.tr);applySettings()};
 $('thSeg').onclick=e=>{const b=e.target.closest('button');if(!b)return;S.theme=b.dataset.v;store.set('theme',S.theme);applySettings()};
 $('pPlay').innerHTML=icon.play2;
