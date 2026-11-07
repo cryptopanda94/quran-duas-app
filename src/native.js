@@ -264,7 +264,7 @@
   // Home-screen icon follows the theme (iOS alternate icons; maroon = main icon)
   async function setIcon(theme) {
     if (platform !== 'ios') return;
-    const name = !theme || theme === 'maroon' ? '' : 'AppIcon-' + theme[0].toUpperCase() + theme.slice(1);
+    const name = !theme || theme === 'sky' ? '' : 'AppIcon-' + theme[0].toUpperCase() + theme.slice(1);
     try { await WB.setIcon({ name }); } catch (e) { console.warn('icon', e); }
   }
   window.NH = { setPref, alertsOn: () => alertsOn, toggleAlerts, refresh, startCompass, getLocation, platform, setIcon };
