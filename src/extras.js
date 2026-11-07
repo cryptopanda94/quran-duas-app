@@ -396,7 +396,7 @@ function monthStart(dt){ // civil Date of the 1st of the hijri month containing 
   let d=new Date(dt.getFullYear(),dt.getMonth(),dt.getDate());
   for(let i=0;i<31;i++){const h=hijri(...civ(d));if(h.d===1)return d;d=new Date(d.getFullYear(),d.getMonth(),d.getDate()-1)}return d}
 function renderCalendar(){
-  setHeader('Shia calendar',true);noJump();
+  setHeader('Calendar',true);noJump();
   if(!HFMT){app.innerHTML='<div class="empty">This browser cannot show Islamic dates.</div>';return}
   if(!calStart)calStart=monthStart(new Date());
   const h0=hijri(...civ(calStart)),days=[];let d=new Date(calStart);
