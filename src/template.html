@@ -493,7 +493,7 @@ function renderHome(){
   setHeader('Quran',false);
   const last=S.last;
   app.innerHTML=`
-   <div class="hero"><div class="ar">القرآن الكريم</div><p>The Noble Quran · Indo-Pak script · English & Urdu translation</p></div>
+   <div class="hero"><div class="ar">القرآن الكريم</div></div>
    ${last?`<a class="continue" href="#surah-${last.s}-${last.v}"><div style="flex:1"><small>Continue reading</small><b>${esc(META[last.s-1][1])} · Verse ${last.v}</b></div>${icon.arrow}</a>`:''}
    <div class="search">${icon.search}<input id="q" type="search" placeholder="Search surah, 2:255, or a word in English / Urdu / Arabic" value="${esc(S.q)}" autocomplete="off"></div>
    <div class="tabs" id="tabs">
