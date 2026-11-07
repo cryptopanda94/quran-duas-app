@@ -109,6 +109,11 @@ function renderDua(id){
   return true;
 }
 
+const dediHTML=()=>`<div class="card dedi"><div class="dstar">✦</div>
+     <div class="dar">اَللّٰهُمَّ عَجِّلْ لِوَلِيِّكَ الْفَرَج</div>
+     <p>This app is lovingly dedicated to <b style="white-space:nowrap">Imam-e-Zamana (a.t.f.s.)</b>, the Master of our Time.</p>
+     <p class="dsub">Every time you turn towards the Kaaba, remember that he is waiting for us too. Please pray for his reappearance 🤍</p></div>`;
+
 /* ================= PRAYER TIMES (Jafari / Shia Ithna Ashari) ================= */
 const dtr=d=>d*Math.PI/180, rtd=r=>r*180/Math.PI;
 const sin=d=>Math.sin(dtr(d)),cos=d=>Math.cos(dtr(d)),tan=d=>Math.tan(dtr(d));
@@ -365,10 +370,7 @@ function renderQibla(){
      <div class="hint">Qibla ${b.toFixed(1)}° ${card} from true North · Makkah ${Math.round(km).toLocaleString()} km</div>`:`<div class="qdeg">${b.toFixed(1)}° <span style="font-size:20px;color:var(--muted)">${card}</span></div>
      <div class="hint">clockwise from true North · Makkah is ${Math.round(km).toLocaleString()} km away</div>`}
    </div>
-   <div class="card dedi"><div class="dstar">✦</div>
-     <div class="dar">اَللّٰهُمَّ عَجِّلْ لِوَلِيِّكَ الْفَرَج</div>
-     <p>This app is lovingly dedicated to <b style="white-space:nowrap">Imam-e-Zamana (a.t.f.s.)</b>, the Master of our Time.</p>
-     <p class="dsub">Every time you turn towards the Kaaba, remember that he is waiting for us too. Please pray for his reappearance 🤍</p></div>
+   ${dediHTML()}
    ${window.NH?'':`<div class="card hint"><b style="color:var(--ink)">How to use it:</b> open your phone's Compass app, turn until it reads <b>${Math.round(b)}°</b> — you're then facing the Qibla. (A web page can't read your phone's compass sensor, so this dial doesn't turn by itself.)</div>`}`;
   if(window.NH){$('qStart').onclick=()=>NH.startCompass(b);setTimeout(()=>{if($('roseAll'))NH.startCompass(b)},150)}
   $('chg').onclick=()=>{editing=true;renderQibla()};
@@ -485,6 +487,7 @@ function renderToday(){
   app.innerHTML=`<div class="hero" style="padding-top:18px"><p style="font-size:13px;letter-spacing:.08em;text-transform:uppercase">${esc(dstr)}</p>
      ${ht?`<a href="#calendar" style="display:block;margin-top:4px"><b style="font-size:17px;color:var(--accent)">${hijriStr(ht)}</b> <span style="font-family:'Noto Nastaliq Urdu',serif;color:var(--muted)">${ht.d} ${HMU[ht.m-1]}</span></a>`:''}</div>
    ${tev.map(e=>`<a class="ev ${e[1]===1?'joy':e[1]===0?'grief':'other'}" href="#calendar" style="display:block"><div class="evd">Today</div><div class="evt">${esc(e[2]).replace(/\n+/g,'<br>')}</div></a>`).join('')}
+   ${dediHTML()}
    ${pr}
    <div class="tcard ayah-card">
      <div class="tlabel">Ayah of the day · ${esc(META[A.s-1][1])} ${ref}</div>
