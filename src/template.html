@@ -26,8 +26,8 @@
 [data-theme=violet] :is(.continue,.tab.on,.verse.playing .ref,.seg button.on,.jumpbox button,.btn.pri,.next,.alertbar,.chip.on,.listen,.pbar #pPlay,.prayer-card){color:#f6efff}
 [data-theme=violet] .qs .sfoot .sdone{color:#1a1408}
 [data-theme=sky]{--bg:#e8f2fa;--card:#f7fbff;--ink:#15314a;--muted:#5a7590;--line:#cddfee;--accent:#1d6fb0;--fill:#2378c0;--accent-soft:#d5e7f7;--gold:#b98326;--hl:#fff1c9;--rule:#b9cfe2;--vbg:linear-gradient(180deg,#ffffff,#f1f7fc);--vline:#d3e3f1}
-:is([data-theme=royal],[data-theme=violet],[data-theme=sky],[data-theme=navy],[data-theme=lavender]) :is(.verse,.dverse){background:var(--vbg);border:1px solid var(--vline);border-radius:16px;padding:16px 14px;margin:12px 0}
-:is([data-theme=royal],[data-theme=violet],[data-theme=sky],[data-theme=navy],[data-theme=lavender]) .verse.playing{box-shadow:0 0 0 2px var(--gold)}
+:is([data-theme=royal],[data-theme=violet],[data-theme=sky],[data-theme=navy],[data-theme=lavender],[data-theme=emerald]) :is(.verse,.dverse){background:var(--vbg);border:1px solid var(--vline);border-radius:16px;padding:16px 14px;margin:12px 0}
+:is([data-theme=royal],[data-theme=violet],[data-theme=sky],[data-theme=navy],[data-theme=lavender],[data-theme=emerald]) .verse.playing{box-shadow:0 0 0 2px var(--gold)}
 [data-theme=sky] .ayah-card{background:linear-gradient(170deg,#dcebf8,var(--card))}
 [data-theme=navy]{--bg:#0b1426;--card:#111d35;--ink:#eaf0fa;--muted:#9aa9c2;--line:#22324f;--accent:#e2b65e;--fill:#1f4e8c;--accent-soft:#1a2c4d;--gold:#e2b65e;--hl:#1d3358;--rule:#2b3e60;--vbg:linear-gradient(160deg,#16294a,#0f1a30);--vline:#263a5e}
 [data-theme=navy] :is(.continue,.tab.on,.verse.playing .ref,.seg button.on,.jumpbox button,.btn.pri,.next,.alertbar,.chip.on,.listen,.pbar #pPlay,.prayer-card){color:#f6dc95}
@@ -36,6 +36,11 @@
 [data-theme=lavender] body{background:radial-gradient(ellipse 120% 60% at 50% 0%,#E4D2FF 0%,#F2E9FF 55%) fixed}
 [data-theme=lavender] .prayer-card{background:linear-gradient(160deg,#6A2FC8,#25134D)}
 [data-theme=lavender] .ayah-card{background:linear-gradient(170deg,#E9DCFF,var(--card))}
+[data-theme=emerald]{--bg:#051F20;--card:#0B2B26;--ink:#DAF1DE;--muted:#8EB69B;--line:#1d4239;--accent:#8EB69B;--fill:#235347;--accent-soft:#163832;--gold:#B9DBC2;--hl:#163832;--rule:#235347;--vbg:linear-gradient(160deg,#163832,#0B2B26);--vline:#235347}
+[data-theme=emerald] body{background:radial-gradient(ellipse 120% 60% at 50% 0%,#0f3a33 0%,#051F20 60%) fixed}
+[data-theme=emerald] :is(.continue,.tab.on,.verse.playing .ref,.seg button.on,.jumpbox button,.btn.pri,.next,.alertbar,.chip.on,.listen,.pbar #pPlay,.prayer-card){color:#DAF1DE}
+[data-theme=emerald] .prayer-card{background:linear-gradient(160deg,#235347,#0B2B26)}
+[data-theme=emerald] .qs .sfoot .sdone{color:#051F20}
 [data-theme=dark]{
   --bg:#12161a;--card:#1a2026;--ink:#ece6da;--muted:#9a9488;--line:#2a323a;
   --accent:#5cc2a3;--accent-soft:#1d3530;--gold:#d4b06a;--hl:#2e2a1b;--rule:#3a444d;
@@ -380,6 +385,7 @@ body.playing .wrap{padding-bottom:180px}
       <button class="sw" data-v="black"><i style="background:#000;color:#ebe8e1">Aa</i>Black</button>
       <button class="sw" data-v="sky"><i style="background:#e8f2fa;color:#1d6fb0;border-color:#9cc3e4">Aa</i>Sky</button>
       <button class="sw" data-v="lavender"><i style="background:linear-gradient(160deg,#F2E9FF,#D1B8FF);color:#6A2FC8;border-color:#9D71E8">Aa</i>Lavender</button>
+      <button class="sw" data-v="emerald"><i style="background:linear-gradient(160deg,#235347,#051F20);color:#DAF1DE;border-color:#8EB69B">Aa</i>Emerald</button>
       <button class="sw" data-v="navy"><i style="background:linear-gradient(160deg,#16294a,#0b1426);color:#e2b65e;border-color:#1f4e8c">Aa</i>Navy</button>
       <button class="sw" data-v="violet"><i style="background:linear-gradient(160deg,#2c2048,#14111c);color:#c9aaff;border-color:#6a42b0">Aa</i>Violet</button>
       <button class="sw" data-v="royal"><i style="background:#12161a;color:#e2b65e;border-color:#8a2236">Aa</i>Royal</button>
@@ -719,11 +725,11 @@ function drawRecs(){$('recList').innerHTML=RECS.map(([k,n,t])=>`<button data-v="
 drawRecs();$('pRec').textContent=recName();
 $('recList').onclick=e=>{const b=e.target.closest('button');if(!b||b.dataset.v===S.rec)return;stopPlayer();S.rec=b.dataset.v;store.set('rec',S.rec);AUD=AUD_ALL[S.rec];P.srcS=0;P.part=-1;P.s=0;drawRecs();$('pRec').textContent=recName();rerender()};
 $('sTabs').onclick=e=>{const b=e.target.closest('button');if(!b)return;[...$('sTabs').children].forEach(x=>x.classList.toggle('on',x===b));document.querySelectorAll('#setSheet .spane').forEach(p=>p.classList.toggle('on',p.dataset.p===b.dataset.p))};
-$('setReset').onclick=()=>{Object.assign(S,{theme:'sepia',font:'indopak',arSize:40,tr:'off',enT:'sahih',urT:'junagarhi',enSize:16,showTr:false,rules:false});['theme','font','arSize','tr','enT','urT','enSize','showTr','rules'].forEach(k=>store.set(k,S[k]));EN=EN_S;UR=UR_J;rerender()};
+$('setReset').onclick=()=>{Object.assign(S,{theme:'sepia',font:'indopak',arSize:40,tr:'off',enT:'sahih',urT:'junagarhi',enSize:16,showTr:false,rules:false});['theme','font','arSize','tr','enT','urT','enSize','showTr','rules'].forEach(k=>store.set(k,S[k]));EN=EN_S;UR=UR_J;rerender();window.NH&&NH.setIcon&&NH.setIcon(S.theme)};
 $('urTSeg').onclick=e=>{const b=e.target.closest('button');if(!b)return;S.urT=b.dataset.v;store.set('urT',S.urT);UR=urFor(S.urT);rerender()};
 $('enTSeg').onclick=e=>{const b=e.target.closest('button');if(!b)return;S.enT=b.dataset.v;store.set('enT',S.enT);EN=S.enT==='qarai'?EN_Q:EN_S;rerender()};
 $('enSeg').onclick=e=>{const b=e.target.closest('button');if(!b)return;S.tr=b.dataset.v;store.set('tr',S.tr);applySettings()};
-$('thSeg').onclick=e=>{const b=e.target.closest('button');if(!b)return;S.theme=b.dataset.v;store.set('theme',S.theme);applySettings()};
+$('thSeg').onclick=e=>{const b=e.target.closest('button');if(!b)return;S.theme=b.dataset.v;store.set('theme',S.theme);applySettings();window.NH&&NH.setIcon&&NH.setIcon(S.theme)};
 $('pPlay').innerHTML=icon.play2;
 $('pPlay').onclick=()=>{if(!P.s)return;if(P.el.paused){P.on=true;P.el.play().catch(()=>{})}else P.el.pause()};
 $('pPrev').onclick=()=>stepVerse(-1);$('pNext').onclick=()=>stepVerse(1);

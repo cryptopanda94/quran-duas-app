@@ -25,6 +25,7 @@ jobs:
       - run: npx cap add ios
       - run: npm run native:setup
       - run: npx capacitor-assets generate --ios
+      - run: node scripts/ios-alt-icons.mjs
       - run: npx cap sync ios
       - run: node scripts/ios-plugins.mjs
       - name: Add widget target + App Group

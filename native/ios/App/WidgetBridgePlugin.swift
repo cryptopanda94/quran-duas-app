@@ -1,4 +1,5 @@
 import Foundation
+import UIKit
 import Capacitor
 import WidgetKit
 import CoreLocation
@@ -14,7 +15,8 @@ public class WidgetBridgePlugin: CAPPlugin, CAPBridgedPlugin, CLLocationManagerD
         CAPPluginMethod(name: "update", returnType: CAPPluginReturnPromise),
         CAPPluginMethod(name: "startHeading", returnType: CAPPluginReturnPromise),
         CAPPluginMethod(name: "stopHeading", returnType: CAPPluginReturnPromise),
-        CAPPluginMethod(name: "getLocation", returnType: CAPPluginReturnPromise)
+        CAPPluginMethod(name: "getLocation", returnType: CAPPluginReturnPromise),
+        CAPPluginMethod(name: "setIcon", returnType: CAPPluginReturnPromise)
     ]
     private var locCalls: [CAPPluginCall] = []
     private var lm: CLLocationManager?
@@ -24,6 +26,19 @@ public class WidgetBridgePlugin: CAPPlugin, CAPBridgedPlugin, CLLocationManagerD
     static let appGroup = "group.com.cryptopanda94.quranduas"
 
     public override func load() { NSLog("QD: WidgetBridgePlugin loaded") }
+
+    /// Switch the home-screen icon to match the theme. name nil/"" = the main icon.
+    @objc func setIcon(_ call: CAPPluginCall) {
+        let raw = call.getString("name") ?? ""
+        let name: String? = raw.isEmpty ? nil : raw
+        DispatchQueue.main.async {
+            guard UIApplication.shared.supportsAlternateIcons else { call.reject("alternate icons not supported"); return }
+            if UIApplication.shared.alternateIconName == name { call.resolve(); return }
+            UIApplication.shared.setAlternateIconName(name) { err in
+                if let err = err { NSLog("QD: setIcon failed \(err)"); call.reject(err.localizedDescription) } else { call.resolve() }
+            }
+        }
+    }
 
     @objc func update(_ call: CAPPluginCall) {
         guard let data = call.getString("data") else {

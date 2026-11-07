@@ -70,6 +70,13 @@ widget.build_configurations.each do |c|
   s['LD_RUNPATH_SEARCH_PATHS']   = ['$(inherited)', '@executable_path/Frameworks', '@executable_path/../../Frameworks']
 end
 app.build_configurations.each { |c| c.build_settings['CODE_SIGN_ENTITLEMENTS'] = 'App/App.entitlements' }
+# Theme icons: alternate app icon sets in Assets.xcassets (made by scripts/ios-alt-icons.mjs)
+alt = Dir[File.join(ios, 'App', 'Assets.xcassets', 'AppIcon-*.appiconset')].map { |d| File.basename(d, '.appiconset') }.sort
+app.build_configurations.each do |c|
+  c.build_settings['ASSETCATALOG_COMPILER_INCLUDE_ALL_APPICON_ASSETS'] = 'YES'
+  c.build_settings['ASSETCATALOG_COMPILER_ALTERNATE_APPICON_NAMES'] = alt.join(' ') unless alt.empty?
+end
+puts "alternate icons: #{alt.join(', ')}"
 
 team  = ENV['APPLE_TEAM_ID'].to_s.strip
 build = ENV['BUILD_NUMBER'].to_s.strip
