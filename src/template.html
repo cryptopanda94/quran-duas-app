@@ -121,6 +121,12 @@ input[type=range]{accent-color:var(--accent);width:150px}
 .dseg{display:grid;grid-template-columns:1fr 1fr}.dseg button{padding:10px;font-size:15px;font-weight:600}
 .azseg{display:grid;grid-template-columns:repeat(5,1fr)}.azseg button{padding:8px 2px;font-size:13px}
 .azsum{display:inline-block;margin-right:8px;font-size:12px;color:var(--muted)}
+.aprefs{display:flex;flex-direction:column;gap:8px}
+.arow{display:flex;align-items:center;gap:12px;width:100%;text-align:left;padding:12px;border:1px solid var(--line);border-radius:12px;background:var(--bg)}
+.arow span{flex:1}.arow b{display:block;font-size:15px}.arow small{display:block;font-size:12px;color:var(--muted);margin-top:2px}
+.arow .sw,.trtog .sw{width:44px;height:26px;border-radius:13px;background:var(--line);position:relative;flex:none;transition:background .2s}
+.arow .sw::after{content:"";position:absolute;top:3px;left:3px;width:20px;height:20px;border-radius:50%;background:#fff;box-shadow:0 1px 3px rgba(0,0,0,.25);transition:left .2s}
+.arow .sw.on{background:var(--accent)}.arow .sw.on::after{left:21px}
 .dgrp{display:flex;align-items:baseline;justify-content:space-between;margin:20px 2px 8px}.dgrp b{font-size:13px;letter-spacing:.08em;text-transform:uppercase;color:var(--gold)}.dgrp span{font-family:IndoPak,serif;color:var(--muted);font-size:18px}
 .uvc{padding:6px 0 2px}.enb{text-align:left;line-height:1.7;margin:4px 6px 14px}.enb b{display:block;font-size:12px;letter-spacing:.06em;text-transform:uppercase;margin-bottom:6px;color:var(--accent)}
 .dua-item .num{transform:none;border-radius:12px;font-family:IndoPak,serif;font-size:18px}

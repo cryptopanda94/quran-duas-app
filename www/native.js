@@ -16,7 +16,7 @@
   const toast = (m) => { try { window.Q && Q.toast(m); } catch (e) {} };
 
   /* ---------------- Azan notifications ---------------- */
-  const DAYS_AHEAD = 6;           // 6 days x 5 prayers = 30 (iOS allows 64 pending)
+  const DAYS_AHEAD = 12;          // 12 days x 5 prayers = 60 (iOS allows 64 pending)
   // one Android channel per sound (a channel's sound can't change once created)
   const SOUNDS = {
     builtin: { ch: 'azan', name: 'Azan (Shia)', file: 'azan_short.wav' },
@@ -24,15 +24,25 @@
     medina:  { ch: 'azan_medina', name: 'Azan (Medina)', file: 'azan_medina_short.wav' },
   };
   const soundFor = (k) => SOUNDS[(window.QX && QX.slotFor(k))] || SOUNDS.builtin;
+  // user prefs: sound on/off, vibrate on/off (Android: one channel per sound x vibration, since channels can't change)
+  const prefs = () => ({ sound: store.get('alertSound', true), vib: store.get('alertVib', true) });
+  function alertFor(k) {
+    const { sound, vib } = prefs();
+    if (sound) { const s = soundFor(k); return { file: s.file, ch: `${s.ch}_v${vib ? 1 : 0}` }; }
+    // no azan: a silent sound still lets iPhone vibrate; Android uses a silent channel with/without vibration
+    if (vib) return { file: 'silent.wav', ch: 'silent_v1' };
+    return { file: platform === 'android' ? 'silent.wav' : null, ch: 'silent_v0' };
+  }
   let alertsOn = store.get('nativeAlerts', false);
 
   async function ensureChannel() {
     if (platform !== 'android') return;
     try {
-      for (const s of Object.values(SOUNDS)) {
-        const c = { id: s.ch, name: s.name, description: 'Prayer time alerts', importance: 5, visibility: 1, vibration: true };
-        if (s.file) c.sound = s.file;
-        await LN.createChannel(c);
+      for (const old of ['azan', 'azan_mecca', 'azan_medina', 'prayer_chime']) { try { await LN.deleteChannel({ id: old }); } catch (e) {} }
+      const list = [...Object.values(SOUNDS), { ch: 'silent', name: 'Prayer time (silent)', file: 'silent.wav' }];
+      for (const s of list) for (const v of [1, 0]) {
+        await LN.createChannel({ id: `${s.ch}_v${v}`, name: `${s.name}${v ? '' : ' · no vibration'}`,
+          description: 'Prayer time alerts', importance: 5, visibility: 1, vibration: !!v, sound: s.file });
       }
     } catch (e) { console.warn('channel', e); }
   }
@@ -64,8 +74,8 @@
           title: `${n} · ${u}`,
           body: `It's time for ${n} prayer — ${QX.LOC.name}`,
           schedule: { at: new Date(at), allowWhileIdle: true },
-          ...(soundFor(k).file ? { sound: soundFor(k).file } : {}),
-          channelId: soundFor(k).ch,
+          ...(alertFor(k).file ? { sound: alertFor(k).file } : {}),
+          channelId: alertFor(k).ch,
           extra: { k, n },
         });
       });
@@ -229,7 +239,9 @@
       { enableHighAccuracy: false, timeout: 20000, maximumAge: 600000 }));
   }
 
-  window.NH = { alertsOn: () => alertsOn, toggleAlerts, refresh, startCompass, getLocation, platform };
+  async function setPref(key, val) { store.set(key, val); await schedule(); }
+
+  window.NH = { setPref, alertsOn: () => alertsOn, toggleAlerts, refresh, startCompass, getLocation, platform };
 
   try {
     LN.addListener('localNotificationReceived', (n) => {

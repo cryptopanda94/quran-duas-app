@@ -24,7 +24,7 @@ class MainViewController: CAPBridgeViewController {
         guard let lib = fm.urls(for: .libraryDirectory, in: .userDomainMask).first else { return }
         let dir = lib.appendingPathComponent("Sounds", isDirectory: true)
         try? fm.createDirectory(at: dir, withIntermediateDirectories: true)
-        for name in ["azan_short", "azan_mecca_short", "azan_medina_short"] {
+        for name in ["azan_short", "azan_mecca_short", "azan_medina_short", "silent"] {
             guard let src = Bundle.main.url(forResource: name, withExtension: "wav", subdirectory: "public") else { continue }
             let dst = dir.appendingPathComponent(name + ".wav")
             if fm.fileExists(atPath: dst.path) { continue }

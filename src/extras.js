@@ -185,6 +185,8 @@ function slotFor(k){const v=AZP[k]||AZP.dhuhr;return AZ[v]?v:'builtin'}
 function playAlert(name,k){
   stopAlert();const slot=k&&k.startsWith('slot:')?k.slice(5):slotFor(k);
   $('alertTxt').textContent=k&&k.startsWith('slot:')?`Playing: ${name}`:`It's time for ${name} prayer · ${LOC?LOC.name:''}`;$('alertbar').classList.add('show');
+  if(!k||!k.startsWith('slot:')){try{if(store.get('alertVib',true)&&navigator.vibrate)navigator.vibrate([600,300,600])}catch(e){}
+    if(!store.get('alertSound',true)){playing={stop(){}};return}}
   if(AZ[slot]){const a=new Audio(AZ[slot].url);a.play().catch(()=>{});a.onended=()=>$('alertbar').classList.remove('show');playing={stop(){a.pause()}}}
   else playing=chime();
   try{if(window.Notification&&Notification.permission==='granted')new Notification(`${name} — time for prayer`,{body:LOC?LOC.name:''})}catch(e){}
@@ -280,8 +282,13 @@ function renderPrayer(){
       ${main?`<button class="bell${ALERTS[k]?' on':''}" data-k="${k}" aria-label="Azan alert for ${n}">${ALERTS[k]?icons.bell:icons.belloff}</button>`:'<span style="width:34px;flex:none"></span>'}</div>`).join('')}</div>
    <div class="card">
      <div style="display:flex;align-items:center;gap:10px;margin-bottom:10px"><b style="flex:1">Azan alerts</b>
-       <button class="btn${(window.NH?NH.alertsOn():armed)?'':' pri'}" id="arm">${(window.NH?NH.alertsOn():armed)?'✓ Alerts on':'Turn on alerts'}</button></div>
-     ${window.NH?`<div class="hint">The azan notification rings at each prayer time even when the app is closed or the phone is locked (a short azan, as phones limit notification sounds). Tap the notification to hear the full azan you chose below.</div>`:''}<div class="hint"${window.NH?' hidden':''}>Alerts ring <b>only while this page is open</b> on your screen — keep it open (e.g. on a charging phone or a computer). Browsers don't let web pages ring in the background, so for alerts with the phone locked you'd need an installed app.</div>
+       <button class="btn${(window.NH?NH.alertsOn():armed)?'':' pri'}" id="arm">${(window.NH?NH.alertsOn():armed)?'Turn off':'Turn on alerts'}</button></div>
+     ${(window.NH?NH.alertsOn():armed)?`<div class="aprefs">
+        <button class="arow" data-pref="alertSound"><span><b>🔊 Sound</b><small>Plays the azan you chose for each prayer</small></span><i class="sw${store.get('alertSound',true)?' on':''}"></i></button>
+        <button class="arow" data-pref="alertVib"><span><b>📳 Vibrate</b><small>${window.NH&&NH.platform==='ios'?'With sound on, vibration follows your iPhone\'s Sounds &amp; Haptics settings':'Vibrates when the alert arrives'}</small></span><i class="sw${store.get('alertVib',true)?' on':''}"></i></button>
+        <div class="hint" style="margin-top:8px">✓ Alerts on for ${esc(LOC.name)} — at the exact time of each prayer you've belled above, even when the app is closed.</div>
+      </div>`:`<div class="hint">Get an alert at the time of every salah for your location, with the azan you choose below.</div>`}
+     ${window.NH?'':`<div class="hint" style="margin-top:6px">In the web version, alerts ring <b>only while this page is open</b>. Install the app for alerts with the phone locked.</div>`}
    </div>
    <div class="card">
      <div style="display:flex;align-items:center;gap:10px;margin-bottom:10px"><b style="flex:1">Choose azan</b>
@@ -306,6 +313,9 @@ function renderPrayer(){
     const u=AZ[slotFor('dhuhr')]||AZ[slotFor('fajr')];if(u){const a=new Audio(u.url);a.volume=0;a.play().then(()=>a.pause()).catch(()=>{})}
     try{if(window.Notification&&Notification.permission==='default')Notification.requestPermission().catch(()=>{})}catch(e){}
     armed=true;toast('Azan alerts on — keep this page open');renderPrayer()};
+  app.querySelectorAll('[data-pref]').forEach(b=>b.onclick=async()=>{const k=b.dataset.pref,v=!store.get(k,true);
+    b.querySelector('.sw').classList.toggle('on',v);if(window.NH)await NH.setPref(k,v);else store.set(k,v);
+    toast((k==='alertSound'?'Sound ':'Vibrate ')+(v?'on':'off'))});
   app.querySelectorAll('[data-add]').forEach(inp=>inp.onchange=async e=>{const f=e.target.files[0];if(!f)return;const k=inp.dataset.add;
     if(AZ[k])URL.revokeObjectURL(AZ[k].url);AZ[k]={url:URL.createObjectURL(f),name:f.name};
     try{await idbPut('azan:'+k,{blob:f,name:f.name})}catch(err){toast('Saved for this visit only')}
