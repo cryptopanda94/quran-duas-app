@@ -1,0 +1,28 @@
+name: Fetch Tanzil translation
+on:
+  workflow_dispatch:
+    inputs:
+      edition: {description: 'alquran.cloud edition id, e.g. ur.jawadi', required: true}
+      out: {description: 'output file in src/data', required: true}
+permissions:
+  contents: write
+jobs:
+  fetch:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - env: {ED: "${{ inputs.edition }}", OUT: "${{ inputs.out }}"}
+        run: |
+          curl -sSf "https://api.alquran.cloud/v1/quran/$ED" -o /tmp/q.json
+          python3 - <<'PY'
+          import json,os
+          d=json.load(open('/tmp/q.json'))['data'];print(d['edition'])
+          out=['\n'.join(' '.join(a['text'].split()) for a in s['ayahs']) for s in d['surahs']]
+          n=sum(len(x.split('\n')) for x in out);print('verses',n);assert len(out)==114 and n==6236
+          print(out[0].split('\n')[:2])
+          json.dump({'source':d['edition']['name']+' via Tanzil.net','e':out},open('src/data/'+os.environ['OUT'],'w'),ensure_ascii=False)
+          PY
+      - run: |
+          git config user.name github-actions; git config user.email actions@github.com
+          git pull -q --rebase origin main
+          git add src/data/ && git commit -m "Add translation ${{ inputs.out }} [skip ci]" && git push
