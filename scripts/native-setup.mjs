@@ -74,6 +74,7 @@ async function setupIOS() {
   addKey('UIBackgroundModes', '<array>\n\t\t<string>audio</string>\n\t</array>');
   addKey('NSMotionUsageDescription', '<string>The Qibla compass uses your phone\'s motion sensors to show which way to face.</string>');
   addKey('ITSAppUsesNonExemptEncryption', '<false/>');
+  addKey('NSLocationWhenInUseUsageDescription', '<string>Your location lets the Qibla compass point to the Kaaba from true north.</string>');
   // home-screen name with a proper (escaped) ampersand
   p = p.replace(/(<key>CFBundleDisplayName<\/key>\s*<string>)[^<]*(<\/string>)/, '$1Quran &amp; Duas$2');
   writeFileSync(plist, p);

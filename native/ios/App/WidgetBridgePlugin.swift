@@ -1,17 +1,22 @@
 import Foundation
 import Capacitor
 import WidgetKit
+import CoreLocation
 
 /// JS: Capacitor.registerPlugin('WidgetBridge').update({ data: '<json>' })
 /// Saves the next prayer times + ayah of the day where the widgets can read them,
 /// then asks iOS to redraw the widgets.
 @objc(WidgetBridgePlugin)
-public class WidgetBridgePlugin: CAPPlugin, CAPBridgedPlugin {
+public class WidgetBridgePlugin: CAPPlugin, CAPBridgedPlugin, CLLocationManagerDelegate {
     public let identifier = "WidgetBridgePlugin"
     public let jsName = "WidgetBridge"
     public let pluginMethods: [CAPPluginMethod] = [
-        CAPPluginMethod(name: "update", returnType: CAPPluginReturnPromise)
+        CAPPluginMethod(name: "update", returnType: CAPPluginReturnPromise),
+        CAPPluginMethod(name: "startHeading", returnType: CAPPluginReturnPromise),
+        CAPPluginMethod(name: "stopHeading", returnType: CAPPluginReturnPromise)
     ]
+    private var lm: CLLocationManager?
+    private var headingOn = false
 
     /// Must match the App Group you add to BOTH the App and the QuranWidget targets in Xcode.
     static let appGroup = "group.com.cryptopanda94.quranduas"
@@ -31,4 +36,54 @@ public class WidgetBridgePlugin: CAPPlugin, CAPBridgedPlugin {
         }
         call.resolve()
     }
+
+    // MARK: - Qibla compass (native heading; the web view's motion events are unreliable on iOS)
+
+    @objc func startHeading(_ call: CAPPluginCall) {
+        DispatchQueue.main.async {
+            guard CLLocationManager.headingAvailable() else {
+                call.reject("This device has no compass")
+                return
+            }
+            let m = self.lm ?? CLLocationManager()
+            self.lm = m
+            m.delegate = self
+            m.headingFilter = 1
+            m.headingOrientation = .portrait
+            m.desiredAccuracy = kCLLocationAccuracyKilometer
+            self.headingOn = true
+            switch m.authorizationStatus {
+            case .notDetermined: m.requestWhenInUseAuthorization()   // for true north; heading works either way
+            case .authorizedWhenInUse, .authorizedAlways: m.startUpdatingLocation()
+            default: break
+            }
+            m.startUpdatingHeading()
+            call.resolve()
+        }
+    }
+
+    @objc func stopHeading(_ call: CAPPluginCall) {
+        DispatchQueue.main.async {
+            self.headingOn = false
+            self.lm?.stopUpdatingHeading()
+            self.lm?.stopUpdatingLocation()
+            call.resolve()
+        }
+    }
+
+    public func locationManagerDidChangeAuthorization(_ m: CLLocationManager) {
+        if headingOn && (m.authorizationStatus == .authorizedWhenInUse || m.authorizationStatus == .authorizedAlways) {
+            m.startUpdatingLocation()
+        }
+    }
+
+    public func locationManager(_ m: CLLocationManager, didUpdateHeading h: CLHeading) {
+        let isTrue = h.trueHeading >= 0
+        notifyListeners("heading", data: ["h": isTrue ? h.trueHeading : h.magneticHeading,
+                                          "acc": h.headingAccuracy, "true": isTrue])
+    }
+
+    public func locationManager(_ m: CLLocationManager, didFailWithError error: Error) {}
+
+    public func locationManagerShouldDisplayHeadingCalibration(_ m: CLLocationManager) -> Bool { true }
 }

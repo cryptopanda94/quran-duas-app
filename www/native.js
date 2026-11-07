@@ -145,21 +145,9 @@
     const status = () => document.getElementById('qStatus');
     const rose = () => document.getElementById('roseAll');
     if (stopCompass) stopCompass();
-    try {
-      if (platform === 'ios' && typeof DeviceOrientationEvent !== 'undefined' && typeof DeviceOrientationEvent.requestPermission === 'function') {
-        const r = await DeviceOrientationEvent.requestPermission();
-        if (r !== 'granted') { status().textContent = 'Compass permission was not given. You can allow it in Settings.'; return; }
-      }
-    } catch (e) {}
     const btn = document.getElementById('qStart'); if (btn) btn.hidden = true;
     let shown = null, got = false;
-    const onO = (e) => {
-      let h = null;
-      if (typeof e.webkitCompassHeading === 'number') h = e.webkitCompassHeading;         // iOS
-      else if (e.absolute !== false && typeof e.alpha === 'number') h = (360 - e.alpha) % 360; // Android
-      if (h == null) return;
-      const so = (screen.orientation && screen.orientation.angle) || window.orientation || 0;
-      h = (h + so + 360) % 360;
+    const show = (h) => {
       const r = rose(), st = status();
       if (!r || !st) { stop(); return; }
       got = true;
@@ -171,13 +159,37 @@
         ? '<b style="color:var(--accent);font-size:17px">✓ You are facing the Qibla</b>'
         : `Turn <b>${diff > 0 ? 'right' : 'left'}</b> ${Math.round(Math.abs(diff))}°`;
     };
-    const ev = ('ondeviceorientationabsolute' in window) ? 'deviceorientationabsolute' : 'deviceorientation';
-    window.addEventListener(ev, onO);
+    let stop = () => {};
     const onHash = () => stop();
     window.addEventListener('hashchange', onHash);
-    function stop() { window.removeEventListener(ev, onO); window.removeEventListener('hashchange', onHash); stopCompass = null; }
-    stopCompass = stop;
-    setTimeout(() => { if (!got && status()) status().textContent = 'No compass reading yet — move your phone in a figure-8 to calibrate it.'; }, 3000);
+
+    if (platform === 'ios') {
+      // iOS: read the heading from Core Location (works without any web permission prompt)
+      let sub = null;
+      try {
+        sub = await WB.addListener('heading', (d) => { if (d && typeof d.h === 'number') show(d.h); });
+        await WB.startHeading();
+      } catch (e) {
+        if (sub) sub.remove();
+        status().textContent = 'Compass not available on this device.';
+        window.removeEventListener('hashchange', onHash); return;
+      }
+      stop = () => { try { sub && sub.remove(); WB.stopHeading(); } catch (e) {} window.removeEventListener('hashchange', onHash); stopCompass = null; };
+    } else {
+      const onO = (e) => {
+        let h = null;
+        if (typeof e.webkitCompassHeading === 'number') h = e.webkitCompassHeading;
+        else if (e.absolute !== false && typeof e.alpha === 'number') h = (360 - e.alpha) % 360;
+        if (h == null) return;
+        const so = (screen.orientation && screen.orientation.angle) || window.orientation || 0;
+        show((h + so + 360) % 360);
+      };
+      const ev = ('ondeviceorientationabsolute' in window) ? 'deviceorientationabsolute' : 'deviceorientation';
+      window.addEventListener(ev, onO);
+      stop = () => { window.removeEventListener(ev, onO); window.removeEventListener('hashchange', onHash); stopCompass = null; };
+    }
+    stopCompass = () => stop();
+    setTimeout(() => { if (!got && status()) status().textContent = 'No compass reading yet — move your phone in a figure-8 to calibrate it.'; }, 4000);
   }
 
   /* ---------------- App lifecycle ---------------- */
