@@ -227,11 +227,11 @@ function cityPicker(target){
   $('cq').oninput=e=>show(e.target.value);
   if($('cgps'))$('cgps').onclick=async()=>{const b=$('cgps');b.disabled=true;b.textContent='Finding your location…';if(!(await locateMe(false))){b.disabled=false;b.textContent='📍 Use my current location'}};
   $('cres').onclick=e=>{const b=e.target.closest('button');if(!b)return;const p=CI.p[+b.dataset.i];
-    setLoc({name:`${p[0]}, ${CI.c[p[1]]||p[1]}`,lat:p[2],lng:p[3],tz:CI.z[p[4]]})};
+    setLoc({name:`${p[0]}, ${CI.c[p[1]]||p[1]}`,lat:p[2],lng:p[3],tz:CI.z[p[4]],auto:false})};
   $('cset').onclick=()=>{const la=parseFloat($('clat').value),ln=parseFloat($('clng').value);
     if(!(la>=-90&&la<=90&&ln>=-180&&ln<=180)){toast('Enter a valid latitude and longitude');return}
     let tz;try{tz=Intl.DateTimeFormat().resolvedOptions().timeZone}catch(e){tz='UTC'}
-    setLoc({name:`${la.toFixed(2)}, ${ln.toFixed(2)}`,lat:la,lng:ln,tz})};
+    setLoc({name:`${la.toFixed(2)}, ${ln.toFixed(2)}`,lat:la,lng:ln,tz,auto:false})};
   setTimeout(()=>{try{$('cq').focus()}catch(e){}},50);
 }
 function setLoc(l,quiet){LOC=l;store.set('loc',l);if(!quiet)toast('Location set: '+l.name);window.NH&&NH.refresh();route2()}
@@ -251,7 +251,7 @@ async function locateMe(quiet){
     let tz;try{tz=Intl.DateTimeFormat().resolvedOptions().timeZone}catch(e){tz=c?CI.z[c[4]]:'UTC'}
     const place=c?`${c[0]}, ${CI.c[c[1]]||c[1]}`:`${lat.toFixed(2)}, ${lng.toFixed(2)}`;
     const name=c&&d>40?`Near ${place}`:place;
-    if(quiet&&LOC&&LOC.auto){const [,moved]=[0,Math.hypot(LOC.lat-lat,(LOC.lng-lng)*Math.cos(dtr(lat)))*111];if(moved<20){locating=false;return true}}
+    if(quiet&&LOC&&LOC.auto!==false){const [,moved]=[0,Math.hypot(LOC.lat-lat,(LOC.lng-lng)*Math.cos(dtr(lat)))*111];if(moved<20){locating=false;return true}}
     setLoc({name,lat:+lat.toFixed(4),lng:+lng.toFixed(4),tz,auto:true},quiet);editing=false;
     if(quiet)toast('📍 Location: '+name);
     return true;
@@ -261,8 +261,8 @@ async function locateMe(quiet){
 /* called at launch / when the app comes back: first run asks once; afterwards only follows you if you chose automatic */
 function autoLocate(resume){
   if(!window.NH)return;
-  if(!LOC){if(resume||store.get('autoAsked',false))return;store.set('autoAsked',true);locateMe(true);return}
-  if(LOC.auto)locateMe(true);
+  if(!LOC){if(resume&&store.get('autoAsked',false))return;store.set('autoAsked',true);locateMe(true);return}
+  if(LOC.auto!==false)locateMe(true);
 }
 function route2(){if(location.hash==='#qibla')renderQibla();else renderPrayer()}
 let editing=false;
@@ -276,7 +276,7 @@ function renderPrayer(){
   const now=new Date(),T=timesFor(LOC,now),np=nextPrayer();
   let dstr='';try{dstr=now.toLocaleDateString([], {timeZone:LOC.tz,weekday:'long',day:'numeric',month:'long'})}catch(e){}
   app.innerHTML=`
-   <div class="card loc" style="margin-top:16px"><b>📍 ${esc(LOC.name)}<br><small class="hint">${esc(dstr)}${LOC.auto?' · automatic':''}</small></b><button class="btn" id="chg">Change</button></div>
+   <div class="card loc" style="margin-top:16px"><b>📍 ${esc(LOC.name)}<br><small class="hint">${esc(dstr)}${window.NH&&LOC.auto!==false?' · 📡 automatic':''}</small></b><button class="btn" id="chg">Change</button></div>
    <div class="next" id="nextBox"></div>
    <div class="card ptable">${PR.map(([k,n,u,main])=>`<div class="pr${main?'':' minor'}${np&&np.k===k?' now':''}"><span>${n}</span><span class="ur">${u}</span><b>${fmt(LOC,T[k])}</b>
       ${main?`<button class="bell${ALERTS[k]?' on':''}" data-k="${k}" aria-label="Azan alert for ${n}">${ALERTS[k]?icons.bell:icons.belloff}</button>`:'<span style="width:34px;flex:none"></span>'}</div>`).join('')}</div>
