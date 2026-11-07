@@ -451,7 +451,7 @@ const $=id=>document.getElementById(id), app=$('app');
 const store={get(k,d){try{const v=localStorage.getItem('qr_'+k);return v==null?d:JSON.parse(v)}catch(e){return d}},
              set(k,v){try{localStorage.setItem('qr_'+k,JSON.stringify(v))}catch(e){}}};
 const S={arSize:store.get('arSize',40),tr:store.get('tr','off'),
-         theme:store.get('theme','sepia'),
+         theme:store.get('theme','sky'),
          marks:store.get('marks',[]),showTr:store.get('showTr',false),enSize:store.get('enSize',16),rules:store.get('rules',false),font:store.get('font','indopak'),ensrc:store.get('ensrc2','alt'),rec:store.get('rec','alafasy'),urT:store.get('urT','junagarhi'),enT:store.get('enT','sahih'),last:store.get('last',null),tab:'surahs',q:''};
 
 EN=S.enT==='qarai'?EN_Q:EN_S;
@@ -736,7 +736,7 @@ function drawRecs(){$('recList').innerHTML=RECS.map(([k,n,t])=>`<button data-v="
 drawRecs();$('pRec').textContent=recName();
 $('recList').onclick=e=>{const b=e.target.closest('button');if(!b||b.dataset.v===S.rec)return;stopPlayer();S.rec=b.dataset.v;store.set('rec',S.rec);AUD=AUD_ALL[S.rec];P.srcS=0;P.part=-1;P.s=0;drawRecs();$('pRec').textContent=recName();rerender()};
 $('sTabs').onclick=e=>{const b=e.target.closest('button');if(!b)return;[...$('sTabs').children].forEach(x=>x.classList.toggle('on',x===b));document.querySelectorAll('#setSheet .spane').forEach(p=>p.classList.toggle('on',p.dataset.p===b.dataset.p))};
-$('setReset').onclick=()=>{Object.assign(S,{theme:'sepia',font:'indopak',arSize:40,tr:'off',enT:'sahih',urT:'junagarhi',enSize:16,showTr:false,rules:false});['theme','font','arSize','tr','enT','urT','enSize','showTr','rules'].forEach(k=>store.set(k,S[k]));EN=EN_S;UR=UR_J;rerender();window.NH&&NH.setIcon&&NH.setIcon(S.theme)};
+$('setReset').onclick=()=>{Object.assign(S,{theme:'sky',font:'indopak',arSize:40,tr:'off',enT:'sahih',urT:'junagarhi',enSize:16,showTr:false,rules:false});['theme','font','arSize','tr','enT','urT','enSize','showTr','rules'].forEach(k=>store.set(k,S[k]));EN=EN_S;UR=UR_J;rerender();window.NH&&NH.setIcon&&NH.setIcon(S.theme)};
 $('urTSeg').onclick=e=>{const b=e.target.closest('button');if(!b)return;S.urT=b.dataset.v;store.set('urT',S.urT);UR=urFor(S.urT);rerender()};
 $('enTSeg').onclick=e=>{const b=e.target.closest('button');if(!b)return;S.enT=b.dataset.v;store.set('enT',S.enT);EN=S.enT==='qarai'?EN_Q:EN_S;rerender()};
 $('enSeg').onclick=e=>{const b=e.target.closest('button');if(!b)return;S.tr=b.dataset.v;store.set('tr',S.tr);applySettings()};
@@ -916,8 +916,8 @@ const fmt=(loc,dt)=>{try{return dt.toLocaleTimeString([], {timeZone:loc.tz,hour:
 let LOC=store.get('loc',null);
 const ALERTS=Object.assign({fajr:true,dhuhr:true,asr:true,maghrib:true,isha:true},store.get('alerts',{}));
 let armed=false,ticker=null,audioCtx=null,playing=null,fired=store.get('fired',{});
-const SLOTS=[['builtin','Azan','Ammal-e-Namaz recording'],['mecca','Mecca','Masjid al-Haram'],['medina','Medina','Masjid an-Nabawi']];
-const AZ={builtin:{url:document.getElementById('azdata').dataset.src||('data:audio/mpeg;base64,'+document.getElementById('azdata').textContent.trim()),name:'Azan (Ammal-e-Namaz)',fixed:true},
+const SLOTS=[['builtin','Azan',''],['mecca','Mecca','Masjid al-Haram'],['medina','Medina','Masjid an-Nabawi']];
+const AZ={builtin:{url:document.getElementById('azdata').dataset.src||('data:audio/mpeg;base64,'+document.getElementById('azdata').textContent.trim()),name:'Azan',fixed:true},
   mecca:{url:'azan_mecca.mp3',name:'Mecca azan',fixed:true},medina:{url:'azan_medina.mp3',name:'Medina azan',fixed:true}};
 const AZOK=v=>!!AZ[v];
 const AZK=[['fajr','Fajr'],['dhuhr','Dhuhr'],['asr','Asr'],['maghrib','Maghrib'],['isha','Isha']];
@@ -1059,7 +1059,7 @@ function renderPrayer(){
      <div class="azlist">${SLOTS.map(([k,n,sub])=>{const have=AZ[k],sel=AZP[azTarget]===k;
        return `<div class="azrow${sel?' sel':''}${have?'':' off'}" data-pick="${k}" role="radio" aria-checked="${sel}" tabindex="0">
          <span class="azdot"></span>
-         <div style="flex:1;min-width:0"><b>${n}</b><small>${have?(k==='chime'||AZ[k].fixed?sub:'✓ '+esc(AZ[k].name)):(sub?sub+' · ':'')+'Tap to add a recording'}</small></div>
+         <div style="flex:1;min-width:0"><b>${n}</b>${(have&&AZ[k].fixed&&!sub)?'':`<small>${have?(k==='chime'||AZ[k].fixed?sub:'✓ '+esc(AZ[k].name)):(sub?sub+' · ':'')+'Tap to add a recording'}</small>`}</div>
          ${have?`<button class="btn azplay" data-play="${k}" aria-label="Play ${n}">▶</button>`:''}${AZ[k]&&!AZ[k].fixed?`<button class="btn" data-del="${k}" aria-label="Remove ${n}">✕</button>`:''}
          ${have?'':`<input type="file" accept="audio/*" data-add="${k}" hidden>`}</div>`}).join('')}</div>
    </div>
@@ -1081,7 +1081,7 @@ function renderPrayer(){
     if(AZ[k])URL.revokeObjectURL(AZ[k].url);AZ[k]={url:URL.createObjectURL(f),name:f.name};
     try{await idbPut('azan:'+k,{blob:f,name:f.name})}catch(err){toast('Saved for this visit only')}
     setAz(azTarget,k);renderPrayer()});
-  app.querySelectorAll('[data-play]').forEach(b=>b.onclick=e=>{e.stopPropagation();const k=b.dataset.play;playAlert(SLOTS.find(x=>x[0]===k)[1]+' azan','slot:'+k)});
+  app.querySelectorAll('[data-play]').forEach(b=>b.onclick=e=>{e.stopPropagation();const k=b.dataset.play;playAlert(k==='builtin'?'Azan':SLOTS.find(x=>x[0]===k)[1]+' azan','slot:'+k)});
   app.querySelectorAll('[data-tgt]').forEach(b=>b.onclick=()=>{azTarget=b.dataset.tgt;renderPrayer()});
   app.querySelectorAll('[data-pick]').forEach(r=>{const pick=()=>{const k=r.dataset.pick;
       if(!AZ[k]){r.querySelector('[data-add]').click();return}

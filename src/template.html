@@ -446,7 +446,7 @@ const $=id=>document.getElementById(id), app=$('app');
 const store={get(k,d){try{const v=localStorage.getItem('qr_'+k);return v==null?d:JSON.parse(v)}catch(e){return d}},
              set(k,v){try{localStorage.setItem('qr_'+k,JSON.stringify(v))}catch(e){}}};
 const S={arSize:store.get('arSize',40),tr:store.get('tr','off'),
-         theme:store.get('theme','sepia'),
+         theme:store.get('theme','sky'),
          marks:store.get('marks',[]),showTr:store.get('showTr',false),enSize:store.get('enSize',16),rules:store.get('rules',false),font:store.get('font','indopak'),ensrc:store.get('ensrc2','alt'),rec:store.get('rec','alafasy'),urT:store.get('urT','junagarhi'),enT:store.get('enT','sahih'),last:store.get('last',null),tab:'surahs',q:''};
 
 EN=S.enT==='qarai'?EN_Q:EN_S;
@@ -731,7 +731,7 @@ function drawRecs(){$('recList').innerHTML=RECS.map(([k,n,t])=>`<button data-v="
 drawRecs();$('pRec').textContent=recName();
 $('recList').onclick=e=>{const b=e.target.closest('button');if(!b||b.dataset.v===S.rec)return;stopPlayer();S.rec=b.dataset.v;store.set('rec',S.rec);AUD=AUD_ALL[S.rec];P.srcS=0;P.part=-1;P.s=0;drawRecs();$('pRec').textContent=recName();rerender()};
 $('sTabs').onclick=e=>{const b=e.target.closest('button');if(!b)return;[...$('sTabs').children].forEach(x=>x.classList.toggle('on',x===b));document.querySelectorAll('#setSheet .spane').forEach(p=>p.classList.toggle('on',p.dataset.p===b.dataset.p))};
-$('setReset').onclick=()=>{Object.assign(S,{theme:'sepia',font:'indopak',arSize:40,tr:'off',enT:'sahih',urT:'junagarhi',enSize:16,showTr:false,rules:false});['theme','font','arSize','tr','enT','urT','enSize','showTr','rules'].forEach(k=>store.set(k,S[k]));EN=EN_S;UR=UR_J;rerender();window.NH&&NH.setIcon&&NH.setIcon(S.theme)};
+$('setReset').onclick=()=>{Object.assign(S,{theme:'sky',font:'indopak',arSize:40,tr:'off',enT:'sahih',urT:'junagarhi',enSize:16,showTr:false,rules:false});['theme','font','arSize','tr','enT','urT','enSize','showTr','rules'].forEach(k=>store.set(k,S[k]));EN=EN_S;UR=UR_J;rerender();window.NH&&NH.setIcon&&NH.setIcon(S.theme)};
 $('urTSeg').onclick=e=>{const b=e.target.closest('button');if(!b)return;S.urT=b.dataset.v;store.set('urT',S.urT);UR=urFor(S.urT);rerender()};
 $('enTSeg').onclick=e=>{const b=e.target.closest('button');if(!b)return;S.enT=b.dataset.v;store.set('enT',S.enT);EN=S.enT==='qarai'?EN_Q:EN_S;rerender()};
 $('enSeg').onclick=e=>{const b=e.target.closest('button');if(!b)return;S.tr=b.dataset.v;store.set('tr',S.tr);applySettings()};

@@ -160,8 +160,8 @@ const fmt=(loc,dt)=>{try{return dt.toLocaleTimeString([], {timeZone:loc.tz,hour:
 let LOC=store.get('loc',null);
 const ALERTS=Object.assign({fajr:true,dhuhr:true,asr:true,maghrib:true,isha:true},store.get('alerts',{}));
 let armed=false,ticker=null,audioCtx=null,playing=null,fired=store.get('fired',{});
-const SLOTS=[['builtin','Azan','Ammal-e-Namaz recording'],['mecca','Mecca','Masjid al-Haram'],['medina','Medina','Masjid an-Nabawi']];
-const AZ={builtin:{url:document.getElementById('azdata').dataset.src||('data:audio/mpeg;base64,'+document.getElementById('azdata').textContent.trim()),name:'Azan (Ammal-e-Namaz)',fixed:true},
+const SLOTS=[['builtin','Azan',''],['mecca','Mecca','Masjid al-Haram'],['medina','Medina','Masjid an-Nabawi']];
+const AZ={builtin:{url:document.getElementById('azdata').dataset.src||('data:audio/mpeg;base64,'+document.getElementById('azdata').textContent.trim()),name:'Azan',fixed:true},
   mecca:{url:'azan_mecca.mp3',name:'Mecca azan',fixed:true},medina:{url:'azan_medina.mp3',name:'Medina azan',fixed:true}};
 const AZOK=v=>!!AZ[v];
 const AZK=[['fajr','Fajr'],['dhuhr','Dhuhr'],['asr','Asr'],['maghrib','Maghrib'],['isha','Isha']];
@@ -303,7 +303,7 @@ function renderPrayer(){
      <div class="azlist">${SLOTS.map(([k,n,sub])=>{const have=AZ[k],sel=AZP[azTarget]===k;
        return `<div class="azrow${sel?' sel':''}${have?'':' off'}" data-pick="${k}" role="radio" aria-checked="${sel}" tabindex="0">
          <span class="azdot"></span>
-         <div style="flex:1;min-width:0"><b>${n}</b><small>${have?(k==='chime'||AZ[k].fixed?sub:'✓ '+esc(AZ[k].name)):(sub?sub+' · ':'')+'Tap to add a recording'}</small></div>
+         <div style="flex:1;min-width:0"><b>${n}</b>${(have&&AZ[k].fixed&&!sub)?'':`<small>${have?(k==='chime'||AZ[k].fixed?sub:'✓ '+esc(AZ[k].name)):(sub?sub+' · ':'')+'Tap to add a recording'}</small>`}</div>
          ${have?`<button class="btn azplay" data-play="${k}" aria-label="Play ${n}">▶</button>`:''}${AZ[k]&&!AZ[k].fixed?`<button class="btn" data-del="${k}" aria-label="Remove ${n}">✕</button>`:''}
          ${have?'':`<input type="file" accept="audio/*" data-add="${k}" hidden>`}</div>`}).join('')}</div>
    </div>
@@ -325,7 +325,7 @@ function renderPrayer(){
     if(AZ[k])URL.revokeObjectURL(AZ[k].url);AZ[k]={url:URL.createObjectURL(f),name:f.name};
     try{await idbPut('azan:'+k,{blob:f,name:f.name})}catch(err){toast('Saved for this visit only')}
     setAz(azTarget,k);renderPrayer()});
-  app.querySelectorAll('[data-play]').forEach(b=>b.onclick=e=>{e.stopPropagation();const k=b.dataset.play;playAlert(SLOTS.find(x=>x[0]===k)[1]+' azan','slot:'+k)});
+  app.querySelectorAll('[data-play]').forEach(b=>b.onclick=e=>{e.stopPropagation();const k=b.dataset.play;playAlert(k==='builtin'?'Azan':SLOTS.find(x=>x[0]===k)[1]+' azan','slot:'+k)});
   app.querySelectorAll('[data-tgt]').forEach(b=>b.onclick=()=>{azTarget=b.dataset.tgt;renderPrayer()});
   app.querySelectorAll('[data-pick]').forEach(r=>{const pick=()=>{const k=r.dataset.pick;
       if(!AZ[k]){r.querySelector('[data-add]').click();return}
