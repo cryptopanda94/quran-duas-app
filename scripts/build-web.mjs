@@ -1,6 +1,6 @@
 // Builds www/ (the app's web layer) from src/.
 // Run:  node scripts/build-web.mjs      (also run automatically by `npm run sync`)
-import { readFileSync, writeFileSync, mkdirSync, copyFileSync, readdirSync, rmSync } from 'node:fs';
+import { readFileSync, writeFileSync, mkdirSync, copyFileSync, readdirSync, rmSync, existsSync } from 'node:fs';
 import { join, dirname } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
@@ -33,7 +33,7 @@ header.top{padding-top:env(safe-area-inset-top)}
 html,body{overscroll-behavior:none;-webkit-tap-highlight-color:transparent}
 `);
 must('<script id="azdata" type="text/plain">__AZAN__</script>', '<script id="azdata" type="text/plain" data-src="azan.mp3"></script>');
-must('</body>', '<script src="native.js"></script>\n</body>');
+must('</body>', '<script src="capacitor.js"></script>\n<script src="native.js"></script>\n</body>');
 
 t = t
   .replace('__DATA__', json('data/data.json'))
@@ -52,6 +52,13 @@ rmSync(www, { recursive: true, force: true });
 mkdirSync(join(www, 'fonts'), { recursive: true });
 writeFileSync(join(www, 'index.html'), t);
 copyFileSync(join(src, 'native.js'), join(www, 'native.js'));
+// Capacitor's JS runtime (window.Capacitor.registerPlugin etc.) — without it the native layer can't start.
+{
+  const capJs = join(root, 'node_modules', '@capacitor', 'core', 'dist', 'capacitor.js');
+  if (existsSync(capJs)) copyFileSync(capJs, join(www, 'capacitor.js'));
+  else if (process.env.CI) throw new Error('@capacitor/core/dist/capacitor.js not found — run npm install');
+  else { console.warn('! capacitor.js not found (run npm install) — the native layer will not start'); writeFileSync(join(www, 'capacitor.js'), '/* missing */'); }
+}
 copyFileSync(join(src, 'azan.mp3'), join(www, 'azan.mp3'));
 for (const f of readdirSync(src)) if (/^azan_.+\.mp3$/.test(f)) copyFileSync(join(src, f), join(www, f));   // full azans
 for (const f of readdirSync(join(root, 'native', 'shared'))) if (f.endsWith('.wav'))                     // iOS notification sound sources
