@@ -17,6 +17,8 @@
 [data-theme=white]{--bg:#ffffff;--card:#f8f8f6;--ink:#1d1d1b;--muted:#6f6f6a;--line:#e6e6e1;--accent:#1f6f5c;--accent-soft:#e6f0ec;--gold:#a8822f;--hl:#fff4cc;--rule:#d2d2cc}
 [data-theme=sepia]{--bg:#f2e6cf;--card:#f9f0de;--ink:#3a2a1a;--muted:#7d6549;--line:#dfcca9;--accent:#2a8c78;--accent-soft:#dcebe2;--gold:#8f6a2a;--hl:#fde9a8;--rule:#bfa57c}
 [data-theme=black]{--bg:#000;--card:#0c0f11;--ink:#ebe8e1;--muted:#8d8a83;--line:#22272b;--accent:#6fd3b5;--accent-soft:#11302a;--gold:#d4b06a;--hl:#2a2614;--rule:#2e353a}
+[data-theme=maroon]{--bg:#2e0a11;--card:#43121c;--ink:#f6e7c8;--muted:#d1ad86;--line:#5e2230;--accent:#e3b257;--accent-soft:#5a2a1c;--gold:#e8bd62;--hl:#5c2a17;--rule:#7a3a3f}
+[data-theme=maroon] body{background:radial-gradient(ellipse 120% 70% at 50% 0%,#5a1724 0%,#2e0a11 60%) fixed}
 [data-theme=dark]{
   --bg:#12161a;--card:#1a2026;--ink:#ece6da;--muted:#9a9488;--line:#2a323a;
   --accent:#5cc2a3;--accent-soft:#1d3530;--gold:#d4b06a;--hl:#2e2a1b;--rule:#3a444d;
@@ -37,7 +39,7 @@ header h1 .ar{font-family:IndoPak,serif;font-weight:400;color:var(--accent);marg
 .hero .ar{font-family:IndoPak,serif;font-size:34px;color:var(--accent);line-height:1.8}
 .hero p{color:var(--muted);margin:2px 0 0;font-size:14px}
 .continue{display:flex;align-items:center;gap:12px;background:var(--accent);color:#fff;border-radius:14px;padding:14px 16px;margin:18px 0 6px}
-:is([data-theme=dark],[data-theme=black]) .continue{color:#0d1a16}
+:is([data-theme=dark],[data-theme=black],[data-theme=maroon]) .continue{color:#0d1a16}
 .continue small{display:block;opacity:.8;font-size:12px}
 .continue b{font-weight:600}
 .search{position:relative;margin:16px 0 10px}
@@ -47,7 +49,7 @@ header h1 .ar{font-family:IndoPak,serif;font-weight:400;color:var(--accent);marg
 .tabs{display:flex;gap:6px;margin:6px 0 14px;overflow-x:auto}
 .tab{padding:8px 14px;border-radius:999px;border:1px solid var(--line);font-size:14px;white-space:nowrap;background:var(--card)}
 .tab.on{background:var(--accent);border-color:var(--accent);color:#fff}
-:is([data-theme=dark],[data-theme=black]) .tab.on{color:#0d1a16}
+:is([data-theme=dark],[data-theme=black],[data-theme=maroon]) .tab.on{color:#0d1a16}
 .list{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:8px}
 .item{display:flex;align-items:center;gap:12px;background:var(--card);border:1px solid var(--line);border-radius:12px;padding:12px 14px;transition:border-color .15s}
 .item:hover{border-color:var(--accent)}
@@ -98,7 +100,7 @@ mark{background:var(--hl);color:inherit;border-radius:3px;padding:0 1px}
 .seg{display:flex;border:1px solid var(--line);border-radius:10px;overflow:hidden}
 .seg button{padding:7px 12px;font-size:14px}
 .seg button.on{background:var(--accent);color:#fff}
-:is([data-theme=dark],[data-theme=black]) .seg button.on{color:#0d1a16}
+:is([data-theme=dark],[data-theme=black],[data-theme=maroon]) .seg button.on{color:#0d1a16}
 input[type=range]{accent-color:var(--accent);width:150px}
 .toast{position:fixed;bottom:calc(84px + env(safe-area-inset-bottom));left:50%;transform:translateX(-50%);background:var(--ink);color:var(--bg);padding:10px 16px;border-radius:10px;font-size:14px;z-index:30;opacity:0;transition:opacity .2s;pointer-events:none}
 .toast.show{opacity:1}
@@ -149,9 +151,9 @@ details.merits div{font-size:14px;line-height:1.65;white-space:pre-line;margin-t
 .loc b{flex:1;font-size:15px}
 .btn{padding:9px 14px;border-radius:10px;border:1px solid var(--line);background:var(--card);font-size:14px;font-weight:500}
 .btn.pri{background:var(--accent);border-color:var(--accent);color:#fff}
-:is([data-theme=dark],[data-theme=black]) .btn.pri{color:#0d1a16}
+:is([data-theme=dark],[data-theme=black],[data-theme=maroon]) .btn.pri{color:#0d1a16}
 .next{text-align:center;padding:22px 10px;background:var(--accent);color:#fff;border-radius:16px;margin:12px 0}
-:is([data-theme=dark],[data-theme=black]) .next{color:#0d1a16}
+:is([data-theme=dark],[data-theme=black],[data-theme=maroon]) .next{color:#0d1a16}
 .next small{opacity:.85;font-size:13px}
 .next .nm{font-size:26px;font-weight:600;margin:4px 0}
 .next .cd{font-size:15px;font-variant-numeric:tabular-nums}
@@ -195,11 +197,11 @@ details.merits div{font-size:14px;line-height:1.65;white-space:pre-line;margin-t
 .readbar .rl{font-size:12px;color:var(--muted);width:100%;margin-bottom:-2px}
 .chip{padding:6px 11px;border-radius:999px;border:1px solid var(--line);font-size:13px;background:var(--bg)}
 .chip.on{background:var(--accent);border-color:var(--accent);color:#fff}
-:is([data-theme=dark],[data-theme=black]) .chip.on{color:#0d1a16}
+:is([data-theme=dark],[data-theme=black],[data-theme=maroon]) .chip.on{color:#0d1a16}
 .chip.ur{font-family:"Noto Nastaliq Urdu",serif;line-height:1.4;padding:3px 11px 7px}
 .readbar select{padding:6px 8px;border-radius:10px;border:1px solid var(--line);background:var(--bg);color:var(--ink);font:inherit;font-size:13px;max-width:200px}
 .listen{display:inline-flex;align-items:center;gap:6px;padding:7px 12px;border-radius:999px;background:var(--accent);color:#fff;font-size:13px;font-weight:500}
-:is([data-theme=dark],[data-theme=black]) .listen{color:#0d1a16}
+:is([data-theme=dark],[data-theme=black],[data-theme=maroon]) .listen{color:#0d1a16}
 .v-enp{font-size:16px;line-height:1.7;padding:12px 14px;margin:2px 0 6px;background:var(--accent-soft);border-radius:10px}
 .v-enp small{display:block;font-size:11px;color:var(--muted);margin-top:6px}
 
@@ -305,7 +307,8 @@ body.playing .wrap{padding-bottom:180px}
 .qs .clist i{width:24px;height:24px;border-radius:6px;border:2px solid var(--line);flex:none;display:grid;place-items:center}
 .qs .clist button.on i{background:var(--gold);border-color:var(--gold)}
 .qs .clist button.on i::after{content:"";width:6px;height:11px;border:solid var(--card);border-width:0 2.5px 2.5px 0;transform:translateY(-1px) rotate(45deg)}
-.qs .themes{margin-top:8px}
+.qs .themes{margin-top:8px;flex-wrap:nowrap;justify-content:space-between;gap:4px}
+.qs .themes .sw i{width:46px;height:46px}
 .qs .srow .ssub{display:block;font-size:13px;color:var(--muted);margin-top:2px}
 .qs .rlist{display:flex;flex-direction:column;gap:8px;margin:4px 0 6px}
 .qs .rlist button{display:flex;align-items:center;gap:14px;min-height:60px;padding:10px 16px;border-radius:14px;background:var(--bg);text-align:left;color:var(--ink);border:2px solid transparent}
@@ -317,7 +320,7 @@ body.playing .wrap{padding-bottom:180px}
 .qs .sfoot{display:flex;justify-content:space-between;align-items:center;padding:14px 16px 0;margin-top:14px;border-top:1px solid var(--line)}
 .qs .sfoot button{padding:10px 14px;font-size:16px;font-weight:600;color:var(--ink)}
 .qs .sfoot .sdone{background:var(--gold);color:#fff;border-radius:12px;padding:11px 22px}
-:is([data-theme=dark],[data-theme=black]) .qs .sfoot .sdone{color:#1a1408}
+:is([data-theme=dark],[data-theme=black],[data-theme=maroon]) .qs .sfoot .sdone{color:#1a1408}
 </style>
 </head>
 <body>
@@ -356,6 +359,7 @@ body.playing .wrap{padding-bottom:180px}
       <button class="sw" data-v="sepia"><i style="background:#f2e6cf;color:#3a2a1a">Aa</i>Sepia</button>
       <button class="sw" data-v="dark"><i style="background:#12161a;color:#ece6da">Aa</i>Dark</button>
       <button class="sw" data-v="black"><i style="background:#000;color:#ebe8e1">Aa</i>Black</button>
+      <button class="sw" data-v="maroon"><i style="background:radial-gradient(circle at 50% 30%,#8a2a36,#3a0d14);color:#e8bd62">Aa</i>Maroon</button>
     </div>
   </div>
   <input type="range" id="arSize" min="20" max="56" step="4" hidden><input type="range" id="enSize" min="12" max="26" step="1" hidden>
