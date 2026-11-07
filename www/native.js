@@ -195,7 +195,14 @@
   /* ---------------- App lifecycle ---------------- */
   async function refresh() { await schedule(); await updateWidgets(); }
 
-  window.NH = { alertsOn: () => alertsOn, toggleAlerts, refresh, startCompass, platform };
+  async function getLocation() {
+    if (platform === 'ios') return await WB.getLocation();
+    return await new Promise((res, rej) => navigator.geolocation.getCurrentPosition(
+      (p) => res({ lat: p.coords.latitude, lng: p.coords.longitude, acc: p.coords.accuracy }), rej,
+      { enableHighAccuracy: false, timeout: 20000, maximumAge: 600000 }));
+  }
+
+  window.NH = { alertsOn: () => alertsOn, toggleAlerts, refresh, startCompass, getLocation, platform };
 
   try {
     LN.addListener('localNotificationReceived', (n) => {
@@ -209,13 +216,13 @@
     });
   } catch (e) {}
   try {
-    AppP.addListener('appStateChange', (s) => { if (s && s.isActive) refresh(); });
+    AppP.addListener('appStateChange', (s) => { if (s && s.isActive) { refresh(); window.QX && QX.autoLocate && QX.autoLocate(true); } });
     AppP.addListener('backButton', () => {
       const h = location.hash.replace('#', '');
       if (h && h !== 'today') history.back(); else AppP.exitApp();
     });
   } catch (e) {}
 
-  const boot = () => setTimeout(async () => { await ensureChannel(); refresh(); }, 800);
+  const boot = () => setTimeout(async () => { await ensureChannel(); refresh(); window.QX && QX.autoLocate && QX.autoLocate(false); }, 800);
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', boot); else boot();
 })();

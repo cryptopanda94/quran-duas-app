@@ -13,8 +13,10 @@ public class WidgetBridgePlugin: CAPPlugin, CAPBridgedPlugin, CLLocationManagerD
     public let pluginMethods: [CAPPluginMethod] = [
         CAPPluginMethod(name: "update", returnType: CAPPluginReturnPromise),
         CAPPluginMethod(name: "startHeading", returnType: CAPPluginReturnPromise),
-        CAPPluginMethod(name: "stopHeading", returnType: CAPPluginReturnPromise)
+        CAPPluginMethod(name: "stopHeading", returnType: CAPPluginReturnPromise),
+        CAPPluginMethod(name: "getLocation", returnType: CAPPluginReturnPromise)
     ]
+    private var locCalls: [CAPPluginCall] = []
     private var lm: CLLocationManager?
     private var headingOn = false
 
@@ -72,9 +74,46 @@ public class WidgetBridgePlugin: CAPPlugin, CAPBridgedPlugin, CLLocationManagerD
     }
 
     public func locationManagerDidChangeAuthorization(_ m: CLLocationManager) {
-        if headingOn && (m.authorizationStatus == .authorizedWhenInUse || m.authorizationStatus == .authorizedAlways) {
-            m.startUpdatingLocation()
+        let ok = m.authorizationStatus == .authorizedWhenInUse || m.authorizationStatus == .authorizedAlways
+        if ok {
+            if headingOn { m.startUpdatingLocation() }
+            if !locCalls.isEmpty { m.requestLocation() }
+        } else if m.authorizationStatus == .denied || m.authorizationStatus == .restricted {
+            finishLocation(error: "Location permission is off")
         }
+    }
+
+    // MARK: - One-off location (to pick the prayer-times city automatically)
+
+    @objc func getLocation(_ call: CAPPluginCall) {
+        DispatchQueue.main.async {
+            let m = self.lm ?? CLLocationManager()
+            self.lm = m
+            m.delegate = self
+            m.desiredAccuracy = kCLLocationAccuracyKilometer
+            self.locCalls.append(call)
+            switch m.authorizationStatus {
+            case .notDetermined: m.requestWhenInUseAuthorization()
+            case .authorizedWhenInUse, .authorizedAlways: m.requestLocation()
+            default: self.finishLocation(error: "Location permission is off")
+            }
+        }
+    }
+
+    private func finishLocation(error: String? = nil, location: CLLocation? = nil) {
+        let calls = locCalls
+        locCalls.removeAll()
+        for c in calls {
+            if let l = location {
+                c.resolve(["lat": l.coordinate.latitude, "lng": l.coordinate.longitude, "acc": l.horizontalAccuracy])
+            } else {
+                c.reject(error ?? "Location unavailable")
+            }
+        }
+    }
+
+    public func locationManager(_ m: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
+        if let l = locations.last, !locCalls.isEmpty { finishLocation(location: l) }
     }
 
     public func locationManager(_ m: CLLocationManager, didUpdateHeading h: CLHeading) {
@@ -83,7 +122,10 @@ public class WidgetBridgePlugin: CAPPlugin, CAPBridgedPlugin, CLLocationManagerD
                                           "acc": h.headingAccuracy, "true": isTrue])
     }
 
-    public func locationManager(_ m: CLLocationManager, didFailWithError error: Error) {}
+    public func locationManager(_ m: CLLocationManager, didFailWithError error: Error) {
+        if let e = error as? CLError, e.code == .locationUnknown { return }   // transient; keep waiting
+        if !locCalls.isEmpty { finishLocation(error: error.localizedDescription) }
+    }
 
     public func locationManagerShouldDisplayHeadingCalibration(_ m: CLLocationManager) -> Bool { true }
 }

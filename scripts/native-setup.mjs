@@ -74,7 +74,7 @@ async function setupIOS() {
   addKey('UIBackgroundModes', '<array>\n\t\t<string>audio</string>\n\t</array>');
   addKey('NSMotionUsageDescription', '<string>The Qibla compass uses your phone\'s motion sensors to show which way to face.</string>');
   addKey('ITSAppUsesNonExemptEncryption', '<false/>');
-  addKey('NSLocationWhenInUseUsageDescription', '<string>Your location lets the Qibla compass point to the Kaaba from true north.</string>');
+  addKey('NSLocationWhenInUseUsageDescription', '<string>Your location sets your prayer times automatically and lets the Qibla compass point from true north.</string>');
   // home-screen name with a proper (escaped) ampersand
   p = p.replace(/(<key>CFBundleDisplayName<\/key>\s*<string>)[^<]*(<\/string>)/, '$1Quran &amp; Duas$2');
   writeFileSync(plist, p);
@@ -128,7 +128,7 @@ function setupAndroid() {
   // 4. Manifest: widgets + permissions
   const man = join(main, 'AndroidManifest.xml');
   let m = read(man);
-  const perms = ['android.permission.POST_NOTIFICATIONS', 'android.permission.SCHEDULE_EXACT_ALARM', 'android.permission.RECEIVE_BOOT_COMPLETED', 'android.permission.WAKE_LOCK'];
+  const perms = ['android.permission.ACCESS_COARSE_LOCATION', 'android.permission.ACCESS_FINE_LOCATION', 'android.permission.POST_NOTIFICATIONS', 'android.permission.SCHEDULE_EXACT_ALARM', 'android.permission.RECEIVE_BOOT_COMPLETED', 'android.permission.WAKE_LOCK'];
   for (const pm of perms) if (!m.includes(`"${pm}"`)) m = m.replace(/(<manifest[^>]*>)/, `$1\n    <uses-permission android:name="${pm}" />`);
   const receiver = (cls, label, info) => `
         <receiver android:name=".${cls}" android:label="${label}" android:exported="true">

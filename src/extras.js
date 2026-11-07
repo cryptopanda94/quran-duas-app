@@ -196,7 +196,9 @@ function updateNext(){
   el.innerHTML=`<small>Next prayer</small><div class="nm">${np.n} · ${fmt(LOC,np.t)}</div><div class="cd">in ${h?h+'h ':''}${m}m ${String(sec).padStart(2,'0')}s</div>`;
 }
 function cityPicker(target){
-  target.innerHTML=`<input class="inp" id="cq" placeholder="Search your city (e.g. Chicago, Karachi, Qom)" autocomplete="off">
+  target.innerHTML=`${window.NH?`<button class="btn pri" id="cgps" style="width:100%;padding:13px;font-size:15px;margin-bottom:12px">📍 Use my current location</button>
+    <div class="hint" style="text-align:center;margin:-4px 0 10px">or search</div>`:''}
+    <input class="inp" id="cq" placeholder="Search your city (e.g. Chicago, Karachi, Qom)" autocomplete="off">
     <div class="cities" id="cres"></div>
     <details style="margin-top:12px"><summary class="hint" style="cursor:pointer">Or enter coordinates</summary>
       <div style="display:flex;gap:8px;margin-top:8px"><input class="inp" id="clat" placeholder="Latitude" inputmode="decimal"><input class="inp" id="clng" placeholder="Longitude" inputmode="decimal"></div>
@@ -205,6 +207,7 @@ function cityPicker(target){
     if(q.length>=2){for(const p of CI.p)if(p[0].toLowerCase()===q)out.push(p);for(const p of CI.p){if(out.length>=40)break;if(out.includes(p))continue;if(p[0].toLowerCase().startsWith(q)||(q.length>3&&p[0].toLowerCase().includes(q)))out.push(p)}}
     $('cres').innerHTML=out.map((p,i)=>`<button data-i="${CI.p.indexOf(p)}">${esc(p[0])} <small>· ${esc(CI.c[p[1]]||p[1])}</small></button>`).join('')||(q.length>=2?'<div class="hint" style="padding:10px 4px">No match — try a nearby larger city, or enter coordinates.</div>':'')};
   $('cq').oninput=e=>show(e.target.value);
+  if($('cgps'))$('cgps').onclick=async()=>{const b=$('cgps');b.disabled=true;b.textContent='Finding your location…';if(!(await locateMe(false))){b.disabled=false;b.textContent='📍 Use my current location'}};
   $('cres').onclick=e=>{const b=e.target.closest('button');if(!b)return;const p=CI.p[+b.dataset.i];
     setLoc({name:`${p[0]}, ${CI.c[p[1]]||p[1]}`,lat:p[2],lng:p[3],tz:CI.z[p[4]]})};
   $('cset').onclick=()=>{const la=parseFloat($('clat').value),ln=parseFloat($('clng').value);
@@ -213,7 +216,36 @@ function cityPicker(target){
     setLoc({name:`${la.toFixed(2)}, ${ln.toFixed(2)}`,lat:la,lng:ln,tz})};
   setTimeout(()=>{try{$('cq').focus()}catch(e){}},50);
 }
-function setLoc(l){LOC=l;store.set('loc',l);toast('Location set: '+l.name);window.NH&&NH.refresh();route2()}
+function setLoc(l,quiet){LOC=l;store.set('loc',l);if(!quiet)toast('Location set: '+l.name);window.NH&&NH.refresh();route2()}
+/* automatic location: GPS -> nearest city name, device time zone */
+function nearestCity(la,ln){let best=null,bd=1e9;for(const p of CI.p){const dl=dtr(p[2]-la),dg=dtr(p[3]-ln),a=Math.sin(dl/2)**2+Math.cos(dtr(la))*Math.cos(dtr(p[2]))*Math.sin(dg/2)**2,d=12742*Math.asin(Math.sqrt(a));if(d<bd){bd=d;best=p}}return [best,bd]}
+async function getPos(){
+  if(window.NH&&NH.getLocation)return await NH.getLocation();
+  if(!navigator.geolocation)throw new Error('no geolocation');
+  return await new Promise((res,rej)=>navigator.geolocation.getCurrentPosition(p=>res({lat:p.coords.latitude,lng:p.coords.longitude}),rej,{timeout:20000,maximumAge:600000}));
+}
+let locating=false;
+async function locateMe(quiet){
+  if(locating)return false;locating=true;
+  try{
+    const {lat,lng}=await getPos();
+    const [c,d]=nearestCity(lat,lng);
+    let tz;try{tz=Intl.DateTimeFormat().resolvedOptions().timeZone}catch(e){tz=c?CI.z[c[4]]:'UTC'}
+    const place=c?`${c[0]}, ${CI.c[c[1]]||c[1]}`:`${lat.toFixed(2)}, ${lng.toFixed(2)}`;
+    const name=c&&d>40?`Near ${place}`:place;
+    if(quiet&&LOC&&LOC.auto){const [,moved]=[0,Math.hypot(LOC.lat-lat,(LOC.lng-lng)*Math.cos(dtr(lat)))*111];if(moved<20){locating=false;return true}}
+    setLoc({name,lat:+lat.toFixed(4),lng:+lng.toFixed(4),tz,auto:true},quiet);editing=false;
+    if(quiet)toast('📍 Location: '+name);
+    return true;
+  }catch(e){if(!quiet)toast('Could not get your location — please allow location, or search your city');return false}
+  finally{locating=false}
+}
+/* called at launch / when the app comes back: first run asks once; afterwards only follows you if you chose automatic */
+function autoLocate(resume){
+  if(!window.NH)return;
+  if(!LOC){if(resume||store.get('autoAsked',false))return;store.set('autoAsked',true);locateMe(true);return}
+  if(LOC.auto)locateMe(true);
+}
 function route2(){if(location.hash==='#qibla')renderQibla();else renderPrayer()}
 let editing=false;
 function renderPrayer(){
@@ -226,7 +258,7 @@ function renderPrayer(){
   const now=new Date(),T=timesFor(LOC,now),np=nextPrayer();
   let dstr='';try{dstr=now.toLocaleDateString([], {timeZone:LOC.tz,weekday:'long',day:'numeric',month:'long'})}catch(e){}
   app.innerHTML=`
-   <div class="card loc" style="margin-top:16px"><b>📍 ${esc(LOC.name)}<br><small class="hint">${esc(dstr)}</small></b><button class="btn" id="chg">Change</button></div>
+   <div class="card loc" style="margin-top:16px"><b>📍 ${esc(LOC.name)}<br><small class="hint">${esc(dstr)}${LOC.auto?' · automatic':''}</small></b><button class="btn" id="chg">Change</button></div>
    <div class="next" id="nextBox"></div>
    <div class="card ptable">${PR.map(([k,n,u,main])=>`<div class="pr${main?'':' minor'}${np&&np.k===k?' now':''}"><span>${n}</span><span class="ur">${u}</span><b>${fmt(LOC,T[k])}</b>
       ${main?`<button class="bell${ALERTS[k]?' on':''}" data-k="${k}" aria-label="Azan alert for ${n}">${ALERTS[k]?icons.bell:icons.belloff}</button>`:'<span style="width:34px;flex:none"></span>'}</div>`).join('')}</div>
@@ -434,5 +466,5 @@ window.XR=function(h){
   return false;
 };
 setInterval(tick,1000);
-window.QX={get LOC(){return LOC},get ALERTS(){return ALERTS},timesFor,PR,nextPrayer,fmt,DAILY,LIST,UD,DU,slotFor,get AZ(){return AZ},playAlert,stopAlert,hijriToday:()=>HFMT?hijriToday():null,hijriStr,eventsOn,evTitle,HMU,HM};
+window.QX={autoLocate,locateMe,get LOC(){return LOC},get ALERTS(){return ALERTS},timesFor,PR,nextPrayer,fmt,DAILY,LIST,UD,DU,slotFor,get AZ(){return AZ},playAlert,stopAlert,hijriToday:()=>HFMT?hijriToday():null,hijriStr,eventsOn,evTitle,HMU,HM};
 })();
