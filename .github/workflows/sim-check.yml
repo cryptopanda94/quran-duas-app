@@ -11,7 +11,7 @@ jobs:
         run: |
           X=$(ls -d /Applications/Xcode_26*.app 2>/dev/null | sort -V | tail -1); sudo xcode-select -s "$X"
       - run: npm install && npm run build:web && npx cap add ios && npm run native:setup && npx cap sync ios
-      - run: sudo gem install xcodeproj --no-document && ruby scripts/ios-widget-target.rb
+      - run: node scripts/ios-plugins.mjs
       - name: Storyboard + config
         run: |
           grep -n "customClass\|customModule" ios/App/App/Base.lproj/Main.storyboard

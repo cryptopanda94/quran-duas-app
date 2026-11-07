@@ -7,10 +7,11 @@
   "scripts": {
     "build:web": "node scripts/build-web.mjs",
     "native:setup": "node scripts/native-setup.mjs",
-    "sync": "node scripts/build-web.mjs && npx cap sync",
+    "sync": "node scripts/build-web.mjs && npx cap sync && node scripts/ios-plugins.mjs",
     "ios": "npx cap open ios",
     "android": "npx cap open android",
-    "assets": "npx capacitor-assets generate --ios --android"
+    "assets": "npx capacitor-assets generate --ios --android",
+    "ios:plugins": "node scripts/ios-plugins.mjs"
   },
   "engines": {
     "node": ">=22"

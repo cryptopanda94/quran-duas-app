@@ -26,6 +26,7 @@ jobs:
       - run: npm run native:setup
       - run: npx capacitor-assets generate --ios
       - run: npx cap sync ios
+      - run: node scripts/ios-plugins.mjs
       - name: Add widget target + App Group
         env:
           APPLE_TEAM_ID: ${{ secrets.APPLE_TEAM_ID }}

@@ -33,6 +33,7 @@ npx cap add android
 npm run native:setup
 npm run assets
 npx cap sync
+npm run ios:plugins
 ```
 
 `npm run assets` puts the maroon & gold app icon and splash screen into both apps.
