@@ -1,0 +1,24 @@
+name: Fetch source pages (download only)
+on:
+  workflow_dispatch:
+    inputs:
+      urls:
+        description: space-separated URLs
+        required: true
+jobs:
+  fetch:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Download
+        run: |
+          mkdir -p pages; i=0
+          for u in ${{ github.event.inputs.urls }}; do
+            i=$((i+1)); f="pages/$(printf %03d $i)_$(echo "$u" | sed 's#https\?://##; s#[^A-Za-z0-9._-]#_#g' | cut -c1-120)"
+            curl -sSL -A "Mozilla/5.0" --max-time 60 "$u" -o "$f" -w "%{http_code} %{size_download} $u\n" || echo "FAIL $u"
+            sleep 1
+          done
+      - uses: actions/upload-artifact@v4
+        with:
+          name: pages
+          path: pages
+          retention-days: 3
