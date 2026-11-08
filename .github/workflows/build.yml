@@ -85,6 +85,8 @@ jobs:
 
   android:
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
     env:
       KS: ${{ secrets.ANDROID_KEYSTORE_B64 }}
     steps:
@@ -119,6 +121,38 @@ jobs:
           npx cap build android --keystorepath "$RUNNER_TEMP/upload.jks" --keystorepass "$KP" --keystorealias upload --keystorealiaspass "$KP" --androidreleasetype AAB
           ls -la android/app/build/outputs/bundle/release/
           rm -f "$RUNNER_TEMP/upload.jks"
+      - name: Build signed release APK (website download / other stores)
+        if: ${{ env.KS != '' }}
+        env:
+          KS: ${{ secrets.ANDROID_KEYSTORE_B64 }}
+          KP: ${{ secrets.ANDROID_KEYSTORE_PASSWORD }}
+        run: |
+          echo "$KS" | base64 -d > "$RUNNER_TEMP/upload.jks"
+          npx cap build android --keystorepath "$RUNNER_TEMP/upload.jks" --keystorepass "$KP" --keystorealias upload --keystorealiaspass "$KP" --androidreleasetype APK
+          rm -f "$RUNNER_TEMP/upload.jks"
+          APK=$(find android/app/build/outputs/apk/release -name '*signed*.apk' | head -1)
+          [ -z "$APK" ] && APK=$(find android/app/build/outputs/apk/release -name '*.apk' | head -1)
+          mkdir -p dist && cp "$APK" dist/QuranDuas.apk && ls -la dist
+      - uses: actions/upload-artifact@v4
+        if: ${{ hashFiles('dist/QuranDuas.apk') != '' }}
+        with:
+          name: quran-duas-release-apk
+          path: dist/QuranDuas.apk
+      - name: Publish APK to website (commit message contains [apk])
+        if: ${{ contains(github.event.head_commit.message, '[apk]') && hashFiles('dist/QuranDuas.apk') != '' }}
+        run: |
+          git fetch origin gh-pages --depth=1
+          git worktree add ../site origin/gh-pages
+          mkdir -p ../site/download
+          cp dist/QuranDuas.apk ../site/download/QuranDuas.apk
+          SIZE=$(du -m dist/QuranDuas.apk | cut -f1)
+          printf '{"version":"1.1","build":%s,"sizeMB":%s,"date":"%s"}\n' "${{ github.run_number }}" "$SIZE" "$(date -u +%Y-%m-%d)" > ../site/download/version.json
+          cd ../site
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add download
+          git commit -m "Publish Android APK build ${{ github.run_number }}"
+          git push origin HEAD:gh-pages
       - uses: actions/upload-artifact@v4
         if: ${{ hashFiles('android/app/build/outputs/bundle/release/*.aab') != '' }}
         with:
