@@ -147,7 +147,7 @@ input[type=range]{accent-color:var(--accent);width:150px}
 .qstat{font-size:19px;font-weight:600;color:var(--ink);margin:10px 0 2px;min-height:28px}.qstat.ok{color:var(--accent)}
 .dial.aligned #roseAll circle{fill:color-mix(in srgb,var(--accent) 16%,var(--bg))}
 .dtop{position:sticky;top:0;z-index:5;background:var(--bg);padding:14px 0 10px;display:flex;flex-direction:column;gap:10px}
-.dseg{display:grid;grid-template-columns:1fr 1fr}.dseg button{padding:10px;font-size:15px;font-weight:600}
+.dseg{display:grid;grid-template-columns:repeat(4,1fr)}.dseg button{padding:10px 4px!important;font-size:14px!important}.dsec{display:flex;justify-content:space-between;align-items:baseline;margin:18px 4px 6px;color:var(--accent)}.dsec b{font-size:17px}.dsec span{font-family:"Noto Nastaliq Urdu",serif;font-size:16px}.dseg button{padding:10px;font-size:15px;font-weight:600}
 .azseg{display:grid;grid-template-columns:repeat(5,1fr)}.azseg button{padding:8px 2px;font-size:13px}
 .azsum{display:inline-block;margin-right:8px;font-size:12px;color:var(--muted)}
 .aprefs{display:flex;flex-direction:column;gap:8px}
@@ -343,6 +343,13 @@ body.playing .wrap{padding-bottom:180px}
 .qs .rlist{display:flex;flex-direction:column;gap:8px;margin:4px 0 6px}
 .qs .rlist button{display:flex;align-items:center;gap:14px;min-height:60px;padding:10px 16px;border-radius:14px;background:var(--bg);text-align:left;color:var(--ink);border:2px solid transparent}
 .qs .rlist button.on{border-color:var(--gold)}
+.offa{margin:10px 0 4px;padding:12px 14px;border-radius:14px;background:var(--bg)}
+.offa .ot{display:flex;justify-content:space-between;align-items:center;gap:10px;font-size:14px}
+.offa .ot b{font-size:15px}.offa small{display:block;color:var(--muted);font-size:12px;margin-top:2px}
+.offa .ob{display:flex;gap:8px;margin-top:10px}.offa .ob button{flex:1;padding:10px;border-radius:11px;font-weight:600;font-size:14px;background:var(--card,#fff);color:var(--ink);border:1px solid var(--line)}
+.offa .ob button.pri{background:var(--fill,var(--accent));color:#fff;border-color:transparent}
+.offa .bar{height:6px;border-radius:3px;background:var(--line);margin-top:10px;overflow:hidden}.offa .bar i{display:block;height:100%;background:var(--fill,var(--accent));transition:width .3s}
+.qs.ctx-dua .offa{display:none!important}
 .qs .rlist i{width:22px;height:22px;border-radius:50%;border:2px solid var(--line);flex:none;display:grid;place-items:center}
 .qs .rlist button.on i{border-color:var(--gold)}
 .qs .rlist button.on i::after{content:"";width:10px;height:10px;border-radius:50%;background:var(--gold)}
@@ -373,6 +380,7 @@ body .ayah-card .v-en{display:block!important}
     <div class="srow"><span>Lines under Arabic<small class="ssub">Ruled lines like a printed mushaf</small></span><button class="switch" id="ruleSw" aria-label="Lines under Arabic"></button></div>
     <div class="shead shead-rec">Reciter</div>
     <div class="rlist" id="recList"></div>
+    <div id="offAud" class="offa" hidden></div>
   </div>
   <div class="spane" data-p="tr">
     <div class="pill" id="enSeg"><button data-v="off">Off</button><button data-v="en">English</button><button data-v="ur">اردو</button><button data-v="both">Both</button></div>
@@ -572,8 +580,11 @@ function setSrc(s,k,cb){
   const useBlob=()=>{fetch(url).then(r=>{if(!r.ok)throw 0;return r.blob()}).then(b=>{const u=URL.createObjectURL(b);P.blobs[name]=u;P.el.addEventListener('loadedmetadata',()=>cb(),{once:true});P.el.src=u}).catch(()=>{toast('Could not load the recitation');stopPlayer()})};
   const wait=()=>P.el.addEventListener('loadedmetadata',()=>cb(),{once:true});
   if(P.blobs[name]){P.el.onerror=null;P.el.src=P.blobs[name];wait();return}
+  const OA=window.NH&&NH.audio,loc=OA&&OA.local(url);
+  if(loc){P.el.onerror=()=>{OA.forget(url);P.el.onerror=()=>{P.el.onerror=null;useBlob()};P.el.src=url;wait()};P.el.src=loc;wait();return}
   P.el.onerror=()=>{P.el.onerror=null;useBlob()};
   P.el.src=url;wait();
+  if(OA)OA.played(url);
 }
 function playVerse(s,v){
   const A=AUD[s-1],a=A&&A.a[v-1];if(!a)return;
@@ -581,7 +592,7 @@ function playVerse(s,v){
   const seek=()=>{const off=Math.max(0,(a[0]-A.p[k][1])/1000);
     try{P.el.currentTime=off}catch(e){}P.el.play().catch(()=>{});
     if(off>2)setTimeout(()=>{const name=A.p[k][0];
-      if(P.s===s&&P.part===k&&Math.abs(P.el.currentTime-off)>3&&!P.blobs[name]&&!P.el.src.startsWith('blob:')){
+      if(P.s===s&&P.part===k&&Math.abs(P.el.currentTime-off)>3&&!P.blobs[name]&&!P.el.src.startsWith('blob:')&&!(window.NH&&NH.audio&&NH.audio.has(name))){
         fetch(/^https?:/.test(name)?name:'audio/'+name).then(r=>r.blob()).then(bl=>{P.blobs[name]=URL.createObjectURL(bl);if(P.s===s&&P.part===k){P.srcS=0;playVerse(s,v)}}).catch(()=>{})}},700)};
   if(P.srcS===s&&P.part===k&&P.el.src&&P.el.readyState>=1)seek();else setSrc(s,k,seek);
   showBar();markPlaying(true);
@@ -696,7 +707,7 @@ function route(){
 }
 function openSheet(id){if(id==='setSheet')ctxSettings();$('sheetBg').classList.add('open');$(id).classList.add('open')}
 /* Settings adapt to the page: on a dua/ziyarat page only show what that text actually has */
-function ctxSettings(){
+function ctxSettings(){drawOff();
   const sh=$('setSheet');if(!sh)return;
   const h=location.hash.slice(1),dua=h.startsWith('dua-')&&h!=='dua-ayat-kursi',app=$('app');
   const has=c=>!!app.querySelector(c);
@@ -728,7 +739,21 @@ $('fontSeg').onclick=e=>{const b=e.target.closest('button');if(!b)return;S.font=
 $('trSw').onclick=()=>{S.showTr=!S.showTr;store.set('showTr',S.showTr);applySettings()};
 $('ruleSw').onclick=()=>{S.rules=!S.rules;store.set('rules',S.rules);applySettings()};
 $('setDone').onclick=()=>closeSheets();
-function drawRecs(){$('recList').innerHTML=RECS.map(([k,n,t])=>`<button data-v="${k}" class="${k===S.rec?'on':''}"><i></i><span><b>${n}</b><small>${t}</small></span></button>`).join('')}
+const AUD_MB={alafasy:221,sudais:157};
+function audUrls(){return AUD.flatMap(x=>x.p.map(q=>q[0]))}
+function drawOff(){const box=$('offAud'),OA=window.NH&&NH.audio;if(!box)return;if(!OA){box.hidden=true;return}box.hidden=false;
+  const st=OA.stats(audUrls()),sur=AUD.filter(x=>x.p.every(q=>OA.has(q[0]))).length,b=OA.busy(),all=st.n>=st.total;
+  box.innerHTML=`<div class="ot"><span><b>Offline recitation</b><small>${all?'All 114 surahs saved on this phone':`${sur} of 114 surahs saved`}${st.mb?` · ${st.mb} MB`:''}</small></span></div>
+   ${b?`<div class="bar"><i style="width:${Math.round(100*b.done/Math.max(1,b.total))}%"></i></div><small>Downloading… ${Math.round(100*b.done/Math.max(1,b.total))}% · keep the app open</small>
+     <div class="ob"><button id="offStop">Stop</button></div>`
+   :`<div class="ob">${all?'':`<button class="pri" id="offAll">Download all${AUD_MB[S.rec]?` (~${AUD_MB[S.rec]-st.mb} MB)`:''}</button>`}${st.n?'<button id="offDel">Delete</button>':''}</div>`}
+   <div class="srow" style="margin:10px 0 0"><span>Save surahs I listen to<small class="ssub">Play them again without internet</small></span><button class="switch${OA.autoOn()?' on':''}" id="offSw" aria-label="Save surahs I listen to"></button></div>`}
+$('offAud').onclick=e=>{const OA=window.NH&&NH.audio;if(!OA)return;const id=e.target.closest('button')&&e.target.closest('button').id;
+  if(id==='offSw'){OA.setAuto(!OA.autoOn());drawOff()}
+  else if(id==='offStop'){OA.stop()}
+  else if(id==='offDel'){if(confirm('Delete the downloaded recitation for '+recName()+'?'))OA.removeAll(audUrls()).then(()=>{drawOff();toast('Downloads deleted')})}
+  else if(id==='offAll'){OA.downloadAll(audUrls(),b=>{drawOff();if(b.finished)toast(b.failed?`Saved, but ${b.failed} could not download. Try again on Wi-Fi.`:b.stop?'Download stopped':'All surahs saved for offline listening')});drawOff()}};
+function drawRecs(){$('recList').innerHTML=RECS.map(([k,n,t])=>`<button data-v="${k}" class="${k===S.rec?'on':''}"><i></i><span><b>${n}</b><small>${t}</small></span></button>`).join('');drawOff()}
 drawRecs();$('pRec').textContent=recName();
 $('recList').onclick=e=>{const b=e.target.closest('button');if(!b||b.dataset.v===S.rec)return;stopPlayer();S.rec=b.dataset.v;store.set('rec',S.rec);AUD=AUD_ALL[S.rec];P.srcS=0;P.part=-1;P.s=0;drawRecs();$('pRec').textContent=recName();rerender()};
 $('sTabs').onclick=e=>{const b=e.target.closest('button');if(!b)return;[...$('sTabs').children].forEach(x=>x.classList.toggle('on',x===b));document.querySelectorAll('#setSheet .spane').forEach(p=>p.classList.toggle('on',p.dataset.p===b.dataset.p))};
