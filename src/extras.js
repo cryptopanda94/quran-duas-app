@@ -51,7 +51,7 @@ const LIST=[
   {id:'ziyarat-jamia-sagheera',key:'Z_jamia_saghira',grp:'z',sub:'Short ziyarat for all the Imams (a.s.)',mark:'ج'},
   {id:'ziyarat-jamia-kabeera',key:'Z_jamia_kabira',grp:'z',sub:'Taught by Imam Ali al-Naqi (a.s.) · for all Imams',mark:'ج'},
   {id:'ziyarat-comprehensive-1',key:'Z_jamia_1',grp:'z',sub:'Especially on the Day of Arafah · at any shrine',mark:'ج'},
-  {id:'ziyarat-aminullah',key:'N_aminullah',grp:'z',sub:'2nd Comprehensive Ziyarat · Imam Zainul Abideen (a.s.)',mark:'ا'},
+  {id:'ziyarat-aminullah',key:'N_aminullah',grp:'z',sub:'Ziyarat of Imam Ali (a.s.) by Imam Zainul Abideen (a.s.) · at any shrine',mark:'ا'},
   {id:'ziyarat-comprehensive-3',key:'Z_rajabiya',grp:'z',sub:'Can be recited at any shrine',mark:'ر'},
   {id:'ziyarat-jamia-aimma',user:'jamia-aimma',grp:'z',sub:'Comprehensive ziyarat for all the Imams (a.s.)',mark:'ج'},
   {id:'ziyarat-masuma',key:'Z_masuma',grp:'z',sub:'Qom',mark:'م'},
@@ -633,24 +633,25 @@ let calStart=null,calSel=null;
 function monthStart(dt){ // civil Date of the 1st of the hijri month containing dt
   let d=new Date(dt.getFullYear(),dt.getMonth(),dt.getDate());
   for(let i=0;i<31;i++){const h=hijri(...civ(d));if(h.d===1)return d;d=new Date(d.getFullYear(),d.getMonth(),d.getDate()-1)}return d}
+function gMonthDays(st){const days=[];let d=new Date(st.getFullYear(),st.getMonth(),1);while(d.getMonth()===st.getMonth()){days.push({dt:new Date(d),h:hijri(...civ(d))});d=new Date(d.getFullYear(),d.getMonth(),d.getDate()+1)}return days}
+function hSpan(days,ur){const a=days[0].h,b=days[days.length-1].h,N=ur?HMU:HM;
+  return a.m===b.m?`${N[a.m-1]} ${a.y}${ur?'ھ':''}`:`${N[a.m-1]}${a.y!==b.y?' '+a.y:''} – ${N[b.m-1]} ${b.y}${ur?'ھ':''}`}
 function renderCalendar(){
   setHeader('Calendar',true);noJump();
   if(!HFMT){app.innerHTML='<div class="empty">This browser cannot show Islamic dates.</div>';return}
-  if(!calStart)calStart=monthStart(new Date());
-  const h0=hijri(...civ(calStart)),days=[];let d=new Date(calStart);
-  for(let i=0;i<31;i++){const h=hijri(...civ(d));if(h.m!==h0.m)break;days.push({dt:new Date(d),h});d=new Date(d.getFullYear(),d.getMonth(),d.getDate()+1)}
+  if(!calStart){const n=new Date();calStart=new Date(n.getFullYear(),n.getMonth(),1)}
+  const days=gMonthDays(calStart);
   const today=civ(new Date()).join('-'),lead=calStart.getDay();
-  const g0=days[0].dt,g1=days[days.length-1].dt;
-  const gm=g0.getMonth()===g1.getMonth()?g0.toLocaleDateString([], {month:'long',year:'numeric'}):`${g0.toLocaleDateString([], {month:'short'})} – ${g1.toLocaleDateString([], {month:'short',year:'numeric'})}`;
+  const gm=calStart.toLocaleDateString([], {month:'long',year:'numeric'});
   const cells=Array(lead).fill('<div></div>').concat(days.map(x=>{const ev=eventsOn(x.h),k=civ(x.dt).join('-');
     const cls=ev.length?(ev.some(e=>e[1]===0)?' grief':ev.some(e=>e[1]===1)?' joy':' other'):'';
-    return `<button class="cday${cls}${k===today?' today':''}${calSel===k?' sel':''}" data-cd="${k}"><b>${x.h.d}</b><small>${x.dt.getDate()}</small>${ev.length?'<i></i>':''}</button>`}));
+    return `<button class="cday${cls}${k===today?' today':''}${calSel===k?' sel':''}" data-cd="${k}"><b>${x.dt.getDate()}</b><small>${x.h.d}</small>${ev.length?'<i></i>':''}</button>`}));
   const sel=calSel?days.find(x=>civ(x.dt).join('-')===calSel):null;
   const evHTML=x=>eventsOn(x.h).map(e=>`<div class="ev ${e[1]===1?'joy':e[1]===0?'grief':'other'}"><div class="evd">${x.h.d} ${HM[x.h.m-1]} · ${x.dt.toLocaleDateString([], {weekday:'short',day:'numeric',month:'short'})}</div>
       <div class="evt">${esc(e[2]).replace(/\n+/g,'<br>')}</div>${e[4]?`<div class="evu">${esc(e[4]).replace(/\n+/g,'<br>')}</div>`:''}</div>`).join('');
   app.innerHTML=`
    <div class="calhead"><button class="btn" id="cPrev" aria-label="Previous month">‹</button>
-     <div style="flex:1;text-align:center"><b style="font-size:19px">${HM[h0.m-1]} ${h0.y}</b><div style="font-family:'Noto Nastaliq Urdu',serif;color:var(--accent);line-height:2">${HMU[h0.m-1]} ${h0.y}ھ</div><small class="hint">${gm}</small></div>
+     <div style="flex:1;text-align:center"><b style="font-size:19px">${gm}</b><div style="color:var(--accent);font-size:14px;font-weight:600;margin-top:2px">${hSpan(days)}</div><div style="font-family:'Noto Nastaliq Urdu',serif;color:var(--muted);line-height:2;font-size:14px">${hSpan(days,1)}</div></div>
      <button class="btn" id="cNext" aria-label="Next month">›</button></div>
    <div class="calgrid">${['Sun','Mon','Tue','Wed','Thu','Fri','Sat'].map(w=>`<div class="wd">${w}</div>`).join('')}${cells.join('')}</div>
    <div class="legend"><span><i class="joy"></i>Birth / Eid</span><span><i class="grief"></i>Martyrdom / mourning</span><span><i class="other"></i>Other</span></div>
@@ -661,8 +662,8 @@ function renderCalendar(){
      <div class="hint" style="margin:4px 0 10px">Islamic months start with the sighting of the new moon, so your local Shia centre may be a day ahead of or behind this calendar. Adjust it to match.</div>
      <div class="sizer"><button id="hM">−1</button><div style="flex:1;text-align:center;font-weight:600">${hAdj>0?'+':''}${hAdj} day${Math.abs(hAdj)===1?'':'s'} · today is ${hijriStr(hijriToday())}</div><button id="hP">+1</button></div></div>
 `;
-  $('cPrev').onclick=()=>{calStart=monthStart(new Date(calStart.getFullYear(),calStart.getMonth(),calStart.getDate()-1));calSel=null;renderCalendar()};
-  $('cNext').onclick=()=>{calStart=monthStart(new Date(calStart.getFullYear(),calStart.getMonth(),calStart.getDate()+32));calSel=null;renderCalendar()};
+  $('cPrev').onclick=()=>{calStart=new Date(calStart.getFullYear(),calStart.getMonth()-1,1);calSel=null;renderCalendar()};
+  $('cNext').onclick=()=>{calStart=new Date(calStart.getFullYear(),calStart.getMonth()+1,1);calSel=null;renderCalendar()};
   app.querySelectorAll('[data-cd]').forEach(b=>b.onclick=()=>{calSel=calSel===b.dataset.cd?null:b.dataset.cd;renderCalendar()});
   const setAdj=v=>{hAdj=Math.max(-2,Math.min(2,v));store.set('hAdj',hAdj);calStart=null;renderCalendar()};
   $('hM').onclick=()=>setAdj(hAdj-1);$('hP').onclick=()=>setAdj(hAdj+1);
@@ -672,18 +673,16 @@ function renderCalendar(){
 let tSel=null;
 function todayCal(){
   const el=$('tcal');if(!el)return;
-  const st=monthStart(new Date()),h0=hijri(...civ(st)),days=[];let d=new Date(st);
-  for(let i=0;i<31;i++){const h=hijri(...civ(d));if(h.m!==h0.m)break;days.push({dt:new Date(d),h});d=new Date(d.getFullYear(),d.getMonth(),d.getDate()+1)}
+  const n0=new Date(),st=new Date(n0.getFullYear(),n0.getMonth(),1),days=gMonthDays(st);
   const today=civ(new Date()).join('-');
   if(!tSel){const nx=days.find(x=>civ(x.dt).join('-')>=today&&eventsOn(x.h).length);tSel=nx?civ(nx.dt).join('-'):today}
-  const g0=days[0].dt,g1=days[days.length-1].dt;
-  const gm=`${g0.toLocaleDateString([], {month:'short'})} – ${g1.toLocaleDateString([], {month:'short',year:'numeric'})}`;
+  const gm=hSpan(days);
   const cells=Array(st.getDay()).fill('<div></div>').concat(days.map(x=>{const ev=eventsOn(x.h),k=civ(x.dt).join('-');
     const cls=ev.length?(ev.some(e=>e[1]===0)?' grief':ev.some(e=>e[1]===1)?' joy':' other'):'';
-    return `<button class="cday${cls}${k===today?' today':''}${tSel===k?' sel':''}" data-td="${k}"><b>${x.h.d}</b><small>${x.dt.getDate()}</small>${ev.length?'<i></i>':''}</button>`}));
+    return `<button class="cday${cls}${k===today?' today':''}${tSel===k?' sel':''}" data-td="${k}"><b>${x.dt.getDate()}</b><small>${x.h.d}</small>${ev.length?'<i></i>':''}</button>`}));
   const sel=days.find(x=>civ(x.dt).join('-')===tSel);
   const evs=sel?eventsOn(sel.h):[];
-  el.innerHTML=`<div style="display:flex;align-items:center"><div style="flex:1"><div class="tlabel">${HM[h0.m-1]} ${h0.y}</div><small class="hint">${gm}</small></div><a href="#calendar" class="btn" style="font-size:13px;padding:7px 11px">Full calendar ›</a></div>
+  el.innerHTML=`<div style="display:flex;align-items:center"><div style="flex:1"><div class="tlabel">${st.toLocaleDateString([], {month:'long',year:'numeric'})}</div><small class="hint">${gm}</small></div><a href="#calendar" class="btn" style="font-size:13px;padding:7px 11px">Full calendar ›</a></div>
     <div class="calgrid" style="margin-top:10px">${['S','M','T','W','T','F','S'].map(w=>`<div class="wd">${w}</div>`).join('')}${cells.join('')}</div>
     ${sel?`<div class="tcalev">${evs.length?evs.map(e=>`<div class="ev ${e[1]===1?'joy':e[1]===0?'grief':'other'}"><div class="evd">${sel.h.d} ${HM[sel.h.m-1]} · ${sel.dt.toLocaleDateString([], {weekday:'short',day:'numeric',month:'short'})}${civ(sel.dt).join('-')===today?' · today':''}</div><div class="evt">${esc(evTitle(e))}</div></div>`).join(''):`<div class="hint" style="padding:8px 2px">${sel.h.d} ${HM[sel.h.m-1]} · no listed occasion</div>`}</div>`:''}`;
   el.querySelectorAll('[data-td]').forEach(b=>b.onclick=()=>{tSel=b.dataset.td;todayCal()});
