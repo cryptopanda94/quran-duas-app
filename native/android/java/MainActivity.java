@@ -26,7 +26,7 @@ public class MainActivity extends BridgeActivity {
         if (Build.VERSION.SDK_INT < 26) return;
         NotificationManager nm = getSystemService(NotificationManager.class);
         if (nm == null) return;
-        String[][] sounds = { {"azan", "Azan", "azan_short"}, {"azan_mecca", "Azan (Mecca)", "azan_mecca_short"}, {"azan_medina", "Azan (Medina)", "azan_medina_short"} };
+        String[][] sounds = { {"azan", "Azan", "azan_short"}, {"azan_mecca", "Azan (Mecca)", "azan_mecca_short"}, {"azan_medina", "Azan (Medina)", "azan_medina_short"}, {"azan_moazenzadeh", "Azan (Moazenzadeh)", "azan_moazenzadeh_short"}, {"azan_kazemzadeh", "Azan (Kazemzadeh)", "azan_kazemzadeh_short"}, {"azan_aghati_1", "Azan (Aghati (1))", "azan_aghati_1_short"}, {"azan_aghati_2", "Azan (Aghati (2))", "azan_aghati_2_short"}, {"azan_rezaeian", "Azan (Rezaeian)", "azan_rezaeian_short"}, {"azan_abdulbasit", "Azan (Abdul Basit)", "azan_abdulbasit_short"} };
         AudioAttributes aa = new AudioAttributes.Builder()
             .setUsage(AudioAttributes.USAGE_ALARM)
             .setContentType(AudioAttributes.CONTENT_TYPE_SONIFICATION)

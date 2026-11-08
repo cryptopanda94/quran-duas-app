@@ -360,9 +360,9 @@ const fmt=(loc,dt)=>{try{return dt.toLocaleTimeString([], {timeZone:loc.tz,hour:
 let LOC=store.get('loc',null);
 const ALERTS=Object.assign({fajr:true,dhuhr:true,asr:true,maghrib:true,isha:true},store.get('alerts',{}));
 let armed=false,ticker=null,audioCtx=null,playing=null,fired=store.get('fired',{});
-const SLOTS=[['builtin','Azan',''],['mecca','Mecca','Masjid al-Haram'],['medina','Medina','Masjid an-Nabawi']];
+const SLOTS=[['builtin','Azan',''],['mecca','Mecca','Masjid al-Haram'],['medina','Medina','Masjid an-Nabawi'],['moazenzadeh','Moazenzadeh','Rahim Moazenzadeh Ardabili'],['kazemzadeh','Kazemzadeh','Shia azan'],['aghati_1','Aghati (1)','Shia azan'],['aghati_2','Aghati (2)','Shia azan'],['rezaeian','Rezaeian','Shia azan'],['abdulbasit','Abdul Basit','Sunni azan']];
 const AZ={builtin:{url:document.getElementById('azdata').dataset.src||('data:audio/mpeg;base64,'+document.getElementById('azdata').textContent.trim()),name:'Azan',fixed:true},
-  mecca:{url:'azan_mecca.mp3',name:'Mecca azan',fixed:true},medina:{url:'azan_medina.mp3',name:'Medina azan',fixed:true}};
+  mecca:{url:'azan_mecca.mp3',name:'Mecca azan',fixed:true},medina:{url:'azan_medina.mp3',name:'Medina azan',fixed:true},moazenzadeh:{url:'azan_moazenzadeh.mp3',name:'Moazenzadeh azan',fixed:true},kazemzadeh:{url:'azan_kazemzadeh.mp3',name:'Kazemzadeh azan',fixed:true},aghati_1:{url:'azan_aghati_1.mp3',name:'Aghati (1) azan',fixed:true},aghati_2:{url:'azan_aghati_2.mp3',name:'Aghati (2) azan',fixed:true},rezaeian:{url:'azan_rezaeian.mp3',name:'Rezaeian azan',fixed:true},abdulbasit:{url:'azan_abdulbasit.mp3',name:'Abdul Basit azan',fixed:true}};
 const AZOK=v=>!!AZ[v];
 const AZK=[['fajr','Fajr'],['dhuhr','Dhuhr'],['asr','Asr'],['maghrib','Maghrib'],['isha','Isha']];
 const AZP=(()=>{const f=store.get('azFajr','builtin'),o=store.get('azOther','builtin'),m=store.get('azPer',{}),r={};
