@@ -19,7 +19,7 @@ const LIST=[
   {id:'dua-imam-zamana',user:'faraj-kun',grp:'d',sub:'For Imam al-Mahdi (a.t.f.s.) · after every prayer',mark:'ف'},
   {id:'hadees-kisa',user:'kisa',grp:'d',sub:'Narrated by Bibi Fatima (s.a.)',mark:'ح'},
   {id:'dua-mujeer',user:'mujeer',grp:'d',sub:'13th–15th Ramadan · for forgiveness & relief',mark:'م'},
-  {id:'dua-alqamah',user:'alqamah',grp:'d',sub:'Recited after Ziyarat Ashura',mark:'ع'},
+  {id:'dua-alqamah',key:'N_alqama',grp:'d',sub:'Recited after Ziyarat Ashura',mark:'ع'},
   {id:'duas-qunoot',key:'N_qunoot-quran',grp:'d',sub:'Quranic duas, Imam Husain (a.s.) & Witr qunoot',mark:'ق'},
   {id:'dua-safar',key:'N_dua-safar',grp:'d',sub:'Travel duas: setting out, boarding, arriving, returning',mark:'س'},
   {id:'munajat-safar',key:'N_munajat-safar',grp:'d',sub:'Imam Muhammad Taqi (a.s.) · before a journey',mark:'م'},
@@ -42,16 +42,19 @@ const LIST=[
   {id:'dua-muqatil',key:'N_muqatil',grp:'d',sub:'For the fulfilment of needs',mark:'م'},
   {id:'dua-imam-husain-ashura',key:'N_ashura-husain',grp:'d',sub:'Dua of Imam Husain (a.s.) on the day of Ashura',mark:'ح'},
   {id:'dua-unity',key:'N_unity',grp:'d',sub:'After every obligatory prayer · Dua al-Wahda',mark:'و'},
+  {id:'ziyarat-arbaeen',key:'Z_arbaeen',grp:'z',sub:'20th Safar · Imam Husain (a.s.)',mark:'ا'},
   {id:'ziyarat-ashura',key:'G4',grp:'z',sub:'Ziyarat of Imam Husain (a.s.)',mark:'ع'},
   {id:'ziyarat-waritha',user:'waritha',grp:'z',sub:'With Ali Akbar, Shuhada, Abbas, Imam Reza & Imam Zamana (a.s.)',mark:'و'},
   {id:'ziyarat-warith',key:'G6',grp:'z',sub:'Mafatih al-Jinan text, line-by-line Urdu',mark:'و'},
-  {id:'ziyarat-arbaeen',user:'arbaeen',grp:'z',sub:'20th Safar · Imam Husain (a.s.)',mark:'ا'},
-  {id:'ziyarat-nahiya',user:'nahiya',grp:'z',sub:'Ziyarat of Imam Husain (a.s.) by Imam al-Mahdi (a.t.f.s.)',mark:'ن'},
+  {id:'ziyarat-nahiya',key:'Z_nahiya',grp:'z',sub:'Ziyarat of Imam Husain (a.s.) by Imam al-Mahdi (a.t.f.s.)',mark:'ن'},
   {id:'ziyarat-aale-yasin',user:'aleyasin',grp:'z',sub:'Ziyarat of Imam al-Mahdi (a.t.f.s.)',mark:'ی'},
-  {id:'ziyarat-jamia-kabeera',user:'jamia-kabeera',grp:'z',sub:'Taught by Imam Ali al-Naqi (a.s.) · for all Imams',mark:'ج'},
-  {id:'ziyarat-jamia-sagheera',user:'jamia-sagheera',grp:'z',sub:'Short ziyarat for all the Imams (a.s.)',mark:'ج'},
+  {id:'ziyarat-jamia-sagheera',key:'Z_jamia_saghira',grp:'z',sub:'Short ziyarat for all the Imams (a.s.)',mark:'ج'},
+  {id:'ziyarat-jamia-kabeera',key:'Z_jamia_kabira',grp:'z',sub:'Taught by Imam Ali al-Naqi (a.s.) · for all Imams',mark:'ج'},
+  {id:'ziyarat-comprehensive-1',key:'Z_jamia_1',grp:'z',sub:'Especially on the Day of Arafah · at any shrine',mark:'ج'},
+  {id:'ziyarat-aminullah',key:'N_aminullah',grp:'z',sub:'2nd Comprehensive Ziyarat · Imam Zainul Abideen (a.s.)',mark:'ا'},
+  {id:'ziyarat-comprehensive-3',key:'Z_rajabiya',grp:'z',sub:'Can be recited at any shrine',mark:'ر'},
   {id:'ziyarat-jamia-aimma',user:'jamia-aimma',grp:'z',sub:'Comprehensive ziyarat for all the Imams (a.s.)',mark:'ج'},
-  {id:'ziyarat-aminullah',key:'N_aminullah',grp:'z',sub:'Ziyarat of Imam Ali (a.s.) by Imam Zainul Abideen (a.s.)',mark:'ا'},
+  {id:'ziyarat-masuma',key:'Z_masuma',grp:'z',sub:'Qom',mark:'م'},
   {id:'sahifa-1',key:'S_1',grp:'s',sub:'Dua 1 · Imam Zainul Abideen (a.s.)',mark:'ص'},
   {id:'sahifa-2',key:'S_2',grp:'s',sub:'Dua 2 · Imam Zainul Abideen (a.s.)',mark:'ص'},
   {id:'sahifa-3',key:'S_3',grp:'s',sub:'Dua 3 · Imam Zainul Abideen (a.s.)',mark:'ص'},
@@ -236,8 +239,8 @@ let dTab=store.get('dTab','d'), dQ='';
 function renderDuas(){
   setHeader('Duas &amp; Ziyarat',false);
   app.innerHTML=`<div class="dtop">
-     <div class="seg dseg"><button data-g="d" class="${dTab==='d'?'on':''}">Duas</button><button data-g="z" class="${dTab==='z'?'on':''}">Ziyarat</button><button data-g="s" class="${dTab==='s'?'on':''}">Sahifa</button><button data-g="a" class="${dTab==='a'?'on':''}">Aamal</button></div>
-     <input class="inp" id="dq" type="search" placeholder="Search duas, ziyarat, Sahifa &amp; aamal" value="${esc(dQ)}" autocomplete="off">
+     <div class="seg dseg"><button data-g="d" class="${dTab==='d'?'on':''}">Duas</button><button data-g="z" class="${dTab==='z'?'on':''}">Ziyarat</button><button data-g="s" class="${dTab==='s'?'on':''}">Sahifa Sajjadiya</button><button data-g="a" class="${dTab==='a'?'on':''}">Aamaal</button></div>
+     <input class="inp" id="dq" type="search" placeholder="Search duas, ziyarat, Sahifa &amp; aamaal" value="${esc(dQ)}" autocomplete="off">
    </div>
    <div class="list" id="dlist"></div>
 `;
@@ -360,7 +363,7 @@ const fmt=(loc,dt)=>{try{return dt.toLocaleTimeString([], {timeZone:loc.tz,hour:
 let LOC=store.get('loc',null);
 const ALERTS=Object.assign({fajr:true,dhuhr:true,asr:true,maghrib:true,isha:true},store.get('alerts',{}));
 let armed=false,ticker=null,audioCtx=null,playing=null,fired=store.get('fired',{});
-const SLOTS=[['builtin','Azan',''],['mecca','Mecca','Masjid al-Haram'],['medina','Medina','Masjid an-Nabawi'],['moazenzadeh','Moazenzadeh','Rahim Moazenzadeh Ardabili'],['kazemzadeh','Kazemzadeh','Shia azan'],['aghati_1','Aghati (1)','Shia azan'],['aghati_2','Aghati (2)','Shia azan'],['rezaeian','Rezaeian','Shia azan'],['abdulbasit','Abdul Basit','Sunni azan']];
+const SLOTS=[['builtin','Azan',''],['mecca','Mecca','Masjid al-Haram'],['medina','Medina','Masjid an-Nabawi'],['moazenzadeh','Moazenzadeh','Rahim Moazenzadeh Ardabili'],['kazemzadeh','Kazemzadeh',''],['aghati_1','Aghati (1)',''],['aghati_2','Aghati (2)',''],['rezaeian','Rezaeian',''],['abdulbasit','Abdul Basit','']];
 const AZ={builtin:{url:document.getElementById('azdata').dataset.src||('data:audio/mpeg;base64,'+document.getElementById('azdata').textContent.trim()),name:'Azan',fixed:true},
   mecca:{url:'azan_mecca.mp3',name:'Mecca azan',fixed:true},medina:{url:'azan_medina.mp3',name:'Medina azan',fixed:true},moazenzadeh:{url:'azan_moazenzadeh.mp3',name:'Moazenzadeh azan',fixed:true},kazemzadeh:{url:'azan_kazemzadeh.mp3',name:'Kazemzadeh azan',fixed:true},aghati_1:{url:'azan_aghati_1.mp3',name:'Aghati (1) azan',fixed:true},aghati_2:{url:'azan_aghati_2.mp3',name:'Aghati (2) azan',fixed:true},rezaeian:{url:'azan_rezaeian.mp3',name:'Rezaeian azan',fixed:true},abdulbasit:{url:'azan_abdulbasit.mp3',name:'Abdul Basit azan',fixed:true}};
 const AZOK=v=>!!AZ[v];
