@@ -282,8 +282,7 @@ function renderDuas(){
       ||'<div class="hint" style="padding:20px 4px;text-align:center">Nothing found — try another name (e.g. Kumayl, Ashura, Kisa).</div>';
     app.querySelectorAll('.dseg button').forEach(b=>b.classList.toggle('on',!q&&b.dataset.g===dTab));
   };
-  app.querySelectorAll('.dseg button').forEach(b=>b.onclick=()=>{dTab=b.dataset.g;store.set('dTab',dTab);dQ='';$('dq').value='';draw();b.scrollIntoView({inline:'nearest',block:'nearest'})});
-  {const on=app.querySelector('.dseg button.on');on&&on.scrollIntoView({inline:'center',block:'nearest'});window.scrollTo(0,0)}
+  app.querySelectorAll('.dseg button').forEach(b=>b.onclick=()=>{dTab=b.dataset.g;store.set('dTab',dTab);dQ='';$('dq').value='';draw()});
   $('dq').oninput=e=>{dQ=e.target.value;draw()};
   draw();
 }
