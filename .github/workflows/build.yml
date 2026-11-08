@@ -130,8 +130,8 @@ jobs:
           echo "$KS" | base64 -d > "$RUNNER_TEMP/upload.jks"
           npx cap build android --keystorepath "$RUNNER_TEMP/upload.jks" --keystorepass "$KP" --keystorealias upload --keystorealiaspass "$KP" --androidreleasetype APK
           rm -f "$RUNNER_TEMP/upload.jks"
-          APK=$(find android/app/build/outputs/apk/release -name '*signed*.apk' | head -1)
-          [ -z "$APK" ] && APK=$(find android/app/build/outputs/apk/release -name '*.apk' | head -1)
+          APK=$(find android/app/build/outputs/apk/release -name '*release-signed.apk' | head -1)
+          [ -z "$APK" ] && { echo 'No signed APK found'; ls android/app/build/outputs/apk/release; exit 1; }
           mkdir -p dist && cp "$APK" dist/QuranDuas.apk && ls -la dist
       - uses: actions/upload-artifact@v4
         if: ${{ hashFiles('dist/QuranDuas.apk') != '' }}
