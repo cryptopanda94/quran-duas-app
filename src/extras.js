@@ -120,7 +120,114 @@ const LIST=[
   {id:'sahifa-m12',key:'S_M12',grp:'s',sub:'Munajat 12 · Imam Zainul Abideen (a.s.)',mark:'م'},
   {id:'sahifa-m13',key:'S_M13',grp:'s',sub:'Munajat 13 · Imam Zainul Abideen (a.s.)',mark:'م'},
   {id:'sahifa-m14',key:'S_M14',grp:'s',sub:'Munajat 14 · Imam Zainul Abideen (a.s.)',mark:'م'},
-  {id:'sahifa-m15',key:'S_M15',grp:'s',sub:'Munajat 15 · Imam Zainul Abideen (a.s.)',mark:'م'}
+  {id:'sahifa-m15',key:'S_M15',grp:'s',sub:'Munajat 15 · Imam Zainul Abideen (a.s.)',mark:'م'},
+  {id:'aamal-r1',key:'A_R1',grp:'a',sec:'Muharram',secUr:'محرم',sub:'Muharram · Mafatih al-Jinan',mark:'ع'},
+  {id:'aamal-r4',key:'A_R4',grp:'a',sec:'Muharram',secUr:'محرم',sub:'Muharram · Mafatih al-Jinan',mark:'ع'},
+  {id:'aamal-r6',key:'A_R6',grp:'a',sec:'Muharram',secUr:'محرم',sub:'Muharram · Mafatih al-Jinan',mark:'ع'},
+  {id:'aamal-r7',key:'A_R7',grp:'a',sec:'Muharram',secUr:'محرم',sub:'Muharram · Mafatih al-Jinan',mark:'ع'},
+  {id:'aamal-r9',key:'A_R9',grp:'a',sec:'Muharram',secUr:'محرم',sub:'Muharram · Mafatih al-Jinan',mark:'ع'},
+  {id:'aamal-s1',key:'A_S1',grp:'a',sec:'Safar',secUr:'صفر',sub:'Safar · Mafatih al-Jinan',mark:'ع'},
+  {id:'aamal-s5',key:'A_S5',grp:'a',sec:'Safar',secUr:'صفر',sub:'Safar · Mafatih al-Jinan',mark:'ع'},
+  {id:'aamal-t2',key:'A_T2',grp:'a',sec:'Rabi al-Awwal',secUr:'ربیع الاول',sub:'Rabi al-Awwal · Mafatih al-Jinan',mark:'ع'},
+  {id:'aamal-w1',key:'A_W1',grp:'a',sec:'Jumada al-Akhirah',secUr:'جمادی الثانی',sub:'Jumada al-Akhirah · Mafatih al-Jinan',mark:'ع'},
+  {id:'aamal-w2',key:'A_W2',grp:'a',sec:'Jumada al-Akhirah',secUr:'جمادی الثانی',sub:'Jumada al-Akhirah · Mafatih al-Jinan',mark:'ع'},
+  {id:'aamal-w3',key:'A_W3',grp:'a',sec:'Jumada al-Akhirah',secUr:'جمادی الثانی',sub:'Jumada al-Akhirah · Mafatih al-Jinan',mark:'ع'},
+  {id:'aamal-x1',key:'A_X1',grp:'a',sec:'Rajab',secUr:'رجب',sub:'Rajab · Mafatih al-Jinan',mark:'ع'},
+  {id:'aamal-x2',key:'A_X2',grp:'a',sec:'Rajab',secUr:'رجب',sub:'Rajab · Mafatih al-Jinan',mark:'ع'},
+  {id:'aamal-x3',key:'A_X3',grp:'a',sec:'Rajab',secUr:'رجب',sub:'Rajab · Mafatih al-Jinan',mark:'ع'},
+  {id:'aamal-x4',key:'A_X4',grp:'a',sec:'Rajab',secUr:'رجب',sub:'Rajab · Mafatih al-Jinan',mark:'ع'},
+  {id:'aamal-x5',key:'A_X5',grp:'a',sec:'Rajab',secUr:'رجب',sub:'Rajab · Mafatih al-Jinan',mark:'ع'},
+  {id:'aamal-x6',key:'A_X6',grp:'a',sec:'Rajab',secUr:'رجب',sub:'Rajab · Mafatih al-Jinan',mark:'ع'},
+  {id:'aamal-x7',key:'A_X7',grp:'a',sec:'Rajab',secUr:'رجب',sub:'Rajab · Mafatih al-Jinan',mark:'ع'},
+  {id:'aamal-x10',key:'A_X10',grp:'a',sec:'Rajab',secUr:'رجب',sub:'Rajab · Mafatih al-Jinan',mark:'ع'},
+  {id:'aamal-x11',key:'A_X11',grp:'a',sec:'Rajab',secUr:'رجب',sub:'Rajab · Mafatih al-Jinan',mark:'ع'},
+  {id:'aamal-x13',key:'A_X13',grp:'a',sec:'Rajab',secUr:'رجب',sub:'Rajab · Mafatih al-Jinan',mark:'ع'},
+  {id:'aamal-x14',key:'A_X14',grp:'a',sec:'Rajab',secUr:'رجب',sub:'Rajab · Mafatih al-Jinan',mark:'ع'},
+  {id:'aamal-x15',key:'A_X15',grp:'a',sec:'Rajab',secUr:'رجب',sub:'Rajab · Mafatih al-Jinan',mark:'ع'},
+  {id:'aamal-y1',key:'A_Y1',grp:'a',sec:'Shaban',secUr:'شعبان',sub:'Shaban · Mafatih al-Jinan',mark:'ع'},
+  {id:'aamal-y2',key:'A_Y2',grp:'a',sec:'Shaban',secUr:'شعبان',sub:'Shaban · Mafatih al-Jinan',mark:'ع'},
+  {id:'aamal-y3',key:'A_Y3',grp:'a',sec:'Shaban',secUr:'شعبان',sub:'Shaban · Mafatih al-Jinan',mark:'ع'},
+  {id:'aamal-y4',key:'A_Y4',grp:'a',sec:'Shaban',secUr:'شعبان',sub:'Shaban · Mafatih al-Jinan',mark:'ع'},
+  {id:'aamal-y5',key:'A_Y5',grp:'a',sec:'Shaban',secUr:'شعبان',sub:'Shaban · Mafatih al-Jinan',mark:'ع'},
+  {id:'aamal-y6',key:'A_Y6',grp:'a',sec:'Shaban',secUr:'شعبان',sub:'Shaban · Mafatih al-Jinan',mark:'ع'},
+  {id:'aamal-y7',key:'A_Y7',grp:'a',sec:'Shaban',secUr:'شعبان',sub:'Shaban · Mafatih al-Jinan',mark:'ع'},
+  {id:'aamal-y9',key:'A_Y9',grp:'a',sec:'Shaban',secUr:'شعبان',sub:'Shaban · Mafatih al-Jinan',mark:'ع'},
+  {id:'aamal-y10',key:'A_Y10',grp:'a',sec:'Shaban',secUr:'شعبان',sub:'Shaban · Mafatih al-Jinan',mark:'ع'},
+  {id:'aamal-y11',key:'A_Y11',grp:'a',sec:'Shaban',secUr:'شعبان',sub:'Shaban · Mafatih al-Jinan',mark:'ع'},
+  {id:'aamal-aa1',key:'A_AA1',grp:'a',sec:'Ramadan',secUr:'رمضان',sub:'Ramadan · Mafatih al-Jinan',mark:'ع'},
+  {id:'aamal-aa2',key:'A_AA2',grp:'a',sec:'Ramadan',secUr:'رمضان',sub:'Ramadan · Mafatih al-Jinan',mark:'ع'},
+  {id:'aamal-aa3',key:'A_AA3',grp:'a',sec:'Ramadan',secUr:'رمضان',sub:'Ramadan · Mafatih al-Jinan',mark:'ع'},
+  {id:'aamal-aa4',key:'A_AA4',grp:'a',sec:'Ramadan',secUr:'رمضان',sub:'Ramadan · Mafatih al-Jinan',mark:'ع'},
+  {id:'aamal-aa5',key:'A_AA5',grp:'a',sec:'Ramadan',secUr:'رمضان',sub:'Ramadan · Mafatih al-Jinan',mark:'ع'},
+  {id:'aamal-aa9',key:'A_AA9',grp:'a',sec:'Ramadan',secUr:'رمضان',sub:'Ramadan · Mafatih al-Jinan',mark:'ع'},
+  {id:'aamal-aa10',key:'A_AA10',grp:'a',sec:'Ramadan',secUr:'رمضان',sub:'Ramadan · Mafatih al-Jinan',mark:'ع'},
+  {id:'aamal-aa11',key:'A_AA11',grp:'a',sec:'Ramadan',secUr:'رمضان',sub:'Ramadan · Mafatih al-Jinan',mark:'ع'},
+  {id:'aamal-aa12',key:'A_AA12',grp:'a',sec:'Ramadan',secUr:'رمضان',sub:'Ramadan · Mafatih al-Jinan',mark:'ع'},
+  {id:'aamal-aa13',key:'A_AA13',grp:'a',sec:'Ramadan',secUr:'رمضان',sub:'Ramadan · Mafatih al-Jinan',mark:'ع'},
+  {id:'aamal-aa14',key:'A_AA14',grp:'a',sec:'Ramadan',secUr:'رمضان',sub:'Ramadan · Mafatih al-Jinan',mark:'ع'},
+  {id:'aamal-aa15',key:'A_AA15',grp:'a',sec:'Ramadan',secUr:'رمضان',sub:'Ramadan · Mafatih al-Jinan',mark:'ع'},
+  {id:'aamal-aa16',key:'A_AA16',grp:'a',sec:'Ramadan',secUr:'رمضان',sub:'Ramadan · Mafatih al-Jinan',mark:'ع'},
+  {id:'aamal-aa17',key:'A_AA17',grp:'a',sec:'Ramadan',secUr:'رمضان',sub:'Ramadan · Mafatih al-Jinan',mark:'ع'},
+  {id:'aamal-aa18',key:'A_AA18',grp:'a',sec:'Ramadan',secUr:'رمضان',sub:'Ramadan · Mafatih al-Jinan',mark:'ع'},
+  {id:'aamal-aa19',key:'A_AA19',grp:'a',sec:'Ramadan',secUr:'رمضان',sub:'Ramadan · Mafatih al-Jinan',mark:'ع'},
+  {id:'aamal-aa20',key:'A_AA20',grp:'a',sec:'Ramadan',secUr:'رمضان',sub:'Ramadan · Mafatih al-Jinan',mark:'ع'},
+  {id:'aamal-aa21',key:'A_AA21',grp:'a',sec:'Ramadan',secUr:'رمضان',sub:'Ramadan · Mafatih al-Jinan',mark:'ع'},
+  {id:'aamal-aa22',key:'A_AA22',grp:'a',sec:'Ramadan',secUr:'رمضان',sub:'Ramadan · Mafatih al-Jinan',mark:'ع'},
+  {id:'aamal-aa23',key:'A_AA23',grp:'a',sec:'Ramadan',secUr:'رمضان',sub:'Ramadan · Mafatih al-Jinan',mark:'ع'},
+  {id:'aamal-aa25',key:'A_AA25',grp:'a',sec:'Ramadan',secUr:'رمضان',sub:'Ramadan · Mafatih al-Jinan',mark:'ع'},
+  {id:'aamal-aa26',key:'A_AA26',grp:'a',sec:'Ramadan',secUr:'رمضان',sub:'Ramadan · Mafatih al-Jinan',mark:'ع'},
+  {id:'aamal-aa27',key:'A_AA27',grp:'a',sec:'Ramadan',secUr:'رمضان',sub:'Ramadan · Mafatih al-Jinan',mark:'ع'},
+  {id:'aamal-aa29',key:'A_AA29',grp:'a',sec:'Ramadan',secUr:'رمضان',sub:'Ramadan · Mafatih al-Jinan',mark:'ع'},
+  {id:'aamal-aa30',key:'A_AA30',grp:'a',sec:'Ramadan',secUr:'رمضان',sub:'Ramadan · Mafatih al-Jinan',mark:'ع'},
+  {id:'aamal-aa31',key:'A_AA31',grp:'a',sec:'Ramadan',secUr:'رمضان',sub:'Ramadan · Mafatih al-Jinan',mark:'ع'},
+  {id:'aamal-aa32',key:'A_AA32',grp:'a',sec:'Ramadan',secUr:'رمضان',sub:'Ramadan · Mafatih al-Jinan',mark:'ع'},
+  {id:'aamal-aa33',key:'A_AA33',grp:'a',sec:'Ramadan',secUr:'رمضان',sub:'Ramadan · Mafatih al-Jinan',mark:'ع'},
+  {id:'aamal-aa34',key:'A_AA34',grp:'a',sec:'Ramadan',secUr:'رمضان',sub:'Ramadan · Mafatih al-Jinan',mark:'ع'},
+  {id:'aamal-aa35',key:'A_AA35',grp:'a',sec:'Ramadan',secUr:'رمضان',sub:'Ramadan · Mafatih al-Jinan',mark:'ع'},
+  {id:'aamal-aa37',key:'A_AA37',grp:'a',sec:'Ramadan',secUr:'رمضان',sub:'Ramadan · Mafatih al-Jinan',mark:'ع'},
+  {id:'aamal-aa38',key:'A_AA38',grp:'a',sec:'Ramadan',secUr:'رمضان',sub:'Ramadan · Mafatih al-Jinan',mark:'ع'},
+  {id:'aamal-aa39',key:'A_AA39',grp:'a',sec:'Ramadan',secUr:'رمضان',sub:'Ramadan · Mafatih al-Jinan',mark:'ع'},
+  {id:'aamal-aa40',key:'A_AA40',grp:'a',sec:'Ramadan',secUr:'رمضان',sub:'Ramadan · Mafatih al-Jinan',mark:'ع'},
+  {id:'aamal-aa43',key:'A_AA43',grp:'a',sec:'Ramadan',secUr:'رمضان',sub:'Ramadan · Mafatih al-Jinan',mark:'ع'},
+  {id:'aamal-aa46',key:'A_AA46',grp:'a',sec:'Ramadan',secUr:'رمضان',sub:'Ramadan · Mafatih al-Jinan',mark:'ع'},
+  {id:'aamal-aa47',key:'A_AA47',grp:'a',sec:'Ramadan',secUr:'رمضان',sub:'Ramadan · Mafatih al-Jinan',mark:'ع'},
+  {id:'aamal-aa48',key:'A_AA48',grp:'a',sec:'Ramadan',secUr:'رمضان',sub:'Ramadan · Mafatih al-Jinan',mark:'ع'},
+  {id:'aamal-aa49',key:'A_AA49',grp:'a',sec:'Ramadan',secUr:'رمضان',sub:'Ramadan · Mafatih al-Jinan',mark:'ع'},
+  {id:'aamal-zall',key:'A_Zall',grp:'a',sec:'Ramadan',secUr:'رمضان',sub:'Ramadan · Mafatih al-Jinan',mark:'ع'},
+  {id:'aamal-ad2',key:'A_AD2',grp:'a',sec:'Shawwal',secUr:'شوال',sub:'Shawwal · Mafatih al-Jinan',mark:'ع'},
+  {id:'aamal-ad3',key:'A_AD3',grp:'a',sec:'Shawwal',secUr:'شوال',sub:'Shawwal · Mafatih al-Jinan',mark:'ع'},
+  {id:'aamal-ad4',key:'A_AD4',grp:'a',sec:'Shawwal',secUr:'شوال',sub:'Shawwal · Mafatih al-Jinan',mark:'ع'},
+  {id:'aamal-ab1',key:'A_AB1',grp:'a',sec:'Dhul Qadah',secUr:'ذی القعدہ',sub:'Dhul Qadah · Mafatih al-Jinan',mark:'ع'},
+  {id:'aamal-ab2',key:'A_AB2',grp:'a',sec:'Dhul Qadah',secUr:'ذی القعدہ',sub:'Dhul Qadah · Mafatih al-Jinan',mark:'ع'},
+  {id:'aamal-ab3',key:'A_AB3',grp:'a',sec:'Dhul Qadah',secUr:'ذی القعدہ',sub:'Dhul Qadah · Mafatih al-Jinan',mark:'ع'},
+  {id:'aamal-ac1',key:'A_AC1',grp:'a',sec:'Dhul Hijjah',secUr:'ذی الحجہ',sub:'Dhul Hijjah · Mafatih al-Jinan',mark:'ع'},
+  {id:'aamal-ac2',key:'A_AC2',grp:'a',sec:'Dhul Hijjah',secUr:'ذی الحجہ',sub:'Dhul Hijjah · Mafatih al-Jinan',mark:'ع'},
+  {id:'aamal-ac3',key:'A_AC3',grp:'a',sec:'Dhul Hijjah',secUr:'ذی الحجہ',sub:'Dhul Hijjah · Mafatih al-Jinan',mark:'ع'},
+  {id:'aamal-ac5',key:'A_AC5',grp:'a',sec:'Dhul Hijjah',secUr:'ذی الحجہ',sub:'Dhul Hijjah · Mafatih al-Jinan',mark:'ع'},
+  {id:'aamal-ac6',key:'A_AC6',grp:'a',sec:'Dhul Hijjah',secUr:'ذی الحجہ',sub:'Dhul Hijjah · Mafatih al-Jinan',mark:'ع'},
+  {id:'aamal-ac7',key:'A_AC7',grp:'a',sec:'Dhul Hijjah',secUr:'ذی الحجہ',sub:'Dhul Hijjah · Mafatih al-Jinan',mark:'ع'},
+  {id:'aamal-ac10',key:'A_AC10',grp:'a',sec:'Dhul Hijjah',secUr:'ذی الحجہ',sub:'Dhul Hijjah · Mafatih al-Jinan',mark:'ع'},
+  {id:'aamal-ac11',key:'A_AC11',grp:'a',sec:'Dhul Hijjah',secUr:'ذی الحجہ',sub:'Dhul Hijjah · Mafatih al-Jinan',mark:'ع'},
+  {id:'aamal-ac12',key:'A_AC12',grp:'a',sec:'Dhul Hijjah',secUr:'ذی الحجہ',sub:'Dhul Hijjah · Mafatih al-Jinan',mark:'ع'},
+  {id:'aamal-ac13',key:'A_AC13',grp:'a',sec:'Dhul Hijjah',secUr:'ذی الحجہ',sub:'Dhul Hijjah · Mafatih al-Jinan',mark:'ع'},
+  {id:'aamal-ac14',key:'A_AC14',grp:'a',sec:'Dhul Hijjah',secUr:'ذی الحجہ',sub:'Dhul Hijjah · Mafatih al-Jinan',mark:'ع'},
+  {id:'aamal-ac15',key:'A_AC15',grp:'a',sec:'Dhul Hijjah',secUr:'ذی الحجہ',sub:'Dhul Hijjah · Mafatih al-Jinan',mark:'ع'},
+  {id:'aamal-ac17',key:'A_AC17',grp:'a',sec:'Dhul Hijjah',secUr:'ذی الحجہ',sub:'Dhul Hijjah · Mafatih al-Jinan',mark:'ع'},
+  {id:'aamal-ac18',key:'A_AC18',grp:'a',sec:'Dhul Hijjah',secUr:'ذی الحجہ',sub:'Dhul Hijjah · Mafatih al-Jinan',mark:'ع'},
+  {id:'aamal-ac20',key:'A_AC20',grp:'a',sec:'Dhul Hijjah',secUr:'ذی الحجہ',sub:'Dhul Hijjah · Mafatih al-Jinan',mark:'ع'},
+  {id:'aamal-ac21',key:'A_AC21',grp:'a',sec:'Dhul Hijjah',secUr:'ذی الحجہ',sub:'Dhul Hijjah · Mafatih al-Jinan',mark:'ع'},
+  {id:'aamal-ac22',key:'A_AC22',grp:'a',sec:'Dhul Hijjah',secUr:'ذی الحجہ',sub:'Dhul Hijjah · Mafatih al-Jinan',mark:'ع'},
+  {id:'aamal-ac23',key:'A_AC23',grp:'a',sec:'Dhul Hijjah',secUr:'ذی الحجہ',sub:'Dhul Hijjah · Mafatih al-Jinan',mark:'ع'},
+  {id:'aamal-j1',key:'A_J1',grp:'a',sec:'Friday (Jumu‘ah)',secUr:'جمعہ',sub:'Friday (Jumu‘ah) · Mafatih al-Jinan',mark:'ع'},
+  {id:'aamal-j3',key:'A_J3',grp:'a',sec:'Friday (Jumu‘ah)',secUr:'جمعہ',sub:'Friday (Jumu‘ah) · Mafatih al-Jinan',mark:'ع'},
+  {id:'aamal-j4',key:'A_J4',grp:'a',sec:'Friday (Jumu‘ah)',secUr:'جمعہ',sub:'Friday (Jumu‘ah) · Mafatih al-Jinan',mark:'ع'},
+  {id:'aamal-j6',key:'A_J6',grp:'a',sec:'Friday (Jumu‘ah)',secUr:'جمعہ',sub:'Friday (Jumu‘ah) · Mafatih al-Jinan',mark:'ع'},
+  {id:'aamal-j7',key:'A_J7',grp:'a',sec:'Friday (Jumu‘ah)',secUr:'جمعہ',sub:'Friday (Jumu‘ah) · Mafatih al-Jinan',mark:'ع'},
+  {id:'aamal-j8',key:'A_J8',grp:'a',sec:'Friday (Jumu‘ah)',secUr:'جمعہ',sub:'Friday (Jumu‘ah) · Mafatih al-Jinan',mark:'ع'},
+  {id:'aamal-j9',key:'A_J9',grp:'a',sec:'Friday (Jumu‘ah)',secUr:'جمعہ',sub:'Friday (Jumu‘ah) · Mafatih al-Jinan',mark:'ع'},
+  {id:'aamal-p1',key:'A_P1',grp:'a',sec:'Friday (Jumu‘ah)',secUr:'جمعہ',sub:'Friday (Jumu‘ah) · Mafatih al-Jinan',mark:'ع'},
+  {id:'aamal-c15',key:'A_C15',grp:'a',sec:'Every Month',secUr:'ہر مہینہ',sub:'Every Month · Mafatih al-Jinan',mark:'ع'},
+  {id:'aamal-c16',key:'A_C16',grp:'a',sec:'Every Month',secUr:'ہر مہینہ',sub:'Every Month · Mafatih al-Jinan',mark:'ع'}
 ];
 const UD=JSON.parse(document.getElementById('udata').textContent);
 LIST.forEach(d=>{if(d.key){d.name=DU[d.key].name;d.ur=DU[d.key].nameUr}if(d.user){d.name=UD[d.user].name;d.ur=UD[d.user].nameUr}});
@@ -129,8 +236,8 @@ let dTab=store.get('dTab','d'), dQ='';
 function renderDuas(){
   setHeader('Duas &amp; Ziyarat',false);
   app.innerHTML=`<div class="dtop">
-     <div class="seg dseg"><button data-g="d" class="${dTab==='d'?'on':''}">Duas</button><button data-g="z" class="${dTab==='z'?'on':''}">Ziyarat</button><button data-g="s" class="${dTab==='s'?'on':''}">Sahifa</button></div>
-     <input class="inp" id="dq" type="search" placeholder="Search duas, ziyarat &amp; Sahifa" value="${esc(dQ)}" autocomplete="off">
+     <div class="seg dseg"><button data-g="d" class="${dTab==='d'?'on':''}">Duas</button><button data-g="z" class="${dTab==='z'?'on':''}">Ziyarat</button><button data-g="s" class="${dTab==='s'?'on':''}">Sahifa</button><button data-g="a" class="${dTab==='a'?'on':''}">Aamal</button></div>
+     <input class="inp" id="dq" type="search" placeholder="Search duas, ziyarat, Sahifa &amp; aamal" value="${esc(dQ)}" autocomplete="off">
    </div>
    <div class="list" id="dlist"></div>
 `;
@@ -138,7 +245,8 @@ function renderDuas(){
   const draw=()=>{
     const q=norm(dQ);
     const items=q?LIST.filter(d=>norm(d.name+' '+d.sub+' '+d.ur+' '+d.id).includes(q)):LIST.filter(d=>d.grp===dTab);
-    $('dlist').innerHTML=items.map(d=>`<a class="item dua-item" href="#dua-${d.id}"><div class="t"><b>${esc(d.name)}</b><small>${esc(d.sub)}</small></div><div class="ar" style="font-family:'Noto Nastaliq Urdu',serif;font-size:15px;line-height:2">${d.ur}</div></a>`).join('')
+    let lastSec='';
+    $('dlist').innerHTML=items.map(d=>(d.sec&&!q&&d.sec!==lastSec?(lastSec=d.sec,`<div class="dsec"><b>${esc(d.sec)}</b><span>${d.secUr||''}</span></div>`):'')+`<a class="item dua-item" href="#dua-${d.id}"><div class="t"><b>${esc(d.name)}</b><small>${esc(d.sub)}</small></div><div class="ar" style="font-family:'Noto Nastaliq Urdu',serif;font-size:15px;line-height:2">${d.ur}</div></a>`).join('')
       ||'<div class="hint" style="padding:20px 4px;text-align:center">Nothing found — try another name (e.g. Kumayl, Ashura, Kisa).</div>';
     app.querySelectorAll('.dseg button').forEach(b=>b.classList.toggle('on',!q&&b.dataset.g===dTab));
   };
