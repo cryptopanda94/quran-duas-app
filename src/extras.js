@@ -24,7 +24,7 @@ const LIST=[
   {id:'dua-safar',key:'N_dua-safar',grp:'d',sub:'Travel duas: setting out, boarding, arriving, returning',mark:'س'},
   {id:'munajat-safar',key:'N_munajat-safar',grp:'d',sub:'Imam Muhammad Taqi (a.s.) · before a journey',mark:'م'},
   {id:'duas-leaving-home',key:'N_leaving-home',grp:'d',sub:'Eight duas from Baqiyat al-Salihat',mark:'گ'},
-  {id:'asma-ul-husna',key:'N_names-99',grp:'d',sub:'99 Names of Allah with meanings & benefits',mark:'ا'},
+  {id:'asma-ul-husna',key:'N_names-99',grp:'h',sub:'99 Names of Allah with meanings & benefits',mark:'ا'},
   {id:'dua-sahar',key:'N_sahar',grp:'d',sub:'Ramadan · at the time of Sahar',mark:'س'},
   {id:'dua-baha',key:'N_baha',grp:'d',sub:'Ramadan · Sahar (Dua al-Baha)',mark:'ب'},
   {id:'dua-adeela',key:'N_adeela',grp:'d',sub:'Declaration of beliefs · at the time of death',mark:'ع'},
@@ -230,7 +230,32 @@ const LIST=[
   {id:'aamal-j9',key:'A_J9',grp:'a',sec:'Friday (Jumu‘ah)',secUr:'جمعہ',sub:'Friday (Jumu‘ah) · Mafatih al-Jinan',mark:'ع'},
   {id:'aamal-p1',key:'A_P1',grp:'a',sec:'Friday (Jumu‘ah)',secUr:'جمعہ',sub:'Friday (Jumu‘ah) · Mafatih al-Jinan',mark:'ع'},
   {id:'aamal-c15',key:'A_C15',grp:'a',sec:'Every Month',secUr:'ہر مہینہ',sub:'Every Month · Mafatih al-Jinan',mark:'ع'},
-  {id:'aamal-c16',key:'A_C16',grp:'a',sec:'Every Month',secUr:'ہر مہینہ',sub:'Every Month · Mafatih al-Jinan',mark:'ع'}
+  {id:'aamal-c16',key:'A_C16',grp:'a',sec:'Every Month',secUr:'ہر مہینہ',sub:'Every Month · Mafatih al-Jinan',mark:'ع'},
+  {id:'namaz-merits-shab',key:'NM_merits-shab',grp:'n',sub:'Virtues of the night prayer',mark:'ف'},
+  {id:'namaz-namaz-e-shab',key:'NM_F2',grp:'n',sub:'Night prayer · 11 rak‘ahs',mark:'ن'},
+  {id:'namaz-namaz-e-shab-short',key:'NM_F3',grp:'n',sub:'Short form of the night prayer',mark:'ن'},
+  {id:'namaz-namaz-e-aayaat',key:'NM_F4',grp:'n',sub:'For eclipses, earthquakes & frightening events',mark:'ن'},
+  {id:'namaz-namaz-e-ghufaylah',key:'NM_F5',grp:'n',sub:'Between Maghrib and Isha',mark:'ن'},
+  {id:'namaz-namaz-e-kamilah',key:'NM_F6',grp:'n',sub:'Friday · before noon',mark:'ن'},
+  {id:'namaz-namaz-e-mayyat',key:'NM_F7',grp:'n',sub:'Funeral prayer',mark:'ن'},
+  {id:'namaz-namaz-e-nawafil',key:'NM_F8',grp:'n',sub:'Daily recommended prayers',mark:'ن'},
+  {id:'namaz-namaz-e-wahshat',key:'NM_F9',grp:'n',sub:'Namaz for the Night of Burial',mark:'ن'},
+  {id:'namaz-namaz-e-maghfirat-e-waledain',key:'NM_F10',grp:'n',sub:'Forgiveness for parents',mark:'ن'},
+  {id:'namaz-namaz-of-jafar-e-tayyar',key:'NM_F11',grp:'n',sub:'Salat al-Tasbih',mark:'ن'},
+  {id:'namaz-eid-prayer',key:'NM_AD4',grp:'n',sub:'Eid al-Fitr & Eid al-Adha',mark:'ن'},
+  {id:'namaz-namaz-of-imam-musa-kazim-a-s',key:'NM_F21',grp:'n',sub:'',mark:'ن'},
+  {id:'namaz-namaz-of-imam-mahdi-a-t-f-s',key:'NM_F26',grp:'n',sub:'',mark:'ن'},
+  {id:'namaz-namaz-of-imam-mahdi-a-t-f-s-at-masjid-jamkaran',key:'NM_F41',grp:'n',sub:'Qom',mark:'ن'},
+  {id:'namaz-namaz-for-forgiveness',key:'NM_F45',grp:'n',sub:'',mark:'ن'},
+  {id:'namaz-namaz-for-gaining-intelligence-and-good-memory',key:'NM_F46',grp:'n',sub:'',mark:'ن'},
+  {id:'namaz-namaz-for-seeking-divine-help',key:'NM_F47',grp:'n',sub:'',mark:'ن'},
+  {id:'namaz-namaz-for-settling-needs',key:'NM_F50',grp:'n',sub:'',mark:'ن'},
+  {id:'namaz-namaz-for-settling-urgent-needs',key:'NM_F53',grp:'n',sub:'',mark:'ن'},
+  {id:'namaz-namaz-for-solving-difficulties',key:'NM_F54',grp:'n',sub:'',mark:'ن'},
+  {id:'namaz-namaz-of-pardon',key:'NM_F60',grp:'n',sub:'',mark:'ن'},
+  {id:'namaz-namaz-of-the-hungry',key:'NM_F61',grp:'n',sub:'',mark:'ن'},
+  {id:'namaz-namaz-of-will',key:'NM_F62',grp:'n',sub:'Between Maghrib and Isha',mark:'ن'},
+  {id:'namaz-namaz-on-friday-nights-the-night-of-eid-al-adha-for-fulfilment-of-needs',key:'NM_F63',grp:'n',sub:'',mark:'ن'}
 ];
 const UD=JSON.parse(document.getElementById('udata').textContent);
 LIST.forEach(d=>{if(d.key){d.name=DU[d.key].name;d.ur=DU[d.key].nameUr}if(d.user){d.name=UD[d.user].name;d.ur=UD[d.user].nameUr}});
@@ -239,8 +264,8 @@ let dTab=store.get('dTab','d'), dQ='';
 function renderDuas(){
   setHeader('Duas &amp; Ziyarat',false);
   app.innerHTML=`<div class="dtop">
-     <div class="seg dseg"><button data-g="d" class="${dTab==='d'?'on':''}">Duas</button><button data-g="z" class="${dTab==='z'?'on':''}">Ziyarat</button><button data-g="s" class="${dTab==='s'?'on':''}">Sahifa Sajjadiya</button><button data-g="a" class="${dTab==='a'?'on':''}">Aamaal</button></div>
-     <input class="inp" id="dq" type="search" placeholder="Search duas, ziyarat, Sahifa &amp; aamaal" value="${esc(dQ)}" autocomplete="off">
+     <div class="seg dseg"><button data-g="d" class="${dTab==='d'?'on':''}">Duas</button><button data-g="z" class="${dTab==='z'?'on':''}">Ziyarat</button><button data-g="s" class="${dTab==='s'?'on':''}">Sahifa Sajjadiya</button><button data-g="a" class="${dTab==='a'?'on':''}">Aamaal</button><button data-g="n" class="${dTab==='n'?'on':''}">Namaz</button><button data-g="h" class="${dTab==='h'?'on':''}">99 Names</button></div>
+     <input class="inp" id="dq" type="search" placeholder="Search duas, ziyarat, namaz…" value="${esc(dQ)}" autocomplete="off">
    </div>
    <div class="list" id="dlist"></div>
 `;
@@ -249,11 +274,16 @@ function renderDuas(){
     const q=norm(dQ);
     const items=q?LIST.filter(d=>norm(d.name+' '+d.sub+' '+d.ur+' '+d.id).includes(q)):LIST.filter(d=>d.grp===dTab);
     let lastSec='';
+    if(!q&&dTab==='h'){const N=DU['N_names-99'].segs.filter(x=>x.ar);
+      $('dlist').innerHTML=`<a class="item dua-item" href="#dua-asma-ul-husna"><div class="t"><b>Open with meanings &amp; benefits</b><small>Allah has the Most Beautiful Names, so call Him by them (7:180)</small></div><div class="ar" style="font-family:'Noto Nastaliq Urdu',serif;font-size:15px;line-height:2">اسمائے حسنیٰ</div></a>`+
+        N.map((x,i)=>`<a class="item nm99" href="#dua-asma-ul-husna"><span class="nn">${i||''}</span><div class="t"><b>${esc(x.tr)}</b><small>${esc(x.en.replace(/^\d+\.\s*/,''))}</small></div><div class="ar nar">${x.ar}</div></a>`).join('');
+      app.querySelectorAll('.dseg button').forEach(b=>b.classList.toggle('on',b.dataset.g===dTab));return}
     $('dlist').innerHTML=items.map(d=>(d.sec&&!q&&d.sec!==lastSec?(lastSec=d.sec,`<div class="dsec"><b>${esc(d.sec)}</b><span>${d.secUr||''}</span></div>`):'')+`<a class="item dua-item" href="#dua-${d.id}"><div class="t"><b>${esc(d.name)}</b><small>${esc(d.sub)}</small></div><div class="ar" style="font-family:'Noto Nastaliq Urdu',serif;font-size:15px;line-height:2">${d.ur}</div></a>`).join('')
       ||'<div class="hint" style="padding:20px 4px;text-align:center">Nothing found — try another name (e.g. Kumayl, Ashura, Kisa).</div>';
     app.querySelectorAll('.dseg button').forEach(b=>b.classList.toggle('on',!q&&b.dataset.g===dTab));
   };
-  app.querySelectorAll('.dseg button').forEach(b=>b.onclick=()=>{dTab=b.dataset.g;store.set('dTab',dTab);dQ='';$('dq').value='';draw()});
+  app.querySelectorAll('.dseg button').forEach(b=>b.onclick=()=>{dTab=b.dataset.g;store.set('dTab',dTab);dQ='';$('dq').value='';draw();b.scrollIntoView({inline:'nearest',block:'nearest'})});
+  {const on=app.querySelector('.dseg button.on');on&&on.scrollIntoView({inline:'center',block:'nearest'});window.scrollTo(0,0)}
   $('dq').oninput=e=>{dQ=e.target.value;draw()};
   draw();
 }
