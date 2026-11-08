@@ -74,6 +74,12 @@ header h1 .ar{font-family:IndoPak,serif;font-weight:400;color:var(--accent);marg
 .search input:focus{border-color:var(--fill,var(--accent))}
 .search svg{position:absolute;left:14px;top:50%;transform:translateY(-50%);width:18px;height:18px;stroke:var(--muted);fill:none;stroke-width:2}
 .tabs{display:flex;gap:6px;margin:6px 0 14px;overflow-x:auto}
+#tabs .tab{flex:1 1 auto;padding:8px 10px;text-align:center}#tabs .tab small{font-size:12px;opacity:.75;margin-left:2px}
+.fav{flex:none;width:36px;height:36px;margin:0 -6px 0 2px;border:0;background:none;color:var(--muted);display:grid;place-items:center;border-radius:50%;cursor:pointer;-webkit-tap-highlight-color:transparent}
+.fav svg{width:21px;height:21px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linejoin:round;transition:transform .15s}
+.fav.on{color:#e0445e}.fav.on svg{fill:currentColor}.fav:active svg{transform:scale(.85)}
+.fav.big{width:auto;height:auto;display:inline-flex;gap:6px;align-items:center;margin:10px auto 0;padding:7px 14px;border:1px solid var(--line);border-radius:999px;background:var(--card);font-size:14px;font-weight:600}
+.fav.big svg{width:17px;height:17px}.fav.big.on{border-color:color-mix(in srgb,#e0445e 40%,transparent);background:color-mix(in srgb,#e0445e 8%,var(--card))}
 .tab{padding:8px 14px;border-radius:999px;border:1px solid var(--line);font-size:14px;white-space:nowrap;background:var(--card)}
 .tab.on{background:var(--fill,var(--accent));border-color:var(--fill,var(--accent));color:#fff}
 :is([data-theme=dark],[data-theme=black],[data-theme=maroon]) .tab.on{color:#0d1a16}
@@ -111,6 +117,7 @@ mark{background:var(--hl);color:inherit;border-radius:3px;padding:0 1px}
 .v-ar{font-family:IndoPak,serif;direction:rtl;text-align:center;font-size:var(--ar-size);line-height:2.3em;margin:4px 0 12px;background-image:linear-gradient(to bottom,transparent calc(2.3em - 1px),var(--rule) calc(2.3em - 1px));background-size:100% 2.3em}
 .v-ur{font-family:"Noto Nastaliq Urdu",serif;direction:rtl;text-align:right;font-size:18px;line-height:2.3;margin-top:6px}
 .hide-en .v-en,.hide-ur .v-ur{display:none}
+.ur-rom .qur{direction:ltr!important;text-align:left;font-family:Inter,system-ui,sans-serif!important;line-height:1.65!important;font-size:var(--en-size)!important;font-style:italic}
 .result .ur{font-family:"Noto Nastaliq Urdu",serif;direction:rtl;font-size:16px;line-height:2.2}
 .v-ar .end{color:var(--accent);margin-right:.15em;white-space:nowrap}
 .v-en{font-size:var(--en-size);line-height:1.65;color:var(--ink)}
@@ -262,6 +269,49 @@ details.merits div{font-size:14px;line-height:1.65;white-space:pre-line;margin-t
 .pbar #pPlay{background:var(--fill,var(--accent));color:#fff;border-radius:50%;width:44px;height:44px}
 .pbar button.tg{color:var(--muted);font-size:11px;font-weight:600;width:auto;padding:0 7px}
 .pbar button.tg.on{color:var(--accent);background:var(--accent-soft)}
+.pbar #pSpd{min-width:38px;font-variant-numeric:tabular-nums}
+.np{padding:8px 18px calc(22px + env(safe-area-inset-bottom))}
+.np-grab{width:38px;height:5px;border-radius:9px;background:var(--line);margin:2px auto 14px}
+.np-head{display:flex;align-items:center;gap:14px}
+.np-art{width:74px;height:74px;flex:none;border-radius:20px;display:grid;place-items:center;background:linear-gradient(145deg,var(--fill,var(--accent)),color-mix(in srgb,var(--fill,var(--accent)) 55%,#000));box-shadow:0 8px 20px color-mix(in srgb,var(--fill,var(--accent)) 35%,transparent)}
+.np-art span{font-family:IndoPak,serif;color:#fff;font-size:24px;line-height:1.6;direction:rtl;padding:0 6px;text-align:center}
+.np-t{min-width:0;display:flex;flex-direction:column}.np-t small{font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);font-weight:600}
+.np-t b{font-size:21px;line-height:1.25;margin:2px 0}.np-t span{font-size:13.5px;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.np-prog{height:5px;border-radius:9px;background:var(--line);margin:18px 2px 6px;overflow:hidden}.np-prog i{display:block;height:100%;width:0;border-radius:9px;background:var(--fill,var(--accent));transition:width .3s}
+.np-pl{display:flex;justify-content:space-between;font-size:12px;color:var(--muted);margin:0 2px;font-variant-numeric:tabular-nums}
+.np-ctl{display:flex;align-items:center;justify-content:center;gap:34px;margin:12px 0 8px}
+.np-ctl button{width:48px;height:48px;border-radius:50%;display:grid;place-items:center;color:var(--ink)}
+.np-ctl button svg{width:26px;height:26px;stroke:currentColor;fill:none;stroke-width:1.8;stroke-linejoin:round}
+.np-ctl .np-big{width:70px;height:70px;background:var(--fill,var(--accent));color:#fff;box-shadow:0 8px 22px color-mix(in srgb,var(--fill,var(--accent)) 40%,transparent)}
+.np-ctl .np-big svg{width:30px;height:30px;fill:currentColor;stroke:none}
+.np-sec{font-size:12px;font-weight:700;letter-spacing:.07em;text-transform:uppercase;color:var(--muted);margin:18px 2px 8px}
+.np-recs{display:flex;flex-direction:column;gap:8px}
+.np-recs button{display:flex;align-items:center;gap:12px;padding:10px 12px;border-radius:14px;background:var(--bg);border:1.5px solid transparent;text-align:left;color:var(--ink)}
+.np-recs button .av{width:40px;height:40px;border-radius:50%;flex:none;display:grid;place-items:center;font-weight:700;font-size:15px;font-style:normal;background:var(--accent-soft);color:var(--accent)}
+.np-recs button span{flex:1;min-width:0}.np-recs button b{display:block;font-size:15px}.np-recs button small{font-size:12.5px;color:var(--muted)}
+.np-recs button .ck{width:22px;height:22px;border-radius:50%;border:2px solid var(--line);flex:none;display:grid;place-items:center}
+.np-recs button.on{border-color:var(--fill,var(--accent));background:color-mix(in srgb,var(--fill,var(--accent)) 7%,var(--bg))}
+.np-recs button.on .av{background:var(--fill,var(--accent));color:#fff}
+.np-recs button.on .ck{border-color:var(--fill,var(--accent));background:var(--fill,var(--accent))}
+.np-recs button.on .ck::after{content:"";width:6px;height:10px;border:solid #fff;border-width:0 2px 2px 0;transform:translateY(-1px) rotate(45deg)}
+.np-spd{display:grid;grid-template-columns:repeat(7,1fr);gap:4px;padding:4px;border-radius:14px;background:var(--bg)}
+.np-spd button{height:38px;border-radius:10px;font-size:13px;font-weight:600;color:var(--muted);font-variant-numeric:tabular-nums;padding:0}
+.np-spd button.on{background:var(--card);color:var(--ink);box-shadow:0 1px 4px rgba(0,0,0,.12)}
+.np-opts{display:flex;flex-direction:column;border-radius:14px;background:var(--bg);overflow:hidden}
+.np-opt{display:flex;align-items:center;gap:12px;padding:12px 14px;text-align:left;color:var(--ink)}
+.np-opt+.np-opt{border-top:1px solid var(--line)}
+.np-opt .np-ic{width:34px;height:34px;border-radius:10px;flex:none;display:grid;place-items:center;background:var(--accent-soft);color:var(--accent)}
+.np-opt .np-ic svg{width:18px;height:18px;stroke:currentColor;fill:none;stroke-width:1.9;stroke-linecap:round;stroke-linejoin:round}
+.np-opt span:nth-child(2){flex:1}.np-opt b{display:block;font-size:15px}.np-opt small{font-size:12.5px;color:var(--muted)}
+.np-act{display:flex;gap:10px;margin-top:18px}.np-act button{flex:1;height:46px;border-radius:13px;font-weight:600;font-size:15px;border:1px solid var(--line);color:var(--ink);background:var(--bg)}
+.np-act #npStop{color:#c2414b}
+.pbar .pt{cursor:pointer}
+
+.spdmenu{position:absolute;right:8px;bottom:calc(100% + 8px);background:var(--card);border:1px solid var(--line);border-radius:14px;box-shadow:0 8px 28px rgba(0,0,0,.18);padding:10px 10px 8px}
+.spdmenu b{display:block;font-size:12px;color:var(--muted);font-weight:600;margin:0 4px 6px}
+.spdmenu div{display:grid;grid-template-columns:repeat(4,auto);gap:6px}
+.pbar .spdmenu button{width:auto;height:34px;padding:0 10px;border-radius:9px;border:1px solid var(--line);font-size:13.5px;font-weight:600;color:var(--ink);font-variant-numeric:tabular-nums}
+.pbar .spdmenu button.on{background:var(--accent);border-color:var(--accent);color:#fff}
 body.playing .wrap{padding-bottom:180px}
 
 .uv{padding:14px 0 6px}
@@ -387,7 +437,7 @@ body .ayah-card .v-en{display:block!important}
     <div class="shead" data-lang="en">English</div>
     <div class="clist" data-lang="en" id="enTSeg"><button data-v="sahih"><i></i>Saheeh International</button><button data-v="qarai"><i></i>Ali Quli Qarai</button></div>
     <div class="shead" data-lang="ur">Urdu</div>
-    <div class="clist" data-lang="ur" id="urTSeg"><button data-v="junagarhi"><i></i>Maulana Muhammad Junagarhi</button><button data-v="jawadi"><i></i>Allama Zeeshan Haider Jawadi</button><button data-v="najafi"><i></i>Shaykh Muhammad Hussain Najafi</button></div>
+    <div class="clist" data-lang="ur" id="urTSeg"><button data-v="junagarhi"><i></i>Maulana Muhammad Junagarhi</button><button data-v="jawadi"><i></i>Allama Zeeshan Haider Jawadi</button><button data-v="najafi"><i></i>Shaykh Muhammad Hussain Najafi</button><button data-v="roman"><i></i>Roman Urdu · Maulana Junagarhi</button></div>
     <div class="srow"><span>Font size</span><div class="stepper"><button data-step="en" data-d="-1" aria-label="Smaller translation">—</button><b id="enLvl"></b><button data-step="en" data-d="1" aria-label="Larger translation">+</button></div></div>
     <div class="srow"><span>Transliteration</span><button class="switch" id="trSw" aria-label="Transliteration"></button></div>
   </div>
@@ -410,6 +460,25 @@ body .ayah-card .v-en{display:block!important}
   <input type="range" id="arSize" min="20" max="56" step="4" hidden><input type="range" id="enSize" min="12" max="26" step="1" hidden>
   <div class="sfoot"><button id="setReset">Reset</button><button class="sdone" id="setDone">Done</button></div>
 </div>
+<div class="sheet np" id="npSheet" role="dialog" aria-label="Now playing">
+  <div class="np-grab"></div>
+  <div class="np-head"><div class="np-art"><span id="npAr"></span></div>
+    <div class="np-t"><small>Now playing</small><b id="npTitle"></b><span id="npSub"></span></div></div>
+  <div class="np-prog"><i id="npBar"></i></div><div class="np-pl"><span id="npPos"></span><span id="npLeft"></span></div>
+  <div class="np-ctl">
+    <button id="npPrev" aria-label="Previous verse"><svg viewBox="0 0 24 24"><path d="M18 6l-8 6 8 6zM6 6v12"/></svg></button>
+    <button id="npPlay" class="np-big" aria-label="Play or pause"></button>
+    <button id="npNext" aria-label="Next verse"><svg viewBox="0 0 24 24"><path d="M6 6l8 6-8 6zM18 6v12"/></svg></button>
+  </div>
+  <div class="np-sec">Reciter</div><div class="np-recs" id="npRecs"></div>
+  <div class="np-sec">Speed</div><div class="np-spd" id="npSpd"></div>
+  <div class="np-sec">Playback</div>
+  <div class="np-opts">
+    <button class="np-opt" id="npRep"><span class="np-ic"><svg viewBox="0 0 24 24"><path d="M17 2l4 4-4 4"/><path d="M3 11V9a3 3 0 0 1 3-3h15M7 22l-4-4 4-4"/><path d="M21 13v2a3 3 0 0 1-3 3H3"/></svg></span><span><b>Repeat verse</b><small>Play the current verse again and again</small></span><i class="switch"></i></button>
+    <button class="np-opt" id="npCont"><span class="np-ic"><svg viewBox="0 0 24 24"><path d="M5 4l10 8-10 8z"/><path d="M19 5v14"/></svg></span><span><b>Continue to next surah</b><small>Keep going when this surah ends</small></span><i class="switch"></i></button>
+  </div>
+  <div class="np-act"><button id="npGo">Go to verse</button><button id="npStop">Stop recitation</button></div>
+</div>
 <div class="sheet" id="jumpSheet">
   <h3>Go to verse</h3>
   <div class="row"><span id="jumpLbl">Verse</span><form class="jumpbox" id="jumpForm"><input type="number" id="jumpIn" min="1" inputmode="numeric"><button>Go</button></form></div>
@@ -420,7 +489,9 @@ body .ayah-card .v-en{display:block!important}
   <button id="pPlay" aria-label="Play or pause"></button>
   <button id="pNext" aria-label="Next verse"><svg viewBox="0 0 24 24"><path d="M6 6l8 6-8 6zM18 6v12"/></svg></button>
   <div class="pt" id="pGo" style="cursor:pointer"><span id="pTitle"></span><small id="pRec">Mishary Alafasy</small></div>
+  <button class="tg" id="pSpd" aria-label="Playback speed" aria-haspopup="true">1x</button>
   <button class="tg" id="pRep" aria-label="Repeat this verse">Repeat</button>
+  <div class="spdmenu" id="pSpdMenu" role="menu" hidden><b>Speed</b><div><button data-rate="0.25" role="menuitemradio">0.25x</button><button data-rate="0.5" role="menuitemradio">0.5x</button><button data-rate="0.75" role="menuitemradio">0.75x</button><button data-rate="1" role="menuitemradio">1x</button><button data-rate="1.25" role="menuitemradio">1.25x</button><button data-rate="1.5" role="menuitemradio">1.5x</button><button data-rate="2" role="menuitemradio">2x</button></div></div>
   <button class="tg" id="pCont" aria-label="Continue to next surah">Auto</button>
   <button id="pClose" aria-label="Close player"><svg viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></svg></button>
 </div>
@@ -444,6 +515,7 @@ body .ayah-card .v-en{display:block!important}
 <script id="tldata" type="application/json">__TL__</script>
 <script id="auddata" type="application/json">__AUD__</script>
 <script id="audsdata" type="application/json">__AUDS__</script>
+<script id="audbdata" type="application/json">__AUDB__</script>
 <script>
 (function(){
 const D=JSON.parse(document.getElementById('qdata').textContent);
@@ -456,7 +528,7 @@ const store={get(k,d){try{const v=localStorage.getItem('qr_'+k);return v==null?d
              set(k,v){try{localStorage.setItem('qr_'+k,JSON.stringify(v))}catch(e){}}};
 const S={arSize:store.get('arSize',40),tr:store.get('tr','off'),
          theme:store.get('theme','sky'),
-         marks:store.get('marks',[]),showTr:store.get('showTr',false),enSize:store.get('enSize',16),rules:store.get('rules',false),font:store.get('font','indopak'),ensrc:store.get('ensrc2','alt'),rec:store.get('rec','alafasy'),urT:store.get('urT','junagarhi'),enT:store.get('enT','sahih'),last:store.get('last',null),tab:'surahs',q:''};
+         marks:store.get('marks',[]),favs:store.get('favs',[]),dfavs:store.get('dfavs',[]),showTr:store.get('showTr',false),enSize:store.get('enSize',16),rules:store.get('rules',false),font:store.get('font','indopak'),ensrc:store.get('ensrc2','alt'),rec:store.get('rec','alafasy'),urT:store.get('urT','junagarhi'),enT:store.get('enT','sahih'),last:store.get('last',null),tab:'surahs',q:''};
 
 EN=S.enT==='qarai'?EN_Q:EN_S;
 const urFor=k=>URX[k]?(URX[k].sp||(URX[k].sp=URX[k].map(x=>x.split('\n')))):UR_J;UR=urFor(S.urT);
@@ -471,13 +543,14 @@ const icon={
   pause:'<svg viewBox="0 0 24 24"><rect x="6" y="5" width="4" height="14" rx="1" fill="currentColor"/><rect x="14" y="5" width="4" height="14" rx="1" fill="currentColor"/></svg>',
   play2:'<svg viewBox="0 0 24 24"><path d="M7 5v14l12-7z" fill="currentColor"/></svg>',
   search:'<svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/></svg>',
+  heart:'<svg viewBox="0 0 24 24"><path d="M12 20.5s-7.5-4.6-9.3-9.2C1.4 7.9 3.6 4.5 7 4.5c2 0 3.4 1.1 5 3 1.6-1.9 3-3 5-3 3.4 0 5.6 3.4 4.3 6.8-1.8 4.6-9.3 9.2-9.3 9.2z"/></svg>',
   arrow:'<svg viewBox="0 0 24 24" style="width:20px;height:20px;stroke:currentColor;fill:none;stroke-width:2"><path d="M9 18l6-6-6-6"/></svg>'
 };
 
 function applySettings(){
   document.documentElement.dataset.theme=S.theme;
   document.documentElement.style.setProperty('--ar-size',S.arSize+'px');
-  document.body.classList.toggle('hide-en',!(S.tr==='en'||S.tr==='both'));document.body.classList.toggle('hide-ur',!(S.tr==='ur'||S.tr==='both'));
+  document.body.classList.toggle('hide-en',!(S.tr==='en'||S.tr==='both'));document.body.classList.toggle('hide-ur',!(S.tr==='ur'||S.tr==='both'));document.body.classList.toggle('ur-rom',S.urT==='roman');
   document.body.classList.toggle('hide-tr',!S.showTr||S.tr==='off');document.body.classList.toggle('font-madani',S.font==='madani');
   $('arSize').value=S.arSize;$('enSize').value=S.enSize;
   document.documentElement.style.setProperty('--en-size',S.enSize+'px');
@@ -489,15 +562,30 @@ function applySettings(){
   if(S.tr!=='off')store.set('trLast',S.tr);
   [...$('thSeg').children].forEach(b=>b.classList.toggle('on',b.dataset.v===S.theme));
   $('arLvl').textContent=Math.round((S.arSize-20)/4)+1;$('enLvl').textContent=S.enSize-11;
-  const pe=$('prevEn');pe.textContent=S.tr==='ur'?UR[0][0]:EN[0][0];pe.style.display=S.tr==='off'?'none':'';pe.style.fontFamily=S.tr==='ur'?"'Noto Nastaliq Urdu',serif":'';pe.dir=S.tr==='ur'?'rtl':'ltr';if(location.hash.startsWith('#dua-'))ctxSettings();
+  const pe=$('prevEn');pe.textContent=S.tr==='ur'?UR[0][0]:EN[0][0];pe.style.display=S.tr==='off'?'none':'';pe.style.fontFamily=S.tr==='ur'&&S.urT!=='roman'?"'Noto Nastaliq Urdu',serif":'';pe.dir=S.tr==='ur'&&S.urT!=='roman'?'rtl':'ltr';if(location.hash.startsWith('#dua-'))ctxSettings();
 }
 
 /* ---------- Home ---------- */
 function surahItem(i){
   const m=META[i];
   return `<a class="item" href="#surah-${i+1}"><div class="num"><span>${i+1}</span></div>
-    <div class="t"><b>${esc(m[1])}</b><small>${esc(m[2])} · ${m[4]} verses</small></div><div class="ar">${m[0]}</div></a>`;
+    <div class="t"><b>${esc(m[1])}</b><small>${esc(m[2])} · ${m[4]} verses</small></div><div class="ar">${m[0]}</div>${favBtn(i+1)}</a>`;
 }
+const isFav=s=>S.favs.includes(s), isDFav=id=>S.dfavs.includes(id);
+const favBtn=(s,big)=>`<button class="fav${big?' big':''}${isFav(s)?' on':''}" data-fav="${s}" aria-label="Favorite" aria-pressed="${isFav(s)}">${icon.heart}${big?`<span>${isFav(s)?'Favorite':'Add to favorites'}</span>`:''}</button>`;
+const dfavBtn=(id,big)=>`<button class="fav${big?' big':''}${isDFav(id)?' on':''}" data-dfav="${id}" aria-label="Favorite" aria-pressed="${isDFav(id)}">${icon.heart}${big?`<span>${isDFav(id)?'Favorite':'Add to favorites'}</span>`:''}</button>`;
+const favTab=()=>{const n=S.favs.length+S.dfavs.length;return `Favorites${n?`<small>${n}</small>`:''}`};
+document.addEventListener('click',e=>{const b=e.target.closest('[data-fav],[data-dfav]');if(!b)return;e.preventDefault();e.stopPropagation();
+  let sel,on;
+  if(b.dataset.fav!=null){const s=+b.dataset.fav;if(isFav(s)){S.favs=S.favs.filter(x=>x!==s);toast('Removed from favorites')}else{S.favs.push(s);S.favs.sort((a,b)=>a-b);toast(META[s-1][1]+' added to favorites')}
+    store.set('favs',S.favs);sel=`[data-fav="${s}"]`;on=isFav(s)}
+  else{const id=b.dataset.dfav,d=LISTX().find(x=>x.id===id);if(isDFav(id)){S.dfavs=S.dfavs.filter(x=>x!==id);toast('Removed from favorites')}else{S.dfavs.push(id);toast((d?d.name:'Dua')+' added to favorites')}
+    store.set('dfavs',S.dfavs);sel=`[data-dfav="${id}"]`;on=isDFav(id)}
+  document.querySelectorAll(sel).forEach(x=>{x.classList.toggle('on',on);x.setAttribute('aria-pressed',on);const t=x.querySelector('span');if(t)t.textContent=on?'Favorite':'Add to favorites'});
+  const ft=document.querySelector('.tab[data-t=favs]');if(ft)ft.innerHTML=favTab();
+  if(S.tab==='favs'&&$('body')&&!S.q.trim())renderBody()},true);
+const LISTX=()=>(window.QX&&window.QX.LIST)||[];
+const GRPN={d:'Dua',z:'Ziyarat',s:'Sahifa Sajjadiya',a:'Aamaal',n:'Namaz',h:'99 Names'};
 function renderHome(){
   setHeader('Quran',false);
   const last=S.last;
@@ -506,7 +594,7 @@ function renderHome(){
    ${last?`<a class="continue" href="#surah-${last.s}-${last.v}"><div style="flex:1"><small>Continue reading</small><b>${esc(META[last.s-1][1])} · Verse ${last.v}</b></div>${icon.arrow}</a>`:''}
    <div class="search">${icon.search}<input id="q" type="search" placeholder="Search surah, 2:255, or a word in English / Urdu / Arabic" value="${esc(S.q)}" autocomplete="off"></div>
    <div class="tabs" id="tabs">
-     <button class="tab" data-t="surahs">Surahs</button><button class="tab" data-t="juz">Juz</button><button class="tab" data-t="marks">Bookmarks${S.marks.length?' ('+S.marks.length+')':''}</button>
+     <button class="tab" data-t="surahs">Surahs</button><button class="tab" data-t="juz">Juz</button><button class="tab" data-t="marks">Bookmarks${S.marks.length?`<small>${S.marks.length}</small>`:''}</button><button class="tab" data-t="favs">${favTab()}</button>
    </div>
    <div id="body"></div>
 `;
@@ -524,10 +612,15 @@ function renderBody(){
   else if(S.tab==='juz'){
     body.innerHTML=`<div class="list">${JUZ.map(([s,v],i)=>`<a class="item" href="#surah-${s}-${v}"><div class="num"><span>${i+1}</span></div>
       <div class="t"><b>Juz ${i+1}</b><small>Starts at ${esc(META[s-1][1])} ${s}:${v}</small></div></a>`).join('')}</div>`;
+  } else if(S.tab==='favs'){
+    const ds=S.dfavs.map(id=>LISTX().find(x=>x.id===id)).filter(Boolean);
+    if(!S.favs.length&&!ds.length){body.innerHTML='<div class="empty">No favorites yet.<br>Tap the ♡ next to any surah, dua or ziyarat to keep it here.</div>';return}
+    body.innerHTML=(S.favs.length?`<div class="dsec"><b>Surahs</b></div><div class="list">${S.favs.map(s=>surahItem(s-1)).join('')}</div>`:'')
+      +(ds.length?`<div class="dsec"><b>Duas &amp; Ziyarat</b></div><div class="list">${ds.map(d=>`<a class="item dua-item" href="#dua-${d.id}"><div class="t"><b>${esc(d.name)}</b><small>${GRPN[d.grp]||''}${d.sub?' · '+esc(d.sub):''}</small></div><div class="ar" style="font-family:'Noto Nastaliq Urdu',serif;font-size:15px;line-height:2">${d.ur||''}</div>${dfavBtn(d.id)}</a>`).join('')}</div>`:'');
   } else {
     if(!S.marks.length){body.innerHTML='<div class="empty">No bookmarks yet.<br>Tap the bookmark icon on any verse to save it here.</div>';return}
     body.innerHTML=S.marks.map(([s,v])=>`<a class="result" href="#surah-${s}-${v}"><div class="ref">${esc(META[s-1][1])} · ${s}:${v}</div>
-      <div class="ar">${ARX()[s-1][v-1]}</div><div class="en">${esc(EN[s-1][v-1])}</div><div class="ur">${esc(UR[s-1][v-1])}</div></a>`).join('');
+      <div class="ar">${ARX()[s-1][v-1]}</div><div class="en">${esc(EN[s-1][v-1])}</div><div class="ur qur">${esc(UR[s-1][v-1])}</div></a>`).join('');
   }
 }
 /* Arabic normalisation for search */
@@ -556,7 +649,7 @@ function searchHTML(q){
   const hl=t=>{if(isAr)return esc(t);const e=esc(t);return e.replace(new RegExp('('+esc(q).replace(/[.*+?^${}()|[\]\\]/g,'\\$&')+')','ig'),'<mark>$1</mark>')};
   out+=`<div style="color:var(--muted);font-size:13px;margin:4px 2px 10px">${total} verse${total===1?'':'s'} found${total>100?' · showing first 100':''}</div>`;
   out+=res.map(([s,v])=>`<a class="result" href="#surah-${s+1}-${v+1}"><div class="ref">${esc(META[s][1])} · ${s+1}:${v+1}</div>
-     ${isAr?`<div class="ar">${ARX()[s][v]}</div><div class="ur">${esc(UR[s][v])}</div>`:`<div class="en">${hl(EN[s][v])}</div>`}</a>`).join('');
+     ${isAr?`<div class="ar">${ARX()[s][v]}</div><div class="ur qur">${esc(UR[s][v])}</div>`:`<div class="en">${hl(EN[s][v])}</div>`}</a>`).join('');
   return out;
 }
 
@@ -567,7 +660,8 @@ const endMark=n=>S.font==='madani'?'﴿'+arNum(n)+'﴾':'۝'+arNum(n);
 const p3=n=>String(n).padStart(3,'0');
 const AUD_ALL={alafasy:JSON.parse(document.getElementById('auddata').textContent)};
 {const x=JSON.parse(document.getElementById('audsdata').textContent);if(x)AUD_ALL.sudais=x}
-const RECS=[['alafasy','Mishary Rashid Alafasy','Murattal'],['sudais','Abdur Rahman As-Sudais','Murattal']].filter(r=>AUD_ALL[r[0]]);
+{const e=document.getElementById('audbdata'),x=e&&JSON.parse(e.textContent);if(x)AUD_ALL.abdulbasit=x}
+const RECS=[['alafasy','Mishary Rashid Alafasy','Murattal'],['sudais','Abdur Rahman As-Sudais','Murattal'],['abdulbasit','Abdul Basit Abdus Samad','Murattal']].filter(r=>AUD_ALL[r[0]]);
 if(!AUD_ALL[S.rec])S.rec='alafasy';
 let AUD=AUD_ALL[S.rec];
 const recName=()=>(RECS.find(r=>r[0]===S.rec)||RECS[0])[1];
@@ -616,7 +710,7 @@ P.el.addEventListener('pause',()=>{$('pPlay').innerHTML=icon.play2});
 function showBar(){
   $('pbar').classList.add('show');document.body.classList.add('playing');
   $('pTitle').textContent=`${META[P.s-1][1]} · ${P.s}:${P.v}`;
-  $('pRep').classList.toggle('on',P.repeat);$('pCont').classList.toggle('on',P.cont);
+  $('pRep').classList.toggle('on',P.repeat);$('pCont').classList.toggle('on',P.cont);if($('npSheet')&&$('npSheet').classList.contains('open'))drawNP();
   try{if('mediaSession' in navigator){navigator.mediaSession.metadata=new MediaMetadata({title:`${META[P.s-1][1]} ${P.s}:${P.v}`,artist:recName()});
     navigator.mediaSession.setActionHandler('nexttrack',()=>stepVerse(1));navigator.mediaSession.setActionHandler('previoustrack',()=>stepVerse(-1))}}catch(e){}
 }
@@ -654,7 +748,7 @@ function isMarked(s,v){return S.marks.some(m=>m[0]===s&&m[1]===v)}
 function renderSurah(s,v){
   const m=META[s-1];curS=s;
   setHeader(`${m[1]}<span class="ar">${m[0]}</span>`,true);
-  let h=`<div class="s-head"><div class="ar">${m[0]}</div><h2>${esc(m[1])}</h2><p>${esc(m[2])} · ${typeName(m[3])} · ${m[4]} verses</p></div>`;
+  let h=`<div class="s-head"><div class="ar">${m[0]}</div><h2>${esc(m[1])}</h2><p>${esc(m[2])} · ${typeName(m[3])} · ${m[4]} verses</p>${favBtn(s,true)}</div>`;
   h+=readbar('quran',s);
   if(s!==1&&s!==9)h+=`<div class="bism">${BISMX()}</div>`;
   h+=ARX()[s-1].map((a,i)=>`<div class="verse" id="v${i+1}" data-v="${i+1}">
@@ -663,7 +757,7 @@ function renderSurah(s,v){
        <button class="icon-btn" data-a="play" aria-label="Play this verse">${icon.play}</button>
        <button class="icon-btn" data-a="copy" aria-label="Copy">${icon.copy}</button></div>
      <div class="v-ar">${a} <span class="end">${endMark(i+1)}</span></div>
-     <div class="v-tr">${esc(TL[s-1][i])}</div><div class="v-en">${esc(EN[s-1][i])}</div><div class="v-ur">${esc(UR[s-1][i])}</div></div>`).join('');
+     <div class="v-tr">${esc(TL[s-1][i])}</div><div class="v-en">${esc(EN[s-1][i])}</div><div class="v-ur qur">${esc(UR[s-1][i])}</div></div>`).join('');
   h+=`<div class="nav-surah">${s>1?`<a href="#surah-${s-1}">‹ ${esc(META[s-2][1])}</a>`:''}${s<114?`<a href="#surah-${s+1}">${esc(META[s][1])} ›</a>`:''}</div>`;
   app.innerHTML=h;
   if(v&&v>1){const el=$('v'+v);if(el){el.scrollIntoView();el.classList.add('flash')}}else window.scrollTo(0,0);
@@ -721,7 +815,7 @@ function ctxSettings(){drawOff();
   if(dua){const a=app.querySelector('.dverse .v-ar,.uv .v-ar');pa.innerHTML=a?a.innerHTML:'';
     const t=S.tr==='off'?null:app.querySelector((S.tr==='ur'||(S.tr==='both'&&!av.en))?'.v-ur':'.v-en');
     pe.textContent=t?t.textContent.replace(/^(English)/,''):'';pe.style.display=t?'':'none';pe.dir=t&&t.classList.contains('v-ur')?'rtl':'ltr';pe.style.fontFamily=t&&t.classList.contains('v-ur')?"'Noto Nastaliq Urdu',serif":''}
-  else{pa.textContent='بِسْمِ اللّٰهِ الرَّحْمٰنِ الرَّحِيْمِ';pe.textContent=S.tr==='ur'?UR[0][0]:EN[0][0];pe.style.display=S.tr==='off'?'none':'';pe.style.fontFamily=S.tr==='ur'?"'Noto Nastaliq Urdu',serif":'';pe.dir=S.tr==='ur'?'rtl':'ltr'}
+  else{pa.textContent='بِسْمِ اللّٰهِ الرَّحْمٰنِ الرَّحِيْمِ';pe.textContent=S.tr==='ur'?UR[0][0]:EN[0][0];pe.style.display=S.tr==='off'?'none':'';pe.style.fontFamily=S.tr==='ur'&&S.urT!=='roman'?"'Noto Nastaliq Urdu',serif":'';pe.dir=S.tr==='ur'&&S.urT!=='roman'?'rtl':'ltr'}
   $('enLvl').closest('.srow').style.display=(av.en||av.ur)?'':'none';
 }
 function closeSheets(){document.querySelectorAll('.sheet,.sheet-bg').forEach(x=>x.classList.remove('open'))}
@@ -739,7 +833,7 @@ $('fontSeg').onclick=e=>{const b=e.target.closest('button');if(!b)return;S.font=
 $('trSw').onclick=()=>{S.showTr=!S.showTr;store.set('showTr',S.showTr);applySettings()};
 $('ruleSw').onclick=()=>{S.rules=!S.rules;store.set('rules',S.rules);applySettings()};
 $('setDone').onclick=()=>closeSheets();
-const AUD_MB={alafasy:221,sudais:157};
+const AUD_MB={alafasy:221,sudais:157,abdulbasit:223};
 function audUrls(){return AUD.flatMap(x=>x.p.map(q=>q[0]))}
 function drawOff(){const box=$('offAud'),OA=window.NH&&NH.audio;if(!box)return;if(!OA){box.hidden=true;return}box.hidden=false;
   const st=OA.stats(audUrls()),sur=AUD.filter(x=>x.p.every(q=>OA.has(q[0]))).length,b=OA.busy(),all=st.n>=st.total;
@@ -758,17 +852,48 @@ drawRecs();$('pRec').textContent=recName();
 $('recList').onclick=e=>{const b=e.target.closest('button');if(!b||b.dataset.v===S.rec)return;stopPlayer();S.rec=b.dataset.v;store.set('rec',S.rec);AUD=AUD_ALL[S.rec];P.srcS=0;P.part=-1;P.s=0;drawRecs();$('pRec').textContent=recName();rerender()};
 $('sTabs').onclick=e=>{const b=e.target.closest('button');if(!b)return;[...$('sTabs').children].forEach(x=>x.classList.toggle('on',x===b));document.querySelectorAll('#setSheet .spane').forEach(p=>p.classList.toggle('on',p.dataset.p===b.dataset.p))};
 $('setReset').onclick=()=>{Object.assign(S,{theme:'sky',font:'indopak',arSize:40,tr:'off',enT:'sahih',urT:'junagarhi',enSize:16,showTr:false,rules:false});['theme','font','arSize','tr','enT','urT','enSize','showTr','rules'].forEach(k=>store.set(k,S[k]));EN=EN_S;UR=UR_J;rerender();window.NH&&NH.setIcon&&NH.setIcon(S.theme)};
-$('urTSeg').onclick=e=>{const b=e.target.closest('button');if(!b)return;S.urT=b.dataset.v;store.set('urT',S.urT);UR=urFor(S.urT);rerender()};
+$('urTSeg').onclick=e=>{const b=e.target.closest('button');if(!b)return;S.urT=b.dataset.v;store.set('urT',S.urT);UR=urFor(S.urT);applySettings();rerender()};
 $('enTSeg').onclick=e=>{const b=e.target.closest('button');if(!b)return;S.enT=b.dataset.v;store.set('enT',S.enT);EN=S.enT==='qarai'?EN_Q:EN_S;rerender()};
 $('enSeg').onclick=e=>{const b=e.target.closest('button');if(!b)return;S.tr=b.dataset.v;store.set('tr',S.tr);applySettings()};
 $('thSeg').onclick=e=>{const b=e.target.closest('button');if(!b)return;S.theme=b.dataset.v;store.set('theme',S.theme);applySettings();window.NH&&NH.setIcon&&NH.setIcon(S.theme)};
 $('pPlay').innerHTML=icon.play2;
 $('pPlay').onclick=()=>{if(!P.s)return;if(P.el.paused){P.on=true;P.el.play().catch(()=>{})}else P.el.pause()};
 $('pPrev').onclick=()=>stepVerse(-1);$('pNext').onclick=()=>stepVerse(1);
-$('pRep').onclick=()=>{P.repeat=!P.repeat;showBar()};$('pCont').onclick=()=>{P.cont=!P.cont;showBar()};
+$('pRep').onclick=()=>{P.repeat=!P.repeat;showBar()};
+P.rate=+store.get('rate',1)||1;
+const applyRate=()=>{try{P.el.defaultPlaybackRate=P.rate;P.el.playbackRate=P.rate;if('preservesPitch' in P.el)P.el.preservesPitch=true;else if('webkitPreservesPitch' in P.el)P.el.webkitPreservesPitch=true}catch(e){}
+  $('pSpd').textContent=P.rate+'x';$('pSpd').classList.toggle('on',P.rate!==1);
+  document.querySelectorAll('#pSpdMenu [data-rate]').forEach(b=>{const on=+b.dataset.rate===P.rate;b.classList.toggle('on',on);b.setAttribute('aria-checked',on)})};
+['loadedmetadata','play'].forEach(ev=>P.el.addEventListener(ev,()=>{if(P.el.playbackRate!==P.rate)applyRate()}));
+$('pSpd').onclick=e=>{e.stopPropagation();const m=$('pSpdMenu');m.hidden=!m.hidden};
+$('pSpdMenu').onclick=e=>{e.stopPropagation();const b=e.target.closest('[data-rate]');if(!b)return;P.rate=+b.dataset.rate;store.set('rate',P.rate);applyRate();$('pSpdMenu').hidden=true;toast('Speed '+P.rate+'x')};
+document.addEventListener('click',e=>{const m=$('pSpdMenu');if(m&&!m.hidden&&!e.target.closest('#pSpdMenu,#pSpd'))m.hidden=true});
+applyRate();$('pCont').onclick=()=>{P.cont=!P.cont;showBar()};
+/* Now-playing panel: tap the player bar to open */
+const RATES=[0.25,0.5,0.75,1,1.25,1.5,2];
+function drawNP(){if(!P.s||!$('npSheet'))return;const m=META[P.s-1],n=AUD[P.s-1].a.length;
+  $('npAr').textContent=m[0];$('npTitle').textContent=m[1];$('npSub').textContent=`${m[2]} · ${recName()}`;
+  $('npPos').textContent=`Verse ${P.v} of ${n}`;$('npLeft').textContent=n-P.v?`${n-P.v} left`:'Last verse';$('npBar').style.width=(P.v/n*100)+'%';
+  $('npPlay').innerHTML=P.el.paused?icon.play2:icon.pause;
+  $('npRecs').innerHTML=RECS.map(([k,nm,t])=>`<button data-rec="${k}" class="${k===S.rec?'on':''}"><i class="av">${nm.split(' ').filter(w=>w.length>2).slice(0,2).map(w=>w[0]).join('')}</i><span><b>${nm}</b><small>${t}</small></span><i class="ck"></i></button>`).join('');
+  $('npSpd').innerHTML=RATES.map(r=>`<button data-rate="${r}" class="${r===P.rate?'on':''}">${r}x</button>`).join('');
+  $('npRep').querySelector('.switch').classList.toggle('on',P.repeat);$('npCont').querySelector('.switch').classList.toggle('on',P.cont)}
+const npOpen=()=>$('npSheet').classList.contains('open');
+$('pGo').onclick=()=>{if(!P.s)return;$('pSpdMenu').hidden=true;drawNP();openSheet('npSheet')};
+['play','pause'].forEach(ev=>P.el.addEventListener(ev,()=>{if(npOpen())drawNP()}));
+$('npPlay').onclick=()=>$('pPlay').click();$('npPrev').onclick=()=>stepVerse(-1);$('npNext').onclick=()=>stepVerse(1);
+$('npRecs').onclick=e=>{const b=e.target.closest('[data-rec]');if(!b||b.dataset.rec===S.rec)return;
+  const s=P.s,v=P.v,was=!P.el.paused;P.el.pause();S.rec=b.dataset.rec;store.set('rec',S.rec);AUD=AUD_ALL[S.rec];P.srcS=0;P.part=-1;
+  drawRecs();$('pRec').textContent=recName();const y=window.scrollY;applySettings();route();window.scrollTo(0,y);openSheet('npSheet');
+  if(s){if(was)playVerse(s,Math.min(v,AUD[s-1].a.length));else{P.s=s;P.v=v;showBar()}}drawNP();toast('Reciter: '+recName())};
+$('npSpd').onclick=e=>{const b=e.target.closest('[data-rate]');if(!b)return;P.rate=+b.dataset.rate;store.set('rate',P.rate);applyRate();drawNP()};
+$('npRep').onclick=()=>{P.repeat=!P.repeat;showBar();drawNP()};$('npCont').onclick=()=>{P.cont=!P.cont;showBar();drawNP()};
+$('npGo').onclick=()=>{closeSheets();location.hash='surah-'+P.s+'-'+P.v};
+$('npStop').onclick=()=>{closeSheets();stopPlayer()};
+
 $('pClose').onclick=stopPlayer;
-$('pGo').onclick=()=>{location.hash='surah-'+P.s+'-'+P.v};
-window.Q={playVerse,P,WU,AR,EN,UR,META,esc,arNum,setHeader,store,S,toast,app,$,ARX,BISMX,endMark,readbar,route};window.__BISM=BISM;
+/*pGo handled by now-playing panel*/
+window.Q={dfavBtn,playVerse,P,WU,AR,EN,UR,META,esc,arNum,setHeader,store,S,toast,app,$,ARX,BISMX,endMark,readbar,route};window.__BISM=BISM;
 window.addEventListener('hashchange',route);
 applySettings();
 if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',route);else setTimeout(route,0);

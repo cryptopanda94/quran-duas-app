@@ -1,5 +1,5 @@
 (function(){
-const {AR,EN,UR,META,esc,setHeader,store,toast,app,$,ARX,BISMX,endMark,readbar,S}=window.Q;
+const {AR,EN,UR,META,esc,setHeader,store,toast,app,$,ARX,BISMX,endMark,readbar,S,dfavBtn}=window.Q;
 const DU=JSON.parse(document.getElementById('ddata').textContent);
 const CI=JSON.parse(document.getElementById('cdata').textContent);
 const icons={
@@ -278,7 +278,7 @@ function renderDuas(){
       $('dlist').innerHTML=`<a class="item dua-item" href="#dua-asma-ul-husna"><div class="t"><b>Open with meanings &amp; benefits</b><small>Allah has the Most Beautiful Names, so call Him by them (7:180)</small></div><div class="ar" style="font-family:'Noto Nastaliq Urdu',serif;font-size:15px;line-height:2">اسمائے حسنیٰ</div></a>`+
         N.map((x,i)=>`<a class="item nm99" href="#dua-asma-ul-husna"><span class="nn">${i||''}</span><div class="t"><b>${esc(x.tr)}</b><small>${esc(x.en.replace(/^\d+\.\s*/,''))}</small></div><div class="ar nar">${x.ar}</div></a>`).join('');
       app.querySelectorAll('.dseg button').forEach(b=>b.classList.toggle('on',b.dataset.g===dTab));return}
-    $('dlist').innerHTML=items.map(d=>(d.sec&&!q&&d.sec!==lastSec?(lastSec=d.sec,`<div class="dsec"><b>${esc(d.sec)}</b><span>${d.secUr||''}</span></div>`):'')+`<a class="item dua-item" href="#dua-${d.id}"><div class="t"><b>${esc(d.name)}</b><small>${esc(d.sub)}</small></div><div class="ar" style="font-family:'Noto Nastaliq Urdu',serif;font-size:15px;line-height:2">${d.ur}</div></a>`).join('')
+    $('dlist').innerHTML=items.map(d=>(d.sec&&!q&&d.sec!==lastSec?(lastSec=d.sec,`<div class="dsec"><b>${esc(d.sec)}</b><span>${d.secUr||''}</span></div>`):'')+`<a class="item dua-item" href="#dua-${d.id}"><div class="t"><b>${esc(d.name)}</b><small>${esc(d.sub)}</small></div><div class="ar" style="font-family:'Noto Nastaliq Urdu',serif;font-size:15px;line-height:2">${d.ur}</div>${dfavBtn(d.id)}</a>`).join('')
       ||'<div class="hint" style="padding:20px 4px;text-align:center">Nothing found — try another name (e.g. Kumayl, Ashura, Kisa).</div>';
     app.querySelectorAll('.dseg button').forEach(b=>b.classList.toggle('on',!q&&b.dataset.g===dTab));
   };
@@ -294,7 +294,7 @@ function verseHTML(ar,tr,en,ur,end){
 function renderDua(id){
   const d=LIST.find(x=>x.id===id); if(!d) return false;
   setHeader(`${esc(d.name)}`,true); noJump();
-  let h=`<div class="s-head"><div class="ar" style="font-family:'Noto Nastaliq Urdu',serif;font-size:30px;line-height:2.2">${d.ur}</div><h2>${esc(d.name)}</h2><p>${esc(d.sub)}</p></div>`;
+  let h=`<div class="s-head"><div class="ar" style="font-family:'Noto Nastaliq Urdu',serif;font-size:30px;line-height:2.2">${d.ur}</div><h2>${esc(d.name)}</h2><p>${esc(d.sub)}</p>${dfavBtn(d.id,true)}</div>`;
   if(d.user){
     const U=UD[d.user];h+=readbar('dua',null);
     const tlBox=t=>t?`<div class="v-tr tlbox"><b>Transliteration</b>${esc(t).replace(/\n\n/g,'<br><br>')}</div>`:'';
@@ -312,7 +312,7 @@ function renderDua(id){
   if(d.id==='ayat-kursi'){
     h+=readbar('dua',false);
     h+=`<div class="bism">${BISMX()}</div><div class="dbody">`;
-    for(const v of [255,256,257]) h+=verseHTML(ARX()[1][v-1],'',EN[1][v-1],UR[1][v-1],endMark(v));
+    for(const v of [255,256,257]) h+=verseHTML(ARX()[1][v-1],'',EN[1][v-1],UR[1][v-1],endMark(v)).replace('class="v-ur"','class="v-ur qur"');
     h+=`</div><div class="nav-surah"><a href="#surah-2-255">Open in Quran (2:255) ›</a></div>`;
   } else {
     const D=DU[d.key], useAlt=!!D.alt, after=useAlt?D.alt.after:{}, para=useAlt&&D.alt.style==='para';
@@ -392,9 +392,9 @@ const fmt=(loc,dt)=>{try{return dt.toLocaleTimeString([], {timeZone:loc.tz,hour:
 let LOC=store.get('loc',null);
 const ALERTS=Object.assign({fajr:true,dhuhr:true,asr:true,maghrib:true,isha:true},store.get('alerts',{}));
 let armed=false,ticker=null,audioCtx=null,playing=null,fired=store.get('fired',{});
-const SLOTS=[['builtin','Azan',''],['mecca','Mecca','Masjid al-Haram'],['medina','Medina','Masjid an-Nabawi'],['moazenzadeh','Moazenzadeh','Rahim Moazenzadeh Ardabili'],['kazemzadeh','Kazemzadeh',''],['aghati_1','Aghati (1)',''],['aghati_2','Aghati (2)',''],['rezaeian','Rezaeian',''],['abdulbasit','Abdul Basit','']];
+const SLOTS=[['builtin','Azan',''],['mecca','Mecca','Masjid al-Haram'],['medina','Medina','Masjid an-Nabawi'],['moazenzadeh','Moazenzadeh','Rahim Moazenzadeh Ardabili'],['moazenzadeh_2','Moazenzadeh (2)','Mashhad'],['kazemzadeh','Kazemzadeh',''],['aghati_1','Aghati (1)',''],['aghati_2','Aghati (2)',''],['rezaeian','Rezaeian',''],['abdulbasit','Abdul Basit','']];
 const AZ={builtin:{url:document.getElementById('azdata').dataset.src||('data:audio/mpeg;base64,'+document.getElementById('azdata').textContent.trim()),name:'Azan',fixed:true},
-  mecca:{url:'azan_mecca.mp3',name:'Mecca azan',fixed:true},medina:{url:'azan_medina.mp3',name:'Medina azan',fixed:true},moazenzadeh:{url:'azan_moazenzadeh.mp3',name:'Moazenzadeh azan',fixed:true},kazemzadeh:{url:'azan_kazemzadeh.mp3',name:'Kazemzadeh azan',fixed:true},aghati_1:{url:'azan_aghati_1.mp3',name:'Aghati (1) azan',fixed:true},aghati_2:{url:'azan_aghati_2.mp3',name:'Aghati (2) azan',fixed:true},rezaeian:{url:'azan_rezaeian.mp3',name:'Rezaeian azan',fixed:true},abdulbasit:{url:'azan_abdulbasit.mp3',name:'Abdul Basit azan',fixed:true}};
+  mecca:{url:'azan_mecca.mp3',name:'Mecca azan',fixed:true},medina:{url:'azan_medina.mp3',name:'Medina azan',fixed:true},moazenzadeh:{url:'azan_moazenzadeh.mp3',name:'Moazenzadeh azan',fixed:true},moazenzadeh_2:{url:'azan_moazenzadeh_2.mp3',name:'Moazenzadeh (2) azan',fixed:true},kazemzadeh:{url:'azan_kazemzadeh.mp3',name:'Kazemzadeh azan',fixed:true},aghati_1:{url:'azan_aghati_1.mp3',name:'Aghati (1) azan',fixed:true},aghati_2:{url:'azan_aghati_2.mp3',name:'Aghati (2) azan',fixed:true},rezaeian:{url:'azan_rezaeian.mp3',name:'Rezaeian azan',fixed:true},abdulbasit:{url:'azan_abdulbasit.mp3',name:'Abdul Basit azan',fixed:true}};
 const AZOK=v=>!!AZ[v];
 const AZK=[['fajr','Fajr'],['dhuhr','Dhuhr'],['asr','Asr'],['maghrib','Maghrib'],['isha','Isha']];
 const AZP=(()=>{const f=store.get('azFajr','builtin'),o=store.get('azOther','builtin'),m=store.get('azPer',{}),r={};
@@ -723,7 +723,7 @@ function renderToday(){
      <div class="tlabel">Ayah of the day · ${esc(META[A.s-1][1])} ${ref}</div>
      <div class="v-ar" style="text-align:center;margin:8px 0 10px">${ar}</div>
      <div class="v-en" style="text-align:center">${esc(en)}</div>
-     <div class="v-ur" style="text-align:center;margin-top:6px">${esc(ur)}</div>
+     <div class="v-ur qur" style="text-align:center;margin-top:6px">${esc(ur)}</div>
      <div class="tact"><button class="listen" id="ayPlay">${Q.icon?'':''}▶ Listen</button><a class="btn" href="#surah-${A.s}-${A.a}">Open in Quran</a><button class="btn" id="ayCopy">Copy</button></div>
    </div>
    ${last?`<a class="continue" href="#surah-${last.s}-${last.v}"><div style="flex:1"><small>Continue reading</small><b>${esc(META[last.s-1][1])} · Verse ${last.v}</b></div>›</a>`:''}
