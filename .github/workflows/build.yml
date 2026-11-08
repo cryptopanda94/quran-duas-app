@@ -21,7 +21,14 @@ jobs:
           X=$(ls -d /Applications/Xcode_26*.app 2>/dev/null | sort -V | tail -1)
           [ -z "$X" ] && X=$(ls -d /Applications/Xcode*.app | sort -V | tail -1)
           echo "Using $X"; sudo xcode-select -s "$X"; xcodebuild -version
-      - run: npm install
+      - name: npm install (with retry)
+        run: |
+          for i in 1 2 3; do
+            if [ $i -ge 2 ]; then export npm_config_sharp_libvips_binary_host="https://npmmirror.com/mirrors/sharp-libvips"; export npm_config_sharp_binary_host="https://npmmirror.com/mirrors/sharp"; fi
+            npm install && break
+            echo "npm install failed (attempt $i), retrying..."; rm -rf node_modules/sharp; sleep 20
+            [ $i -eq 3 ] && exit 1
+          done
       - run: npm run build:web
       - run: npx cap add ios
       - run: npm run native:setup
@@ -98,7 +105,14 @@ jobs:
         with:
           distribution: temurin
           java-version: 21
-      - run: npm install
+      - name: npm install (with retry)
+        run: |
+          for i in 1 2 3; do
+            if [ $i -ge 2 ]; then export npm_config_sharp_libvips_binary_host="https://npmmirror.com/mirrors/sharp-libvips"; export npm_config_sharp_binary_host="https://npmmirror.com/mirrors/sharp"; fi
+            npm install && break
+            echo "npm install failed (attempt $i), retrying..."; rm -rf node_modules/sharp; sleep 20
+            [ $i -eq 3 ] && exit 1
+          done
       - run: npm run build:web
       - run: npx cap add android
       - run: npm run native:setup

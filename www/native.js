@@ -267,7 +267,81 @@
     const name = !theme || theme === 'sky' ? '' : 'AppIcon-' + theme[0].toUpperCase() + theme.slice(1);
     try { await WB.setIcon({ name }); } catch (e) { console.warn('icon', e); }
   }
-  window.NH = { setPref, alertsOn: () => alertsOn, toggleAlerts, refresh, startCompass, getLocation, platform, setIcon };
+
+  /* ---------------- Offline Quran recitation ----------------
+     Surah audio is saved on the device (not in iCloud backups) and played from there.
+     Anything played online is saved automatically (if enabled); "Download all" saves the rest. */
+  const FS = C.registerPlugin('Filesystem');
+  const DIR = platform === 'ios' ? 'LIBRARY_NO_CLOUD' : 'DATA';
+  const AUD_DIR = 'quran-audio';
+  let audBase = null;                                  // native file URI of AUD_DIR
+  const audIdx = store.get('offAud', {});              // key -> bytes
+  const audKey = (url) => String(url).replace(/^https?:\/\/[^/]+\/[^/]+\/audio\//, '').replace(/[^A-Za-z0-9._-]/g, '_');
+  const saving = {};
+  let bulk = null;                                     // {done,total,stop}
+  const audReady = (async () => {
+    try { await FS.mkdir({ path: AUD_DIR, directory: DIR, recursive: true }); } catch (e) {}
+    try { audBase = (await FS.getUri({ path: AUD_DIR, directory: DIR })).uri; } catch (e) { audBase = null; }
+  })();
+  const b64 = (blob) => new Promise((res, rej) => { const r = new FileReader(); r.onload = () => res(String(r.result).split(',')[1] || ''); r.onerror = rej; r.readAsDataURL(blob); });
+  async function audSave(url) {
+    const k = audKey(url);
+    if (audIdx[k] || saving[k]) return saving[k];
+    return (saving[k] = (async () => {
+      await audReady;
+      const r = await fetch(url, { cache: 'no-store' });
+      if (!r.ok) throw new Error('HTTP ' + r.status);
+      const blob = await r.blob();
+      const tmp = AUD_DIR + '/' + k + '.part', CH = 1536 * 1024;   // write in chunks to keep memory low
+      for (let o = 0; o < blob.size; o += CH) {
+        const data = await b64(blob.slice(o, o + CH));
+        if (o === 0) await FS.writeFile({ path: tmp, data, directory: DIR, recursive: true });
+        else await FS.appendFile({ path: tmp, data, directory: DIR });
+      }
+      try { await FS.deleteFile({ path: AUD_DIR + '/' + k, directory: DIR }); } catch (e) {}
+      await FS.rename({ from: tmp, to: AUD_DIR + '/' + k, directory: DIR, toDirectory: DIR });
+      audIdx[k] = blob.size; store.set('offAud', audIdx);
+    })().finally(() => { delete saving[k]; }));
+  }
+  const audio = {
+    local(url) { const k = audKey(url); return audIdx[k] && audBase ? C.convertFileSrc(audBase + '/' + k) : null; },
+    has(url) { return !!audIdx[audKey(url)]; },
+    autoOn: () => store.get('audAuto', true),
+    setAuto(v) { store.set('audAuto', !!v); },
+    played(url) { if (audio.autoOn()) audSave(url).catch(() => {}); },
+    forget(url) { const k = audKey(url); delete audIdx[k]; store.set('offAud', audIdx); },
+    stats(urls) {
+      const ks = urls ? urls.map(audKey) : Object.keys(audIdx);
+      let n = 0, bytes = 0; ks.forEach((k) => { if (audIdx[k]) { n++; bytes += audIdx[k]; } });
+      return { n, total: ks.length, mb: Math.round(bytes / 1048576) };
+    },
+    busy: () => bulk && { done: bulk.done, total: bulk.total },
+    async downloadAll(urls, onProgress) {
+      if (bulk) return;
+      const todo = urls.filter((u) => !audIdx[audKey(u)]);
+      bulk = { done: 0, total: todo.length, stop: false, failed: 0 };
+      const b = bulk; onProgress && onProgress(b);
+      let i = 0;
+      const worker = async () => {
+        while (!b.stop && i < todo.length) {
+          const u = todo[i++];
+          try { await audSave(u); } catch (e) { b.failed++; }
+          b.done++; onProgress && onProgress(b);
+        }
+      };
+      await Promise.all([worker(), worker()]);
+      bulk = null; onProgress && onProgress(Object.assign(b, { finished: true }));
+    },
+    stop() { if (bulk) bulk.stop = true; },
+    async removeAll(urls) {
+      await audReady;
+      const ks = urls ? urls.map(audKey) : Object.keys(audIdx);
+      for (const k of ks) { if (!audIdx[k]) continue; try { await FS.deleteFile({ path: AUD_DIR + '/' + k, directory: DIR }); } catch (e) {} delete audIdx[k]; }
+      store.set('offAud', audIdx);
+    },
+  };
+
+  window.NH = { setPref, alertsOn: () => alertsOn, toggleAlerts, refresh, startCompass, getLocation, platform, setIcon, audio };
 
   try {
     LN.addListener('localNotificationReceived', (n) => {
