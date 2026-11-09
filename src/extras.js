@@ -327,13 +327,14 @@ function verseHTML(ar,tr,en,ur,end){
   return `<div class="dverse"><div class="v-ar">${ar}${end?` <span class="end">${end}</span>`:''}</div>
     ${tr?`<div class="v-tr">${esc(tr)}</div>`:''}${en?`<div class="v-en">${esc(en)}</div>`:''}${ur?`<div class="v-ur">${esc(ur)}</div>`:''}</div>`;
 }
+const NLG=['a','n','h'];
 function renderDua(id){
   const d=LIST.find(x=>x.id===id); if(!d) return false;
   setHeader(`${esc(d.name)}`,true); noJump();
   let h=`<div class="s-head"><div class="ar" style="font-family:'Noto Nastaliq Urdu',serif;font-size:30px;line-height:2.2">${d.ur}</div><h2>${esc(d.name)}</h2><p>${esc(d.sub)}</p>${dfavBtn(d.id,true)}</div>`;
   if(d.user){
     const U=UD[d.user];h+=readbar('dua',null);
-    if(U.items.some(x=>x.note&&x.ur))h+=nlSeg();
+    if(NLG.includes(d.grp)&&U.items.some(x=>x.note&&x.ur))h+=nlSeg();
     const tlBox=t=>t?`<div class="v-tr tlbox"><b>Transliteration</b>${esc(t).replace(/\n\n/g,'<br><br>')}</div>`:'';
     let pend=U.tl0;h+='<div class="dbody">';
     U.items.forEach(it=>{
@@ -354,7 +355,7 @@ function renderDua(id){
   } else {
     const D=DU[d.key], useAlt=!!D.alt, after=useAlt?D.alt.after:{}, para=useAlt&&D.alt.style==='para';
     h+=readbar('dua',D.alt?D.alt.label:null);
-    if(D.segs.some(x=>x.note!=null&&x.ur))h+=nlSeg();
+    if(NLG.includes(d.grp)&&D.segs.some(x=>x.note!=null&&x.ur))h+=nlSeg();
     if(D.merits) h+=meritsHTML(D,d.id);
     h+='<div class="dbody">';
     if(useAlt&&D.alt.style==='own'){
