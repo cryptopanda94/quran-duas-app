@@ -168,9 +168,9 @@ input[type=range]{accent-color:var(--accent);width:150px}
 .uvc{padding:6px 0 2px}.enb{text-align:left;line-height:1.7;margin:4px 6px 14px}.enb b{display:block;font-size:12px;letter-spacing:.06em;text-transform:uppercase;margin-bottom:6px;color:var(--accent)}
 .dua-item .num{transform:none;border-radius:12px;font-family:IndoPak,serif;font-size:18px}
 .dua-item .num span{transform:none}
-.note{font-style:normal;color:var(--muted);text-align:center;font-size:14.5px;padding:10px 14px;margin:16px 6px 6px;line-height:1.55;background:var(--accent-soft);border-radius:12px}.note.h{background:none;padding:18px 8px 4px;margin:8px 0 0}
-.note.h{font-style:normal;font-weight:600;color:var(--accent);font-size:17px}
-.note .nur{display:block;font-style:normal;font-family:"Noto Nastaliq Urdu",serif;direction:rtl;font-size:15px;line-height:2.2;color:var(--muted)}
+.note{font-style:normal;color:var(--muted);text-align:center;font-size:var(--en-size);padding:10px 14px;margin:16px 6px 6px;line-height:1.55;background:var(--accent-soft);border-radius:12px}.note.h{background:none;padding:18px 8px 4px;margin:8px 0 0}
+.note.h{font-style:normal;font-weight:600;color:var(--accent);font-size:calc(var(--en-size) + 1px)}
+.note .nur{display:block;font-style:normal;font-family:"Noto Nastaliq Urdu",serif;direction:rtl;font-size:calc(var(--en-size) + 2px);line-height:2.3;color:var(--muted)}
 .note .nen{display:block}.note .nen+.nur{margin-top:6px;padding-top:6px;border-top:1px dashed color-mix(in srgb,var(--muted) 30%,transparent)}
 .unote .nur{display:block;font-family:"Noto Nastaliq Urdu",serif;direction:rtl;font-size:16px;line-height:2.2}.unote .nen{display:block}
 
@@ -198,7 +198,7 @@ input[type=range]{accent-color:var(--accent);width:150px}
 .dverse .v-ar{margin:0 0 8px}
 details.merits{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:12px 14px;margin:6px 0 10px}
 details.merits summary{cursor:pointer;font-weight:600;color:var(--accent)}
-details.merits div{font-size:14px;line-height:1.65;white-space:pre-line;margin-top:8px;color:var(--ink)}
+details.merits .men{font-size:var(--en-size);line-height:1.65;white-space:pre-line;margin-top:8px;color:var(--ink)}.merits .mur{font-family:"Noto Nastaliq Urdu",serif;direction:rtl;text-align:right;font-size:calc(var(--en-size) + 2px);line-height:2.3;white-space:pre-line;margin-top:8px;color:var(--ink)}.merits .men+.mur{border-top:1px dashed var(--line);padding-top:8px}.merits summary .mur-t{float:right;font-family:"Noto Nastaliq Urdu",serif;font-weight:400;font-size:13px;color:var(--muted);line-height:1.6}.merits .mseg{display:flex;gap:4px;background:var(--accent-soft);border-radius:10px;padding:3px;margin-top:10px}.merits .mseg button{flex:1;border:0;background:none;padding:6px 4px;border-radius:8px;font:inherit;font-size:13px;color:var(--muted)}.merits .mseg button.on{background:var(--card);color:var(--accent);font-weight:600;box-shadow:0 1px 3px rgba(0,0,0,.08)}
 /* prayer */
 .card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:16px;margin:12px 0}
 .loc{display:flex;align-items:center;gap:10px}

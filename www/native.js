@@ -22,6 +22,13 @@
     builtin: { ch: 'azan', name: 'Azan', file: 'azan_short.wav' },
     mecca:   { ch: 'azan_mecca', name: 'Azan (Mecca)', file: 'azan_mecca_short.wav' },
     medina:  { ch: 'azan_medina', name: 'Azan (Medina)', file: 'azan_medina_short.wav' },
+    moazenzadeh: { ch: 'azan_moazenzadeh', name: 'Azan (Moazenzadeh)', file: 'azan_moazenzadeh_short.wav' },
+    kazemzadeh: { ch: 'azan_kazemzadeh', name: 'Azan (Kazemzadeh)', file: 'azan_kazemzadeh_short.wav' },
+    aghati_1: { ch: 'azan_aghati_1', name: 'Azan (Aghati (1))', file: 'azan_aghati_1_short.wav' },
+    aghati_2: { ch: 'azan_aghati_2', name: 'Azan (Aghati (2))', file: 'azan_aghati_2_short.wav' },
+    rezaeian: { ch: 'azan_rezaeian', name: 'Azan (Rezaeian)', file: 'azan_rezaeian_short.wav' },
+    moazenzadeh_2: { ch: 'azan_moazenzadeh_2', name: 'Azan (Moazenzadeh 2)', file: 'azan_moazenzadeh_2_short.wav' },
+    abdulbasit: { ch: 'azan_abdulbasit', name: 'Azan (Abdul Basit)', file: 'azan_abdulbasit_short.wav' },
   };
   const soundFor = (k) => SOUNDS[(window.QX && QX.slotFor(k))] || SOUNDS.builtin;
   // user prefs: sound on/off, vibrate on/off (Android: one channel per sound x vibration, since channels can't change)

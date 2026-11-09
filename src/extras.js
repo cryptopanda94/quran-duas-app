@@ -315,6 +315,12 @@ function noteHTML(note,ur,h,cls){const l=S.nl,hasUr=!!ur,showEn=l!=='ur'||!hasUr
   return `<div class="${cls||'note'}${h?' h':''}">${showEn?`<span class="nen">${esc(note)}</span>`:''}${showUr?`<span class="nur">${esc(ur)}</span>`:''}</div>`}
 function nlSeg(){const b=(v,t)=>`<button data-nl="${v}" class="${S.nl===v?'on':''}">${t}</button>`;
   return `<div class="nlseg"><span>Instructions</span><div>${b('en','English')}${b('ur','اردو')}${b('both','Both')}</div></div>`}
+function meritsHTML(D,id){const l=S.nl,u=D.meritsUr,showEn=l!=='ur'||!u,showUr=u&&l!=='en';
+  const b=(v,t)=>`<button data-nl="${v}" class="${S.nl===v?'on':''}">${t}</button>`;
+  return `<details class="merits" data-mid="${id}"${S.moId===id?' open':''}><summary>About &amp; merits<span class="mur-t">فضیلت و تعارف</span></summary>`
+   +(u?`<div class="mseg">${b('en','English')}${b('ur','اردو')}${b('both','Both')}</div>`:'')
+   +(showEn?`<div class="men">${esc(cleanMd(D.merits))}</div>`:'')+(showUr?`<div class="mur">${esc(u)}</div>`:'')+`</details>`}
+document.addEventListener('toggle',e=>{const t=e.target;if(t.matches&&t.matches('details.merits'))S.moId=t.open?t.dataset.mid:null},true);
 app.addEventListener('click',e=>{const b=e.target.closest('[data-nl]');if(!b)return;S.nl=b.dataset.nl;store.set('nl',S.nl);const y=window.scrollY,h=location.hash.slice(1);if(window.XR)window.XR(h);window.scrollTo(0,y)});
 const cleanMd=s=>s.replace(/\[([^\]]+)\]\([^)]+\)/g,'$1').replace(/^##\s*/gm,'').replace(/\*\*/g,'');
 function verseHTML(ar,tr,en,ur,end){
@@ -349,7 +355,7 @@ function renderDua(id){
     const D=DU[d.key], useAlt=!!D.alt, after=useAlt?D.alt.after:{}, para=useAlt&&D.alt.style==='para';
     h+=readbar('dua',D.alt?D.alt.label:null);
     if(D.segs.some(x=>x.note!=null&&x.ur))h+=nlSeg();
-    if(D.merits) h+=`<details class="merits"><summary>About &amp; merits</summary><div>${esc(cleanMd(D.merits))}</div></details>`;
+    if(D.merits) h+=meritsHTML(D,d.id);
     h+='<div class="dbody">';
     if(useAlt&&D.alt.style==='own'){
       const segs=D.segs,L=D.alt.lines,noteH=s=>noteHTML(s.note,s.ur,s.h);
