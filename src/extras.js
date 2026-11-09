@@ -353,8 +353,8 @@ function renderDua(id){
     for(const v of [255,256,257]) h+=verseHTML(ARX()[1][v-1],'',EN[1][v-1],UR[1][v-1],endMark(v)).replace('class="v-ur"','class="v-ur qur"');
     h+=`</div><div class="nav-surah"><a href="#surah-2-255">Open in Quran (2:255) ›</a></div>`;
   } else {
-    const D=DU[d.key], useAlt=!!D.alt, after=useAlt?D.alt.after:{}, para=useAlt&&D.alt.style==='para';
-    h+=readbar('dua',D.alt?D.alt.label:null);
+    const D=DU[d.key], useAlt=!!D.alt&&D.alt.style!=='para', after=useAlt?D.alt.after:{}, para=useAlt&&D.alt.style==='para';
+    h+=readbar('dua',useAlt?D.alt.label:null);
     if(NLG.includes(d.grp)&&D.segs.some(x=>x.note!=null&&x.ur))h+=nlSeg();
     if(D.merits) h+=meritsHTML(D,d.id);
     h+='<div class="dbody">';
