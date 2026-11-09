@@ -1,5 +1,5 @@
 (function(){
-const {AR,EN,UR,META,esc,setHeader,store,toast,app,$,ARX,BISMX,endMark,readbar,S,dfavBtn}=window.Q;
+const {AR,EN,UR,META,esc,setHeader,store,toast,app,$,ARX,BISMX,endMark,readbar,S,dfavBtn,icon}=window.Q;
 const DU=JSON.parse(document.getElementById('ddata').textContent);
 const CI=JSON.parse(document.getElementById('cdata').textContent);
 const icons={
@@ -21,6 +21,7 @@ const LIST=[
   {id:'dua-mujeer',user:'mujeer',grp:'d',sub:'13th–15th Ramadan · for forgiveness & relief',mark:'م'},
   {id:'dua-alqamah',key:'N_alqama',grp:'d',sub:'Recited after Ziyarat Ashura',mark:'ع'},
   {id:'duas-qunoot',key:'N_qunoot-quran',grp:'d',sub:'Quranic duas, Imam Husain (a.s.) & Witr qunoot',mark:'ق'},
+  {id:'dua-safar-sakhkhara',key:'N_safar-sakhkhara',grp:'d',sub:'When getting into a car, plane or any ride · Quran 43:13–14',mark:'س'},
   {id:'dua-safar',key:'N_dua-safar',grp:'d',sub:'Travel duas: setting out, boarding, arriving, returning',mark:'س'},
   {id:'munajat-safar',key:'N_munajat-safar',grp:'d',sub:'Imam Muhammad Taqi (a.s.) · before a journey',mark:'م'},
   {id:'duas-leaving-home',key:'N_leaving-home',grp:'d',sub:'Eight duas from Baqiyat al-Salihat',mark:'گ'},
@@ -231,42 +232,64 @@ const LIST=[
   {id:'aamal-p1',key:'A_P1',grp:'a',sec:'Friday (Jumu‘ah)',secUr:'جمعہ',sub:'Friday (Jumu‘ah) · Mafatih al-Jinan',mark:'ع'},
   {id:'aamal-c15',key:'A_C15',grp:'a',sec:'Every Month',secUr:'ہر مہینہ',sub:'Every Month · Mafatih al-Jinan',mark:'ع'},
   {id:'aamal-c16',key:'A_C16',grp:'a',sec:'Every Month',secUr:'ہر مہینہ',sub:'Every Month · Mafatih al-Jinan',mark:'ع'},
-  {id:'namaz-merits-shab',key:'NM_merits-shab',grp:'n',sub:'Virtues of the night prayer',mark:'ف'},
-  {id:'namaz-namaz-e-shab',key:'NM_F2',grp:'n',sub:'Night prayer · 11 rak‘ahs',mark:'ن'},
-  {id:'namaz-namaz-e-shab-short',key:'NM_F3',grp:'n',sub:'Short form of the night prayer',mark:'ن'},
-  {id:'namaz-namaz-e-aayaat',key:'NM_F4',grp:'n',sub:'For eclipses, earthquakes & frightening events',mark:'ن'},
-  {id:'namaz-namaz-e-ghufaylah',key:'NM_F5',grp:'n',sub:'Between Maghrib and Isha',mark:'ن'},
-  {id:'namaz-namaz-e-kamilah',key:'NM_F6',grp:'n',sub:'Friday · before noon',mark:'ن'},
-  {id:'namaz-namaz-e-mayyat',key:'NM_F7',grp:'n',sub:'Funeral prayer',mark:'ن'},
-  {id:'namaz-namaz-e-nawafil',key:'NM_F8',grp:'n',sub:'Daily recommended prayers',mark:'ن'},
-  {id:'namaz-namaz-e-wahshat',key:'NM_F9',grp:'n',sub:'Namaz for the Night of Burial',mark:'ن'},
-  {id:'namaz-namaz-e-maghfirat-e-waledain',key:'NM_F10',grp:'n',sub:'Forgiveness for parents',mark:'ن'},
-  {id:'namaz-namaz-of-jafar-e-tayyar',key:'NM_F11',grp:'n',sub:'Salat al-Tasbih',mark:'ن'},
-  {id:'namaz-eid-prayer',key:'NM_AD4',grp:'n',sub:'Eid al-Fitr & Eid al-Adha',mark:'ن'},
-  {id:'namaz-namaz-of-imam-musa-kazim-a-s',key:'NM_F21',grp:'n',sub:'',mark:'ن'},
-  {id:'namaz-namaz-of-imam-mahdi-a-t-f-s',key:'NM_F26',grp:'n',sub:'',mark:'ن'},
-  {id:'namaz-namaz-of-imam-mahdi-a-t-f-s-at-masjid-jamkaran',key:'NM_F41',grp:'n',sub:'Qom',mark:'ن'},
-  {id:'namaz-namaz-for-forgiveness',key:'NM_F45',grp:'n',sub:'',mark:'ن'},
-  {id:'namaz-namaz-for-gaining-intelligence-and-good-memory',key:'NM_F46',grp:'n',sub:'',mark:'ن'},
-  {id:'namaz-namaz-for-seeking-divine-help',key:'NM_F47',grp:'n',sub:'',mark:'ن'},
-  {id:'namaz-namaz-for-settling-needs',key:'NM_F50',grp:'n',sub:'',mark:'ن'},
-  {id:'namaz-namaz-for-settling-urgent-needs',key:'NM_F53',grp:'n',sub:'',mark:'ن'},
-  {id:'namaz-namaz-for-solving-difficulties',key:'NM_F54',grp:'n',sub:'',mark:'ن'},
-  {id:'namaz-namaz-of-pardon',key:'NM_F60',grp:'n',sub:'',mark:'ن'},
-  {id:'namaz-namaz-of-the-hungry',key:'NM_F61',grp:'n',sub:'',mark:'ن'},
-  {id:'namaz-namaz-of-will',key:'NM_F62',grp:'n',sub:'Between Maghrib and Isha',mark:'ن'},
-  {id:'namaz-namaz-on-friday-nights-the-night-of-eid-al-adha-for-fulfilment-of-needs',key:'NM_F63',grp:'n',sub:'',mark:'ن'}
+  {id:'namaz-merits-shab',key:'NM_merits-shab',grp:'n',sec:'Daily & Special Namaz',secUr:'روزمرہ اور خاص نمازیں',sub:'Virtues of the night prayer',mark:'ف'},
+  {id:'namaz-namaz-e-shab',key:'NM_F2',grp:'n',sec:'Daily & Special Namaz',secUr:'روزمرہ اور خاص نمازیں',sub:'Night prayer · 11 rak‘ahs',mark:'ن'},
+  {id:'namaz-namaz-e-shab-short',key:'NM_F3',grp:'n',sec:'Daily & Special Namaz',secUr:'روزمرہ اور خاص نمازیں',sub:'Short form of the night prayer',mark:'ن'},
+  {id:'namaz-namaz-e-aayaat',key:'NM_F4',grp:'n',sec:'Daily & Special Namaz',secUr:'روزمرہ اور خاص نمازیں',sub:'For eclipses, earthquakes & frightening events',mark:'ن'},
+  {id:'namaz-namaz-e-ghufaylah',key:'NM_F5',grp:'n',sec:'Daily & Special Namaz',secUr:'روزمرہ اور خاص نمازیں',sub:'Between Maghrib and Isha',mark:'ن'},
+  {id:'namaz-namaz-e-kamilah',key:'NM_F6',grp:'n',sec:'Daily & Special Namaz',secUr:'روزمرہ اور خاص نمازیں',sub:'Friday · before noon',mark:'ن'},
+  {id:'namaz-namaz-e-mayyat',key:'NM_F7',grp:'n',sec:'Daily & Special Namaz',secUr:'روزمرہ اور خاص نمازیں',sub:'Funeral prayer',mark:'ن'},
+  {id:'namaz-namaz-e-nawafil',key:'NM_F8',grp:'n',sec:'Daily & Special Namaz',secUr:'روزمرہ اور خاص نمازیں',sub:'Daily recommended prayers',mark:'ن'},
+  {id:'namaz-namaz-e-wahshat',key:'NM_F9',grp:'n',sec:'Daily & Special Namaz',secUr:'روزمرہ اور خاص نمازیں',sub:'Namaz for the Night of Burial',mark:'ن'},
+  {id:'namaz-namaz-e-maghfirat-e-waledain',key:'NM_F10',grp:'n',sec:'Daily & Special Namaz',secUr:'روزمرہ اور خاص نمازیں',sub:'Forgiveness for parents',mark:'ن'},
+  {id:'namaz-namaz-of-jafar-e-tayyar',key:'NM_F11',grp:'n',sec:'Daily & Special Namaz',secUr:'روزمرہ اور خاص نمازیں',sub:'Salat al-Tasbih',mark:'ن'},
+  {id:'namaz-eid-prayer',key:'NM_AD4',grp:'n',sec:'Daily & Special Namaz',secUr:'روزمرہ اور خاص نمازیں',sub:'Eid al-Fitr & Eid al-Adha',mark:'ن'},
+  {id:'namaz-hadiyah-masoomeen',key:'NM_F12',grp:'n',sec:'Namaz of the Masoomeen (a.s.)',secUr:'نماز ہائے معصومین علیہم السلام',sub:'Gift prayer for the 14 Masoomeen',mark:'ن'},
+  {id:'namaz-holy-prophet',key:'NM_F13',grp:'n',sec:'Namaz of the Masoomeen (a.s.)',secUr:'نماز ہائے معصومین علیہم السلام',sub:'2 rak‘ahs',mark:'ن'},
+  {id:'namaz-lady-fatimah',key:'NM_F14',grp:'n',sec:'Namaz of the Masoomeen (a.s.)',secUr:'نماز ہائے معصومین علیہم السلام',sub:'Three forms',mark:'ن'},
+  {id:'namaz-imam-ali',key:'NM_F15',grp:'n',sec:'Namaz of the Masoomeen (a.s.)',secUr:'نماز ہائے معصومین علیہم السلام',sub:'1st Imam',mark:'ن'},
+  {id:'namaz-imam-hasan',key:'NM_F16',grp:'n',sec:'Namaz of the Masoomeen (a.s.)',secUr:'نماز ہائے معصومین علیہم السلام',sub:'2nd Imam',mark:'ن'},
+  {id:'namaz-imam-husain',key:'NM_F17',grp:'n',sec:'Namaz of the Masoomeen (a.s.)',secUr:'نماز ہائے معصومین علیہم السلام',sub:'3rd Imam',mark:'ن'},
+  {id:'namaz-imam-sajjad',key:'NM_F18',grp:'n',sec:'Namaz of the Masoomeen (a.s.)',secUr:'نماز ہائے معصومین علیہم السلام',sub:'4th Imam',mark:'ن'},
+  {id:'namaz-imam-baqir',key:'NM_F19',grp:'n',sec:'Namaz of the Masoomeen (a.s.)',secUr:'نماز ہائے معصومین علیہم السلام',sub:'5th Imam',mark:'ن'},
+  {id:'namaz-imam-sadiq',key:'NM_F20',grp:'n',sec:'Namaz of the Masoomeen (a.s.)',secUr:'نماز ہائے معصومین علیہم السلام',sub:'6th Imam',mark:'ن'},
+  {id:'namaz-namaz-of-imam-musa-kazim-a-s',key:'NM_F21',grp:'n',sec:'Namaz of the Masoomeen (a.s.)',secUr:'نماز ہائے معصومین علیہم السلام',sub:'7th Imam',mark:'ن'},
+  {id:'namaz-imam-reza',key:'NM_F22',grp:'n',sec:'Namaz of the Masoomeen (a.s.)',secUr:'نماز ہائے معصومین علیہم السلام',sub:'8th Imam',mark:'ن'},
+  {id:'namaz-imam-taqi',key:'NM_F23',grp:'n',sec:'Namaz of the Masoomeen (a.s.)',secUr:'نماز ہائے معصومین علیہم السلام',sub:'9th Imam',mark:'ن'},
+  {id:'namaz-imam-naqi',key:'NM_F24',grp:'n',sec:'Namaz of the Masoomeen (a.s.)',secUr:'نماز ہائے معصومین علیہم السلام',sub:'10th Imam',mark:'ن'},
+  {id:'namaz-imam-askari',key:'NM_F25',grp:'n',sec:'Namaz of the Masoomeen (a.s.)',secUr:'نماز ہائے معصومین علیہم السلام',sub:'11th Imam',mark:'ن'},
+  {id:'namaz-namaz-of-imam-mahdi-a-t-f-s',key:'NM_F26',grp:'n',sec:'Namaz of the Masoomeen (a.s.)',secUr:'نماز ہائے معصومین علیہم السلام',sub:'12th Imam',mark:'ن'},
+  {id:'namaz-namaz-of-imam-mahdi-a-t-f-s-at-masjid-jamkaran',key:'NM_F41',grp:'n',sec:'Namaz of the Masoomeen (a.s.)',secUr:'نماز ہائے معصومین علیہم السلام',sub:'12th Imam · Masjid Jamkaran, Qom',mark:'ن'},
+  {id:'namaz-namaz-for-forgiveness',key:'NM_F45',grp:'n',sec:'Namaz for Needs & Forgiveness',secUr:'حاجات اور مغفرت کی نمازیں',sub:'',mark:'ن'},
+  {id:'namaz-namaz-for-gaining-intelligence-and-good-memory',key:'NM_F46',grp:'n',sec:'Namaz for Needs & Forgiveness',secUr:'حاجات اور مغفرت کی نمازیں',sub:'',mark:'ن'},
+  {id:'namaz-namaz-for-seeking-divine-help',key:'NM_F47',grp:'n',sec:'Namaz for Needs & Forgiveness',secUr:'حاجات اور مغفرت کی نمازیں',sub:'',mark:'ن'},
+  {id:'namaz-namaz-for-settling-needs',key:'NM_F50',grp:'n',sec:'Namaz for Needs & Forgiveness',secUr:'حاجات اور مغفرت کی نمازیں',sub:'',mark:'ن'},
+  {id:'namaz-namaz-for-settling-urgent-needs',key:'NM_F53',grp:'n',sec:'Namaz for Needs & Forgiveness',secUr:'حاجات اور مغفرت کی نمازیں',sub:'',mark:'ن'},
+  {id:'namaz-namaz-for-solving-difficulties',key:'NM_F54',grp:'n',sec:'Namaz for Needs & Forgiveness',secUr:'حاجات اور مغفرت کی نمازیں',sub:'',mark:'ن'},
+  {id:'namaz-namaz-of-pardon',key:'NM_F60',grp:'n',sec:'Namaz for Needs & Forgiveness',secUr:'حاجات اور مغفرت کی نمازیں',sub:'',mark:'ن'},
+  {id:'namaz-namaz-of-the-hungry',key:'NM_F61',grp:'n',sec:'Namaz for Needs & Forgiveness',secUr:'حاجات اور مغفرت کی نمازیں',sub:'',mark:'ن'},
+  {id:'namaz-namaz-of-will',key:'NM_F62',grp:'n',sec:'Namaz for Needs & Forgiveness',secUr:'حاجات اور مغفرت کی نمازیں',sub:'Between Maghrib and Isha',mark:'ن'},
+  {id:'namaz-namaz-on-friday-nights-the-night-of-eid-al-adha-for-fulfilment-of-needs',key:'NM_F63',grp:'n',sec:'Namaz for Needs & Forgiveness',secUr:'حاجات اور مغفرت کی نمازیں',sub:'',mark:'ن'}
 ];
 const UD=JSON.parse(document.getElementById('udata').textContent);
 LIST.forEach(d=>{if(d.key){d.name=DU[d.key].name;d.ur=DU[d.key].nameUr}if(d.user){d.name=UD[d.user].name;d.ur=UD[d.user].nameUr}});
 LIST.find(x=>x.id==='ziyarat-warith').name='Ziyarat Warith (Mafatih)';
 let dTab=store.get('dTab','d'), dQ='';
+function duaSpot(){const n=new Date(),day=n.getDay(),hr=n.getHours();
+  const pick=(day===4&&hr>=16)||(day===5&&hr<5)?['dua-kumayl','Recommended tonight · Thursday night']
+    :day===2?['dua-tawassul','Recommended today · Tuesday']
+    :day===5?['dua-nudba','Recommended today · Friday']
+    :hr<12?['dua-e-ahad','Recommended this morning']:['ziyarat-ashura','Recommended today'];
+  const d=LIST.find(x=>x.id===pick[0]);if(!d)return'';
+  return `<a class="continue dspot" href="#dua-${d.id}"><div class="t2"><small>${pick[1]}</small><b>${esc(d.name)}</b></div><div class="dsu">${d.ur}</div>${icon.arrow}</a>`}
+const DTABS=[['d','Duas'],['z','Ziyarat'],['s','Sahifa'],['a','Aamaal'],['n','Namaz'],['h','99 Names']];
 function renderDuas(){
   setHeader('Duas &amp; Ziyarat',false);
-  app.innerHTML=`<div class="dtop">
-     <div class="seg dseg"><button data-g="d" class="${dTab==='d'?'on':''}">Duas</button><button data-g="z" class="${dTab==='z'?'on':''}">Ziyarat</button><button data-g="s" class="${dTab==='s'?'on':''}">Sahifa Sajjadiya</button><button data-g="a" class="${dTab==='a'?'on':''}">Aamaal</button><button data-g="n" class="${dTab==='n'?'on':''}">Namaz</button><button data-g="h" class="${dTab==='h'?'on':''}">99 Names</button></div>
-     <input class="inp" id="dq" type="search" placeholder="Search duas, ziyarat, namaz…" value="${esc(dQ)}" autocomplete="off">
-   </div>
+  const cnt=g=>g==='h'?99:LIST.filter(x=>x.grp===g).length;
+  app.innerHTML=`<div class="hero"><div class="ar" style="font-family:'Noto Nastaliq Urdu',serif;font-size:30px;line-height:2.1">دعائیں اور زیارات</div></div>
+   ${duaSpot()}
+   <div class="search">${icon.search}<input id="dq" type="search" placeholder="Search duas, ziyarat, namaz…" value="${esc(dQ)}" autocomplete="off"></div>
+   <div class="tabs dtabs">${DTABS.map(([g,t])=>`<button class="tab" data-g="${g}">${t}<small>${cnt(g)}</small></button>`).join('')}</div>
    <div class="list" id="dlist"></div>
 `;
   const norm=x=>(x||'').toLowerCase().replace(/[^a-z0-9\u0600-\u06ff]+/g,' ').trim();
@@ -277,15 +300,22 @@ function renderDuas(){
     if(!q&&dTab==='h'){const N=DU['N_names-99'].segs.filter(x=>x.ar);
       $('dlist').innerHTML=`<a class="item dua-item" href="#dua-asma-ul-husna"><div class="t"><b>Open with meanings &amp; benefits</b><small>Allah has the Most Beautiful Names, so call Him by them (7:180)</small></div><div class="ar" style="font-family:'Noto Nastaliq Urdu',serif;font-size:15px;line-height:2">اسمائے حسنیٰ</div></a>`+
         N.map((x,i)=>`<a class="item nm99" href="#dua-asma-ul-husna"><span class="nn">${i||''}</span><div class="t"><b>${esc(x.tr)}</b><small>${esc(x.en.replace(/^\d+\.\s*/,''))}</small></div><div class="ar nar">${x.ar}</div></a>`).join('');
-      app.querySelectorAll('.dseg button').forEach(b=>b.classList.toggle('on',b.dataset.g===dTab));return}
-    $('dlist').innerHTML=items.map(d=>(d.sec&&!q&&d.sec!==lastSec?(lastSec=d.sec,`<div class="dsec"><b>${esc(d.sec)}</b><span>${d.secUr||''}</span></div>`):'')+`<a class="item dua-item" href="#dua-${d.id}"><div class="t"><b>${esc(d.name)}</b><small>${esc(d.sub)}</small></div><div class="ar" style="font-family:'Noto Nastaliq Urdu',serif;font-size:15px;line-height:2">${d.ur}</div>${dfavBtn(d.id)}</a>`).join('')
+      app.querySelectorAll('.dtabs .tab').forEach(b=>b.classList.toggle('on',b.dataset.g===dTab));return}
+    $('dlist').innerHTML=items.map(d=>(d.sec&&!q&&d.sec!==lastSec?(lastSec=d.sec,`<div class="dsec"><b>${esc(d.sec)}</b><span>${d.secUr||''}</span></div>`):'')+(()=>{const m=d.grp==='s'&&/^(\d+)\.\s*(.*)$/.exec(d.name),sub=m?'':d.sub;
+      return `<a class="item dua-item${m?' snum':''}" href="#dua-${d.id}"><div class="num"><span>${m?m[1]:(d.mark||'د')}</span></div><div class="t"><b>${esc(m?m[2]:d.name)}</b>${sub?`<small>${esc(sub)}</small>`:''}</div>`})()+`<div class="dur">${d.ur||''}</div>${dfavBtn(d.id)}</a>`).join('')
       ||'<div class="hint" style="padding:20px 4px;text-align:center">Nothing found — try another name (e.g. Kumayl, Ashura, Kisa).</div>';
-    app.querySelectorAll('.dseg button').forEach(b=>b.classList.toggle('on',!q&&b.dataset.g===dTab));
+    app.querySelectorAll('.dtabs .tab').forEach(b=>b.classList.toggle('on',!q&&b.dataset.g===dTab));
   };
-  app.querySelectorAll('.dseg button').forEach(b=>b.onclick=()=>{dTab=b.dataset.g;store.set('dTab',dTab);dQ='';$('dq').value='';draw()});
+  app.querySelectorAll('.dtabs .tab').forEach(b=>b.onclick=()=>{dTab=b.dataset.g;store.set('dTab',dTab);dQ='';$('dq').value='';draw()});
   $('dq').oninput=e=>{dQ=e.target.value;draw()};
   draw();
 }
+if(S.nl==null)S.nl=store.get('nl','en');
+function noteHTML(note,ur,h,cls){const l=S.nl,hasUr=!!ur,showEn=l!=='ur'||!hasUr,showUr=hasUr&&l!=='en';
+  return `<div class="${cls||'note'}${h?' h':''}">${showEn?`<span class="nen">${esc(note)}</span>`:''}${showUr?`<span class="nur">${esc(ur)}</span>`:''}</div>`}
+function nlSeg(){const b=(v,t)=>`<button data-nl="${v}" class="${S.nl===v?'on':''}">${t}</button>`;
+  return `<div class="nlseg"><span>Instructions</span><div>${b('en','English')}${b('ur','اردو')}${b('both','Both')}</div></div>`}
+app.addEventListener('click',e=>{const b=e.target.closest('[data-nl]');if(!b)return;S.nl=b.dataset.nl;store.set('nl',S.nl);const y=window.scrollY,h=location.hash.slice(1);if(window.XR)window.XR(h);window.scrollTo(0,y)});
 const cleanMd=s=>s.replace(/\[([^\]]+)\]\([^)]+\)/g,'$1').replace(/^##\s*/gm,'').replace(/\*\*/g,'');
 function verseHTML(ar,tr,en,ur,end){
   return `<div class="dverse"><div class="v-ar">${ar}${end?` <span class="end">${end}</span>`:''}</div>
@@ -297,11 +327,12 @@ function renderDua(id){
   let h=`<div class="s-head"><div class="ar" style="font-family:'Noto Nastaliq Urdu',serif;font-size:30px;line-height:2.2">${d.ur}</div><h2>${esc(d.name)}</h2><p>${esc(d.sub)}</p>${dfavBtn(d.id,true)}</div>`;
   if(d.user){
     const U=UD[d.user];h+=readbar('dua',null);
+    if(U.items.some(x=>x.note&&x.ur))h+=nlSeg();
     const tlBox=t=>t?`<div class="v-tr tlbox"><b>Transliteration</b>${esc(t).replace(/\n\n/g,'<br><br>')}</div>`:'';
     let pend=U.tl0;h+='<div class="dbody">';
     U.items.forEach(it=>{
       if(it.head){h+=tlBox(pend);pend=it.tl||'';h+=`<div class="uhead">${esc(it.head)}</div>`;return}
-      if(it.note){h+=`<div class="unote">${esc(it.note)}</div>`;return}
+      if(it.note){h+=noteHTML(it.note,it.ur,false,'unote');return}
       if(it.enb){h+=`<div class="v-en tbox enb"><b>English</b>${esc(it.enb).replace(/\n\n/g,'<br><br>')}</div>`;return}
       if(!it.en){h+=`<div class="uv uvc"><div class="v-ar">${it.ar}</div></div>`;return}
       h+=`<div class="uv"><div class="v-ar">${it.ar}</div><div class="v-en tbox">${esc(it.en)}</div>${it.ur?`<div class="v-ur tbox urbox">${esc(it.ur)}</div>`:''}</div>`;
@@ -317,10 +348,11 @@ function renderDua(id){
   } else {
     const D=DU[d.key], useAlt=!!D.alt, after=useAlt?D.alt.after:{}, para=useAlt&&D.alt.style==='para';
     h+=readbar('dua',D.alt?D.alt.label:null);
+    if(D.segs.some(x=>x.note!=null&&x.ur))h+=nlSeg();
     if(D.merits) h+=`<details class="merits"><summary>About &amp; merits</summary><div>${esc(cleanMd(D.merits))}</div></details>`;
     h+='<div class="dbody">';
     if(useAlt&&D.alt.style==='own'){
-      const segs=D.segs,L=D.alt.lines,noteH=s=>`<div class="note${s.h?' h':''}">${esc(s.note)}${s.ur?`<span class="nur">${esc(s.ur)}</span>`:''}</div>`;
+      const segs=D.segs,L=D.alt.lines,noteH=s=>noteHTML(s.note,s.ur,s.h);
       let ptr=0;
       L.forEach(([ar,en,sg],k)=>{
         if(sg<0){h+=verseHTML(ar,'',en,'');return}
@@ -332,7 +364,7 @@ function renderDua(id){
       for(;ptr<segs.length;ptr++){const s2=segs[ptr];h+=s2.note!=null?noteH(s2):verseHTML(s2.ar,s2.tr,s2.en,s2.ur)}
     } else
     h+=D.segs.map((s,i)=>s.note!=null
-      ? `<div class="note${s.h?' h':''}">${esc(s.note)}${s.ur?`<span class="nur">${esc(s.ur)}</span>`:''}</div>`
+      ? noteHTML(s.note,s.ur,s.h)
       : (para?verseHTML(s.ar,s.tr,'',s.ur)+(after[i]?`<div class="v-en v-enp">${esc(after[i])}</div>`:'')
              :verseHTML(s.ar,s.tr,useAlt?(after[i]||''):s.en,s.ur))).join('');
   }
