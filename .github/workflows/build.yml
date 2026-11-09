@@ -124,7 +124,10 @@ jobs:
           grep -E "versionCode|versionName" android/app/build.gradle
       - name: Build debug APK
         working-directory: android
-        run: chmod +x gradlew && ./gradlew assembleDebug --no-daemon
+        run: |
+          chmod +x gradlew
+          sed -i 's/networkTimeout=[0-9]*/networkTimeout=120000/' gradle/wrapper/gradle-wrapper.properties || true
+          for i in 1 2 3 4 5; do ./gradlew assembleDebug --no-daemon && exit 0; echo "Build attempt $i failed (often a GitHub download timeout), retrying..."; sleep 45; done; exit 1
       - name: Build signed release bundle (Play Store)
         if: ${{ env.KS != '' }}
         env:
