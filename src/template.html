@@ -122,6 +122,7 @@ mark{background:var(--hl);color:inherit;border-radius:3px;padding:0 1px}
 .v-ar .end{color:var(--accent);margin-right:.15em;white-space:nowrap}
 .v-en{font-size:var(--en-size);line-height:1.65;color:var(--ink)}
 .nav-surah{display:flex;gap:10px;margin-top:26px}
+.jz-s{margin-top:28px}.jz-cont{margin:14px 0 4px;padding:8px 14px;border-radius:12px;background:var(--accent-soft);color:var(--muted);font-size:13px;text-align:center}.jz-cont .ar{font-family:IndoPak,serif;font-size:16px;color:var(--accent)}
 .nav-surah a{flex:1;text-align:center;padding:14px;border:1px solid var(--line);border-radius:12px;background:var(--card);font-weight:500}
 .nav-surah a:hover{border-color:var(--fill,var(--accent))}
 /* sheet */
@@ -650,7 +651,7 @@ function renderHome(){
   const last=S.last;
   app.innerHTML=`
    <div class="hero"><div class="ar">القرآن الكريم</div></div>
-   ${last?`<a class="continue" href="#surah-${last.s}-${last.v}"><div style="flex:1"><small>Continue reading</small><b>${esc(META[last.s-1][1])} · Verse ${last.v}</b><small style="opacity:.85;margin-top:2px">Juz ${qInfo(quarterOf(last.s,last.v)).juz} · ${hizbLabel(qInfo(quarterOf(last.s,last.v)))}</small></div>${icon.arrow}</a>`:''}
+   ${last?`<a class="continue" href="${S.ctx&&S.ctx.juz?`#juz-${S.ctx.juz}-${last.s}-${last.v}`:`#surah-${last.s}-${last.v}`}"><div style="flex:1"><small>Continue reading</small><b>${esc(META[last.s-1][1])} · Verse ${last.v}</b><small style="opacity:.85;margin-top:2px">Juz ${qInfo(quarterOf(last.s,last.v)).juz} · ${hizbLabel(qInfo(quarterOf(last.s,last.v)))}</small></div>${icon.arrow}</a>`:''}
    <div class="search">${icon.search}<input id="q" type="search" placeholder="Search surah, 2:255, or a word in English / Urdu / Arabic" value="${esc(S.q)}" autocomplete="off"></div>
    <div class="tabs" id="tabs">
      <button class="tab" data-t="surahs">Surahs</button><button class="tab" data-t="juz">Juz</button><button class="tab" data-t="marks">Bookmarks${S.marks.length?`<small>${S.marks.length}</small>`:''}</button><button class="tab" data-t="favs">${favTab()}</button>
@@ -670,10 +671,10 @@ function renderBody(){
   if(S.tab==='surahs'){body.innerHTML=`<div class="list">${META.map((_,i)=>surahItem(i)).join('')}</div>`}
   else if(S.tab==='juz'){
     const L=S.last,ci=L?qInfo(quarterOf(L.s,L.v)):null;
-    body.innerHTML=(ci?`<a class="jzcont" href="#surah-${L.s}-${L.v}"><div style="flex:1"><small>You are on</small><b>Juz ${ci.juz} · ${hizbLabel(ci)} · Rub' ${ci.rub} of 8</b><span>${esc(META[L.s-1][1])} ${L.s}:${L.v} · Ruku ${rukuOf(L.s,L.v)}</span></div>${icon.arrow}</a>`:'')
+    body.innerHTML=(ci?`<a class="jzcont" href="#juz-${ci.juz}-${L.s}-${L.v}"><div style="flex:1"><small>You are on</small><b>Juz ${ci.juz} · ${QN[ci.part]}</b><span>${esc(META[L.s-1][1])} ${L.s}:${L.v} · Ruku ${rukuOf(L.s,L.v)}</span></div>${icon.arrow}</a>`:'')
      +`<div class="list">${JUZ.map(([s,v],i)=>{const [es,ev]=juzEnd(i+1),[ar,en]=juzName(i+1),cur=ci&&ci.juz===i+1;
-      return `<a class="item jzrow${cur?' cur':''}" data-juz="${i+1}" href="#surah-${s}-${v}"><div class="num"><span>${i+1}</span></div>
-      <div class="t"><b>Juz ${i+1} · ${esc(en)}${cur?'<em class="here">Reading</em>':''}</b><small>${esc(META[s-1][1])} ${s}:${v} – ${es!==s?esc(META[es-1][1])+' ':''}${es}:${ev} · Hizb ${2*i+1}–${2*i+2}</small></div><div class="jar">${ar}</div></a>`}).join('')}</div>`;
+      return `<a class="item jzrow${cur?' cur':''}" data-juz="${i+1}" href="#juz-${i+1}"><div class="num"><span>${i+1}</span></div>
+      <div class="t"><b>Juz ${i+1} · ${esc(en)}${cur?'<em class="here">Reading</em>':''}</b><small>${esc(META[s-1][1])} ${s}:${v} – ${es!==s?esc(META[es-1][1])+' ':''}${es}:${ev} · ${rukusInJuz(i+1)} Rukus</small></div><div class="jar">${ar}</div></a>`}).join('')}</div>`;
     const c=document.querySelector('.jzrow.cur');if(c&&!S.jzScrolled){S.jzScrolled=1;setTimeout(()=>c.scrollIntoView({block:'center'}),50)}
   } else if(S.tab==='favs'){
     const ds=S.dfavs.map(id=>LISTX().find(x=>x.id===id)).filter(Boolean);
@@ -686,7 +687,7 @@ function renderBody(){
     const list=S.marks.map((m,i)=>({s:m[0],v:m[1],t:m[2]||0,via:m[3]||'s',i})).sort((a,b)=>b.t-a.t||a.s-b.s||a.v-b.v);
     body.innerHTML=`<div class="bm-sum">${list.length} bookmark${list.length>1?'s':''} · newest first</div>`+list.map(({s,v,t,via})=>{const j=qInfo(quarterOf(s,v)).juz,jn=juzName(j);
       const src=via==='j'?`<span class="bm-src j">${icon.book||''}Juz ${j} · ${esc(jn[1])}</span>`:`<span class="bm-src">Surah ${esc(META[s-1][1])}</span>`;
-      return `<div class="bm"><a class="result" href="#surah-${s}-${v}"${via==='j'?` data-juz="${j}"`:''}><div class="bm-top">${src}<span class="bm-time">${t?fmtT(t):'Saved earlier'}</span></div>
+      return `<div class="bm"><a class="result" href="${via==='j'?`#juz-${j}-${s}-${v}`:`#surah-${s}-${v}`}"><div class="bm-top">${src}<span class="bm-time">${t?fmtT(t):'Saved earlier'}</span></div>
       <div class="ref">${esc(META[s-1][1])} ${s}:${v}${via==='j'?` · Juz ${j}`:''}</div>
       <div class="ar">${ARX()[s-1][v-1]}</div><div class="en">${esc(EN[s-1][v-1])}</div><div class="ur qur">${esc(UR[s-1][v-1])}</div></a>
       <button class="bm-del" data-unmark="${s}:${v}" aria-label="Remove bookmark">×</button></div>`}).join('');
@@ -772,7 +773,7 @@ P.el.addEventListener('ended',()=>{
   if(!P.on)return;const A=AUD[P.s-1];
   if(P.repeat){playVerse(P.s,P.v);return}
   if(P.part+1<A.p.length){setSrc(P.s,P.part+1,()=>{P.el.play().catch(()=>{})});return}
-  if(P.cont&&P.s<114){const ns=P.s+1;if(curS===P.s&&location.hash.startsWith('#surah-'))location.hash='surah-'+ns;playVerse(ns,1)}else stopPlayer();
+  if(P.cont&&P.s<114){const ns=P.s+1;if(location.hash.startsWith('#surah-')&&curS===P.s)location.hash='surah-'+ns;else if(curJ&&!vEl(ns,1)&&vEl(P.s,P.v)&&curJ<30)location.hash='juz-'+(curJ+1);playVerse(ns,1)}else stopPlayer();
 });
 P.el.addEventListener('play',()=>{$('pPlay').innerHTML=icon.pause});
 P.el.addEventListener('pause',()=>{$('pPlay').innerHTML=icon.play2});
@@ -785,8 +786,8 @@ function showBar(){
 }
 function markPlaying(scroll){
   document.querySelectorAll('.verse.playing').forEach(e=>e.classList.remove('playing'));
-  if(!P.on||curS!==P.s||!location.hash.startsWith('#surah-'))return;
-  const el=$('v'+P.v);if(el){el.classList.add('playing');if(scroll){const r=el.getBoundingClientRect();if(r.top<70||r.top>innerHeight*0.55)el.scrollIntoView({behavior:'smooth',block:'start'})}}
+  if(!P.on)return;
+  const el=vEl(P.s,P.v);if(el){el.classList.add('playing');if(scroll){const r=el.getBoundingClientRect();if(r.top<70||r.top>innerHeight*0.55)el.scrollIntoView({behavior:'smooth',block:'start'})}}
 }
 function stepVerse(d){if(!P.s)return;let s=P.s,v=P.v+d;if(v<1){if(s>1){s--;v=AUD[s-1].a.length}else v=1}else if(v>AUD[s-1].a.length){if(s<114){s++;v=1}else return}playVerse(s,v)}
 function readbar(kind,arg){
@@ -811,31 +812,35 @@ document.addEventListener('click',e=>{
 });
 document.addEventListener('change',e=>{if(e.target.id==='recSel'){S.rec=e.target.value;store.set('rec',S.rec);const y=window.scrollY;route();window.scrollTo(0,y)}});
 
-/* ---------- Juz / Hizb / Rub' / Ruku / Sajda markers ---------- */
+/* ---------- Para (Indo-Pak) / Rub' Nisf Sulus / Ruku / Sajda markers ---------- */
 const QM=JSON.parse(document.getElementById('qmdata').textContent);
 const QK=(s,v)=>s*1000+v, QQ=QM.q.map(([s,v])=>QK(s,v));
 const quarterOf=(s,v)=>{const k=QK(s,v);let lo=0,hi=QQ.length-1;while(lo<hi){const m=(lo+hi+1)>>1;if(QQ[m]<=k)lo=m;else hi=m-1}return lo+1};
 const QSTART=new Map(QQ.map((k,i)=>[k,i+1]));
-const qInfo=q=>({q,juz:Math.ceil(q/8),hizb:Math.ceil(q/4),part:(q-1)%4,rub:(q-1)%8+1,hizbInJuz:((Math.ceil(q/4)-1)%2)+1});
-const PART=['','¼','½','¾'], PARTAR=['الحزب','الربع','النصف','ثلاثة ارباع'];
+const qInfo=q=>({q,juz:Math.ceil(q/4),part:(q-1)%4});
+const PART=['','¼','½','¾'], PARTAR=['','الربع','النصف','الثلٰثة'], QN=['1st quarter',"Rub' (¼)",'Nisf (½)','Sulus (¾)'];
+const RKEND=(()=>{const e=[];for(let s=1;s<=114;s++){const a=QM.r.filter(x=>x[0]===s).map(x=>x[1]);a.slice(1).forEach(v=>e.push(s*1000+v-1));e.push(s*1000+META[s-1][4])}return e.sort((a,b)=>a-b)})();
+const juzOfKey=k=>{let j=1;while(j<30&&JUZ[j][0]*1000+JUZ[j][1]<=k)j++;return j};
+const rukusInJuz=j=>RKEND.filter(k=>juzOfKey(k)===j).length;
+const juzRukuNo=(s,v)=>{const k=s*1000+v,j=juzOfKey(k);return RKEND.filter(x=>x<=k&&juzOfKey(x)===j).length};
 const RK={};QM.r.forEach(([s,v])=>(RK[s]=RK[s]||[]).push(v));
 const rukuOf=(s,v)=>{const a=RK[s]||[1];let k=0;while(k+1<a.length&&a[k+1]<=v)k++;return k+1};
 const SJ=new Map(QM.sj.map(([s,v,w])=>[QK(s,v),w]));
 const juzName=j=>QM.jn[j-1]||['',''];
-const hizbLabel=i=>`${i.part?PART[i.part]+' ':''}Hizb ${i.hizb}`;
+const hizbLabel=i=>QN[i.part];
 function juzEnd(j){if(j<30){let [s,v]=JUZ[j];return v>1?[s,v-1]:[s-1,META[s-2][4]]}return [114,6]}
-function markersBefore(s,v){
-  const q=QSTART.get(QK(s,v));if(!q)return'';const i=qInfo(q);
-  if(i.rub===1){const [ar,en]=juzName(i.juz);
-    return `<div class="jz-ban"><div class="jz-n"><small>Juz</small><b>${i.juz}</b></div><div class="jz-t"><b class="ar">${ar}</b><span>${esc(en)} · Hizb ${i.hizb} begins</span></div><div class="jz-of">of 30</div></div>`}
-  return `<div class="rub${i.part===0?' hz':''}"><i><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="5" y="5" width="14" height="14" rx="1.2"/><rect x="5" y="5" width="14" height="14" rx="1.2" transform="rotate(45 12 12)"/><circle cx="12" cy="12" r="2.6"/></svg></i><div><b>${hizbLabel(i)}</b><span>Rub' ${i.rub} of 8 · Juz ${i.juz}${i.part===0?' · 2nd Hizb of this Juz':''}</span></div><em class="ar">${PARTAR[i.part]}</em></div>`}
+function markersBefore(s,v,noJuzBan){
+  const q=QSTART.get(QK(s,v));if(!q)return'';const i=qInfo(q);if(noJuzBan&&i.part===0)return'';
+  if(i.part===0){const [ar,en]=juzName(i.juz);
+    return `<div class="jz-ban"><div class="jz-n"><small>Juz</small><b>${i.juz}</b></div><div class="jz-t"><b class="ar">${ar}</b><span>${esc(en)} · Para begins</span></div><div class="jz-of">of 30</div></div>`}
+  return `<div class="rub${i.part===2?' hz':''}"><i><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="5" y="5" width="14" height="14" rx="1.2"/><rect x="5" y="5" width="14" height="14" rx="1.2" transform="rotate(45 12 12)"/><circle cx="12" cy="12" r="2.6"/></svg></i><div><b>${QN[i.part]} · Juz ${i.juz}</b><span>${['','One quarter','Half','Three quarters'][i.part]} of this Para completed</span></div><em class="ar">${PARTAR[i.part]}</em></div>`}
 function rukuAfter(s,v){const a=RK[s]||[1],n=META[s-1][4];const k=a.indexOf(v+1);const isEnd=k>0||v===n;if(!isEnd)return'';
   const idx=v===n?a.length:k,start=a[idx-1],len=v-start+1;
-  return `<div class="rk"><span class="rk-ar">ع</span><span>End of Ruku ${idx}${a.length>1?' of '+a.length:''} · ${len} verse${len>1?'s':''}</span></div>`}
+  return `<div class="rk"><span class="rk-ar">ع</span><span>End of Ruku ${idx}${a.length>1?' of '+a.length:''} · ${len} verse${len>1?'s':''} · Juz ${juzOfKey(s*1000+v)} Ruku ${juzRukuNo(s,v)}</span></div>`}
 function sajdaTag(s,v){const w=SJ.get(QK(s,v));return w==null?'':`<span class="sj${w?' w':''}">۩ ${w?'Wajib':'Mustahab'} Sajda</span>`}
 function sajdaNote(s,v){const w=SJ.get(QK(s,v));if(w==null)return'';
   return `<div class="sjn${w?' w':''}"><b>${w?'Wajib (obligatory) Sajda':'Mustahab (recommended) Sajda'}</b><span>${w?'Prostrate immediately on reciting or listening to this verse.':'It is recommended to prostrate on reciting or hearing this verse.'}</span><span class="ur">${w?'اس آیت کی تلاوت کرنے یا سننے پر فوراً سجدہ واجب ہے۔':'اس آیت کی تلاوت یا سننے پر سجدہ مستحب ہے۔'}</span></div>`}
-function posText(s,v){const i=qInfo(quarterOf(s,v));const a=RK[s]||[1];return `<b>Juz ${i.juz}</b><i></i>${hizbLabel(i)}<i></i>Rub' ${i.rub}/8<i></i>Ruku ${rukuOf(s,v)}/${a.length}`}
+function posText(s,v){const i=qInfo(quarterOf(s,v));const a=RK[s]||[1];return `<b>Juz ${i.juz}</b><i></i>${QN[i.part]}<i></i>Ruku ${rukuOf(s,v)}/${a.length}`}
 function setPos(s,v){const b=$('jzBar');if(b){b.innerHTML=(S.ctx&&S.ctx.juz?'<span class="jzmode">Juz mode</span>':'')+posText(s,v);b.hidden=false}}
 
 document.addEventListener('click',e=>{const a=e.target.closest('a[href^="#surah-"]');if(!a)return;
@@ -850,41 +855,67 @@ document.addEventListener('click',e=>{const b=e.target.closest('[data-unmark]');
 /* ---------- Reader ---------- */
 let curS=0,obs=null;
 function isMarked(s,v){return S.marks.some(m=>m[0]===s&&m[1]===v)}
+function verseHTML(s,v,a,noJuzBan){const i=v-1;
+  return `${markersBefore(s,v,noJuzBan)}<div class="verse${SJ.has(QK(s,v))?' sjv'+(SJ.get(QK(s,v))?' sjw':''):''}" id="v${s}_${v}" data-s="${s}" data-v="${v}">
+     <div class="v-tools"><span class="ref">${s}:${v}</span>${sajdaTag(s,v)}
+       <button class="icon-btn mk${isMarked(s,v)?' on':''}" data-a="mark" aria-label="Bookmark">${icon.mark}</button>
+       <button class="icon-btn" data-a="play" aria-label="Play this verse">${icon.play}</button>
+       <button class="icon-btn" data-a="copy" aria-label="Copy">${icon.copy}</button></div>
+     <div class="v-ar">${a} <span class="end">${endMark(v)}</span></div>
+     <div class="v-tr">${esc(TL[s-1][i])}</div><div class="v-en">${esc(EN[s-1][i])}</div><div class="v-ur qur">${esc(UR[s-1][i])}</div>${sajdaNote(s,v)}</div>${rukuAfter(s,v)}`}
+const vEl=(s,v)=>document.getElementById(`v${s}_${v}`);
+let curJ=0;
+function watchVerses(){
+  if(obs)obs.disconnect();
+  if('IntersectionObserver' in window){
+    obs=new IntersectionObserver(es=>{
+      const vis=es.filter(e=>e.isIntersecting).map(e=>[+e.target.dataset.s,+e.target.dataset.v]).sort((a,b)=>a[0]-b[0]||a[1]-b[1]);
+      if(vis.length){const [s,v]=vis[0];curS=s;S.last={s,v};store.set('last',S.last);setPos(s,v)}
+    },{rootMargin:'-70px 0px -60% 0px'});
+    document.querySelectorAll('.verse').forEach(el=>obs.observe(el));
+  }
+}
+function renderJuz(j,s0,v0){
+  curJ=j;S.ctx={juz:j};store.set('ctx',S.ctx);
+  const [ss,sv]=JUZ[j-1],[es,ev]=juzEnd(j),[ar,en]=juzName(j);curS=ss;
+  setHeader(`Juz ${j}<span class="ar">${ar}</span>`,true);$('jumpBtn').style.display='none';
+  const nv=(()=>{let n=0;for(let x=ss;x<=es;x++)n+=(x===es?ev:META[x-1][4])-(x===ss?sv:1)+1;return n})();
+  let h=`<div class="s-head jz-head"><div class="ar">${ar}</div><h2>Juz ${j} · ${esc(en)}</h2><p>${esc(META[ss-1][1])} ${ss}:${sv} – ${esc(META[es-1][1])} ${es}:${ev} · ${nv} verses · ${rukusInJuz(j)} Rukus</p></div>`;
+  h+=readbar('quran',ss).replace('Play surah','Play Juz');
+  for(let x=ss;x<=es;x++){const a=x===ss?sv:1,b=x===es?ev:META[x-1][4],m=META[x-1];
+    if(a===1){h+=`<div class="s-head jz-s"><div class="ar">${m[0]}</div><h2>${x}. ${esc(m[1])}</h2><p>${esc(m[2])} · ${typeName(m[3])} · ${m[4]} verses</p></div>`;if(x!==1&&x!==9)h+=`<div class="bism">${BISMX()}</div>`}
+    else h+=`<div class="jz-cont">${esc(m[1])} <span class="ar">${m[0]}</span> · continued from verse ${a}</div>`;
+    for(let v=a;v<=b;v++)h+=verseHTML(x,v,ARX()[x-1][v-1],x===ss&&v===sv);
+  }
+  h+=`<div class="nav-surah">${j>1?`<a href="#juz-${j-1}">‹ Juz ${j-1}</a>`:''}${j<30?`<a href="#juz-${j+1}">Juz ${j+1} ›</a>`:''}</div>`;
+  app.innerHTML=h;
+  const el=s0?vEl(s0,v0||1):null;if(el){el.scrollIntoView();el.classList.add('flash')}else window.scrollTo(0,0);
+  watchVerses();
+  const st=el?[s0,v0||1]:[ss,sv];S.last={s:st[0],v:st[1]};store.set('last',S.last);setPos(st[0],st[1]);document.body.classList.add('reading');
+  markPlaying();
+}
 function renderSurah(s,v){
-  const m=META[s-1];curS=s;
+  const m=META[s-1];curS=s;curJ=0;if(S.ctx){S.ctx=null;store.set('ctx',null)}
   setHeader(`${m[1]}<span class="ar">${m[0]}</span>`,true);
   let h=`<div class="s-head"><div class="ar">${m[0]}</div><h2>${esc(m[1])}</h2><p>${esc(m[2])} · ${typeName(m[3])} · ${m[4]} verses</p>${favBtn(s,true)}</div>`;
   h+=readbar('quran',s);
   if(s!==1&&s!==9)h+=`<div class="bism">${BISMX()}</div>`;
-  h+=ARX()[s-1].map((a,i)=>`${markersBefore(s,i+1)}<div class="verse${SJ.has(QK(s,i+1))?' sjv'+(SJ.get(QK(s,i+1))?' sjw':''):''}" id="v${i+1}" data-v="${i+1}">
-     <div class="v-tools"><span class="ref">${s}:${i+1}</span>${sajdaTag(s,i+1)}
-       <button class="icon-btn mk${isMarked(s,i+1)?' on':''}" data-a="mark" aria-label="Bookmark">${icon.mark}</button>
-       <button class="icon-btn" data-a="play" aria-label="Play this verse">${icon.play}</button>
-       <button class="icon-btn" data-a="copy" aria-label="Copy">${icon.copy}</button></div>
-     <div class="v-ar">${a} <span class="end">${endMark(i+1)}</span></div>
-     <div class="v-tr">${esc(TL[s-1][i])}</div><div class="v-en">${esc(EN[s-1][i])}</div><div class="v-ur qur">${esc(UR[s-1][i])}</div>${sajdaNote(s,i+1)}</div>${rukuAfter(s,i+1)}`).join('');
+  h+=ARX()[s-1].map((a,i)=>verseHTML(s,i+1,a)).join('');
   h+=`<div class="nav-surah">${s>1?`<a href="#surah-${s-1}">‹ ${esc(META[s-2][1])}</a>`:''}${s<114?`<a href="#surah-${s+1}">${esc(META[s][1])} ›</a>`:''}</div>`;
   app.innerHTML=h;
-  if(v&&v>1){const el=$('v'+v);if(el){el.scrollIntoView();el.classList.add('flash')}}else window.scrollTo(0,0);
-  if(obs)obs.disconnect();
-  if('IntersectionObserver' in window){
-    obs=new IntersectionObserver(es=>{
-      const vis=es.filter(e=>e.isIntersecting).map(e=>+e.target.dataset.v);
-      if(vis.length){S.last={s,v:Math.min(...vis)};store.set('last',S.last);setPos(s,S.last.v)}
-    },{rootMargin:'-70px 0px -60% 0px'});
-    document.querySelectorAll('.verse').forEach(el=>obs.observe(el));
-  }
+  if(v&&v>1){const el=vEl(s,v);if(el){el.scrollIntoView();el.classList.add('flash')}}else window.scrollTo(0,0);
+  watchVerses();
   S.last={s,v:v||1};store.set('last',S.last);setPos(s,v||1);document.body.classList.add('reading');
   markPlaying();
 }
 app.addEventListener('click',e=>{
-  if(e.target.closest('[data-a2=playsurah]')){playVerse(curS,1);return}
+  if(e.target.closest('[data-a2=playsurah]')){if(curJ){const [a,b]=JUZ[curJ-1];playVerse(a,b)}else playVerse(curS,1);return}
   const b=e.target.closest('[data-a]');if(!b)return;
-  const v=+b.closest('.verse').dataset.v,s=curS;
+  const ve=b.closest('.verse'),v=+ve.dataset.v,s=+ve.dataset.s||curS;
   if(b.dataset.a==='play'){if(P.on&&P.s===s&&P.v===v&&!P.el.paused)P.el.pause();else playVerse(s,v);return}
   if(b.dataset.a==='mark'){
     if(isMarked(s,v)){S.marks=S.marks.filter(m=>!(m[0]===s&&m[1]===v));toast('Bookmark removed')}
-    else{const j=S.ctx&&S.ctx.juz?qInfo(quarterOf(s,v)).juz:0;S.marks.push([s,v,Date.now(),j?'j':'s']);toast(j?`Bookmarked ${s}:${v} · via Juz ${j}`:'Bookmarked '+s+':'+v)}
+    else{const j=curJ||0;S.marks.push([s,v,Date.now(),j?'j':'s']);toast(j?`Bookmarked ${s}:${v} · via Juz ${j}`:'Bookmarked '+s+':'+v)}
     store.set('marks',S.marks);b.classList.toggle('on',isMarked(s,v));
   } else {
     const txt=`${ARX()[s-1][v-1]}\n\n${EN[s-1][v-1]}\n\n${UR[s-1][v-1]}\n— Quran ${s}:${v} (${META[s-1][1]})`;
@@ -901,6 +932,8 @@ function route(){
   document.querySelectorAll('#tabbar a').forEach(a=>a.classList.toggle('on',a.dataset.tab===tab));
   if(obs&&tab!=='quran'){obs.disconnect();obs=null}
   if(window.XR&&window.XR(h)){window.scrollTo(0,0);return}
+  const jm=h.match(/^juz-(\d{1,2})(?:-(\d{1,3})-(\d{1,3}))?$/);
+  if(jm&&+jm[1]>=1&&+jm[1]<=30){renderJuz(+jm[1],jm[2]?+jm[2]:0,jm[3]?+jm[3]:0);return}
   if(m&&+m[1]>=1&&+m[1]<=114)renderSurah(+m[1],m[2]?Math.min(+m[2],META[+m[1]-1][4]):0);
   else{renderHome();window.scrollTo(0,0)}
 }
