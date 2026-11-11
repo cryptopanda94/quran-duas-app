@@ -75,7 +75,9 @@
     } catch (e) { console.warn('cancel', e); }
   }
 
-  async function schedule() {
+  let schedQ = Promise.resolve();
+  function schedule() { const r = schedQ.then(scheduleNow, scheduleNow); schedQ = r.catch(() => {}); return r; }
+  async function scheduleNow() {
     const QX = window.QX;
     if (!QX) return;
     await cancelAll();
@@ -104,11 +106,56 @@
     if (prefs().sound && await alarmReady(false)) {
       const items = list.filter((n) => n.schedule.at.getTime() < now + 7 * 864e5)
         .map((n) => ({ at: n.schedule.at.getTime(), title: n.title, sound: soundFor(n.extra.k).file }));
-      try { const r = await WB.alarmSchedule({ items }); if (r && r.scheduled) return; } catch (e) { console.warn('alarms', e); }
+      try {
+        const r = await WB.alarmSchedule({ items });
+        if (r && r.scheduled && r.scheduled >= items.length) {
+          // alarms cover the next 7 days; normal notifications cover days 8-12 so alerts don't stop if the app isn't opened
+          lastMode = 'alarm'; lastAlarms = items.length;
+          const cut = now + 7 * 864e5;
+          // alarm days: also a silent notification at the same moment so it shows in Notification Center
+          const quiet = list.filter((n) => n.schedule.at.getTime() < cut)
+            .map((n) => ({ ...n, sound: 'silent.wav', extra: { ...n.extra, companion: true } }));
+          const rest = list.filter((n) => n.schedule.at.getTime() >= cut);
+          if (quiet.length || rest.length) { try { await LN.schedule({ notifications: [...quiet, ...rest] }); } catch (e) { console.warn('schedule', e); } }
+          return;
+        }
+      } catch (e) { console.warn('alarms', e); }
+      try { await WB.alarmSchedule({ items: [] }); } catch (e) {}   // partial/failed: clear, use notifications
     }
+    lastMode = 'notif'; lastAlarms = 0;
     if (list.length) {
-      try { await LN.schedule({ notifications: list }); } catch (e) { console.warn('schedule', e); }
+      try { await LN.schedule({ notifications: list }); } catch (e) { lastErr = String((e && e.message) || e); console.warn('schedule', e); }
     }
+  }
+  let lastMode = '', lastAlarms = 0, lastErr = '';
+
+  // What's actually set up on this phone (shown on the Prayer screen)
+  async function alertStatus() {
+    const out = { on: alertsOn, perm: '', exact: '', pending: 0, alarms: lastAlarms, mode: lastMode, next: null, err: lastErr, loc: !!(window.QX && QX.LOC) };
+    try { out.perm = (await LN.checkPermissions()).display; } catch (e) {}
+    if (platform === 'android' && LN.checkExactNotificationSetting) { try { out.exact = (await LN.checkExactNotificationSetting()).exact_alarm; } catch (e) {} }
+    try {
+      const p = await LN.getPending(); const ns = (p && p.notifications) || [];
+      out.pending = ns.length;
+      const ts = ns.map((n) => new Date((n.schedule && n.schedule.at) || 0).getTime()).filter((t) => t > Date.now()).sort((a, b) => a - b);
+      if (ts.length) out.next = ts[0];
+    } catch (e) {}
+    return out;
+  }
+
+  // Fire one alert in 10 seconds with the Fajr azan, to check sound/permissions
+  async function testAlert() {
+    try {
+      let p = await LN.checkPermissions();
+      if (p.display !== 'granted') p = await LN.requestPermissions();
+      if (p.display !== 'granted') { toast('Notifications are blocked — allow them in Settings'); return false; }
+      await ensureChannel();
+      const a = alertFor('fajr');
+      await LN.schedule({ notifications: [{ id: 999, title: 'Test · Fajr azan', body: 'If you see this, azan alerts work on this phone.',
+        schedule: { at: new Date(Date.now() + 10000), allowWhileIdle: true }, ...(a.file ? { sound: a.file } : {}), channelId: a.ch, extra: { k: 'fajr', n: 'Fajr' } }] });
+      toast('Test alert in 10 seconds — lock your phone now');
+      return true;
+    } catch (e) { toast('Test failed: ' + ((e && e.message) || e)); return false; }
   }
 
   async function toggleAlerts() {
@@ -348,12 +395,12 @@
     },
   };
 
-  window.NH = { setPref, alertsOn: () => alertsOn, toggleAlerts, refresh, startCompass, getLocation, platform, setIcon, audio };
+  window.NH = { setPref, alertsOn: () => alertsOn, toggleAlerts, alertStatus, testAlert, refresh, startCompass, getLocation, platform, setIcon, audio };
 
   try {
     LN.addListener('localNotificationReceived', (n) => {
       const x = (n && n.extra) || {};
-      if (x.n && window.QX) QX.playAlert(x.n, x.k);   // app is open: play the full chosen azan
+      if (x.n && !x.companion && window.QX) QX.playAlert(x.n, x.k);   // app is open: play the full chosen azan (not when the alarm already rings)
     });
     LN.addListener('localNotificationActionPerformed', (a) => {
       const x = (a && a.notification && a.notification.extra) || {};

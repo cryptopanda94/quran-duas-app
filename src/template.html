@@ -299,7 +299,7 @@ details.merits .men{font-size:var(--en-size);line-height:1.65;white-space:pre-li
 .bm-src.j{background:var(--fill,var(--accent));color:#fff}
 .bm-time{font-size:12px;color:var(--muted);white-space:nowrap}
 .bm-del{position:absolute;top:8px;right:6px;width:30px;height:30px;border-radius:50%;font-size:20px;line-height:1;color:var(--muted)}
-.jzmode{font-size:11px;font-weight:700;padding:2px 8px;border-radius:999px;background:var(--fill,var(--accent));color:#fff;margin-right:2px}
+.jzmode{font-size:11px;font-weight:700;padding:2px 8px;border-radius:999px;background:var(--fill,var(--accent));color:#fff;margin-right:2px}.jzmode.smode{background:var(--accent-soft);color:var(--accent);border:1px solid var(--accent)}.mode-pill{display:inline-block;margin:6px 0 2px;font-size:12px;font-weight:700;padding:3px 10px;border-radius:999px;background:var(--accent-soft);color:var(--accent)}.jz-endc{margin:22px 0 8px;padding:16px;border-radius:16px;background:var(--accent-soft);text-align:center;display:flex;flex-direction:column;gap:6px}.jz-endc span{color:var(--muted);font-size:14px}.jz-endc div{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;margin-top:6px}.jz-endc .btn{text-decoration:none}.jz-cont a{color:var(--accent);font-weight:600}
 .jzbar{max-width:820px;margin:0 auto;padding:0 16px 8px;display:flex;align-items:center;gap:8px;font-size:12.5px;color:var(--muted);white-space:nowrap;overflow-x:auto;font-variant-numeric:tabular-nums;scrollbar-width:none}
 .jzbar[hidden]{display:none}.jzbar::-webkit-scrollbar{display:none}.jzbar b{color:var(--accent);font-weight:700}.jzbar i{width:3px;height:3px;border-radius:50%;background:var(--rule);flex:none}
 body.reading .verse{scroll-margin-top:100px}
@@ -468,6 +468,8 @@ body.playing .wrap{padding-bottom:180px}
 .qs .sfoot .sdone{background:var(--gold);color:#fff;border-radius:12px;padding:11px 22px}
 :is([data-theme=dark],[data-theme=black],[data-theme=maroon]) .qs .sfoot .sdone{color:#1a1408}
 body .ayah-card .v-en{display:block!important}
+.dcat-head{display:flex;align-items:center;justify-content:space-between;margin:18px 2px 10px}.dcat-head b{font-size:19px}.vseg{display:flex;gap:2px;background:var(--line);border-radius:999px;padding:2px}.vseg button{border:0;background:transparent;color:var(--ink);font-size:13px;font-weight:600;padding:6px 12px;border-radius:999px}.vseg button.on{background:var(--fill,var(--accent));color:#fff}.dcats.grid{display:grid;grid-template-columns:repeat(2,1fr);gap:12px}.dcats.list{display:flex;flex-direction:column;gap:8px}.dcat{position:relative;display:flex;text-decoration:none;color:var(--ink);background:var(--card,#fff);border:1px solid var(--line);border-radius:18px;box-shadow:0 2px 8px rgba(0,0,0,.05);transition:transform .15s}.dcat:active{transform:scale(.98)}.dcats.grid .dcat{flex-direction:column;align-items:flex-start;gap:8px;padding:16px 14px 14px;min-height:150px}.dcats.list .dcat{align-items:center;gap:12px;padding:12px 14px}.dcat-m{width:42px;height:42px;flex:none;border-radius:12px;display:grid;place-items:center;background:var(--accent-soft);color:var(--accent);font-family:'Noto Nastaliq Urdu',serif;font-size:20px;line-height:1}.dcat-t{display:flex;flex-direction:column;gap:3px;flex:1;min-width:0}.dcat-t b{font-size:16px}.dcat-t small{color:var(--muted);font-size:12px;line-height:1.35}.dcat-u{font-family:'Noto Nastaliq Urdu',serif;color:var(--accent);font-size:14px;line-height:1.9}.dcats.list .dcat-u{display:none}.dcat-n{position:absolute;top:12px;right:12px;font-size:11px;font-weight:700;color:var(--muted);background:var(--bg);border-radius:999px;padding:2px 8px}.dcats.list .dcat-n{position:static}.dcat-go{display:none;color:var(--muted);font-size:22px}.dcats.list .dcat-go{display:block}
+.lib-logo{width:26px;height:26px;border-radius:7px;vertical-align:-6px;margin-right:8px}
 </style>
 </head>
 <body>
@@ -558,7 +560,7 @@ body .ayah-card .v-en{display:block!important}
 <nav class="tabbar" id="tabbar">
   <a href="#today" data-tab="today"><svg viewBox="0 0 24 24"><path d="M4 11l8-6 8 6v8a1 1 0 0 1-1 1h-4v-6h-6v6H5a1 1 0 0 1-1-1z"/></svg>Today</a>
   <a href="#home" data-tab="quran"><svg viewBox="0 0 24 24"><path d="M4 5.5C6.5 4 9.5 4 12 6c2.5-2 5.5-2 8-.5V19c-2.5-1.5-5.5-1.5-8 .5-2.5-2-5.5-2-8-.5z"/><path d="M12 6v13.5"/></svg>Quran</a>
-  <a href="#duas" data-tab="duas"><svg viewBox="0 0 24 24"><path d="M8 13V6.5a1.5 1.5 0 0 1 3 0V12M11 11V4.5a1.5 1.5 0 0 1 3 0V12M14 11.5V6.5a1.5 1.5 0 0 1 3 0v7.5a6 6 0 0 1-6 6h-.5a5.5 5.5 0 0 1-4.6-2.5L4 14.5a1.5 1.5 0 0 1 2.5-1.6L8 15"/></svg>Duas</a>
+  <a href="#duas" data-tab="duas"><svg viewBox="0 0 24 24"><path d="M8 13V6.5a1.5 1.5 0 0 1 3 0V12M11 11V4.5a1.5 1.5 0 0 1 3 0V12M14 11.5V6.5a1.5 1.5 0 0 1 3 0v7.5a6 6 0 0 1-6 6h-.5a5.5 5.5 0 0 1-4.6-2.5L4 14.5a1.5 1.5 0 0 1 2.5-1.6L8 15"/></svg>Library</a>
   <a href="#prayer" data-tab="prayer"><svg viewBox="0 0 24 24"><circle cx="12" cy="13" r="7"/><path d="M12 9.5V13l2.5 1.5M5 4L2.5 6.5M19 4l2.5 2.5"/></svg>Prayer</a>
   <a href="#qibla" data-tab="qibla"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M15.5 8.5l-2 5-5 2 2-5z"/></svg>Qibla</a>
 </nav>
@@ -830,18 +832,19 @@ const juzName=j=>QM.jn[j-1]||['',''];
 const hizbLabel=i=>QN[i.part];
 function juzEnd(j){if(j<30){let [s,v]=JUZ[j];return v>1?[s,v-1]:[s-1,META[s-2][4]]}return [114,6]}
 function markersBefore(s,v,noJuzBan){
+  if(!curJ)return'';   // surah-wise reading: no Para / quarter markings
   const q=QSTART.get(QK(s,v));if(!q)return'';const i=qInfo(q);if(noJuzBan&&i.part===0)return'';
   if(i.part===0){const [ar,en]=juzName(i.juz);
     return `<div class="jz-ban"><div class="jz-n"><small>Juz</small><b>${i.juz}</b></div><div class="jz-t"><b class="ar">${ar}</b><span>${esc(en)} · Para begins</span></div><div class="jz-of">of 30</div></div>`}
   return `<div class="rub${i.part===2?' hz':''}"><i><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="5" y="5" width="14" height="14" rx="1.2"/><rect x="5" y="5" width="14" height="14" rx="1.2" transform="rotate(45 12 12)"/><circle cx="12" cy="12" r="2.6"/></svg></i><div><b>${QN[i.part]} · Juz ${i.juz}</b><span>${['','One quarter','Half','Three quarters'][i.part]} of this Para completed</span></div><em class="ar">${PARTAR[i.part]}</em></div>`}
 function rukuAfter(s,v){const a=RK[s]||[1],n=META[s-1][4];const k=a.indexOf(v+1);const isEnd=k>0||v===n;if(!isEnd)return'';
   const idx=v===n?a.length:k,start=a[idx-1],len=v-start+1;
-  return `<div class="rk"><span class="rk-ar">ع</span><span>End of Ruku ${idx}${a.length>1?' of '+a.length:''} · ${len} verse${len>1?'s':''} · Juz ${juzOfKey(s*1000+v)} Ruku ${juzRukuNo(s,v)}</span></div>`}
+  return `<div class="rk"><span class="rk-ar">ع</span><span>End of Ruku ${idx}${a.length>1?' of '+a.length:''} · ${len} verse${len>1?'s':''}${curJ?` · Juz ${juzOfKey(s*1000+v)} Ruku ${juzRukuNo(s,v)}`:''}</span></div>`}
 function sajdaTag(s,v){const w=SJ.get(QK(s,v));return w==null?'':`<span class="sj${w?' w':''}">۩ ${w?'Wajib':'Mustahab'} Sajda</span>`}
 function sajdaNote(s,v){const w=SJ.get(QK(s,v));if(w==null)return'';
   return `<div class="sjn${w?' w':''}"><b>${w?'Wajib (obligatory) Sajda':'Mustahab (recommended) Sajda'}</b><span>${w?'Prostrate immediately on reciting or listening to this verse.':'It is recommended to prostrate on reciting or hearing this verse.'}</span><span class="ur">${w?'اس آیت کی تلاوت کرنے یا سننے پر فوراً سجدہ واجب ہے۔':'اس آیت کی تلاوت یا سننے پر سجدہ مستحب ہے۔'}</span></div>`}
-function posText(s,v){const i=qInfo(quarterOf(s,v));const a=RK[s]||[1];return `<b>Juz ${i.juz}</b><i></i>${QN[i.part]}<i></i>Ruku ${rukuOf(s,v)}/${a.length}`}
-function setPos(s,v){const b=$('jzBar');if(b){b.innerHTML=(S.ctx&&S.ctx.juz?'<span class="jzmode">Juz mode</span>':'')+posText(s,v);b.hidden=false}}
+function posText(s,v){const i=qInfo(quarterOf(s,v));const a=RK[s]||[1];if(!curJ)return `<b>${esc(META[s-1][1])}</b><i></i>Ruku ${rukuOf(s,v)}/${a.length}`;return `<b>Juz ${i.juz}</b><i></i>${QN[i.part]}<i></i>Ruku ${rukuOf(s,v)}/${a.length}`}
+function setPos(s,v){const b=$('jzBar');if(b){b.innerHTML=(curJ?'<span class="jzmode">Juz mode</span>':'<span class="jzmode smode">Surah mode</span>')+posText(s,v);b.hidden=false}}
 
 document.addEventListener('click',e=>{const a=e.target.closest('a[href^="#surah-"]');if(!a)return;
   if(a.closest('.continue')&&!a.closest('.jzcont'))return;
@@ -880,13 +883,14 @@ function renderJuz(j,s0,v0){
   const [ss,sv]=JUZ[j-1],[es,ev]=juzEnd(j),[ar,en]=juzName(j);curS=ss;
   setHeader(`Juz ${j}<span class="ar">${ar}</span>`,true);$('jumpBtn').style.display='none';
   const nv=(()=>{let n=0;for(let x=ss;x<=es;x++)n+=(x===es?ev:META[x-1][4])-(x===ss?sv:1)+1;return n})();
-  let h=`<div class="s-head jz-head"><div class="ar">${ar}</div><h2>Juz ${j} · ${esc(en)}</h2><p>${esc(META[ss-1][1])} ${ss}:${sv} – ${esc(META[es-1][1])} ${es}:${ev} · ${nv} verses · ${rukusInJuz(j)} Rukus</p></div>`;
+  let h=`<div class="s-head jz-head"><div class="ar">${ar}</div><h2>Juz ${j} · ${esc(en)}</h2><span class="mode-pill">Juz mode</span><p>${esc(META[ss-1][1])} ${ss}:${sv} – ${esc(META[es-1][1])} ${es}:${ev} · ${nv} verses · ${rukusInJuz(j)} Rukus</p></div>`;
   h+=readbar('quran',ss).replace('Play surah','Play Juz');
   for(let x=ss;x<=es;x++){const a=x===ss?sv:1,b=x===es?ev:META[x-1][4],m=META[x-1];
     if(a===1){h+=`<div class="s-head jz-s"><div class="ar">${m[0]}</div><h2>${x}. ${esc(m[1])}</h2><p>${esc(m[2])} · ${typeName(m[3])} · ${m[4]} verses</p></div>`;if(x!==1&&x!==9)h+=`<div class="bism">${BISMX()}</div>`}
-    else h+=`<div class="jz-cont">${esc(m[1])} <span class="ar">${m[0]}</span> · continued from verse ${a}</div>`;
+    else h+=`<div class="jz-cont">${esc(m[1])} <span class="ar">${m[0]}</span> · continued from verse ${a} · <a href="#surah-${x}">Read full surah</a></div>`;
     for(let v=a;v<=b;v++)h+=verseHTML(x,v,ARX()[x-1][v-1],x===ss&&v===sv);
   }
+  if(j<30&&ev<META[es-1][4]){const m=META[es-1];h+=`<div class="jz-endc"><b>Juz ${j} ends here, at ${esc(m[1])} ${es}:${ev}</b><span>${esc(m[1])} continues from verse ${ev+1} in Juz ${j+1}.</span><div><a class="btn pri" href="#juz-${j+1}">Continue in Juz ${j+1} ›</a><a class="btn" href="#surah-${es}-${ev+1}">Read ${esc(m[1])} in Surah mode</a></div></div>`}
   h+=`<div class="nav-surah">${j>1?`<a href="#juz-${j-1}">‹ Juz ${j-1}</a>`:''}${j<30?`<a href="#juz-${j+1}">Juz ${j+1} ›</a>`:''}</div>`;
   app.innerHTML=h;
   const el=s0?vEl(s0,v0||1):null;if(el){el.scrollIntoView();el.classList.add('flash')}else window.scrollTo(0,0);
@@ -897,8 +901,9 @@ function renderJuz(j,s0,v0){
 function renderSurah(s,v){
   const m=META[s-1];curS=s;curJ=0;if(S.ctx){S.ctx=null;store.set('ctx',null)}
   setHeader(`${m[1]}<span class="ar">${m[0]}</span>`,true);
-  let h=`<div class="s-head"><div class="ar">${m[0]}</div><h2>${esc(m[1])}</h2><p>${esc(m[2])} · ${typeName(m[3])} · ${m[4]} verses</p>${favBtn(s,true)}</div>`;
+  let h=`<div class="s-head"><div class="ar">${m[0]}</div><h2>${esc(m[1])}</h2><p>${esc(m[2])} · ${typeName(m[3])} · ${m[4]} verses</p><span class="mode-pill">Surah mode · complete surah</span>${favBtn(s,true)}</div>`;
   h+=readbar('quran',s);
+  {const ab=QM.ab&&QM.ab[s];if(ab&&window.QX&&QX.meritsHTML)h+=QX.meritsHTML({merits:ab[0]+'\n\n'+ab[1],meritsUr:ab[2]+'\n\n'+ab[3]},'surah-'+s)}
   if(s!==1&&s!==9)h+=`<div class="bism">${BISMX()}</div>`;
   h+=ARX()[s-1].map((a,i)=>verseHTML(s,i+1,a)).join('');
   h+=`<div class="nav-surah">${s>1?`<a href="#surah-${s-1}">‹ ${esc(META[s-2][1])}</a>`:''}${s<114?`<a href="#surah-${s+1}">${esc(META[s][1])} ›</a>`:''}</div>`;
@@ -957,7 +962,7 @@ function ctxSettings(){drawOff();
   $('enLvl').closest('.srow').style.display=(av.en||av.ur)?'':'none';
 }
 function closeSheets(){document.querySelectorAll('.sheet,.sheet-bg').forEach(x=>x.classList.remove('open'))}
-$('backBtn').onclick=()=>{const c=location.hash.slice(1);location.hash=/^dua-/.test(c)?'duas':c==='calendar'?'today':'home'};
+$('backBtn').onclick=()=>{const c=location.hash.slice(1);let t='home';if(/^dua-/.test(c)){const d=LISTX().find(x=>x.id===c.slice(4));t=d&&d.grp?'duas-'+d.grp:'duas'}else if(/^duas-/.test(c))t='duas';else if(c==='calendar')t='today';location.hash=t};
 $('setBtn').onclick=()=>openSheet('setSheet');
 $('jumpBtn').onclick=()=>{$('jumpLbl').textContent=`Verse (1–${META[curS-1][4]})`;$('jumpIn').max=META[curS-1][4];$('jumpIn').value='';openSheet('jumpSheet');setTimeout(()=>$('jumpIn').focus(),50)};
 $('jumpForm').onsubmit=e=>{e.preventDefault();const v=Math.max(1,Math.min(+$('jumpIn').value||1,META[curS-1][4]));closeSheets();const el=$('v'+v);if(el){el.scrollIntoView({behavior:'smooth'});el.classList.remove('flash');void el.offsetWidth;el.classList.add('flash')}};
