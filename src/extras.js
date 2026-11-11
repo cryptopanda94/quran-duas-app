@@ -25,6 +25,8 @@ const LIST=[
   {id:'dua-safar',key:'N_dua-safar',grp:'d',sub:'Travel duas: setting out, boarding, arriving, returning',mark:'س'},
   {id:'munajat-safar',key:'N_munajat-safar',grp:'d',sub:'Imam Muhammad Taqi (a.s.) · before a journey',mark:'م'},
   {id:'duas-leaving-home',key:'N_leaving-home',grp:'d',sub:'Eight duas from Baqiyat al-Salihat',mark:'گ'},
+  {id:'taqibaat-general',key:'T_taqibaat_general',grp:'t',sub:'After every obligatory prayer',mark:'ت'},
+  {id:'taqibaat-fajr-1',key:'T_taqibaat_fajr_1',grp:'t',sub:'After the Fajr prayer',mark:'ت'},
   {id:'taqibaat-fajr-2',key:'T_taqibaat_fajr_2',grp:'t',sub:'After the Fajr prayer',mark:'ت'},
   {id:'nafilah-fajr',key:'T_nafilah_fajr',grp:'t',sub:'With the Nafilah of Fajr',mark:'ت'},
   {id:'taqibaat-zuhr',key:'T_taqibaat_zuhr',grp:'t',sub:'After the Zuhr prayer',mark:'ت'},
