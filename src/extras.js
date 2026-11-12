@@ -72,6 +72,10 @@ const LIST=[
   {id:'ziyarat-kazim-jawad',key:'Z_kazim_jawad',grp:'z',sub:'Imam al-Kazim & Imam al-Jawad (a.s.)',mark:'ك'},
   {id:'ziyarat-narjis',key:'Z_narjis',grp:'z',sub:'Mother of Imam al-Mahdi (a.t.f.s.) · Samarra',mark:'ن'},
   {id:'ziyarat-abd-azim',key:'Z_abd_azim',grp:'z',sub:'Shah Abd al-Azim al-Hasani (a.s.) · Rayy',mark:'ع'},
+  {id:'salawat-prophet',key:'Z_salawat_prophet',grp:'z',sub:'Salawat upon the Holy Prophet (s.a.w.)',mark:'ص'},
+  {id:'salawat-ali',key:'Z_salawat_ali',grp:'z',sub:'Salawat upon the Commander of the Faithful (a.s.)',mark:'ع'},
+  {id:'salawat-fatima',key:'Z_salawat_fatima',grp:'z',sub:'Salawat upon Lady Fatima al-Zahra (s.a.)',mark:'ف'},
+  {id:'salawat-hasan-husayn',key:'Z_salawat_hh',grp:'z',sub:'Salawat upon Imam Hasan and Imam Husayn (a.s.)',mark:'ح'},
   {id:'salawat-mahdi',key:'Z_salawat_mahdi',grp:'z',sub:'Salawat upon Imam al-Mahdi (a.t.f.s.)',mark:'ص'},
   {id:'ziyarat-hakimah',key:'Z_hakimah',grp:'z',sub:'Daughter of Imam al-Jawad (a.s.) · Samarra',mark:'ح'},
   {id:'ziyarat-nahiya',key:'Z_nahiya',grp:'z',sub:'Ziyarat of Imam Husain (a.s.) by Imam al-Mahdi (a.t.f.s.)',mark:'ن'},
@@ -437,6 +441,7 @@ function renderDua(id){
   const d=LIST.find(x=>x.id===id); if(!d) return false;
   setHeader(`${esc(d.name)}`,true); noJump();
   let h=`<div class="s-head"><div class="ar" style="font-family:'Noto Nastaliq Urdu',serif;font-size:30px;line-height:2.2">${d.ur}</div><h2>${esc(d.name)}</h2><p>${esc(d.sub)}</p>${dfavBtn(d.id,true)}</div>`;
+  if(d.id==='hadees-kisa')h+=`<div class="kisa-aud"><b>Listen · Hadees-e-Kisa</b><small>Recitation by Ali Fani</small><audio controls preload="none" src="hadees_kisa.mp3"></audio></div>`;
   if(d.user){
     const U=UD[d.user];h+=readbar('dua',null);
     if(NLG.includes(d.grp)&&U.items.some(x=>x.note&&x.ur))h+=nlSeg();
