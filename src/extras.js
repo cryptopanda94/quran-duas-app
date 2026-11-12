@@ -60,6 +60,10 @@ const LIST=[
   {id:'ziyarat-waritha',user:'waritha',grp:'z',sub:'With Ali Akbar, Shuhada, Abbas, Imam Reza & Imam Zamana (a.s.)',mark:'و'},
   {id:'ziyarat-warith',key:'G6',grp:'z',sub:'Mafatih al-Jinan text, line-by-line Urdu',mark:'و'},
   {id:'ziyarat-aale-yasin',key:'Z_aale_yasin',grp:'z',sub:'Imam al-Mahdi (a.s.), line-by-line Urdu',mark:'ي'},
+  {id:'ziyarat-hadi-askari',key:'Z_hadi_askari',grp:'z',sub:'Samarra · Imam al-Hadi & Imam al-Askari (a.s.)',mark:'س'},
+  {id:'ziyarat-mahdi-fajr',key:'Z_mahdi_fajr',grp:'z',sub:'Imam al-Mahdi (a.t.f.s.) · after Fajr',mark:'ف'},
+  {id:'ziyarat-jawad',key:'Z_jawad_1',grp:'z',sub:'Imam Muhammad al-Jawad (a.s.) · Kazimayn',mark:'ج'},
+  {id:'ziyarat-kazim-jawad',key:'Z_kazim_jawad',grp:'z',sub:'Imam al-Kazim & Imam al-Jawad (a.s.)',mark:'ك'},
   {id:'ziyarat-nahiya',key:'Z_nahiya',grp:'z',sub:'Ziyarat of Imam Husain (a.s.) by Imam al-Mahdi (a.t.f.s.)',mark:'ن'},
   
   {id:'ziyarat-jamia-sagheera',key:'Z_jamia_saghira',grp:'z',sub:'Short ziyarat for all the Imams (a.s.)',mark:'ج'},
