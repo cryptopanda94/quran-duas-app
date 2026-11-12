@@ -60,6 +60,8 @@ const LIST=[
   {id:'ziyarat-waritha',user:'waritha',grp:'z',sub:'With Ali Akbar, Shuhada, Abbas, Imam Reza & Imam Zamana (a.s.)',mark:'و'},
   {id:'ziyarat-warith',key:'G6',grp:'z',sub:'Mafatih al-Jinan text, line-by-line Urdu',mark:'و'},
   {id:'ziyarat-aale-yasin',key:'Z_aale_yasin',grp:'z',sub:'Imam al-Mahdi (a.s.), line-by-line Urdu',mark:'ي'},
+  {id:'ziyarat-hadi',key:'Z_hadi',grp:'z',sub:'Imam Ali al-Hadi (a.s.) · Samarra',mark:'ه'},
+  {id:'ziyarat-askari',key:'Z_askari',grp:'z',sub:'Imam Hasan al-Askari (a.s.) · Samarra',mark:'ع'},
   {id:'ziyarat-hadi-askari',key:'Z_hadi_askari',grp:'z',sub:'Samarra · Imam al-Hadi & Imam al-Askari (a.s.)',mark:'س'},
   {id:'ziyarat-mahdi-fajr',key:'Z_mahdi_fajr',grp:'z',sub:'Imam al-Mahdi (a.t.f.s.) · after Fajr',mark:'ف'},
   {id:'ziyarat-jawad',key:'Z_jawad_1',grp:'z',sub:'Imam Muhammad al-Jawad (a.s.) · Kazimayn',mark:'ج'},
