@@ -59,6 +59,7 @@ const LIST=[
   {id:'ziyarat-ashura',key:'G4',grp:'z',sub:'Ziyarat of Imam Husain (a.s.)',mark:'ع'},
   {id:'ziyarat-waritha',user:'waritha',grp:'z',sub:'With Ali Akbar, Shuhada, Abbas, Imam Reza & Imam Zamana (a.s.)',mark:'و'},
   {id:'ziyarat-warith',key:'G6',grp:'z',sub:'Mafatih al-Jinan text, line-by-line Urdu',mark:'و'},
+  {id:'ziyarat-aale-yasin',key:'Z_aale_yasin',grp:'z',sub:'Imam al-Mahdi (a.s.), line-by-line Urdu',mark:'ي'},
   {id:'ziyarat-nahiya',key:'Z_nahiya',grp:'z',sub:'Ziyarat of Imam Husain (a.s.) by Imam al-Mahdi (a.t.f.s.)',mark:'ن'},
   {id:'ziyarat-aale-yasin',user:'aleyasin',grp:'z',sub:'Ziyarat of Imam al-Mahdi (a.t.f.s.)',mark:'ی'},
   {id:'ziyarat-jamia-sagheera',key:'Z_jamia_saghira',grp:'z',sub:'Short ziyarat for all the Imams (a.s.)',mark:'ج'},
