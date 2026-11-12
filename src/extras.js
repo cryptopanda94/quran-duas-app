@@ -64,6 +64,8 @@ const LIST=[
   {id:'ziyarat-mahdi-fajr',key:'Z_mahdi_fajr',grp:'z',sub:'Imam al-Mahdi (a.t.f.s.) · after Fajr',mark:'ف'},
   {id:'ziyarat-jawad',key:'Z_jawad_1',grp:'z',sub:'Imam Muhammad al-Jawad (a.s.) · Kazimayn',mark:'ج'},
   {id:'ziyarat-kazim-jawad',key:'Z_kazim_jawad',grp:'z',sub:'Imam al-Kazim & Imam al-Jawad (a.s.)',mark:'ك'},
+  {id:'ziyarat-narjis',key:'Z_narjis',grp:'z',sub:'Mother of Imam al-Mahdi (a.t.f.s.) · Samarra',mark:'ن'},
+  {id:'ziyarat-hakimah',key:'Z_hakimah',grp:'z',sub:'Daughter of Imam al-Jawad (a.s.) · Samarra',mark:'ح'},
   {id:'ziyarat-nahiya',key:'Z_nahiya',grp:'z',sub:'Ziyarat of Imam Husain (a.s.) by Imam al-Mahdi (a.t.f.s.)',mark:'ن'},
   
   {id:'ziyarat-jamia-sagheera',key:'Z_jamia_saghira',grp:'z',sub:'Short ziyarat for all the Imams (a.s.)',mark:'ج'},
