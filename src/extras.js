@@ -71,6 +71,8 @@ const LIST=[
   {id:'ziyarat-kazim',key:'Z_kazim',grp:'z',sub:'Imam Musa al-Kazim (a.s.) · Kazimayn',mark:'م'},
   {id:'ziyarat-kazim-jawad',key:'Z_kazim_jawad',grp:'z',sub:'Imam al-Kazim & Imam al-Jawad (a.s.)',mark:'ك'},
   {id:'ziyarat-narjis',key:'Z_narjis',grp:'z',sub:'Mother of Imam al-Mahdi (a.t.f.s.) · Samarra',mark:'ن'},
+  {id:'ziyarat-abd-azim',key:'Z_abd_azim',grp:'z',sub:'Shah Abd al-Azim al-Hasani (a.s.) · Rayy',mark:'ع'},
+  {id:'salawat-mahdi',key:'Z_salawat_mahdi',grp:'z',sub:'Salawat upon Imam al-Mahdi (a.t.f.s.)',mark:'ص'},
   {id:'ziyarat-hakimah',key:'Z_hakimah',grp:'z',sub:'Daughter of Imam al-Jawad (a.s.) · Samarra',mark:'ح'},
   {id:'ziyarat-nahiya',key:'Z_nahiya',grp:'z',sub:'Ziyarat of Imam Husain (a.s.) by Imam al-Mahdi (a.t.f.s.)',mark:'ن'},
   
