@@ -449,7 +449,7 @@ body.playing .wrap{padding-bottom:180px}
 .qs .clist i{width:24px;height:24px;border-radius:6px;border:2px solid var(--line);flex:none;display:grid;place-items:center}
 .qs .clist button.on i{background:var(--gold);border-color:var(--gold)}
 .qs .clist button.on i::after{content:"";width:6px;height:11px;border:solid var(--card);border-width:0 2.5px 2.5px 0;transform:translateY(-1px) rotate(45deg)}
-.qs.ctx-dua :is([data-lang],.shead-rec,#recList){display:none!important}
+.qs.ctx-dua :is([data-lang],.shead-rec,#recList,#recLinks){display:none!important}
 .qs .themes{margin-top:8px;display:grid;grid-template-columns:repeat(6,1fr);gap:12px 2px}
 .qs .themes .sw{flex:1;min-width:0;font-size:11px}
 .qs .themes .sw i{width:40px;height:40px;font-size:13px}
@@ -457,6 +457,7 @@ body.playing .wrap{padding-bottom:180px}
 .qs .rlist{display:flex;flex-direction:column;gap:8px;margin:4px 0 6px}
 .qs .rlist button{display:flex;align-items:center;gap:14px;min-height:60px;padding:10px 16px;border-radius:14px;background:var(--bg);text-align:left;color:var(--ink);border:2px solid transparent}
 .qs .rlist button.on{border-color:var(--gold)}
+.qs .rlink a{display:flex;align-items:center;min-height:60px;padding:10px 16px;border-radius:14px;background:var(--bg);color:var(--ink);text-decoration:none;border:2px solid transparent}.qs .rlink a::after{content:"↗";margin-left:auto;color:var(--muted);font-size:18px}
 .offa{margin:10px 0 4px;padding:12px 14px;border-radius:14px;background:var(--bg)}
 .offa .ot{display:flex;justify-content:space-between;align-items:center;gap:10px;font-size:14px}
 .offa .ot b{font-size:15px}.offa small{display:block;color:var(--muted);font-size:12px;margin-top:2px}
@@ -501,6 +502,11 @@ body .ayah-card .v-en{display:block!important}
     <div class="srow"><span>Lines under Arabic<small class="ssub">Ruled lines like a printed mushaf</small></span><button class="switch" id="ruleSw" aria-label="Lines under Arabic"></button></div>
     <div class="shead shead-rec">Reciter</div>
     <div class="rlist" id="recList"></div>
+    <div class="shead shead-rec">Listen online · Abdul Basit</div>
+    <div class="rlist rlink" id="recLinks">
+      <a href="https://en.islamway.net/recitation/2140" target="_blank" rel="noopener"><span><b>Abdul Basit – Mujawwad</b><small>Arabic only · opens Islamway</small></span></a>
+      <a href="https://en.islamway.net/recitation/71589" target="_blank" rel="noopener"><span><b>Abdul Basit – Arabic with Urdu translation</b><small>Surah by surah · opens Islamway</small></span></a>
+    </div>
     <div id="offAud" class="offa" hidden></div>
   </div>
   <div class="spane" data-p="tr">
