@@ -83,6 +83,8 @@ const LIST=[
   {id:'farewell-two-imams',key:'Z_farewell_two',grp:'z',sub:'Bidding farewell to the two Imams (a.s.)',mark:'و'},
   {id:'farewell-kazim-jawad',key:'Z_farewell_kj',grp:'z',sub:'Bidding farewell to Imam Kazim & Imam Jawad (a.s.)',mark:'و'},
   {id:'ziyarat-four-deputies',key:'Z_deputies',grp:'z',sub:'The four special deputies of Imam al-Mahdi (a.t.f.s.)',mark:'ن'},
+  {id:'ziyarat-sayyid-muhammad',key:'Z_sayyid_muhammad',grp:'z',sub:'Son of Imam Ali al-Hadi (a.s.) · Balad',mark:'س'},
+  {id:'ziyarat-graves',key:'Z_graves',grp:'z',sub:'Visiting the graves of the faithful believers',mark:'ق'},
   {id:'salawat-mahdi',key:'Z_salawat_mahdi',grp:'z',sub:'Salawat upon Imam al-Mahdi (a.t.f.s.)',mark:'ص'},
   {id:'ziyarat-hakimah',key:'Z_hakimah',grp:'z',sub:'Daughter of Imam al-Jawad (a.s.) · Samarra',mark:'ح'},
   {id:'ziyarat-nahiya',key:'Z_nahiya',grp:'z',sub:'Ziyarat of Imam Husain (a.s.) by Imam al-Mahdi (a.t.f.s.)',mark:'ن'},
