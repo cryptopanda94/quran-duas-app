@@ -70,7 +70,6 @@ copyFileSync(join(src, 'native.js'), join(www, 'native.js'));
   else { console.warn('! capacitor.js not found (run npm install) — the native layer will not start'); writeFileSync(join(www, 'capacitor.js'), '/* missing */'); }
 }
 copyFileSync(join(src, 'azan.mp3'), join(www, 'azan.mp3'));
-copyFileSync(join(src, 'hadees_kisa.mp3'), join(www, 'hadees_kisa.mp3'));
 for (const f of readdirSync(src)) if (/^azan_.+\.mp3$/.test(f)) copyFileSync(join(src, f), join(www, f));   // full azans
 for (const f of readdirSync(join(root, 'native', 'shared'))) if (f.endsWith('.wav'))                     // iOS notification sound sources
   copyFileSync(join(root, 'native', 'shared', f), join(www, f));

@@ -441,7 +441,6 @@ function renderDua(id){
   const d=LIST.find(x=>x.id===id); if(!d) return false;
   setHeader(`${esc(d.name)}`,true); noJump();
   let h=`<div class="s-head"><div class="ar" style="font-family:'Noto Nastaliq Urdu',serif;font-size:30px;line-height:2.2">${d.ur}</div><h2>${esc(d.name)}</h2><p>${esc(d.sub)}</p>${dfavBtn(d.id,true)}</div>`;
-  if(d.id==='hadees-kisa')h+=`<div class="kisa-aud"><b>Listen · Hadees-e-Kisa</b><small>Recitation by Ali Fani</small><audio controls preload="none" src="hadees_kisa.mp3"></audio></div>`;
   if(d.user){
     const U=UD[d.user];h+=readbar('dua',null);
     if(NLG.includes(d.grp)&&U.items.some(x=>x.note&&x.ur))h+=nlSeg();
