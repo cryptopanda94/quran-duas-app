@@ -87,7 +87,7 @@ const LIST=[
   {id:'ziyarat-graves',key:'Z_graves',grp:'z',sub:'Visiting the graves of the faithful believers',mark:'ق'},
   {id:'ziyarat-salman',key:'Z_salman',grp:'z',sub:'Salman al-Farsi (r.a.) · al-Mada\'in',mark:'س'},
   {id:'dua-after-ziyarah',key:'Z_after_ziyarah',grp:'z',sub:'To recite at any shrine after the ziyarah',mark:'د'},
-  {id:'ziyarat-ghadir-short',key:'Z_ghadir_2',grp:'z',sub:'Short form · Day of Ghadir',mark:'غ'},{id:'jamia-fifth',key:'Z_jamia_5',grp:'z',sub:'Fifth comprehensive · closing section',mark:'ج'},{id:'salawat-mahdi',key:'Z_salawat_mahdi',grp:'z',sub:'Salawat upon Imam al-Mahdi (a.t.f.s.)',mark:'ص'},
+  {id:'ziyarat-ghadir-long',key:'Z_ghadir_long',grp:'z',sub:'Long form · Imam al-Hadi (a.s.) · Day of Ghadir',mark:'غ'},{id:'ziyarat-ghadir-short',key:'Z_ghadir_2',grp:'z',sub:'Short form · Day of Ghadir',mark:'غ'},{id:'jamia-fifth',key:'Z_jamia_5',grp:'z',sub:'Fifth comprehensive · closing section',mark:'ج'},{id:'salawat-mahdi',key:'Z_salawat_mahdi',grp:'z',sub:'Salawat upon Imam al-Mahdi (a.t.f.s.)',mark:'ص'},
   {id:'ziyarat-hakimah',key:'Z_hakimah',grp:'z',sub:'Daughter of Imam al-Jawad (a.s.) · Samarra',mark:'ح'},
   {id:'ziyarat-nahiya',key:'Z_nahiya',grp:'z',sub:'Ziyarat of Imam Husain (a.s.) by Imam al-Mahdi (a.t.f.s.)',mark:'ن'},
   
