@@ -17,6 +17,9 @@ const AUDIO_BASE = 'https://cryptopanda94.github.io/quran-duas-app/audio/';
 const audsPath = join(src, 'data', 'aud_sudais.json');
 const auds = existsSync(audsPath) ? JSON.stringify(JSON.parse(readFileSync(audsPath, 'utf8')).map((x) => ({ p: x.p.map(([n, c]) => [AUDIO_BASE + n, c]), a: x.a }))) : 'null';
 const audbPath = join(src, 'data', 'aud_abdulbasit.json');
+const audmPath = join(src, 'data', 'aud_mujawwad.json');
+const MUJ_BASE = 'https://cryptopanda94.github.io/abdulbasit-mujawwad/audio/';
+const audm = existsSync(audmPath) ? JSON.stringify(JSON.parse(readFileSync(audmPath, 'utf8')).map((x) => ({ p: x.p.map(([n, c]) => [MUJ_BASE + n, c]), a: x.a }))) : 'null';
 const audb = existsSync(audbPath) ? JSON.stringify(JSON.parse(readFileSync(audbPath, 'utf8')).map((x) => ({ p: x.p.map(([n, c]) => [AUDIO_BASE + n, c]), a: x.a }))) : 'null';
 const aud = JSON.stringify(JSON.parse(rd('data/aud16.json')).map((x) => ({ p: x.p.map(([n, c]) => [AUDIO_BASE + n, c]), a: x.a })));
 
@@ -49,13 +52,14 @@ t = t
   .replace('__AUD__', aud)
   .replace('__AUDS__', auds)
   .replace('__AUDB__', audb)
+  .replace('__AUDM__', audm)
   .replace('__DUAS__', json('data/duas.json'))
   .replace('__UDUAS__', json('data/userduas.json'))
   .replace('__CITIES__', json('data/cities.json'))
   .replace('__EVENTS__', json('data/events.json'))
   .replace('__EXTRAS__', rd('extras.js'));
 
-for (const p of ['__DATA__', '__ENQ__', '__URX__', '__TL__', '__QMARKS__', '__AUD__', '__AUDS__', '__AUDB__', '__DUAS__', '__UDUAS__', '__CITIES__', '__EVENTS__', '__EXTRAS__', '__FONT__', '__AZAN__'])
+for (const p of ['__DATA__', '__ENQ__', '__URX__', '__TL__', '__QMARKS__', '__AUD__', '__AUDS__', '__AUDB__', '__AUDM__', '__DUAS__', '__UDUAS__', '__CITIES__', '__EVENTS__', '__EXTRAS__', '__FONT__', '__AZAN__'])
   if (t.includes(p)) throw new Error('build-web: placeholder left unfilled: ' + p);
 
 rmSync(www, { recursive: true, force: true });

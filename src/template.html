@@ -336,7 +336,7 @@ body.reading .verse{scroll-margin-top:100px}
 .np-art span{font-family:IndoPak,serif;color:#fff;font-size:24px;line-height:1.6;direction:rtl;padding:0 6px;text-align:center}
 .np-t{min-width:0;display:flex;flex-direction:column}.np-t small{font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);font-weight:600}
 .np-t b{font-size:21px;line-height:1.25;margin:2px 0}.np-t span{font-size:13.5px;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.np-prog{height:5px;border-radius:9px;background:var(--line);margin:18px 2px 6px;overflow:hidden}.np-prog i{display:block;height:100%;width:0;border-radius:9px;background:var(--fill,var(--accent));transition:width .3s}
+.np-prog{position:relative;height:5px;border-radius:9px;background:var(--line);margin:22px 2px 10px}.np-prog #npSeek{position:absolute;left:-8px;right:-8px;top:-12px;width:calc(100% + 16px);height:29px;margin:0;opacity:0;cursor:pointer;touch-action:none}.np-prog::after{content:'';position:absolute;top:50%;left:var(--kn,0%);width:16px;height:16px;margin:-8px 0 0 -8px;border-radius:50%;background:var(--fill,var(--accent));box-shadow:0 1px 4px rgba(0,0,0,.25);pointer-events:none}.np-prog i{display:block;height:100%;width:0;border-radius:9px;background:var(--fill,var(--accent));transition:width .3s}
 .np-pl{display:flex;justify-content:space-between;font-size:12px;color:var(--muted);margin:0 2px;font-variant-numeric:tabular-nums}
 .np-ctl{display:flex;align-items:center;justify-content:center;gap:34px;margin:12px 0 8px}
 .np-ctl button{width:48px;height:48px;border-radius:50%;display:grid;place-items:center;color:var(--ink)}
@@ -497,9 +497,8 @@ body .ayah-card .v-en{display:block!important}
     <div class="srow"><span>Lines under Arabic<small class="ssub">Ruled lines like a printed mushaf</small></span><button class="switch" id="ruleSw" aria-label="Lines under Arabic"></button></div>
     <div class="shead shead-rec">Reciter</div>
     <div class="rlist" id="recList"></div>
-    <div class="shead shead-rec">Listen online · Abdul Basit</div>
+    <div class="shead shead-rec">Listen online · Abdul Basit with Urdu</div>
     <div class="rlist rlink" id="recLinks">
-      <a href="https://en.islamway.net/recitation/2140" target="_blank" rel="noopener"><span><b>Abdul Basit – Mujawwad</b><small>Arabic only · opens Islamway</small></span></a>
       <a href="https://en.islamway.net/recitation/71589" target="_blank" rel="noopener"><span><b>Abdul Basit – Arabic with Urdu translation</b><small>Surah by surah · opens Islamway</small></span></a>
     </div>
     <div id="offAud" class="offa" hidden></div>
@@ -536,7 +535,7 @@ body .ayah-card .v-en{display:block!important}
   <div class="np-grab"></div>
   <div class="np-head"><div class="np-art"><span id="npAr"></span></div>
     <div class="np-t"><small>Now playing</small><b id="npTitle"></b><span id="npSub"></span></div></div>
-  <div class="np-prog"><i id="npBar"></i></div><div class="np-pl"><span id="npPos"></span><span id="npLeft"></span></div>
+  <div class="np-prog"><i id="npBar"></i><input type="range" id="npSeek" min="1" max="1" step="1" value="1" aria-label="Seek to verse"></div><div class="np-pl"><span id="npPos"></span><span id="npLeft"></span></div>
   <div class="np-ctl">
     <button id="npPrev" aria-label="Previous verse"><svg viewBox="0 0 24 24"><path d="M18 6l-8 6 8 6zM6 6v12"/></svg></button>
     <button id="npPlay" class="np-big" aria-label="Play or pause"></button>
@@ -589,6 +588,7 @@ body .ayah-card .v-en{display:block!important}
 <script id="auddata" type="application/json">__AUD__</script>
 <script id="audsdata" type="application/json">__AUDS__</script>
 <script id="audbdata" type="application/json">__AUDB__</script>
+<script id="audmdata" type="application/json">__AUDM__</script>
 <script>
 (function(){
 const D=JSON.parse(document.getElementById('qdata').textContent);
@@ -744,7 +744,8 @@ const p3=n=>String(n).padStart(3,'0');
 const AUD_ALL={alafasy:JSON.parse(document.getElementById('auddata').textContent)};
 {const x=JSON.parse(document.getElementById('audsdata').textContent);if(x)AUD_ALL.sudais=x}
 {const e=document.getElementById('audbdata'),x=e&&JSON.parse(e.textContent);if(x)AUD_ALL.abdulbasit=x}
-const RECS=[['alafasy','Mishary Rashid Alafasy','Murattal'],['sudais','Abdur Rahman As-Sudais','Murattal'],['abdulbasit','Abdul Basit Abdus Samad','Murattal']].filter(r=>AUD_ALL[r[0]]);
+{const e=document.getElementById('audmdata'),x=e&&JSON.parse(e.textContent);if(x)AUD_ALL.mujawwad=x}
+const RECS=[['alafasy','Mishary Rashid Alafasy','Murattal'],['sudais','Abdur Rahman As-Sudais','Murattal'],['abdulbasit','Abdul Basit Abdus Samad','Murattal'],['mujawwad','Abdul Basit Abdus Samad','Mujawwad']].filter(r=>AUD_ALL[r[0]]);
 if(!AUD_ALL[S.rec])S.rec='alafasy';
 let AUD=AUD_ALL[S.rec];
 const recName=()=>(RECS.find(r=>r[0]===S.rec)||RECS[0])[1];
@@ -987,7 +988,7 @@ $('fontSeg').onclick=e=>{const b=e.target.closest('button');if(!b)return;S.font=
 $('trSw').onclick=()=>{S.showTr=!S.showTr;store.set('showTr',S.showTr);applySettings()};
 $('ruleSw').onclick=()=>{S.rules=!S.rules;store.set('rules',S.rules);applySettings()};
 $('setDone').onclick=()=>closeSheets();
-const AUD_MB={alafasy:221,sudais:157,abdulbasit:223};
+const AUD_MB={alafasy:221,sudais:157,abdulbasit:223,mujawwad:420};
 function audUrls(){return AUD.flatMap(x=>x.p.map(q=>q[0]))}
 function drawOff(){const box=$('offAud'),OA=window.NH&&NH.audio;if(!box)return;if(!OA){box.hidden=true;return}box.hidden=false;
   const st=OA.stats(audUrls()),sur=AUD.filter(x=>x.p.every(q=>OA.has(q[0]))).length,b=OA.busy(),all=st.n>=st.total;
@@ -1025,13 +1026,17 @@ document.addEventListener('click',e=>{const m=$('pSpdMenu');if(m&&!m.hidden&&!e.
 applyRate();$('pCont').onclick=()=>{P.cont=!P.cont;showBar()};
 /* Now-playing panel: tap the player bar to open */
 const RATES=[0.25,0.5,0.75,1,1.25,1.5,2];
+const NPS={drag:false};
+function npSetBar(v,n){const pc=n>1?(v-1)/(n-1)*100:100;$('npBar').style.width=pc+'%';document.querySelector('.np-prog').style.setProperty('--kn',pc+'%')}
 function drawNP(){if(!P.s||!$('npSheet'))return;const m=META[P.s-1],n=AUD[P.s-1].a.length;
   $('npAr').textContent=m[0];$('npTitle').textContent=m[1];$('npSub').textContent=`${m[2]} · ${recName()}`;
-  $('npPos').textContent=`Verse ${P.v} of ${n}`;$('npLeft').textContent=n-P.v?`${n-P.v} left`:'Last verse';$('npBar').style.width=(P.v/n*100)+'%';
+  if(!NPS.drag){$('npPos').textContent=`Verse ${P.v} of ${n}`;$('npLeft').textContent=n-P.v?`${n-P.v} left`:'Last verse';npSetBar(P.v,n);const r=$('npSeek');r.max=n;r.value=P.v}
   $('npPlay').innerHTML=P.el.paused?icon.play2:icon.pause;
   $('npRecs').innerHTML=RECS.map(([k,nm,t])=>`<button data-rec="${k}" class="${k===S.rec?'on':''}"><i class="av">${nm.split(' ').filter(w=>w.length>2).slice(0,2).map(w=>w[0]).join('')}</i><span><b>${nm}</b><small>${t}</small></span><i class="ck"></i></button>`).join('');
   $('npSpd').innerHTML=RATES.map(r=>`<button data-rate="${r}" class="${r===P.rate?'on':''}">${r}x</button>`).join('');
   $('npRep').querySelector('.switch').classList.toggle('on',P.repeat);$('npCont').querySelector('.switch').classList.toggle('on',P.cont)}
+$('npSeek').oninput=e=>{NPS.drag=true;const v=+e.target.value,n=+e.target.max;npSetBar(v,n);$('npPos').textContent=`Verse ${v} of ${n}`;$('npLeft').textContent=n-v?`${n-v} left`:'Last verse'};
+$('npSeek').onchange=e=>{NPS.drag=false;const v=+e.target.value;if(P.s&&v!==P.v)playVerse(P.s,v);drawNP()};
 const npOpen=()=>$('npSheet').classList.contains('open');
 $('pGo').onclick=()=>{if(!P.s)return;$('pSpdMenu').hidden=true;drawNP();openSheet('npSheet')};
 ['play','pause'].forEach(ev=>P.el.addEventListener(ev,()=>{if(npOpen())drawNP()}));
