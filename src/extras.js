@@ -85,6 +85,8 @@ const LIST=[
   {id:'ziyarat-four-deputies',key:'Z_deputies',grp:'z',sub:'The four special deputies of Imam al-Mahdi (a.t.f.s.)',mark:'ن'},
   {id:'ziyarat-sayyid-muhammad',key:'Z_sayyid_muhammad',grp:'z',sub:'Son of Imam Ali al-Hadi (a.s.) · Balad',mark:'س'},
   {id:'ziyarat-graves',key:'Z_graves',grp:'z',sub:'Visiting the graves of the faithful believers',mark:'ق'},
+  {id:'ziyarat-salman',key:'Z_salman',grp:'z',sub:'Salman al-Farsi (r.a.) · al-Mada\'in',mark:'س'},
+  {id:'dua-after-ziyarah',key:'Z_after_ziyarah',grp:'z',sub:'To recite at any shrine after the ziyarah',mark:'د'},
   {id:'salawat-mahdi',key:'Z_salawat_mahdi',grp:'z',sub:'Salawat upon Imam al-Mahdi (a.t.f.s.)',mark:'ص'},
   {id:'ziyarat-hakimah',key:'Z_hakimah',grp:'z',sub:'Daughter of Imam al-Jawad (a.s.) · Samarra',mark:'ح'},
   {id:'ziyarat-nahiya',key:'Z_nahiya',grp:'z',sub:'Ziyarat of Imam Husain (a.s.) by Imam al-Mahdi (a.t.f.s.)',mark:'ن'},
