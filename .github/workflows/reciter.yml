@@ -4,6 +4,7 @@ on:
     inputs:
       folder: {description: 'everyayah.com folder', required: true, default: 'Abdurrahmaan_As-Sudais_64kbps'}
       slug: {description: 'short name', required: true, default: 'sudais'}
+      kbps: {description: 'AAC bitrate in kbps', required: false, default: '16'}
 permissions:
   contents: write
 jobs:
@@ -15,7 +16,8 @@ jobs:
       - uses: actions/checkout@v4
         with: {ref: gh-pages, path: pages}
       - run: sudo apt-get update -qq && sudo apt-get install -y -qq ffmpeg
-      - run: python3 scripts/build-reciter.py "${{ inputs.folder }}" "${{ inputs.slug }}" pages "src/data/aud_${{ inputs.slug }}.json"
+      - env: {KBPS: "${{ inputs.kbps }}"}
+        run: python3 scripts/build-reciter.py "${{ inputs.folder }}" "${{ inputs.slug }}" pages "src/data/aud_${{ inputs.slug }}.json"
       - run: du -sh pages/audio/${{ inputs.slug }}
       - name: Publish audio to gh-pages
         run: |

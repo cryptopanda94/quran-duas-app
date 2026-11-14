@@ -55,7 +55,7 @@ for s in range(1, 115):
         fname = f'{s:03d}.mp4' if len(parts) == 1 else f'{s:03d}-{k+1}.mp4'
         lst = f'{tmp}/l{s}.txt'
         open(lst, 'w').write(''.join(f"file '{info[f][0]}'\n" for f in files))
-        subprocess.run(['ffmpeg', '-v', 'error', '-y', '-f', 'concat', '-safe', '0', '-i', lst, '-c:a', 'aac', '-b:a', '16k',
+        subprocess.run(['ffmpeg', '-v', 'error', '-y', '-f', 'concat', '-safe', '0', '-i', lst, '-c:a', 'aac', '-b:a', os.environ.get('KBPS', '16') + 'k',
                         '-ac', '1', '-ar', str(SR), '-movflags', '+faststart', os.path.join(dst, fname)], check=True)
         plist.append([f'{slug}/{fname}', start])
     AUD.append({'p': plist, 'a': timings})

@@ -18,8 +18,7 @@ const audsPath = join(src, 'data', 'aud_sudais.json');
 const auds = existsSync(audsPath) ? JSON.stringify(JSON.parse(readFileSync(audsPath, 'utf8')).map((x) => ({ p: x.p.map(([n, c]) => [AUDIO_BASE + n, c]), a: x.a }))) : 'null';
 const audbPath = join(src, 'data', 'aud_abdulbasit.json');
 const audmPath = join(src, 'data', 'aud_mujawwad.json');
-const MUJ_BASE = 'https://cryptopanda94.github.io/abdulbasit-mujawwad/audio/';
-const audm = existsSync(audmPath) ? JSON.stringify(JSON.parse(readFileSync(audmPath, 'utf8')).map((x) => ({ p: x.p.map(([n, c]) => [MUJ_BASE + n, c]), a: x.a }))) : 'null';
+const audm = existsSync(audmPath) ? JSON.stringify(JSON.parse(readFileSync(audmPath, 'utf8')).map((x) => ({ p: x.p.map(([n, c]) => [AUDIO_BASE + n, c]), a: x.a }))) : 'null';
 const audb = existsSync(audbPath) ? JSON.stringify(JSON.parse(readFileSync(audbPath, 'utf8')).map((x) => ({ p: x.p.map(([n, c]) => [AUDIO_BASE + n, c]), a: x.a }))) : 'null';
 const aud = JSON.stringify(JSON.parse(rd('data/aud16.json')).map((x) => ({ p: x.p.map(([n, c]) => [AUDIO_BASE + n, c]), a: x.a })));
 
