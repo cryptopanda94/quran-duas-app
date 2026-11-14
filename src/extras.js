@@ -384,13 +384,13 @@ function renderDuas(g){
   if(g&&!DCAT[g])g=null;
   if(g){if(g!==dTab)dSec='';dTab=g;store.set('dTab',g)}
   setHeader(g?DCAT[g][0]:'<span class="lib-logo" role="img" aria-label=""></span>Library',!!g);
-  const cnt=g=>g==='e'?LIST.filter(x=>x.grp==='e').length+1:g==='h'?99:g==='b'?BOOKS.reduce((n,x)=>n+x[2].length,0):g==='r'?NOTEBOOKS.length:LIST.filter(x=>x.grp===g).length;
+  const cnt=g=>g==='e'?LIST.filter(x=>x.grp==='e').length+1:g==='h'?99:g==='b'?BK.length:g==='r'?NOTEBOOKS.length:LIST.filter(x=>x.grp===g).length;
   const cats=`<div class="dcat-head"><b>Categories</b><div class="seg vseg"><button data-v="grid" class="${dView==='grid'?'on':''}">▦ Grid</button><button data-v="list" class="${dView==='list'?'on':''}">☰ List</button></div></div>
    <div class="dcats ${dView}">${DTABS.filter(([k])=>k!=='b'||bkBase()).map(([k])=>{const c=DCAT[k];return `<a class="dcat${k==='h'?' wide':''}" href="#duas-${k}"><span class="dcat-m" style="--t:${DTINT[k]}"><svg viewBox="0 0 24 24" aria-hidden="true">${DICON[k]}</svg></span><span class="dcat-t"><b>${c[0]}</b><small>${c[2]}</small></span><span class="dcat-u">${c[1]}</span><span class="dcat-n">${cnt(k)}</span><span class="dcat-go">›</span></a>`}).join('')}</div>`;
   app.innerHTML=`${g?`<div class="lib-hero"><h1>${DCAT[g][0]}</h1><p>${esc(DCAT[g][2])}</p></div>`:`<div class="lib-hero"><h1>Library</h1><p>Duas, ziyarat, aamaal, namaz &amp; the Sahifa</p></div>
    <div class="ai-ban" role="button" tabindex="0" data-ask="1"><span class="ai-pill">✦ AI Assistant</span><b>HYDER AI</b><span class="ai-d">Ask any question and get answers from al-Kafi, Nahj al-Balagha, Man La Yahduruhu al-Faqih and 20 more classical books, with references.</span><span class="ai-row"><span class="ai-go">Ask a question →</span><a class="ai-nb" href="#duas-r">NotebookLM notebooks</a></span></div>
    ${duaSpot()}`}
-   <div class="search">${icon.search}<input id="dq" type="search" placeholder="Search duas, ziyarat, namaz…" value="${esc(dQ)}" autocomplete="off"></div>
+   <div class="search">${icon.search}<input id="dq" type="search" placeholder="${g==='b'?'Search by title or author…':'Search duas, ziyarat, namaz…'}" value="${esc(dQ)}" autocomplete="off"></div>
    ${g?'':`<div id="dcatw">${cats}</div>`}
    <div class="list" id="dlist"></div>
 `;
@@ -400,6 +400,7 @@ function renderDuas(g){
     const q=norm(dQ);
     if($('dcatw'))$('dcatw').hidden=!!q;
     if(!q&&!g){$('dlist').innerHTML='';return}
+    if(g==='b'){drawBooks(q,norm);return}
     if(!q&&g==='r'){const TG=['Quran & Tafseer','Virtues','24 volumes','8 volumes','Hadith dictations','Primary sources','Imam Ali (a.s.)','3 volumes','Imam al-Mahdi','Beliefs','110 volumes','Fiqh','Q & A','30 volumes','4 volumes','8 volumes'];$('dlist').innerHTML=`<div class="hint" style="margin:0 2px 14px">Public notebooks on Google NotebookLM, shared by Divine Pearls (ya-mahdi.net) as ShiaLM. Each opens in your browser and needs a Google account.</div><div class="nbgrid">`+NOTEBOOKS.map(([id,t,d],i)=>`<a class="nbc" href="https://notebook.google.com/notebook/${id}" target="_blank" rel="noopener"><div class="nbc-top"><span class="nbc-i">✦</span><span class="nbc-tag">${esc(TG[i]||'')}</span></div><b>${esc(t)}</b><small>${esc(d)}</small><span class="nbc-btn">Open NotebookLM →</span></a>`).join('')+'</div>';return}
     const items=q?LIST.filter((d,i,A)=>norm(d.name+' '+d.sub+' '+d.ur+' '+d.id).includes(q)&&(!d.key||A.findIndex(x=>x.key===d.key)===i)):LIST.filter(d=>d.grp===dTab);
     let lastSec='';
@@ -417,7 +418,6 @@ function renderDuas(g){
         return `<a class="item dua-item${m?' snum':''}" href="#dua-${d.id}"><div class="num"><span>${m?m[1]:(d.mark||'د')}</span></div><div class="t"><b>${esc(m?m[2]:d.name)}</b>${sub?`<small>${esc(sub)}</small>`:''}</div><div class="dur">${d.ur||''}</div>${dfavBtn(d.id)}</a>`}).join('');
       $('dlist').querySelector('.sec-back').onclick=()=>{dSec='';draw();window.scrollTo(0,0)};
       return}
-    if(!q&&dTab==='b'){$('dlist').innerHTML=`<div class="hint" style="margin:0 2px 6px">The Arabic is the original text. The English is a machine translation of it, so read it as a guide. The books load from the internet.</div>`+BOOKS.map(([n,u,L])=>`<div class="dsec"><b>${esc(n)}</b><span>${u}</span></div>`+L.map(b=>`<a class="item bk-row" href="#book-${b[0]}"><div class="num"><span>ك</span></div><div class="t"><b>${esc(b[1])}</b><small>${esc(b[3])} · ${b[4].toLocaleString()} ${b[0]==='nahj-al-balagha'?'sections':'hadith'}</small></div><div class="dur bk-ar">${b[2]}</div><span class="dcat-go">›</span></a>`).join('')).join('');return}
     if(!q&&dTab==='h'){const N=DU['N_names-99'].segs.filter(x=>x.ar);
       $('dlist').innerHTML=`<a class="item dua-item" href="#dua-asma-ul-husna"><div class="t"><b>Open with meanings &amp; benefits</b><small>Allah has the Most Beautiful Names, so call Him by them (7:180)</small></div><div class="ar" style="font-family:'Noto Nastaliq Urdu',serif;font-size:15px;line-height:2">اسمائے حسنیٰ</div></a>`+
         N.map((x,i)=>`<a class="item nm99" href="#dua-asma-ul-husna"><span class="nn">${i||''}</span><div class="t"><b>${esc(x.tr)}</b><small>${esc(x.en.replace(/^\d+\.\s*/,''))}</small></div><div class="ar nar">${x.ar}</div></a>`).join('');
@@ -926,12 +926,48 @@ function updToday(){const el=$('todayCd');if(!el||!LOC)return;const np=nextPraye
 setInterval(()=>{if(location.hash===''||location.hash==='#today')updToday()},20000);
 
 /* ================= BOOKS: classical hadith books, read from the app's own server ================= */
-const BOOKS=[
- ['The Four Books','کتبِ اربعہ',[['al-kafi','Al-Kafi','الكافي','Shaykh al-Kulayni',16254],['man-la-yahduruhu-al-faqih','Man La Yahduruhu al-Faqih','من لا يحضره الفقيه','Shaykh al-Saduq',6382],['tahdhib-al-ahkam','Tahdhib al-Ahkam','تهذيب الأحكام','Shaykh al-Tusi',13201],['al-istibsar','Al-Istibsar','الاستبصار','Shaykh al-Tusi',4220]]],
- ['Nahj al-Balagha & Risalat al-Huquq','نہج البلاغہ و رسالۃ الحقوق',[['nahj-al-balagha','Nahj al-Balagha','نهج البلاغة','Imam Ali (a.s.) · compiled by Sharif al-Radi',2260],['risalat-al-huquq','Risalat al-Huquq','رسالة الحقوق','Imam Zayn al-Abidin (a.s.)',49]]],
- ['Shaykh Saduq','شیخ صدوقؒ',[['al-amali-saduq','Al-Amali','الأمالي','Shaykh al-Saduq',1082],['al-khisal','Al-Khisal','الخصال','Shaykh al-Saduq',1282],['al-tawhid','Al-Tawhid','التوحيد','Shaykh al-Saduq',575],['uyun-akhbar-al-rida','Uyun Akhbar al-Rida','عيون أخبار الرضا','Shaykh al-Saduq',954],['kamal-al-din','Kamal al-Din wa Tamam al-Ni\'ma','كمال الدين وتمام النعمة','Shaykh al-Saduq',566],['maani-al-akhbar','Ma\'ani al-Akhbar','معاني الأخبار','Shaykh al-Saduq',829],['thawab-al-amal','Thawab al-A\'mal wa \'Iqab al-A\'mal','ثواب الأعمال وعقاب الأعمال','Shaykh al-Saduq',1106],['fadail-al-shia','Fada\'il al-Shi\'a','فضائل الشيعة','Shaykh al-Saduq',45],['sifat-al-shia','Sifat al-Shi\'a','صفات الشيعة','Shaykh al-Saduq',71]]],
- ['Other','دیگر کتب',[['al-amali-mufid','Al-Amali','الأمالي','Shaykh al-Mufid',387],['kamil-al-ziyarat','Kamil al-Ziyarat','كامل الزيارات','Ibn Qulawayh al-Qummi',749],['kitab-al-ghayba-numani','Kitab al-Ghayba','كتاب الغيبة','Muhammad ibn Ibrahim al-Nu\'mani',468],['kitab-al-ghayba-tusi','Kitab al-Ghayba','كتاب الغيبة','Shaykh al-Tusi',774],['kitab-al-mumin','Kitab al-Mu\'min','كتاب المؤمن','Husayn ibn Sa\'id al-Ahwazi',201],['kitab-al-zuhd','Kitab al-Zuhd','كتاب الزهد','Husayn ibn Sa\'id al-Ahwazi',290],['kitab-al-duafa','Kitab al-Du\'afa\'','كتاب الضعفاء','Ahmad ibn al-Husayn al-Ghada\'iri',226],['mujam-al-ahadith-al-mutabara','Mu\'jam al-Ahadith al-Mu\'tabara','معجم الأحاديث المعتبرة','Muhammad Asif al-Muhsini',555]]]
+/* slug, name, Arabic, author, hadith, meaning of the title, categories, cover colours */
+const BK=[
+ ['al-kafi','Al-Kafi','الكافي','Shaykh al-Kulayni',16254,'The Sufficient',['four'],'#1f5a45','#0f3327'],
+ ['man-la-yahduruhu-al-faqih','Man La Yahduruhu al-Faqih','من لا يحضره الفقيه','Shaykh al-Saduq',6382,'For Him Who Has No Jurist at Hand',['four','saduq'],'#7a2a2a','#451414'],
+ ['tahdhib-al-ahkam','Tahdhib al-Ahkam','تهذيب الأحكام','Shaykh al-Tusi',13201,'The Refinement of the Rulings',['four'],'#27503a','#142b1f'],
+ ['al-istibsar','Al-Istibsar','الاستبصار','Shaykh al-Tusi',4220,'The Clear Insight',['four'],'#2b3f72','#151f3d'],
+ ['nahj-al-balagha','Nahj al-Balagha','نهج البلاغة','Imam Ali (a.s.) · compiled by Sharif al-Radi',2260,'The Peak of Eloquence',['words','anth'],'#1c2a5c','#0c1330'],
+ ['risalat-al-huquq','Risalat al-Huquq','رسالة الحقوق','Imam Zayn al-Abidin (a.s.)',49,'The Treatise on Rights',['words','ethics'],'#5b3a1a','#30200d'],
+ ['al-amali-saduq','Al-Amali','الأمالي','Shaykh al-Saduq',1082,'The Dictations',['saduq','anth'],'#3d2a66','#1f1538'],
+ ['al-khisal','Al-Khisal','الخصال','Shaykh al-Saduq',1282,'The Book of Traits',['saduq','ethics'],'#8a3324','#4a1a12'],
+ ['al-tawhid','Al-Tawhid','التوحيد','Shaykh al-Saduq',575,'The Oneness of God',['saduq','theology'],'#2f4a63','#172533'],
+ ['uyun-akhbar-al-rida','Uyun Akhbar al-Rida','عيون أخبار الرضا','Shaykh al-Saduq',954,'The Sources of the Reports of al-Rida (a.s.)',['saduq','theology'],'#24347a','#111a40'],
+ ['kamal-al-din','Kamal al-Din wa Tamam al-Ni\'ma','كمال الدين وتمام النعمة','Shaykh al-Saduq',566,'The Perfection of the Religion',['saduq','mahdi'],'#39408f','#1b1f4a'],
+ ['maani-al-akhbar','Ma\'ani al-Akhbar','معاني الأخبار','Shaykh al-Saduq',829,'The Meanings of the Reports',['saduq','theology'],'#1f5f66','#0e3033'],
+ ['thawab-al-amal','Thawab al-A\'mal wa \'Iqab al-A\'mal','ثواب الأعمال وعقاب الأعمال','Shaykh al-Saduq',1106,'The Rewards and Punishments of Deeds',['saduq','ethics'],'#6b4a12','#382608'],
+ ['fadail-al-shia','Fada\'il al-Shi\'a','فضائل الشيعة','Shaykh al-Saduq',45,'The Virtues of the Shia',['saduq','ethics'],'#4d5a1e','#272e0e'],
+ ['sifat-al-shia','Sifat al-Shi\'a','صفات الشيعة','Shaykh al-Saduq',71,'The Attributes of the Shia',['saduq','ethics'],'#5a2748','#2f1325'],
+ ['al-amali-mufid','Al-Amali','الأمالي','Shaykh al-Mufid',387,'The Dictations',['anth'],'#234a6b','#102435'],
+ ['kamil-al-ziyarat','Kamil al-Ziyarat','كامل الزيارات','Ibn Qulawayh al-Qummi',749,'The Complete Book of Ziyarat',['ziyarat'],'#1d6140','#0d3020'],
+ ['kitab-al-ghayba-numani','Kitab al-Ghayba','كتاب الغيبة','Muhammad ibn Ibrahim al-Nu\'mani',468,'The Book of the Occultation',['mahdi'],'#4a2c1c','#26160d'],
+ ['kitab-al-ghayba-tusi','Kitab al-Ghayba','كتاب الغيبة','Shaykh al-Tusi',774,'The Book of the Occultation',['mahdi'],'#16303d','#0a181f'],
+ ['kitab-al-mumin','Kitab al-Mu\'min','كتاب المؤمن','Husayn ibn Sa\'id al-Ahwazi',201,'The Book of the Believer',['ahwazi','ethics'],'#3f5a2a','#1f2e14'],
+ ['kitab-al-zuhd','Kitab al-Zuhd','كتاب الزهد','Husayn ibn Sa\'id al-Ahwazi',290,'The Book of Abstinence',['ahwazi','ethics'],'#5c4a2e','#2f2616'],
+ ['kitab-al-duafa','Kitab al-Du\'afa\'','كتاب الضعفاء','Ahmad ibn al-Husayn al-Ghada\'iri',226,'The Book of Weak Narrators',['rijal'],'#4a4a55','#25252b'],
+ ['mujam-al-ahadith-al-mutabara','Mu\'jam al-Ahadith al-Mu\'tabara','معجم الأحاديث المعتبرة','Muhammad Asif al-Muhsini',555,'Lexicon of the Reliable Hadith',['anth'],'#2a5a5a','#132e2e']
 ];
+const BKCATS=[['all','All'],['four','The Four Books'],['words','Words of the Imams'],['saduq','By al-Saduq'],['theology','Theology'],['ethics','Ethics'],['mahdi','Imam Mahdi (a.t.f.s.)'],['ziyarat','Ziyarat'],['anth','Anthologies'],['ahwazi','By al-Ahwazi'],['rijal','Narrators']];
+let bkCat='all',bkView=store.get('bkView','list');
+const bkCover=b=>`<span class="bkcov" style="--c1:${b[7]};--c2:${b[8]}" aria-hidden="true"><span>${b[2]}</span></span>`;
+const bkAgo=t=>{const m=Math.round((Date.now()-t)/60000);return m<2?'Just now':m<60?m+' min ago':m<1440?Math.round(m/60)+' h ago':Math.round(m/1440)+' days ago'};
+function drawBooks(q,norm){
+  const L=$('dlist'),last=store.get('bkLast',null),lb=last&&BK.find(b=>b[0]===last.slug);
+  const items=BK.filter(b=>(bkCat==='all'||b[6].includes(bkCat))&&(!q||norm(b[1]+' '+b[3]+' '+b[5]+' '+b[2]).includes(q)));
+  L.innerHTML=(lb&&!q?`<div class="bkall"><b>Continue Reading</b><i></i><button type="button" id="bkLastX" aria-label="Remove">✕</button></div><a class="bkcard" href="#book-${esc(last.ref)}">${bkCover(lb)}<span class="t"><b>${esc(lb[1])}</b>${last.title&&last.title!==lb[1]?`<i>${esc(last.title)}</i>`:`<i>${esc(lb[5])}</i>`}<small>${esc(lb[3])}</small><em>${bkAgo(last.t)}</em></span></a>`:'')
+   +`<div class="bkall"><span>All Books</span><i></i><span>${items.length}</span><button type="button" id="bkViewB" aria-label="Grid or list">${bkView==='grid'?'☰':'▦'}</button></div>
+   <div class="bkchips">${BKCATS.map(([k,n])=>`<button type="button" data-c="${k}" class="${k===bkCat?'on':''}">${n}</button>`).join('')}</div>
+   <div class="${bkView==='grid'?'bkgrid':'bklist'}">${items.map(b=>`<a class="bkcard" href="#book-${b[0]}">${bkCover(b)}<span class="t"><b>${esc(b[1])}</b><i>${esc(b[5])}</i><small>${esc(b[3])}</small></span></a>`).join('')||'<div class="bk-load">No book matches.</div>'}</div>
+   <div class="hint" style="margin:14px 2px">The Arabic is the original text. The English is a machine translation of it, so read it as a guide. The books load from the internet.</div>`;
+  L.querySelectorAll('.bkchips [data-c]').forEach(c=>c.onclick=()=>{const x=L.querySelector('.bkchips').scrollLeft;bkCat=c.dataset.c;drawBooks(q,norm);L.querySelector('.bkchips').scrollLeft=x});
+  $('bkViewB').onclick=()=>{bkView=bkView==='grid'?'list':'grid';store.set('bkView',bkView);drawBooks(q,norm)};
+  if($('bkLastX'))$('bkLastX').onclick=()=>{store.set('bkLast',null);drawBooks(q,norm)};
+}
 function bkBase(){return (window.QAsk&&window.QAsk.base)||''}
 const bkCache=new Map();
 async function bkGet(ref){
@@ -943,7 +979,7 @@ async function bkGet(ref){
 /* where the back button goes from a book page */
 function bookUp(ref){const j=bkCache.get(ref);if(j&&j.up)return 'book-'+j.up;return ref.includes(':')?'book-'+ref.slice(0,ref.lastIndexOf(':')):'duas-b'}
 function renderBook(ref){
-  const slug=ref.split(':')[0],B=BOOKS.flatMap(g=>g[2]).find(b=>b[0]===slug);
+  const slug=ref.split(':')[0],B=BK.find(b=>b[0]===slug);
   if(!B||!bkBase())return false;
   setHeader(esc(B[1]),true);noJump();
   const hero=(path,t,ar,sub)=>`<div class="lib-hero bk-hero">${path?`<small>${esc(path)}</small>`:''}<h1>${esc(t)}</h1>${ar?`<div class="bk-har">${esc(ar)}</div>`:''}${sub?`<p>${esc(sub)}</p>`:''}</div>`;
@@ -957,6 +993,7 @@ function renderBook(ref){
     if(j.children&&j.children.length)h+='<div class="list">'+j.children.map((c,i)=>`<a class="item bk-row" href="#book-${esc(c.ref)}"><div class="num"><span>${i+1}</span></div><div class="t"><b>${esc(c.title.en)}</b><small>${many(c.count)}</small></div>${c.title.ar?`<div class="dur bk-ar">${esc(c.title.ar)}</div>`:''}<span class="dcat-go">›</span></a>`).join('')+'</div>';
     if(j.items&&j.items.length)h+='<div class="bk-page">'+j.items.map(x=>`<div class="bk-it"><span class="no">${unit} ${esc(x.n)}</span>${x.ar?`<div class="ar">${esc(x.ar)}</div>`:''}${x.en?`<div class="en">${esc(x.en)}</div>`:''}</div>`).join('')+'</div><div class="hint" style="margin:14px 2px">The Arabic is the original text; the English is a machine translation.</div>';
     app.innerHTML=h;document.body.classList.toggle('bk-read',!!(j.items&&j.items.length));
+    store.set('bkLast',{ref,slug,title:top?B[1]:j.title.en,t:Date.now()});
   };
   if(cached)draw(cached);
   else bkGet(ref).then(draw).catch(()=>{if(location.hash.slice(1)==='book-'+ref)app.innerHTML=hero('',B[1],B[2],B[3])+'<div class="bk-load">Could not open the book. Check your internet connection and try again.<br><button class="btn" id="bkRetry" style="margin-top:14px">Try again</button></div>';const b=$('bkRetry');if(b)b.onclick=()=>renderBook(ref)});
