@@ -293,8 +293,10 @@ body.playing .asbar{bottom:calc(142px + env(safe-area-inset-bottom))}
 .asbar #asPlay{background:var(--fill,var(--accent));color:#fff}
 .asbar svg{width:20px;height:20px;stroke:currentColor;fill:none;stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round}
 .asbar #asPlay svg{fill:currentColor;stroke:none}
-.as-sp{display:flex;flex-direction:column;align-items:center;min-width:74px;line-height:1.1}.as-sp b{font-size:17px}.as-sp small{font-size:10.5px;color:var(--muted)}
-#asBtn.on{color:var(--accent)}
+.asbar{overflow:hidden;padding-top:9px}.as-prog{position:absolute;left:0;right:0;top:0;height:4px;background:var(--line)}.as-prog i{display:block;height:100%;width:0;background:var(--fill,var(--accent));transition:width .4s linear}
+.as-sp{display:flex;flex-direction:column;align-items:center;min-width:84px;line-height:1.15}#asLeft{font-weight:600;color:var(--ink)!important}.as-sp b{font-size:17px}.as-sp small{font-size:10.5px;color:var(--muted)}
+#asBtn.as-txt{flex:none;height:32px;padding:0 12px;margin-right:4px;border-radius:999px;font-size:13px;font-weight:600;white-space:nowrap;color:var(--accent);background:var(--bg);border:1.5px solid var(--accent)}
+#asBtn.on{background:var(--fill,var(--accent));color:#fff;border-color:var(--fill,var(--accent))}
 .naqsh{margin:4px 0 16px;padding:12px;border-radius:16px;background:var(--card);border:1px solid var(--line);text-align:center}
 .naqsh .nq-h,.nq-card .nq-t{display:flex;justify-content:space-between;align-items:baseline;gap:8px;margin:0 2px 10px}
 .naqsh .nq-h span,.nq-card .nq-t span{font-family:'Noto Nastaliq Urdu',serif;color:var(--muted);font-size:14px}
@@ -500,7 +502,7 @@ body .ayah-card .v-en{display:block!important}
 <header class="top"><div class="bar">
   <button class="icon-btn" id="backBtn" aria-label="Back" style="display:none"><svg viewBox="0 0 24 24"><path d="M15 18l-6-6 6-6"/></svg></button>
   <h1 id="title">Quran</h1>
-  <button class="icon-btn" id="asBtn" aria-label="Auto-scroll" style="display:none"><svg viewBox="0 0 24 24"><path d="M12 4v13M7 12l5 5 5-5"/><path d="M5 20h14"/></svg></button>
+  <button class="as-txt" id="asBtn" aria-label="Auto scroll" style="display:none">Auto scroll</button>
   <button class="icon-btn" id="jumpBtn" aria-label="Go to verse" style="display:none"><svg viewBox="0 0 24 24"><path d="M4 6h16M4 12h10M4 18h7"/></svg></button>
   <button class="icon-btn" id="setBtn" aria-label="Settings"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 1 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 1 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 1 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 1 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg></button>
 </div><div class="jzbar" id="jzBar" hidden></div></header>
@@ -582,11 +584,12 @@ body .ayah-card .v-en{display:block!important}
   <button id="pClose" aria-label="Close player"><svg viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></svg></button>
 </div>
 <div class="alertbar" id="alertbar"><b id="alertTxt"></b><button id="alertStop">Stop</button></div>
-<div class="asbar" id="asBar" hidden role="toolbar" aria-label="Auto-scroll">
+<div class="asbar" id="asBar" hidden role="toolbar" aria-label="Auto scroll">
+  <div class="as-prog"><i id="asProg"></i></div>
   <button id="asPlay" aria-label="Pause or resume"></button>
-  <button id="asSlow" aria-label="Slower">−</button>
-  <div class="as-sp"><b id="asMin"></b><small>min per juz</small></div>
-  <button id="asFast" aria-label="Faster">+</button>
+  <button id="asLess" aria-label="Fewer minutes (faster)">−</button>
+  <div class="as-sp"><b id="asMin"></b><small>min per juz</small><small id="asLeft"></small></div>
+  <button id="asMore" aria-label="More minutes (slower)">+</button>
   <button id="asClose" aria-label="Stop auto-scroll"><svg viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></svg></button>
 </div>
 <nav class="tabbar" id="tabbar">
@@ -623,7 +626,7 @@ const store={get(k,d){try{const v=localStorage.getItem('qr_'+k);return v==null?d
              set(k,v){try{localStorage.setItem('qr_'+k,JSON.stringify(v))}catch(e){}}};
 const S={arSize:store.get('arSize',40),tr:store.get('tr','off'),
          theme:store.get('theme','sky'),
-         marks:store.get('marks',[]),ctx:store.get('ctx',null),favs:store.get('favs',[]),dfavs:store.get('dfavs',[]),showTr:store.get('showTr',false),enSize:store.get('enSize',16),rules:store.get('rules',false),font:store.get('font','indopak'),ensrc:store.get('ensrc2','alt'),rec:store.get('rec','alafasy'),urT:store.get('urT','junagarhi'),enT:store.get('enT','sahih'),last:store.get('last',null),tab:'surahs',q:''};
+         marks:store.get('marks',[]),ctx:store.get('ctx',null),favs:store.get('favs',[]),dfavs:store.get('dfavs',[]),showTr:store.get('showTr',false),enSize:store.get('enSize',16),rules:store.get('rules',false),font:store.get('font','indopak'),ensrc:store.get('ensrc2','alt'),rec:store.get('rec','mujawwad'),urT:store.get('urT','junagarhi'),enT:store.get('enT','sahih'),last:store.get('last',null),tab:'surahs',q:''};
 
 EN=S.enT==='qarai'?EN_Q:EN_S;
 const urFor=k=>URX[k]?(URX[k].sp||(URX[k].sp=URX[k].map(x=>x.split('\n')))):UR_J;UR=urFor(S.urT);
@@ -964,15 +967,18 @@ app.addEventListener('click',e=>{
 
 /* ---------- Chrome ---------- */
 /* ---------- Auto-scroll: steady scroll timed in minutes per juz ---------- */
-const AS={on:false,run:false,raf:0,acc:0,last:0,ratio:0,lastRatio:0,stuck:0,min:store.get('asMin',25),lock:null,
+const AS={on:false,run:false,raf:0,acc:0,last:0,ratio:0,lastRatio:0,stuck:0,min:store.get('asMin2',40),lock:null,
   perJuz(){if(!this._pj){let n=0;for(const s of AR)for(const v of s)n+=v.length;this._pj=n/30}return this._pj},
   measure(){const els=document.querySelectorAll('#app .ar, #app .v-ar');let n=0;els.forEach(e=>{if(!e.closest('.s-head,.hero'))n+=e.textContent.length});
     const h=document.documentElement.scrollHeight;this.ratio=n>200?h/n:0;this.lastRatio=performance.now()},
   pxps(){const lps=this.perJuz()/(this.min*60);return (this.ratio||1.2)*lps},
-  draw(){$('asMin').textContent=this.min;$('asPlay').innerHTML=this.run?'<svg viewBox="0 0 24 24"><rect x="6" y="5" width="4" height="14" rx="1"/><rect x="14" y="5" width="4" height="14" rx="1"/></svg>':'<svg viewBox="0 0 24 24"><path d="M8 5l11 7-11 7z"/></svg>';$('asBtn').classList.toggle('on',this.on)},
+  ui(){const H=document.documentElement.scrollHeight-innerHeight,y=scrollY,pc=H>0?Math.min(100,y/H*100):100;$('asProg').style.width=pc+'%';
+    const sec=Math.max(0,(H-y)/this.pxps());const m=Math.floor(sec/60),s=Math.round(sec%60);$('asLeft').textContent=(sec>=3600?Math.floor(m/60)+' h '+(m%60)+' min':m+':'+String(s).padStart(2,'0'))+' left'},
+  draw(){$('asMin').textContent=this.min;try{this.ui()}catch(e){}$('asPlay').innerHTML=this.run?'<svg viewBox="0 0 24 24"><rect x="6" y="5" width="4" height="14" rx="1"/><rect x="14" y="5" width="4" height="14" rx="1"/></svg>':'<svg viewBox="0 0 24 24"><path d="M8 5l11 7-11 7z"/></svg>';$('asBtn').classList.toggle('on',this.on)},
   async wake(on){try{if(on&&!this.lock&&navigator.wakeLock)this.lock=await navigator.wakeLock.request('screen');else if(!on&&this.lock){this.lock.release();this.lock=null}}catch(e){this.lock=null}},
   tick(t){if(!AS.run)return;const dt=Math.min(100,t-(AS.last||t));AS.last=t;
     if(t-AS.lastRatio>4000)AS.measure();
+    if(t-(AS.lastUi||0)>500){AS.lastUi=t;AS.ui()}
     AS.acc+=AS.pxps()*dt/1000;const step=Math.floor(AS.acc);
     if(step>=1){AS.acc-=step;const y=window.scrollY;window.scrollBy(0,step);
       if(window.scrollY===y){if((AS.stuck+=dt)>2500){AS.pause();toast('Reached the end');return}}else AS.stuck=0}
@@ -981,10 +987,10 @@ const AS={on:false,run:false,raf:0,acc:0,last:0,ratio:0,lastRatio:0,stuck:0,min:
   resume(){this.run=true;this.last=0;this.stuck=0;this.wake(true);cancelAnimationFrame(this.raf);this.raf=requestAnimationFrame(this.tick);this.draw()},
   pause(){this.run=false;cancelAnimationFrame(this.raf);this.wake(false);this.draw()},
   stop(){if(!this.on)return;this.pause();this.on=false;$('asBar').hidden=true;this.draw()},
-  speed(d){const st=[10,12,15,18,20,22,25,28,30,35,40,45,50,60];let i=st.indexOf(this.min);if(i<0)i=6;i=Math.max(0,Math.min(st.length-1,i+d));this.min=st[i];store.set('asMin',this.min);this.draw()}};
+  speed(d){const st=[10,12,15,18,20,22,25,28,30,35,40,45,50,60];let i=st.indexOf(this.min);if(i<0)i=st.indexOf(40);i=Math.max(0,Math.min(st.length-1,i+d));this.min=st[i];store.set('asMin2',this.min);this.draw()}};
 $('asBtn').onclick=()=>AS.on?AS.stop():AS.start();
 $('asPlay').onclick=()=>AS.run?AS.pause():AS.resume();
-$('asSlow').onclick=()=>AS.speed(1);$('asFast').onclick=()=>AS.speed(-1);$('asClose').onclick=()=>AS.stop();
+$('asMore').onclick=()=>AS.speed(1);$('asLess').onclick=()=>AS.speed(-1);$('asClose').onclick=()=>AS.stop();
 // a finger on the page pauses; lifting it carries on from where the reader left it
 let asHeld=false;addEventListener('touchstart',e=>{if(AS.run&&!e.target.closest('#asBar')){asHeld=true;AS.pause()}},{passive:true});
 addEventListener('touchend',()=>{if(asHeld){asHeld=false;setTimeout(()=>{if(AS.on&&!AS.run)AS.resume()},600)}},{passive:true});
