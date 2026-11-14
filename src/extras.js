@@ -685,23 +685,17 @@ function renderPrayer(){
    <div class="card loc"><b>📍 ${esc(LOC.name)}<br><small class="hint">${esc(dstr)}${window.NH&&LOC.auto!==false?' · 📡 automatic':''}</small></b><button class="btn" id="chg">Change</button></div>
    <div class="next" id="nextBox"></div>
    <div class="card ptable">${PR.map(([k,n,u,main])=>`<div class="pr${main?'':' minor'}${np&&np.k===k?' now':''}"><span>${n}</span><span class="ur">${u}</span><b>${fmt(LOC,T[k])}</b>
-      ${main?`<button class="bell${ALERTS[k]?' on':''}" data-k="${k}" aria-label="Azan alert for ${n}">${ALERTS[k]?icons.bell:icons.belloff}</button>`:'<span style="width:34px;flex:none"></span>'}</div>`).join('')}</div>
+      ${main?`<button class="bell${ALERTS[k]?' on':''}" data-k="${k}" aria-hidden="true" tabindex="-1">${ALERTS[k]?icons.bell:icons.belloff}</button><button class="ios-sw sm${ALERTS[k]?' on':''}" data-k="${k}" role="switch" aria-checked="${ALERTS[k]?'true':'false'}" aria-label="Azan alert for ${n}"></button>`:'<span class="pr-gap"></span>'}</div>`).join('')}</div>
+   <button class="card tsb-open" id="tsbOpen" type="button"><span class="tsb-ic"><svg viewBox="0 0 24 24"><circle cx="12" cy="4" r="1.6"/><circle cx="17.2" cy="6.2" r="1.6"/><circle cx="19.4" cy="11.4" r="1.6"/><circle cx="17.2" cy="16.6" r="1.6"/><circle cx="6.8" cy="6.2" r="1.6"/><circle cx="4.6" cy="11.4" r="1.6"/><circle cx="6.8" cy="16.6" r="1.6"/><circle cx="12" cy="18.8" r="1.6"/><path d="M12 20.4v2.6"/></svg></span><span class="t"><b>Tasbih</b><small>Counter for the Tasbih of Fatima Zahra (s.a.), salawat and dhikr</small></span><span class="dcat-go" style="display:block">›</span></button>
    <div class="card">
-     <div style="margin-bottom:10px"><b>Azan alerts</b></div>
-     <div class="aprefs">
-        <button class="arow" id="arm" role="switch" aria-checked="${(window.NH?NH.alertsOn():armed)?'true':'false'}"><span><b>🔔 Alerts</b><small>${(window.NH?NH.alertsOn():armed)?'On — at the time of each prayer you\'ve belled above':'Off — turn on to get an alert at the time of every salah'}</small></span><i class="sw${(window.NH?NH.alertsOn():armed)?' on':''}"></i></button>
-     ${(window.NH?NH.alertsOn():armed)?`
-        <button class="arow" data-pref="alertSound"><span><b>🔊 Sound</b><small>${window.NH&&NH.platform==='ios'?'Plays the azan you chose, like an alarm — even when your iPhone is on silent':'Plays the azan you chose for each prayer'}</small></span><i class="sw${store.get('alertSound',true)?' on':''}"></i></button>
-        <button class="arow" data-pref="alertVib"><span><b>📳 Vibrate</b><small>${window.NH&&NH.platform==='ios'?'With sound on, vibration follows your iPhone\'s Sounds &amp; Haptics settings':'Vibrates when the alert arrives'}</small></span><i class="sw${store.get('alertVib',true)?' on':''}"></i></button>
-        <div class="hint" style="margin-top:8px">✓ Alerts on for ${esc(LOC.name)} — at the exact time of each prayer you've belled above, even when the app is closed.</div>
-        ${window.NH&&NH.alertStatus?`<div class="hint" id="alstat" style="margin-top:6px">Checking alerts on this phone…</div>
-        <button class="btn" id="testAl" style="margin-top:8px;width:100%">🔔 Send a test alert (10 seconds)</button>`:''}`:''}
-      </div>
-     ${window.NH?'':`<div class="hint" style="margin-top:6px">In the web version, alerts ring <b>only while this page is open</b>. Install the app for alerts with the phone locked.</div>`}
-   </div>
-   <div class="card">
-     <div style="display:flex;align-items:center;gap:10px;margin-bottom:10px"><b style="flex:1">Choose azan</b>
-</div>
+     <div style="margin-bottom:10px"><b>Choose azan</b></div>
+     <div class="aprefs" style="margin-bottom:14px">
+        <button class="arow" id="arm" role="switch" aria-checked="${(window.NH?NH.alertsOn():armed)?'true':'false'}"><span><b>🔔 Azan alerts</b><small>${(window.NH?NH.alertsOn():armed)?'On for the prayers you switched on above':'Off — turn on to hear the azan at prayer time'}</small></span><i class="ios-sw${(window.NH?NH.alertsOn():armed)?' on':''}"></i></button>
+        ${(window.NH?NH.alertsOn():armed)?`<button class="arow" data-pref="alertSound"><span><b>🔊 Sound</b><small>${window.NH&&NH.platform==='ios'?'Plays the azan you chose, like an alarm — even when your iPhone is on silent':'Plays the azan you chose for each prayer'}</small></span><i class="ios-sw${store.get('alertSound',true)?' on':''}"></i></button>
+        <button class="arow" data-pref="alertVib"><span><b>📳 Vibrate</b><small>${window.NH&&NH.platform==='ios'?'With sound on, vibration follows your iPhone\'s Sounds &amp; Haptics settings':'Vibrates when the alert arrives'}</small></span><i class="ios-sw${store.get('alertVib',true)?' on':''}"></i></button>
+        ${window.NH&&NH.alertStatus?`<div class="hint" id="alstat">Checking alerts on this phone…</div>`:''}
+        ${window.NH?'':`<div class="hint">In the web version, alerts ring <b>only while this page is open</b>. Install the app for alerts with the phone locked.</div>`}`:''}
+     </div>
      <div class="seg azseg">${AZK.map(([k,n])=>`<button data-tgt="${k}" class="${azTarget===k?'on':''}">${n}</button>`).join('')}</div>
      <div class="hint" style="margin:8px 0 6px">Tap an azan to use it for <b>${AZK.find(x=>x[0]===azTarget)[1]}</b>. ▶ plays it.<br>${AZK.map(([k,n])=>`<span class="azsum">${n}: ${(SLOTS.find(x=>x[0]===AZP[k])||SLOTS[0])[1]}</span>`).join(' ')}</div>
      <div class="azlist">${SLOTS.map(([k,n,sub])=>{const have=AZ[k],sel=AZP[azTarget]===k;
@@ -714,10 +708,10 @@ function renderPrayer(){
    <div class="foot">Method: Shia Ithna Ashari (Jafari, Leva Institute Qum) — Fajr 16°, Maghrib 4°, Isha 14°, midnight = halfway from sunset to Fajr.<br>Times may differ by a few minutes from your local mosque's timetable.</div>`;
   updateNext();
   $('chg').onclick=()=>{editing=true;renderPrayer()};
-  app.querySelectorAll('.bell').forEach(b=>b.onclick=()=>{const k=b.dataset.k;ALERTS[k]=!ALERTS[k];store.set('alerts',ALERTS);window.NH&&NH.refresh();renderPrayer()});
+  app.querySelectorAll('.ptable [data-k]').forEach(b=>b.onclick=()=>{const k=b.dataset.k;ALERTS[k]=!ALERTS[k];store.set('alerts',ALERTS);window.NH&&NH.refresh();renderPrayer()});
+  if($('tsbOpen'))$('tsbOpen').onclick=()=>tasbihOpen();
   if(window.NH)$('arm').onclick=async()=>{await NH.toggleAlerts();renderPrayer()};
-  if(window.NH&&NH.alertStatus&&$('alstat')){
-    if($('testAl'))$('testAl').onclick=()=>NH.testAlert();
+  if(window.NH){if(NH.alertStatus&&$('alstat')){
     NH.alertStatus().then(st=>{const el=$('alstat');if(!el)return;const bad=[];
       if(st.perm&&st.perm!=='granted')bad.push('⚠️ Notifications are blocked for this app — turn them on in phone Settings.');
       if(st.exact&&st.exact!=='granted')bad.push('⚠️ “Alarms &amp; reminders” is off — alerts may come late. Turn it on in Settings → Apps → Quran &amp; Duas.');
@@ -726,7 +720,7 @@ function renderPrayer(){
       if(!total&&st.loc)bad.push('⚠️ No alerts are scheduled yet. Turn alerts off and on again.');
       const nx=st.next?new Date(st.next).toLocaleString([], {weekday:'short',hour:'numeric',minute:'2-digit'}):'';
       el.innerHTML=(bad.length?bad.join('<br>')+'<br>':'')+`${total} alerts scheduled${st.alarms?` (${st.alarms} as alarms)`:''}${nx?` · next: ${nx}`:''}${st.err?`<br>Error: ${esc(st.err)}`:''}`}).catch(()=>{});
-  }
+  }}
   else $('arm').onclick=()=>{
     if(armed){armed=false;renderPrayer();return}
     try{audioCtx=audioCtx||new (window.AudioContext||window.webkitAudioContext)();audioCtx.resume()}catch(e){}
@@ -734,7 +728,7 @@ function renderPrayer(){
     try{if(window.Notification&&Notification.permission==='default')Notification.requestPermission().catch(()=>{})}catch(e){}
     armed=true;toast('Azan alerts on — keep this page open');renderPrayer()};
   app.querySelectorAll('[data-pref]').forEach(b=>b.onclick=async()=>{const k=b.dataset.pref,v=!store.get(k,true);
-    b.querySelector('.sw').classList.toggle('on',v);if(window.NH)await NH.setPref(k,v);else store.set(k,v);
+    b.querySelector('.ios-sw').classList.toggle('on',v);if(window.NH)await NH.setPref(k,v);else store.set(k,v);
     toast((k==='alertSound'?'Sound ':'Vibrate ')+(v?'on':'off'))});
   app.querySelectorAll('[data-add]').forEach(inp=>inp.onchange=async e=>{const f=e.target.files[0];if(!f)return;const k=inp.dataset.add;
     if(AZ[k])URL.revokeObjectURL(AZ[k].url);AZ[k]={url:URL.createObjectURL(f),name:f.name};
@@ -754,40 +748,53 @@ function renderPrayer(){
 
 /* ================= QIBLA ================= */
 const KAABA=[21.422487,39.826206];
-function qibla(lat,lng){const [kl,kg]=KAABA;const dl=dtr(kg-lng);
+function qibla(lat,lng,T){const [kl,kg]=T||KAABA;const dl=dtr(kg-lng);
   return fix(rtd(Math.atan2(Math.sin(dl),Math.cos(dtr(lat))*Math.tan(dtr(kl))-Math.sin(dtr(lat))*Math.cos(dl))),360)}
-function distKm(lat,lng){const [kl,kg]=KAABA,R=6371,a=Math.sin(dtr(kl-lat)/2)**2+Math.cos(dtr(lat))*Math.cos(dtr(kl))*Math.sin(dtr(kg-lng)/2)**2;return 2*R*Math.asin(Math.sqrt(a))}
+function distKm(lat,lng,T){const [kl,kg]=T||KAABA,R=6371,a=Math.sin(dtr(kl-lat)/2)**2+Math.cos(dtr(lat))*Math.cos(dtr(kl))*Math.sin(dtr(kg-lng)/2)**2;return 2*R*Math.asin(Math.sqrt(a))}
+/* key, chip, place name, "facing ..." wording, latitude, longitude */
+const QPL=[['kaaba','Qibla','Makkah','the Qibla',21.422487,39.826206],['medina','Medina','Madinah','Madinah',24.4672,39.6112],['najaf','Najaf','Najaf','Najaf',31.9960,44.3147],['karbala','Karbala','Karbala','Karbala',32.6163,44.0324],['mashhad','Mashhad','Mashhad','Mashhad',36.2879,59.6157]];
+let qTgt=store.get('qTgt','kaaba');
 function renderQibla(){
   setHeader('Qibla direction',false);
   if(!LOC||editing){app.innerHTML=`${pgBan('قِبْلَه','Qibla Direction','Choose your city')}<div class="card" id="pick"></div>${LOC?'<button class="btn" id="cancelEdit">Cancel</button>':''}`;
     cityPicker($('pick'));if($('cancelEdit'))$('cancelEdit').onclick=()=>{editing=false;renderQibla()};return}
-  const b=qibla(LOC.lat,LOC.lng),km=distKm(LOC.lat,LOC.lng);
+  const P=QPL.find(x=>x[0]===qTgt)||QPL[0],T=[P[4],P[5]];
+  const b=qibla(LOC.lat,LOC.lng,T),km=distKm(LOC.lat,LOC.lng,T);
   const card=['N','NE','E','SE','S','SW','W','NW'][Math.round(b/45)%8];
-  const ticks=Array.from({length:72},(_,i)=>{const a=i*5,l=i%18===0?14:i%2===0?8:4;return`<line x1="150" y1="${22}" x2="150" y2="${22+l}" transform="rotate(${a} 150 150)" stroke="var(--muted)" stroke-width="${i%18===0?2:1}"/>`}).join('');
+  const ticks=Array.from({length:180},(_,i)=>{const a=i*2,big=a%30===0,mid=a%10===0,l=big?16:mid?11:6;
+    return `<line x1="160" y1="22" x2="160" y2="${22+l}" transform="rotate(${a} 160 160)" stroke="${big?'var(--ink)':'var(--muted)'}" stroke-opacity="${big?.9:mid?.7:.4}" stroke-width="${big?2.2:1.2}" stroke-linecap="round"/>`}).join('');
+  const nums=[30,60,120,150,210,240,300,330].map(a=>`<text x="160" y="58" text-anchor="middle" font-size="11.5" font-weight="600" fill="var(--muted)" transform="rotate(${a} 160 160)" font-family="Inter,sans-serif">${a}</text>`).join('');
+  const dirs=['N','E','S','W'].map((t,i)=>`<text x="160" y="62" text-anchor="middle" font-size="19" font-weight="800" fill="${t==='N'?'#d9483b':'var(--ink)'}" transform="rotate(${i*90} 160 160)" font-family="Inter,sans-serif">${t}</text>`).join('');
+  const mark=P[0]==='kaaba'?`<g transform="translate(160 33) rotate(${(-b).toFixed(1)})"><rect x="-12" y="-12" width="24" height="24" rx="3" fill="#161616" stroke="#d4b06a" stroke-width="1"/><rect x="-12" y="-6" width="24" height="4" fill="#d4b06a"/></g>`
+    :`<g transform="translate(160 33) rotate(${(-b).toFixed(1)})"><path d="M0 -14C7 -9 10 -4 10 2v9H-10V2C-10 -4 -7 -9 0 -14z" fill="var(--gold)" stroke="#fff" stroke-width="1"/><path d="M0 -19v5" stroke="var(--gold)" stroke-width="2" stroke-linecap="round"/></g>`;
   app.innerHTML=`${pgBan('قِبْلَه','Qibla Direction','Towards the Holy Kaaba')}
    <div class="card loc"><b>📍 ${esc(LOC.name)}</b><button class="btn" id="chg">Change</button></div>
-   <div class="card" style="text-align:center">
-     <svg class="dial" id="qDial" viewBox="0 0 300 300">
-       <g id="roseAll" style="transition:transform .15s ease-out;transform-origin:150px 150px">
-       <circle cx="150" cy="150" r="134" fill="var(--bg)" stroke="var(--line)" stroke-width="2"/>${ticks}
-       ${['N','E','S','W'].map((t,i)=>`<text x="150" y="58" text-anchor="middle" font-size="18" font-weight="600" fill="${t==='N'?'#c0392b':'var(--muted)'}" transform="rotate(${i*90} 150 150)" font-family="Inter,sans-serif">${t}</text>`).join('')}
-       <g transform="rotate(${b.toFixed(1)} 150 150)">
-         <line x1="150" y1="150" x2="150" y2="62" stroke="var(--accent)" stroke-width="5" stroke-linecap="round"/>
-         <path d="M150 44 L162 70 L138 70 Z" fill="var(--accent)"/>
-         <g transform="translate(150 30) rotate(${(-b).toFixed(1)})"><rect x="-11" y="-11" width="22" height="22" rx="2" fill="#1d1d1d"/><rect x="-11" y="-5" width="22" height="3.5" fill="#d4b06a"/></g>
+   <div class="card qcard">
+     <div class="qchips">${QPL.map(x=>`<button type="button" data-q="${x[0]}" class="${x[0]===P[0]?'on':''}">${x[1]}</button>`).join('')}</div>
+     <div class="qbig"><b>${Math.round(b)}°</b><span>${card}</span></div>
+     ${window.NH?`<div id="qStatus" class="qstat">Hold your phone flat…</div>`:`<div class="qstat qweb">Turn until your compass reads ${Math.round(b)}°</div>`}
+     <svg class="dial qdial" id="qDial" viewBox="0 0 320 320" aria-label="Compass dial">
+       <circle cx="160" cy="160" r="150" fill="var(--bg)" stroke="var(--line)" stroke-width="1.5"/>
+       <g id="roseAll" style="transition:transform .15s ease-out;transform-origin:160px 160px">
+         <circle cx="160" cy="160" r="142" fill="none" stroke="var(--line)" stroke-width="1"/>${ticks}${nums}${dirs}
+         <circle cx="160" cy="160" r="84" fill="none" stroke="var(--line)" stroke-width="1"/>
+         <g transform="rotate(${b.toFixed(1)} 160 160)">
+           <path d="M160 160L160 76" stroke="var(--gold)" stroke-width="3.5" stroke-linecap="round"/>
+           <path d="M160 58l9 20h-18z" fill="var(--gold)"/>
+           ${mark}
+         </g>
        </g>
-       </g>
-       <circle cx="150" cy="150" r="7" fill="var(--accent)"/>
-       ${window.NH?'<path d="M150 4 L158 18 L142 18 Z" fill="var(--ink)"/>':''}
+       <circle cx="160" cy="160" r="19" fill="var(--card)" stroke="var(--line)" stroke-width="1.5"/><path d="M160 153v14M153 160h14" stroke="var(--muted)" stroke-width="1.5" stroke-linecap="round"/>
+       ${window.NH?'<path d="M160 2l9 15h-18z" fill="var(--ink)"/>':''}
      </svg>
-     ${window.NH?`<div id="qStatus" class="qstat">Hold your phone flat…</div>
-     <button class="btn pri" id="qStart" style="margin:6px 0 4px" hidden>Try again</button>
-     <div class="hint">Qibla ${b.toFixed(1)}° ${card} from true North · Makkah ${Math.round(km).toLocaleString()} km</div>`:`<div class="qdeg">${b.toFixed(1)}° <span style="font-size:20px;color:var(--muted)">${card}</span></div>
-     <div class="hint">clockwise from true North · Makkah is ${Math.round(km).toLocaleString()} km away</div>`}
+     ${window.NH?`<button class="btn pri" id="qStart" style="margin:6px 0 4px" hidden>Try again</button>`:''}
+     <div class="qstats"><div><small>Direction</small><b>${b.toFixed(1)}° ${card}</b></div><div><small>${P[0]==='kaaba'?'Holy Kaaba':'Holy shrine'}</small><b>${P[2]}</b></div><div><small>Distance</small><b>${Math.round(km).toLocaleString()} km</b></div></div>
+     <div class="hint" style="margin-top:10px">Measured clockwise from true North, from ${esc(LOC.name)}.</div>
    </div>
    ${dediHTML()}
-   ${window.NH?'':`<div class="card hint"><b style="color:var(--ink)">How to use it:</b> open your phone's Compass app, turn until it reads <b>${Math.round(b)}°</b> — you're then facing the Qibla. (A web page can't read your phone's compass sensor, so this dial doesn't turn by itself.)</div>`}`;
-  if(window.NH){$('qStart').onclick=()=>NH.startCompass(b);setTimeout(()=>{if($('roseAll'))NH.startCompass(b)},150)}
+   ${window.NH?'':`<div class="card hint"><b style="color:var(--ink)">How to use it:</b> open your phone's Compass app and turn until it reads <b>${Math.round(b)}°</b>. You are then facing ${P[3]}. (A web page can't read your phone's compass sensor, so this dial doesn't turn by itself.)</div>`}`;
+  app.querySelectorAll('.qchips [data-q]').forEach(c=>c.onclick=()=>{const x=app.querySelector('.qchips').scrollLeft;qTgt=c.dataset.q;store.set('qTgt',qTgt);renderQibla();const n=app.querySelector('.qchips');if(n)n.scrollLeft=x});
+  if(window.NH){$('qStart').onclick=()=>NH.startCompass(b,P[3]);setTimeout(()=>{if($('roseAll'))NH.startCompass(b,P[3])},150)}
   $('chg').onclick=()=>{editing=true;renderQibla()};
 }
 
@@ -925,9 +932,16 @@ function renderToday(){
    <div class="recs">${(()=>{const EM={z:'🕌',d:'🤲',s:'📖',m:'🌙',a:'✨',n:'🧎',t:'📿',e:'☀️'};const t=todaySahifa();
      const card=(d,k)=>`<a class="rec" href="#dua-${d.id}"><span class="rec-e">${EM[d.grp]||'🤲'}</span><span class="t">${k?`<small class="rec-k">${k}</small>`:''}<b>${esc(d.name)}</b>${d.sub?`<small>${esc(d.sub)}</small>`:''}</span>${d.ur?`<span class="rec-u">${d.ur}</span>`:''}<span class="dcat-go">›</span></a>`;
      return (t.d?card(t.d,"Today's supplication"):'')+todays.map(id=>{const d=LIST.find(x=>x.id===id);return d?card(d,''):''}).join('')})()}</div>
+   <div class="tlabel" style="margin:20px 4px 10px">Recommended acts</div>
+   <div class="card acts" id="acts">${(()=>{const dk='acts:'+civ(new Date()).join('-'),done=store.get(dk,{});
+     const A=[['zahra','Tasbih of Fatima Zahra (s.a.)','34 Allahu Akbar · 33 Alhamdulillah · 33 SubhanAllah','t:zahra'],['kursi','Ayat ul Kursi','Surah al-Baqarah 2:255','h:dua-ayat-kursi'],['ikhlas','Surah al-Ikhlas','Surah 112','h:surah-112'],['salawat','Salawat','Blessings on Muhammad and his family','t:salawat'],['istighfar','Istighfar','Astaghfirullaha Rabbi wa atubu ilayh','t:istighfar'],['shukr','Sajdah of gratitude','Say "Shukran lillah" three times in sajdah','']];
+     const BEAD='<svg viewBox="0 0 24 24"><circle cx="12" cy="4" r="1.6"/><circle cx="17.2" cy="6.2" r="1.6"/><circle cx="19.4" cy="11.4" r="1.6"/><circle cx="17.2" cy="16.6" r="1.6"/><circle cx="6.8" cy="6.2" r="1.6"/><circle cx="4.6" cy="11.4" r="1.6"/><circle cx="6.8" cy="16.6" r="1.6"/><circle cx="12" cy="18.8" r="1.6"/></svg>',BOOK='<svg viewBox="0 0 24 24" class="ln"><path d="M5 4.5A2.5 2.5 0 0 1 7.5 2H19v16H7.5A2.5 2.5 0 0 0 5 20.5zM5 20.5A2.5 2.5 0 0 0 7.5 23H19v-5M9 7h6"/></svg>';
+     return A.map(([k,n,sub,act])=>`<div class="act${done[k]?' ok':''}"><span class="t"><b>${n}</b><small>${sub}</small></span>${act?`<button type="button" class="act-b" data-act="${act}" aria-label="Open ${n}">${act[0]==='t'?BEAD:BOOK}</button>`:''}<button type="button" class="act-c" data-done="${k}" aria-label="Mark ${n} as done" aria-pressed="${done[k]?'true':'false'}"><svg viewBox="0 0 24 24" class="ln"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg></button></div>`).join('')})()}</div>
    ${dediHTML()}
    ${window.NH?`<div class="card hint" style="margin-top:16px"><b style="color:var(--ink)">Widgets:</b> add the Next Prayer and Ayah of the Day widgets to your home or lock screen — touch and hold an empty spot, tap <b>+</b> (iPhone) or <b>Widgets</b> (Android), and search “Quran & Duas”.</div>`:`<div class="card hint" style="margin-top:16px"><b style="color:var(--ink)">Widgets:</b> lock-screen and home-screen widgets need an app installed from the App Store, so this web app can't add one. This Today page shows the same things — next prayer and the ayah of the day.</div>`}`;
   if($('tcal'))todayCal();
+  if($('acts')){$('acts').querySelectorAll('[data-act]').forEach(b=>b.onclick=()=>{const a=b.dataset.act;if(a[0]==='t')tasbihOpen(a.slice(2));else location.hash=a.slice(2)});
+    $('acts').querySelectorAll('[data-done]').forEach(b=>b.onclick=()=>{const dk='acts:'+civ(new Date()).join('-'),d=store.get(dk,{});d[b.dataset.done]=!d[b.dataset.done];store.set(dk,d);b.closest('.act').classList.toggle('ok',!!d[b.dataset.done]);b.setAttribute('aria-pressed',d[b.dataset.done]?'true':'false')})}
   $('ayPlay').onclick=()=>{Q.playVerse(A.s,A.a)};
   $('ayCopy').onclick=()=>{const t=`${vs.map(v=>Q.ARX()[A.s-1][v-1]).join(' ')}\n\n${en}\n\n${ur}\n— Quran ${ref} (${META[A.s-1][1]})`;
     try{navigator.clipboard.writeText(t).then(()=>toast('Ayah copied'),()=>toast('Copy not allowed here'))}catch(e){toast('Copy not allowed here')}};
@@ -937,6 +951,36 @@ function updToday(){const el=$('todayCd');if(!el||!LOC)return;const np=nextPraye
   const s=Math.max(0,Math.round((np.t-new Date())/1000)),h=Math.floor(s/3600),m=Math.floor(s%3600/60);
   el.textContent=`Next prayer in ${h?h+' hr ':''}${m} min`}
 setInterval(()=>{if(location.hash===''||location.hash==='#today')updToday()},20000);
+
+/* ================= TASBIH ================= */
+const TSB_Z=[['اَللّٰهُ اَكْبَر','Allahu Akbar',34],['اَلْحَمْدُ لِلّٰه','Alhamdulillah',33],['سُبْحَانَ اللّٰه','SubhanAllah',33]];
+const TSB_M={zahra:['Tasbih of Fatima Zahra (s.a.)'],salawat:['Salawat','اَللّٰهُمَّ صَلِّ عَلٰى مُحَمَّدٍ وَّاٰلِ مُحَمَّدٍ','Allahumma salli ala Muhammadin wa aali Muhammad',100],istighfar:['Istighfar','اَسْتَغْفِرُ اللّٰهَ رَبِّيْ وَاَتُوْبُ اِلَيْهِ','Astaghfirullaha Rabbi wa atubu ilayh',33],free:['Counter','','',33]};
+let TSB=store.get('tasbih',{mode:'zahra',n:0,st:0,tg:{}});
+if(!TSB||!TSB_M[TSB.mode])TSB={mode:'zahra',n:0,st:0,tg:{}};if(!TSB.tg)TSB.tg={};
+const tsbTarget=()=>TSB.mode==='zahra'?TSB_Z[Math.min(TSB.st,2)][2]:(TSB.tg[TSB.mode]!==undefined?TSB.tg[TSB.mode]:TSB_M[TSB.mode][3]);
+function tasbihDraw(){
+  const el=$('tsbBody');if(!el)return;
+  const z=TSB.mode==='zahra',done=z&&TSB.st>2,cur=z?TSB_Z[Math.min(TSB.st,2)]:[TSB_M[TSB.mode][1],TSB_M[TSB.mode][2]],tg=tsbTarget();
+  el.innerHTML=`<div class="tsb-modes">${Object.keys(TSB_M).map(k=>`<button type="button" data-m="${k}" class="${k===TSB.mode?'on':''}">${TSB_M[k][0]}</button>`).join('')}</div>
+   <button type="button" class="tsb-tap${done?' done':''}" id="tsbTap" aria-label="Count">
+     ${z?`<span class="tsb-steps">${TSB_Z.map((x,i)=>`<i class="${i<TSB.st?'ok':i===TSB.st?'on':''}">${x[2]}</i>`).join('')}</span>`:''}
+     ${done?`<span class="tsb-ar">تَقَبَّلَ اللّٰه</span><span class="tsb-tr">Completed. May Allah accept it.</span><span class="tsb-n">✓</span><span class="tsb-pill">100 / 100</span><span class="tsb-hint">Tap to start again</span>`
+      :`${cur[0]?`<span class="tsb-ar">${cur[0]}</span>`:''}${cur[1]?`<span class="tsb-tr">${cur[1]}</span>`:''}<span class="tsb-n">${TSB.n}</span><span class="tsb-pill">${TSB.n}${tg?' / '+tg:''}</span><span class="tsb-hint">Tap anywhere to count</span>`}
+   </button>
+   <div class="tsb-foot"><button type="button" class="btn" id="tsbReset">↺ Reset</button>${z?'':`<div class="seg tsb-tg">${[33,34,100,0].map(v=>`<button type="button" data-tg="${v}" class="${tg===v?'on':''}">${v||'∞'}</button>`).join('')}</div>`}</div>`;
+  el.querySelectorAll('[data-m]').forEach(b=>b.onclick=()=>{const x=el.querySelector('.tsb-modes').scrollLeft;TSB.mode=b.dataset.m;TSB.n=0;TSB.st=0;store.set('tasbih',TSB);tasbihDraw();el.querySelector('.tsb-modes').scrollLeft=x});
+  el.querySelectorAll('[data-tg]').forEach(b=>b.onclick=()=>{TSB.tg[TSB.mode]=+b.dataset.tg;TSB.n=0;store.set('tasbih',TSB);tasbihDraw()});
+  $('tsbReset').onclick=()=>{TSB.n=0;TSB.st=0;store.set('tasbih',TSB);tasbihDraw()};
+  $('tsbTap').onclick=()=>{
+    const buzz=ms=>{try{navigator.vibrate&&navigator.vibrate(ms)}catch(e){}};
+    if(z&&TSB.st>2){TSB.n=0;TSB.st=0}
+    else{TSB.n++;const t=tsbTarget();
+      if(z&&TSB.n>=t){TSB.st++;TSB.n=0;buzz(TSB.st>2?[60,60,120]:60)}
+      else if(!z&&t&&TSB.n===t)buzz([60,60,120]);
+      else buzz(12)}
+    store.set('tasbih',TSB);tasbihDraw()};
+}
+function tasbihOpen(mode){if(mode&&TSB_M[mode]&&mode!==TSB.mode){TSB.mode=mode;TSB.n=0;TSB.st=0;store.set('tasbih',TSB)}Q.openSheet('tsbSheet');tasbihDraw()}
 
 /* ================= BOOKS: classical hadith books, read from the app's own server ================= */
 /* slug, name, Arabic, author, hadith, meaning of the title, categories, cover colours */
@@ -973,11 +1017,11 @@ const bkAgo=t=>{const m=Math.round((Date.now()-t)/60000);return m<2?'Just now':m
 function drawBooks(q,norm){
   const L=$('dlist'),last=store.get('bkLast',null),lb=last&&BK.find(b=>b[0]===last.slug);
   const items=BK.filter(b=>(bkCat==='all'||b[6].includes(bkCat))&&(!q||norm(b[1]+' '+b[3]+' '+b[5]+' '+b[2]).includes(q)));
-  L.innerHTML=(lb&&!q?`<div class="bkall"><b>Continue Reading</b><i></i><button type="button" id="bkLastX" aria-label="Remove">✕</button></div><a class="bkcard" href="#book-${esc(last.ref)}">${bkCover(lb)}<span class="t"><b>${esc(lb[1])}</b>${last.title&&last.title!==lb[1]?`<i>${esc(last.title)}</i>`:`<i>${esc(lb[5])}</i>`}<small>${esc(lb[3])}</small><em>${bkAgo(last.t)}</em></span></a>`:'')
+  L.innerHTML='<div class="bkwrap">'+(lb&&!q?`<div class="bkall"><b>Continue Reading</b><i></i><button type="button" id="bkLastX" aria-label="Remove">✕</button></div><a class="bkcard" href="#book-${esc(last.ref)}">${bkCover(lb)}<span class="t"><b>${esc(lb[1])}</b>${last.title&&last.title!==lb[1]?`<i>${esc(last.title)}</i>`:`<i>${esc(lb[5])}</i>`}<small>${esc(lb[3])}</small><em>${bkAgo(last.t)}</em></span></a>`:'')
    +`<div class="bkall"><span>All Books</span><i></i><span>${items.length}</span><button type="button" id="bkViewB" aria-label="Grid or list">${bkView==='grid'?'☰':'▦'}</button></div>
    <div class="bkchips">${BKCATS.map(([k,n])=>`<button type="button" data-c="${k}" class="${k===bkCat?'on':''}">${n}</button>`).join('')}</div>
    <div class="${bkView==='grid'?'bkgrid':'bklist'}">${items.map(b=>`<a class="bkcard" href="#book-${b[0]}">${bkCover(b)}<span class="t"><b>${esc(b[1])}</b><i>${esc(b[5])}</i><small>${esc(b[3])}</small></span></a>`).join('')||'<div class="bk-load">No book matches.</div>'}</div>
-   <div class="hint" style="margin:14px 2px">The Arabic is the original text. The English is a machine translation of it, so read it as a guide. The books load from the internet.</div>`;
+   <div class="hint" style="margin:14px 2px">The Arabic is the original text. The English is a machine translation of it, so read it as a guide. The books load from the internet.</div></div>`;
   L.querySelectorAll('.bkchips [data-c]').forEach(c=>c.onclick=()=>{const x=L.querySelector('.bkchips').scrollLeft;bkCat=c.dataset.c;drawBooks(q,norm);L.querySelector('.bkchips').scrollLeft=x});
   $('bkViewB').onclick=()=>{bkView=bkView==='grid'?'list':'grid';store.set('bkView',bkView);drawBooks(q,norm)};
   if($('bkLastX'))$('bkLastX').onclick=()=>{store.set('bkLast',null);drawBooks(q,norm)};
@@ -1026,5 +1070,5 @@ window.XR=function(h){
   return false;
 };
 setInterval(tick,1000);
-window.QX={pgBan,bookUp,meritsHTML,autoLocate,locateMe,get LOC(){return LOC},get ALERTS(){return ALERTS},timesFor,PR,nextPrayer,fmt,DAILY,LIST,UD,DU,slotFor,get AZ(){return AZ},playAlert,stopAlert,hijriToday:()=>HFMT?hijriToday():null,hijriStr,eventsOn,evTitle,HMU,HM};
+window.QX={tasbihOpen,pgBan,bookUp,meritsHTML,autoLocate,locateMe,get LOC(){return LOC},get ALERTS(){return ALERTS},timesFor,PR,nextPrayer,fmt,DAILY,LIST,UD,DU,slotFor,get AZ(){return AZ},playAlert,stopAlert,hijriToday:()=>HFMT?hijriToday():null,hijriStr,eventsOn,evTitle,HMU,HM};
 })();
