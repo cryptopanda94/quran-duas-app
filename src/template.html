@@ -286,6 +286,22 @@ details.merits .men{font-size:var(--en-size);line-height:1.65;white-space:pre-li
 
 .pbar{position:fixed;left:8px;right:8px;bottom:calc(64px + env(safe-area-inset-bottom));z-index:16;background:var(--card);border:1px solid var(--line);border-radius:16px;box-shadow:0 6px 24px rgba(0,0,0,.15);display:none;align-items:center;gap:4px;padding:8px 10px;max-width:640px;margin:0 auto}
 .pbar.show{display:flex}
+.asbar{position:fixed;left:50%;transform:translateX(-50%);bottom:calc(74px + env(safe-area-inset-bottom));z-index:17;display:flex;align-items:center;gap:4px;padding:6px;border-radius:999px;background:var(--card);border:1px solid var(--line);box-shadow:0 6px 24px rgba(0,0,0,.18)}
+.asbar[hidden]{display:none}
+body.playing .asbar{bottom:calc(142px + env(safe-area-inset-bottom))}
+.asbar button{width:40px;height:40px;border-radius:50%;display:grid;place-items:center;font-size:22px;font-weight:600;color:var(--ink);background:var(--bg)}
+.asbar #asPlay{background:var(--fill,var(--accent));color:#fff}
+.asbar svg{width:20px;height:20px;stroke:currentColor;fill:none;stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round}
+.asbar #asPlay svg{fill:currentColor;stroke:none}
+.as-sp{display:flex;flex-direction:column;align-items:center;min-width:74px;line-height:1.1}.as-sp b{font-size:17px}.as-sp small{font-size:10.5px;color:var(--muted)}
+#asBtn.on{color:var(--accent)}
+.naqsh{margin:4px 0 16px;padding:12px;border-radius:16px;background:var(--card);border:1px solid var(--line);text-align:center}
+.naqsh .nq-h,.nq-card .nq-t{display:flex;justify-content:space-between;align-items:baseline;gap:8px;margin:0 2px 10px}
+.naqsh .nq-h span,.nq-card .nq-t span{font-family:'Noto Nastaliq Urdu',serif;color:var(--muted);font-size:14px}
+.naqsh img,.nq-card img{display:block;width:100%;max-width:620px;margin:0 auto;border-radius:10px;background:#fff;padding:6px;box-sizing:border-box}
+.naqsh small{display:block;margin-top:8px;color:var(--muted);font-size:12px}
+.nq-card{display:block}.nq-card .nq-t b{font-size:16px;color:var(--ink)}.nq-card .tsub{margin-top:8px}
+.item.tday{border:1.5px solid var(--accent)}
 .pbar .pt{flex:1;min-width:0;font-size:14px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;padding-left:4px}
 .pbar .pt small{display:block;font-weight:400;color:var(--muted);font-size:11px}
 .pbar button{width:36px;height:36px;border-radius:10px;display:grid;place-items:center;color:var(--ink);flex:none}
@@ -485,6 +501,7 @@ body .ayah-card .v-en{display:block!important}
 <header class="top"><div class="bar">
   <button class="icon-btn" id="backBtn" aria-label="Back" style="display:none"><svg viewBox="0 0 24 24"><path d="M15 18l-6-6 6-6"/></svg></button>
   <h1 id="title">Quran</h1>
+  <button class="icon-btn" id="asBtn" aria-label="Auto-scroll" style="display:none"><svg viewBox="0 0 24 24"><path d="M12 4v13M7 12l5 5 5-5"/><path d="M5 20h14"/></svg></button>
   <button class="icon-btn" id="jumpBtn" aria-label="Go to verse" style="display:none"><svg viewBox="0 0 24 24"><path d="M4 6h16M4 12h10M4 18h7"/></svg></button>
   <button class="icon-btn" id="setBtn" aria-label="Settings"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 1 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 1 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 1 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 1 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg></button>
 </div><div class="jzbar" id="jzBar" hidden></div></header>
@@ -570,6 +587,13 @@ body .ayah-card .v-en{display:block!important}
   <button id="pClose" aria-label="Close player"><svg viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></svg></button>
 </div>
 <div class="alertbar" id="alertbar"><b id="alertTxt"></b><button id="alertStop">Stop</button></div>
+<div class="asbar" id="asBar" hidden role="toolbar" aria-label="Auto-scroll">
+  <button id="asPlay" aria-label="Pause or resume"></button>
+  <button id="asSlow" aria-label="Slower">−</button>
+  <div class="as-sp"><b id="asMin"></b><small>min per juz</small></div>
+  <button id="asFast" aria-label="Faster">+</button>
+  <button id="asClose" aria-label="Stop auto-scroll"><svg viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></svg></button>
+</div>
 <nav class="tabbar" id="tabbar">
   <a href="#today" data-tab="today"><svg viewBox="0 0 24 24"><path d="M4 11l8-6 8 6v8a1 1 0 0 1-1 1h-4v-6h-6v6H5a1 1 0 0 1-1-1z"/></svg>Today</a>
   <a href="#home" data-tab="quran"><svg viewBox="0 0 24 24"><path d="M4 5.5C6.5 4 9.5 4 12 6c2.5-2 5.5-2 8-.5V19c-2.5-1.5-5.5-1.5-8 .5-2.5-2-5.5-2-8-.5z"/><path d="M12 6v13.5"/></svg>Quran</a>
@@ -944,7 +968,34 @@ app.addEventListener('click',e=>{
 });
 
 /* ---------- Chrome ---------- */
-function setHeader(html,reader){{const b=$('jzBar');if(b)b.hidden=true;document.body.classList.remove('reading')}$('title').innerHTML=html;$('backBtn').style.display=reader?'':'none';$('jumpBtn').style.display=reader?'':'none'}
+/* ---------- Auto-scroll: steady scroll timed in minutes per juz ---------- */
+const AS={on:false,run:false,raf:0,acc:0,last:0,ratio:0,lastRatio:0,stuck:0,min:store.get('asMin',25),lock:null,
+  perJuz(){if(!this._pj){let n=0;for(const s of AR)for(const v of s)n+=v.length;this._pj=n/30}return this._pj},
+  measure(){const els=document.querySelectorAll('#app .ar, #app .v-ar');let n=0;els.forEach(e=>{if(!e.closest('.s-head,.hero'))n+=e.textContent.length});
+    const h=document.documentElement.scrollHeight;this.ratio=n>200?h/n:0;this.lastRatio=performance.now()},
+  pxps(){const lps=this.perJuz()/(this.min*60);return (this.ratio||1.2)*lps},
+  draw(){$('asMin').textContent=this.min;$('asPlay').innerHTML=this.run?'<svg viewBox="0 0 24 24"><rect x="6" y="5" width="4" height="14" rx="1"/><rect x="14" y="5" width="4" height="14" rx="1"/></svg>':'<svg viewBox="0 0 24 24"><path d="M8 5l11 7-11 7z"/></svg>';$('asBtn').classList.toggle('on',this.on)},
+  async wake(on){try{if(on&&!this.lock&&navigator.wakeLock)this.lock=await navigator.wakeLock.request('screen');else if(!on&&this.lock){this.lock.release();this.lock=null}}catch(e){this.lock=null}},
+  tick(t){if(!AS.run)return;const dt=Math.min(100,t-(AS.last||t));AS.last=t;
+    if(t-AS.lastRatio>4000)AS.measure();
+    AS.acc+=AS.pxps()*dt/1000;const step=Math.floor(AS.acc);
+    if(step>=1){AS.acc-=step;const y=window.scrollY;window.scrollBy(0,step);
+      if(window.scrollY===y){if((AS.stuck+=dt)>2500){AS.pause();toast('Reached the end');return}}else AS.stuck=0}
+    AS.raf=requestAnimationFrame(AS.tick)},
+  start(){this.on=true;$('asBar').hidden=false;this.measure();this.resume()},
+  resume(){this.run=true;this.last=0;this.stuck=0;this.wake(true);cancelAnimationFrame(this.raf);this.raf=requestAnimationFrame(this.tick);this.draw()},
+  pause(){this.run=false;cancelAnimationFrame(this.raf);this.wake(false);this.draw()},
+  stop(){if(!this.on)return;this.pause();this.on=false;$('asBar').hidden=true;this.draw()},
+  speed(d){const st=[10,12,15,18,20,22,25,28,30,35,40,45,50,60];let i=st.indexOf(this.min);if(i<0)i=6;i=Math.max(0,Math.min(st.length-1,i+d));this.min=st[i];store.set('asMin',this.min);this.draw()}};
+$('asBtn').onclick=()=>AS.on?AS.stop():AS.start();
+$('asPlay').onclick=()=>AS.run?AS.pause():AS.resume();
+$('asSlow').onclick=()=>AS.speed(1);$('asFast').onclick=()=>AS.speed(-1);$('asClose').onclick=()=>AS.stop();
+// a finger on the page pauses; lifting it carries on from where the reader left it
+let asHeld=false;addEventListener('touchstart',e=>{if(AS.run&&!e.target.closest('#asBar')){asHeld=true;AS.pause()}},{passive:true});
+addEventListener('touchend',()=>{if(asHeld){asHeld=false;setTimeout(()=>{if(AS.on&&!AS.run)AS.resume()},600)}},{passive:true});
+addEventListener('wheel',()=>{AS.acc=0},{passive:true});
+document.addEventListener('visibilitychange',()=>{if(document.hidden&&AS.run)AS.pause()});
+function setHeader(html,reader){{const b=$('jzBar');if(b)b.hidden=true;document.body.classList.remove('reading')}$('title').innerHTML=html;$('backBtn').style.display=reader?'':'none';$('jumpBtn').style.display=reader?'':'none';$('asBtn').style.display=reader&&/^#(surah|juz|dua)-/.test(location.hash)?'':'none';AS.stop()}
 function route(){
   const h=location.hash.slice(1),m=h.match(/^surah-(\d{1,3})(?:-(\d{1,3}))?$/);
   closeSheets();
@@ -991,7 +1042,7 @@ $('fontSeg').onclick=e=>{const b=e.target.closest('button');if(!b)return;S.font=
 $('trSw').onclick=()=>{S.showTr=!S.showTr;store.set('showTr',S.showTr);applySettings()};
 $('ruleSw').onclick=()=>{S.rules=!S.rules;store.set('rules',S.rules);applySettings()};
 $('setDone').onclick=()=>closeSheets();
-const AUD_MB={alafasy:221,sudais:157,abdulbasit:223,mujawwad:319};
+const AUD_MB={alafasy:221,sudais:157,abdulbasit:223,mujawwad:420};
 function audUrls(){return AUD.flatMap(x=>x.p.map(q=>q[0]))}
 function drawOff(){const box=$('offAud'),OA=window.NH&&NH.audio;if(!box)return;if(!OA){box.hidden=true;return}box.hidden=false;
   const st=OA.stats(audUrls()),sur=AUD.filter(x=>x.p.every(q=>OA.has(q[0]))).length,b=OA.busy(),all=st.n>=st.total;

@@ -18,7 +18,19 @@ const audsPath = join(src, 'data', 'aud_sudais.json');
 const auds = existsSync(audsPath) ? JSON.stringify(JSON.parse(readFileSync(audsPath, 'utf8')).map((x) => ({ p: x.p.map(([n, c]) => [AUDIO_BASE + n, c]), a: x.a }))) : 'null';
 const audbPath = join(src, 'data', 'aud_abdulbasit.json');
 const audmPath = join(src, 'data', 'aud_mujawwad.json');
-const audm = existsSync(audmPath) ? JSON.stringify(JSON.parse(readFileSync(audmPath, 'utf8')).map((x) => ({ p: x.p.map(([n, c]) => [AUDIO_BASE + n, c]), a: x.a }))) : 'null';
+const MUJ_BASE = 'https://cryptopanda94.github.io/abdulbasit-mujawwad/audio/';
+// Abdul Basit Mujawwad: audio and verse timings live in cryptopanda94/abdulbasit-mujawwad.
+// Timings are taken from that repo at build time (so they work offline); the copy in src/data is the fallback.
+const MUJ_TIMINGS_URL = process.env.MUJ_TIMINGS_URL || 'https://raw.githubusercontent.com/cryptopanda94/abdulbasit-mujawwad/main/src/data/aud_mujawwad.json';
+const mujOk = (d) => Array.isArray(d) && d.length === 114 && d.every((x) => Array.isArray(x.p) && x.p.length && Array.isArray(x.a) && x.a.length);
+let mujData = null;
+try {
+  const r = await fetch(MUJ_TIMINGS_URL, { signal: AbortSignal.timeout(20000) });
+  if (r.ok) { const d = await r.json(); if (mujOk(d)) { mujData = d; console.log('Mujawwad timings: from', MUJ_TIMINGS_URL); } }
+  if (!mujData) console.warn('! Mujawwad timings: repo copy ' + (r.ok ? 'not valid' : 'unavailable (HTTP ' + r.status + ')') + ', using src/data copy');
+} catch (e) { console.warn('! Mujawwad timings: could not reach repo (' + e.message + '), using src/data copy'); }
+if (!mujData && existsSync(audmPath)) mujData = JSON.parse(readFileSync(audmPath, 'utf8'));
+const audm = mujData ? JSON.stringify(mujData.map((x) => ({ p: x.p.map(([n, c]) => [MUJ_BASE + n, c]), a: x.a }))) : 'null';
 const audb = existsSync(audbPath) ? JSON.stringify(JSON.parse(readFileSync(audbPath, 'utf8')).map((x) => ({ p: x.p.map(([n, c]) => [AUDIO_BASE + n, c]), a: x.a }))) : 'null';
 const aud = JSON.stringify(JSON.parse(rd('data/aud16.json')).map((x) => ({ p: x.p.map(([n, c]) => [AUDIO_BASE + n, c]), a: x.a })));
 
