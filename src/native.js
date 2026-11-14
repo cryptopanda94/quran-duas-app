@@ -395,6 +395,62 @@
     },
   };
 
+  /* ---------------- First launch: ask for every permission the app uses, in one go ---------------- */
+  // A short explanation, then one "Continue" button that brings up the system prompts (the user can still say no to each).
+  function needsWelcome() { return !store.get('permsAsked', false); }
+  function welcome() {
+    if (document.getElementById('qdWelcome')) return;
+    const ios = platform === 'ios';
+    const row = (ic, t, s) => `<div style="display:flex;gap:12px;align-items:flex-start;text-align:left;margin:12px 0"><span style="font-size:24px;line-height:1">${ic}</span><span><b style="display:block;font-size:15.5px;color:var(--ink)">${t}</b><small style="color:var(--muted);font-size:13px;line-height:1.4">${s}</small></span></div>`;
+    const w = document.createElement('div');
+    w.id = 'qdWelcome';
+    w.setAttribute('role', 'dialog'); w.setAttribute('aria-label', 'Set up Quran & Duas');
+    w.style.cssText = 'position:fixed;inset:0;z-index:100;background:rgba(0,0,0,.45);display:flex;align-items:flex-end;justify-content:center';
+    w.innerHTML = `<div style="background:var(--card);color:var(--ink);width:100%;max-width:520px;border-radius:22px 22px 0 0;padding:22px 22px calc(22px + env(safe-area-inset-bottom));box-shadow:0 -8px 30px rgba(0,0,0,.2)">
+      <div style="text-align:center;font-family:'Noto Nastaliq Urdu',serif;font-size:22px;color:var(--accent)">بِسْمِ اللّٰهِ</div>
+      <h2 style="text-align:center;margin:6px 0 4px;font-size:21px">Welcome to Quran &amp; Duas</h2>
+      <p style="text-align:center;color:var(--muted);margin:0 0 6px;font-size:14px">To work fully, the app will ask for:</p>
+      ${row('📍', 'Location', 'Sets your prayer times and the Qibla direction for where you are.')}
+      ${row('🔔', 'Notifications' + (ios ? ' & alarms' : ''), 'Plays the azan at each prayer time.')}
+      ${ios ? row('🧭', 'Motion & orientation', 'Lets the Qibla compass turn with your phone.') : ''}
+      <p style="color:var(--muted);font-size:12.5px;margin:10px 0 14px;text-align:center">You can change any of these later in Settings.</p>
+      <button id="qdWelcomeGo" style="width:100%;min-height:50px;border-radius:14px;background:var(--fill,var(--accent));color:#fff;font-size:16px;font-weight:600">Continue</button></div>`;
+    document.body.appendChild(w);
+    document.getElementById('qdWelcomeGo').onclick = async () => {
+      const b = document.getElementById('qdWelcomeGo'); b.disabled = true; b.textContent = 'Setting up…';
+      store.set('permsAsked', true); store.set('autoAsked', true);
+      // motion must be asked straight from the tap
+      let mo = null;
+      try { if (ios && typeof DeviceOrientationEvent !== 'undefined' && DeviceOrientationEvent.requestPermission) mo = DeviceOrientationEvent.requestPermission().catch(() => null); } catch (e) {}
+      try { await mo; } catch (e) {}
+      try { if (window.QX && QX.locateMe) await QX.locateMe(true); } catch (e) {}
+      try { if (!alertsOn) await toggleAlerts(); } catch (e) {}
+      w.remove();
+    };
+  }
+
+  /* ---------------- iOS: ask for an App Store rating now and then ---------------- */
+  // iOS shows the system rating pop-up at most three times a year and decides itself whether to show it.
+  // We only ask after the app has been opened on 5 different days, at least 3 days after the first launch, once per app version.
+  const Review = C.registerPlugin('InAppReview');
+  async function maybeAskReview() {
+    if (platform !== 'ios') return;
+    try {
+      const today = new Date().toDateString();
+      let first = store.get('firstOpen', 0); if (!first) { first = Date.now(); store.set('firstOpen', first); }
+      const days = store.get('openDays', []);
+      if (days[days.length - 1] !== today) { days.push(today); store.set('openDays', days.slice(-30)); }
+      let ver = ''; try { ver = (await AppP.getInfo()).version || ''; } catch (e) {}
+      if (store.get('reviewAsked', null) === ver) return;
+      if (days.length < 5 || Date.now() - first < 3 * 864e5) return;
+      if (needsWelcome() || document.getElementById('qdWelcome')) return;
+      setTimeout(() => {
+        if (document.hidden) return;
+        Review.requestReview().then(() => store.set('reviewAsked', ver)).catch(() => {});
+      }, 20000);
+    } catch (e) {}
+  }
+
   window.NH = { setPref, alertsOn: () => alertsOn, toggleAlerts, alertStatus, testAlert, refresh, startCompass, getLocation, platform, setIcon, audio };
 
   try {
@@ -417,6 +473,6 @@
   } catch (e) {}
 
   setTimeout(() => { try { WB.stopHeading().then(() => console.log('QD WB ok')).catch((e) => console.log('QD WB fail ' + ((e && e.message) || e))); } catch (e) { console.log('QD WB throw ' + e); } }, 1500);
-  const boot = () => setTimeout(async () => { await ensureChannel(); refresh(); window.QX && QX.autoLocate && QX.autoLocate(false); }, 800);
+  const boot = () => setTimeout(async () => { await ensureChannel(); refresh(); if (needsWelcome()) welcome(); else { window.QX && QX.autoLocate && QX.autoLocate(false); maybeAskReview(); } }, 800);
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', boot); else boot();
 })();

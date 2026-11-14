@@ -548,7 +548,7 @@ function timesFor(loc,date){ // returns {key: Date}
   for(const k in t) r[k]=new Date(base+(t[k]-off)*3600e3);
   return r;
 }
-const fmt=(loc,dt)=>{try{return dt.toLocaleTimeString([], {timeZone:loc.tz,hour:'numeric',minute:'2-digit'})}catch(e){return dt.toLocaleTimeString([], {hour:'numeric',minute:'2-digit'})}};
+const fmt=(loc,dt)=>{try{return dt.toLocaleTimeString([], {timeZone:loc.tz,hour:'numeric',minute:'2-digit',hour12:true})}catch(e){return dt.toLocaleTimeString([], {hour:'numeric',minute:'2-digit',hour12:true})}};
 
 let LOC=store.get('loc',null);
 const ALERTS=Object.assign({fajr:true,dhuhr:true,asr:true,maghrib:true,isha:true},store.get('alerts',{}));
