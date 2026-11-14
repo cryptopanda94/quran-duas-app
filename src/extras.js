@@ -686,15 +686,16 @@ function renderPrayer(){
    <div class="card ptable">${PR.map(([k,n,u,main])=>`<div class="pr${main?'':' minor'}${np&&np.k===k?' now':''}"><span>${n}</span><span class="ur">${u}</span><b>${fmt(LOC,T[k])}</b>
       ${main?`<button class="bell${ALERTS[k]?' on':''}" data-k="${k}" aria-label="Azan alert for ${n}">${ALERTS[k]?icons.bell:icons.belloff}</button>`:'<span style="width:34px;flex:none"></span>'}</div>`).join('')}</div>
    <div class="card">
-     <div style="display:flex;align-items:center;gap:10px;margin-bottom:10px"><b style="flex:1">Azan alerts</b>
-       <button class="btn${(window.NH?NH.alertsOn():armed)?'':' pri'}" id="arm">${(window.NH?NH.alertsOn():armed)?'Turn off':'Turn on alerts'}</button></div>
-     ${(window.NH?NH.alertsOn():armed)?`<div class="aprefs">
+     <div style="margin-bottom:10px"><b>Azan alerts</b></div>
+     <div class="aprefs">
+        <button class="arow" id="arm" role="switch" aria-checked="${(window.NH?NH.alertsOn():armed)?'true':'false'}"><span><b>🔔 Alerts</b><small>${(window.NH?NH.alertsOn():armed)?'On — at the time of each prayer you\'ve belled above':'Off — turn on to get an alert at the time of every salah'}</small></span><i class="sw${(window.NH?NH.alertsOn():armed)?' on':''}"></i></button>
+     ${(window.NH?NH.alertsOn():armed)?`
         <button class="arow" data-pref="alertSound"><span><b>🔊 Sound</b><small>${window.NH&&NH.platform==='ios'?'Plays the azan you chose, like an alarm — even when your iPhone is on silent':'Plays the azan you chose for each prayer'}</small></span><i class="sw${store.get('alertSound',true)?' on':''}"></i></button>
         <button class="arow" data-pref="alertVib"><span><b>📳 Vibrate</b><small>${window.NH&&NH.platform==='ios'?'With sound on, vibration follows your iPhone\'s Sounds &amp; Haptics settings':'Vibrates when the alert arrives'}</small></span><i class="sw${store.get('alertVib',true)?' on':''}"></i></button>
         <div class="hint" style="margin-top:8px">✓ Alerts on for ${esc(LOC.name)} — at the exact time of each prayer you've belled above, even when the app is closed.</div>
         ${window.NH&&NH.alertStatus?`<div class="hint" id="alstat" style="margin-top:6px">Checking alerts on this phone…</div>
-        <button class="btn" id="testAl" style="margin-top:8px;width:100%">🔔 Send a test alert (10 seconds)</button>`:''}
-      </div>`:`<div class="hint">Get an alert at the time of every salah for your location, with the azan you choose below.</div>`}
+        <button class="btn" id="testAl" style="margin-top:8px;width:100%">🔔 Send a test alert (10 seconds)</button>`:''}`:''}
+      </div>
      ${window.NH?'':`<div class="hint" style="margin-top:6px">In the web version, alerts ring <b>only while this page is open</b>. Install the app for alerts with the phone locked.</div>`}
    </div>
    <div class="card">
