@@ -64,7 +64,7 @@ t = t
   .replace('__AUDS__', auds)
   .replace('__AUDB__', audb)
   .replace('__AUDM__', audm)
-  .replace('__ASSIST_URL__', process.env.ASSIST_URL || 'https://144-24-19-101.sslip.io')
+  .replace('__ASSIST_URL__', process.env.ASSIST_URL || 'https://ask.quranduas.app')
   .replace('__DUAS__', json('data/duas.json'))
   .replace('__UDUAS__', json('data/userduas.json'))
   .replace('__CITIES__', json('data/cities.json'))
