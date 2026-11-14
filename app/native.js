@@ -5,6 +5,7 @@
   if (!C || !C.isNativePlatform || !C.isNativePlatform()) return;
 
   const platform = C.getPlatform(); // 'ios' | 'android'
+  document.documentElement.classList.add('native'); // hides web-only things such as the "get the app" links
   try { console.log('QD headers ' + JSON.stringify((C.PluginHeaders || []).map((h) => h.name))); } catch (e) {}
   const LN = C.registerPlugin('LocalNotifications');
   const WB = C.registerPlugin('WidgetBridge');
@@ -228,7 +229,7 @@
   let stopCompass = null;
   let appBuild = '';
   try { AppP.getInfo().then((i) => { appBuild = i.version + ' (' + i.build + ')'; }).catch(() => {}); } catch (e) {}
-  async function startCompass(bearing) {
+  async function startCompass(bearing, facing) {
     const status = () => document.getElementById('qStatus');
     const diag = { src: '', n: 0, err: '', acc: null, tru: null }; const t0 = Date.now();
     const showDiag = () => {
@@ -253,7 +254,7 @@
       const diff = ((bearing - h + 540) % 360) - 180;
       const ok = Math.abs(diff) < 5;
       st.classList.toggle('ok', ok);
-      st.textContent = ok ? '✓ You are facing the Qibla' : `Turn ${diff > 0 ? 'right' : 'left'} ${Math.round(Math.abs(diff))}°`;
+      st.textContent = ok ? '✓ You are facing ' + (facing || 'the Qibla') : `Turn ${diff > 0 ? 'right' : 'left'} ${Math.round(Math.abs(diff))}°`;
       const dial = document.getElementById('qDial');
       if (dial && dial.classList.contains('aligned') !== ok) {
         dial.classList.toggle('aligned', ok);
