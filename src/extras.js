@@ -375,20 +375,20 @@ function duaSpot(){const n=new Date(),day=n.getDay(),hr=n.getHours();
     :hr<12?['dua-e-ahad','Recommended this morning']:['ziyarat-ashura','Recommended today'];
   const d=LIST.find(x=>x.id===pick[0]);if(!d)return'';
   return `<a class="continue dspot" href="#dua-${d.id}"><div class="t2"><small>${pick[1]}</small><b>${esc(d.name)}</b></div><div class="dsu">${d.ur}</div>${icon.arrow}</a>`}
-const DTABS=[['e','Every Day'],['t','Taqibaat'],['n','Namaz'],['d','Duas'],['z','Ziyarat'],['a','Aamaal'],['m','Munajaat'],['s','Sahifa'],['h','99 Names']];
-const DCAT={e:['Every Day Recitations','روزانہ کے اعمال','Duas to read every day','ر'],t:['Taqibaat e Namaz','تعقیباتِ نماز','Duas and dhikr after each prayer','ت'],d:['Duas','دعائیں','Daily, weekly & special supplications','د'],z:['Ziyarat','زیارات','Salutations to the Prophet & Ahlul Bayt','ز'],s:['Sahifa Sajjadiya','صحیفۂ سجادیہ','Imam Zainul Abideen (a.s.) · 61 duas, 7 days, 15 munajat','ص'],a:['Aamaal','اعمال','Deeds for special days & nights','ع'],m:['Munajaat','مناجات','Whispered prayers of Imam Ali & Imam Sajjad (a.s.)','م'],n:['Namaz','نماز','Prayers, taqibaat & qunoot','ن'],h:['99 Names','اسمائے حسنیٰ','Names of Allah with meanings & benefits','ا'],r:['AI Research Notebooks','تحقیقی نوٹ بُکس','ShiaLM on Google NotebookLM · ask questions of classical books','✦']};
+const DTABS=[['h','99 Names'],['e','Every Day'],['t','Taqibaat'],['n','Namaz'],['d','Duas'],['z','Ziyarat'],['a','Aamaal'],['m','Munajaat'],['s','Sahifa'],['b','Books']];
+const DCAT={e:['Every Day Recitations','روزانہ کے اعمال','Duas to read every day','ر'],t:['Taqibaat e Namaz','تعقیباتِ نماز','Duas and dhikr after each prayer','ت'],d:['Duas','دعائیں','Daily, weekly & special supplications','د'],z:['Ziyarat','زیارات','Salutations to the Prophet & Ahlul Bayt','ز'],s:['Sahifa Sajjadiya','صحیفۂ سجادیہ','Imam Zainul Abideen (a.s.) · 61 duas, 7 days, 15 munajat','ص'],a:['Aamaal','اعمال','Deeds for special days & nights','ع'],m:['Munajaat','مناجات','Whispered prayers of Imam Ali & Imam Sajjad (a.s.)','م'],n:['Namaz','نماز','Prayers, taqibaat & qunoot','ن'],h:['99 Names','اسمائے حسنیٰ','Names of Allah with meanings & benefits','ا'],b:['Books','کتابیں','23 classical hadith books · Arabic with English','ك'],r:['AI Research Notebooks','تحقیقی نوٹ بُکس','ShiaLM on Google NotebookLM · ask questions of classical books','✦']};
 const NOTEBOOKS=[["991380e6-3141-43c5-8ff4-8882ede2326d", "Holy Quran · Tafseer", "Quranic commentary and exegesis"], ["7e16985a-b1c5-430d-8685-184a64a6980c", "Basa'ir al-Darajat", "al-Saffar on the virtues of the Ahlul Bayt (a.s.)"], ["bc110ba0-ecda-4c25-b738-b5154cf16c76", "Mir'at al-Uqool", "Allama Majlisi's commentary on al-Kafi · 24 volumes (Arabic)"], ["0c5d849e-a657-416a-b128-3c74a5035741", "Safinat al-Bihar", "Shaykh Abbas Qummi's index of Bihar al-Anwar · 8 volumes"], ["84c60541-e06d-4e83-ae44-3fe6614fd53d", "The Amali", "Dictations of Saduq, Mufid and Tusi"], ["49752979-f698-48ba-bcf5-64df6da1971f", "Shaykh Saduq (r.a.)", "Collected works of al-Shaykh al-Saduq"], ["a75a5426-4f2c-4895-8dd3-78ec0ab31e09", "Nahj al-Balagha", "Sermons, letters and sayings of Imam Ali (a.s.)"], ["8ae34cf8-c283-42ee-8f7f-b0ddd5b30bd1", "Virtues of the Five (a.s.)", "From the Sihah al-Sittah · 3 volumes"], ["06e04aab-714e-4475-92a0-007973a17ec1", "Mahdaviyat", "On Imam al-Mahdi (a.t.f.s.)"], ["21f14960-6d8b-47a5-92fc-ee4441e8c93b", "I'tiqadat", "Beliefs, by Saduq and Majlisi"], ["89ee2444-82fc-4f30-892d-c91202ac2359", "Bihar al-Anwar", "Allama Majlisi's hadith encyclopedia · 110 volumes"], ["3df041d1-9621-4501-b6c0-13fff62e3548", "Ayatullah Sistani", "Tauzeeh al-Masael and other books"], ["f9ad8a9b-b533-43aa-8de7-cc24fb628305", "A Shi'ite Encyclopedia", "Questions and answers on Shia beliefs"], ["14d5f383-c902-4400-8548-5e49775c2997", "Wasa'il al-Shi'a", "Hadith on law and practice · 30 volumes"], ["49c6f15f-f2f5-4b82-819e-3bc063c479e0", "Man La Yahduruhu al-Faqih", "Shaykh Saduq's hadith collection · 4 volumes"], ["f5c79bdb-a1ae-422b-b7f3-15dc87ebf106", "Usool al-Kafi", "Shaykh Kulayni's al-Kafi · 8 volumes"]];
-const DICON={"m": "<path d=\"M20 14.5A8 8 0 1 1 9.5 4a6.5 6.5 0 0 0 10.5 10.5z\"/><path d=\"M17 3.5l.6 1.4 1.4.6-1.4.6-.6 1.4-.6-1.4-1.4-.6 1.4-.6z\"/>", "d": "<path d=\"M8 13V6.5a1.5 1.5 0 0 1 3 0V12M11 11V4.5a1.5 1.5 0 0 1 3 0V12M14 11.5V6.5a1.5 1.5 0 0 1 3 0v7.5a6 6 0 0 1-6 6h-.5a5.5 5.5 0 0 1-4.6-2.5L4 14.5a1.5 1.5 0 0 1 2.5-1.6L8 15\"/>", "z": "<path d=\"M4 20h16M6 20v-7a6 6 0 0 1 12 0v7M12 7V4M10.5 4.5h3M9 20v-4a3 3 0 0 1 6 0v4\"/>", "s": "<path d=\"M4 5.5A2.5 2.5 0 0 1 6.5 3H20v15H6.5A2.5 2.5 0 0 0 4 20.5zM4 20.5A2.5 2.5 0 0 0 6.5 23H20v-5M9 8h7M9 11.5h5\"/>", "a": "<path d=\"M20 14.5A8 8 0 1 1 9.5 4a6.5 6.5 0 0 0 10.5 10.5zM17 3l.7 1.6 1.7.2-1.3 1.1.4 1.7-1.5-.9-1.5.9.4-1.7-1.3-1.1 1.7-.2z\"/>", "n": "<path d=\"M5 21V10l7-6 7 6v11zM9 21v-5a3 3 0 0 1 6 0v5M5 21h14\"/>", "h": "<path d=\"M12 2.5l2.4 5 5.4.7-4 3.8 1 5.4L12 14.8 7.2 17.4l1-5.4-4-3.8 5.4-.7z\"/>", "e": "<path d=\"M12 3v2M12 19v2M4.2 7l1.7 1M18.1 15l1.7 1M3 12h2M19 12h2M4.2 17l1.7-1M18.1 9l1.7-1\"/><circle cx=\"12\" cy=\"12\" r=\"4\"/>", "t": "<path d=\"M12 21a9 9 0 1 1 0-18 9 9 0 0 1 0 18zM12 7v5l3 2\"/>"};const DTINT={"m": "#6c5ce7", "d": "#2f7dd1", "z": "#16a085", "s": "#8e44ad", "a": "#d68910", "n": "#c0392b", "h": "#2c7a7b", "e": "#e67e22", "t": "#3d5afe"};
+const DICON={"b": "<path d=\"M5 4h4v16H5zM9 4h4v16H9zM14.2 6.2l3.8-1 3.6 13.6-3.8 1z\"/>", "m": "<path d=\"M20 14.5A8 8 0 1 1 9.5 4a6.5 6.5 0 0 0 10.5 10.5z\"/><path d=\"M17 3.5l.6 1.4 1.4.6-1.4.6-.6 1.4-.6-1.4-1.4-.6 1.4-.6z\"/>", "d": "<path d=\"M8 13V6.5a1.5 1.5 0 0 1 3 0V12M11 11V4.5a1.5 1.5 0 0 1 3 0V12M14 11.5V6.5a1.5 1.5 0 0 1 3 0v7.5a6 6 0 0 1-6 6h-.5a5.5 5.5 0 0 1-4.6-2.5L4 14.5a1.5 1.5 0 0 1 2.5-1.6L8 15\"/>", "z": "<path d=\"M4 20h16M6 20v-7a6 6 0 0 1 12 0v7M12 7V4M10.5 4.5h3M9 20v-4a3 3 0 0 1 6 0v4\"/>", "s": "<path d=\"M4 5.5A2.5 2.5 0 0 1 6.5 3H20v15H6.5A2.5 2.5 0 0 0 4 20.5zM4 20.5A2.5 2.5 0 0 0 6.5 23H20v-5M9 8h7M9 11.5h5\"/>", "a": "<path d=\"M20 14.5A8 8 0 1 1 9.5 4a6.5 6.5 0 0 0 10.5 10.5zM17 3l.7 1.6 1.7.2-1.3 1.1.4 1.7-1.5-.9-1.5.9.4-1.7-1.3-1.1 1.7-.2z\"/>", "n": "<path d=\"M5 21V10l7-6 7 6v11zM9 21v-5a3 3 0 0 1 6 0v5M5 21h14\"/>", "h": "<path d=\"M12 2.5l2.4 5 5.4.7-4 3.8 1 5.4L12 14.8 7.2 17.4l1-5.4-4-3.8 5.4-.7z\"/>", "e": "<path d=\"M12 3v2M12 19v2M4.2 7l1.7 1M18.1 15l1.7 1M3 12h2M19 12h2M4.2 17l1.7-1M18.1 9l1.7-1\"/><circle cx=\"12\" cy=\"12\" r=\"4\"/>", "t": "<path d=\"M12 21a9 9 0 1 1 0-18 9 9 0 0 1 0 18zM12 7v5l3 2\"/>"};const DTINT={"m": "#6c5ce7", "d": "#2f7dd1", "z": "#16a085", "s": "#8e44ad", "a": "#d68910", "n": "#c0392b", "h": "#2c7a7b", "e": "#e67e22", "t": "#3d5afe"};
 let dView=store.get('dView','grid');
 function renderDuas(g){
   if(g&&!DCAT[g])g=null;
   if(g){if(g!==dTab)dSec='';dTab=g;store.set('dTab',g)}
   setHeader(g?DCAT[g][0]:'<span class="lib-logo" role="img" aria-label=""></span>Library',!!g);
-  const cnt=g=>g==='e'?LIST.filter(x=>x.grp==='e').length+1:g==='h'?99:g==='r'?NOTEBOOKS.length:LIST.filter(x=>x.grp===g).length;
+  const cnt=g=>g==='e'?LIST.filter(x=>x.grp==='e').length+1:g==='h'?99:g==='b'?BOOKS.reduce((n,x)=>n+x[2].length,0):g==='r'?NOTEBOOKS.length:LIST.filter(x=>x.grp===g).length;
   const cats=`<div class="dcat-head"><b>Categories</b><div class="seg vseg"><button data-v="grid" class="${dView==='grid'?'on':''}">▦ Grid</button><button data-v="list" class="${dView==='list'?'on':''}">☰ List</button></div></div>
-   <div class="dcats ${dView}">${DTABS.map(([k])=>{const c=DCAT[k];return `<a class="dcat" href="#duas-${k}"><span class="dcat-m" style="--t:${DTINT[k]}"><svg viewBox="0 0 24 24" aria-hidden="true">${DICON[k]}</svg></span><span class="dcat-t"><b>${c[0]}</b><small>${c[2]}</small></span><span class="dcat-u">${c[1]}</span><span class="dcat-n">${cnt(k)}</span><span class="dcat-go">›</span></a>`}).join('')}</div>`;
+   <div class="dcats ${dView}">${DTABS.filter(([k])=>k!=='b'||bkBase()).map(([k])=>{const c=DCAT[k];return `<a class="dcat${k==='h'?' wide':''}" href="#duas-${k}"><span class="dcat-m" style="--t:${DTINT[k]}"><svg viewBox="0 0 24 24" aria-hidden="true">${DICON[k]}</svg></span><span class="dcat-t"><b>${c[0]}</b><small>${c[2]}</small></span><span class="dcat-u">${c[1]}</span><span class="dcat-n">${cnt(k)}</span><span class="dcat-go">›</span></a>`}).join('')}</div>`;
   app.innerHTML=`${g?`<div class="lib-hero"><h1>${DCAT[g][0]}</h1><p>${esc(DCAT[g][2])}</p></div>`:`<div class="lib-hero"><h1>Library</h1><p>Duas, ziyarat, aamaal, namaz &amp; the Sahifa</p></div>
-   <a class="ai-ban" href="#duas-r"><span class="ai-pill">✦ Google NotebookLM AI</span><b>AI Research Notebooks</b><span class="ai-d">Ask questions of 16 classical Shia books, from Bihar al-Anwar and al-Kafi to Nahj al-Balagha and tafseer.</span><span class="ai-go">Explore notebooks →</span></a>
+   <div class="ai-ban" role="button" tabindex="0" data-ask="1"><span class="ai-pill">✦ AI Assistant</span><b>HYDER AI</b><span class="ai-d">Ask any question and get answers from al-Kafi, Nahj al-Balagha, Man La Yahduruhu al-Faqih and 20 more classical books, with references.</span><span class="ai-row"><span class="ai-go">Ask a question →</span><a class="ai-nb" href="#duas-r">NotebookLM notebooks</a></span></div>
    ${duaSpot()}`}
    <div class="search">${icon.search}<input id="dq" type="search" placeholder="Search duas, ziyarat, namaz…" value="${esc(dQ)}" autocomplete="off"></div>
    ${g?'':`<div id="dcatw">${cats}</div>`}
@@ -417,6 +417,7 @@ function renderDuas(g){
         return `<a class="item dua-item${m?' snum':''}" href="#dua-${d.id}"><div class="num"><span>${m?m[1]:(d.mark||'د')}</span></div><div class="t"><b>${esc(m?m[2]:d.name)}</b>${sub?`<small>${esc(sub)}</small>`:''}</div><div class="dur">${d.ur||''}</div>${dfavBtn(d.id)}</a>`}).join('');
       $('dlist').querySelector('.sec-back').onclick=()=>{dSec='';draw();window.scrollTo(0,0)};
       return}
+    if(!q&&dTab==='b'){$('dlist').innerHTML=`<div class="hint" style="margin:0 2px 6px">The Arabic is the original text. The English is a machine translation of it, so read it as a guide. The books load from the internet.</div>`+BOOKS.map(([n,u,L])=>`<div class="dsec"><b>${esc(n)}</b><span>${u}</span></div>`+L.map(b=>`<a class="item bk-row" href="#book-${b[0]}"><div class="num"><span>ك</span></div><div class="t"><b>${esc(b[1])}</b><small>${esc(b[3])} · ${b[4].toLocaleString()} ${b[0]==='nahj-al-balagha'?'sections':'hadith'}</small></div><div class="dur bk-ar">${b[2]}</div><span class="dcat-go">›</span></a>`).join('')).join('');return}
     if(!q&&dTab==='h'){const N=DU['N_names-99'].segs.filter(x=>x.ar);
       $('dlist').innerHTML=`<a class="item dua-item" href="#dua-asma-ul-husna"><div class="t"><b>Open with meanings &amp; benefits</b><small>Allah has the Most Beautiful Names, so call Him by them (7:180)</small></div><div class="ar" style="font-family:'Noto Nastaliq Urdu',serif;font-size:15px;line-height:2">اسمائے حسنیٰ</div></a>`+
         N.map((x,i)=>`<a class="item nm99" href="#dua-asma-ul-husna"><span class="nn">${i||''}</span><div class="t"><b>${esc(x.tr)}</b><small>${esc(x.en.replace(/^\d+\.\s*/,''))}</small></div><div class="ar nar">${x.ar}</div></a>`).join('');
@@ -924,6 +925,43 @@ function updToday(){const el=$('todayCd');if(!el||!LOC)return;const np=nextPraye
   el.textContent=`Next prayer in ${h?h+' hr ':''}${m} min`}
 setInterval(()=>{if(location.hash===''||location.hash==='#today')updToday()},20000);
 
+/* ================= BOOKS: classical hadith books, read from the app's own server ================= */
+const BOOKS=[
+ ['The Four Books','کتبِ اربعہ',[['al-kafi','Al-Kafi','الكافي','Shaykh al-Kulayni',16254],['man-la-yahduruhu-al-faqih','Man La Yahduruhu al-Faqih','من لا يحضره الفقيه','Shaykh al-Saduq',6382],['tahdhib-al-ahkam','Tahdhib al-Ahkam','تهذيب الأحكام','Shaykh al-Tusi',13201],['al-istibsar','Al-Istibsar','الاستبصار','Shaykh al-Tusi',4220]]],
+ ['Nahj al-Balagha & Risalat al-Huquq','نہج البلاغہ و رسالۃ الحقوق',[['nahj-al-balagha','Nahj al-Balagha','نهج البلاغة','Imam Ali (a.s.) · compiled by Sharif al-Radi',2260],['risalat-al-huquq','Risalat al-Huquq','رسالة الحقوق','Imam Zayn al-Abidin (a.s.)',49]]],
+ ['Shaykh Saduq','شیخ صدوقؒ',[['al-amali-saduq','Al-Amali','الأمالي','Shaykh al-Saduq',1082],['al-khisal','Al-Khisal','الخصال','Shaykh al-Saduq',1282],['al-tawhid','Al-Tawhid','التوحيد','Shaykh al-Saduq',575],['uyun-akhbar-al-rida','Uyun Akhbar al-Rida','عيون أخبار الرضا','Shaykh al-Saduq',954],['kamal-al-din','Kamal al-Din wa Tamam al-Ni\'ma','كمال الدين وتمام النعمة','Shaykh al-Saduq',566],['maani-al-akhbar','Ma\'ani al-Akhbar','معاني الأخبار','Shaykh al-Saduq',829],['thawab-al-amal','Thawab al-A\'mal wa \'Iqab al-A\'mal','ثواب الأعمال وعقاب الأعمال','Shaykh al-Saduq',1106],['fadail-al-shia','Fada\'il al-Shi\'a','فضائل الشيعة','Shaykh al-Saduq',45],['sifat-al-shia','Sifat al-Shi\'a','صفات الشيعة','Shaykh al-Saduq',71]]],
+ ['Other','دیگر کتب',[['al-amali-mufid','Al-Amali','الأمالي','Shaykh al-Mufid',387],['kamil-al-ziyarat','Kamil al-Ziyarat','كامل الزيارات','Ibn Qulawayh al-Qummi',749],['kitab-al-ghayba-numani','Kitab al-Ghayba','كتاب الغيبة','Muhammad ibn Ibrahim al-Nu\'mani',468],['kitab-al-ghayba-tusi','Kitab al-Ghayba','كتاب الغيبة','Shaykh al-Tusi',774],['kitab-al-mumin','Kitab al-Mu\'min','كتاب المؤمن','Husayn ibn Sa\'id al-Ahwazi',201],['kitab-al-zuhd','Kitab al-Zuhd','كتاب الزهد','Husayn ibn Sa\'id al-Ahwazi',290],['kitab-al-duafa','Kitab al-Du\'afa\'','كتاب الضعفاء','Ahmad ibn al-Husayn al-Ghada\'iri',226],['mujam-al-ahadith-al-mutabara','Mu\'jam al-Ahadith al-Mu\'tabara','معجم الأحاديث المعتبرة','Muhammad Asif al-Muhsini',555]]]
+];
+function bkBase(){return (window.QAsk&&window.QAsk.base)||''}
+const bkCache=new Map();
+async function bkGet(ref){
+  if(bkCache.has(ref))return bkCache.get(ref);
+  const r=await fetch(bkBase()+'/toc?ref='+encodeURIComponent(ref));const j=await r.json();
+  if(!r.ok)throw new Error(j.error||'');
+  bkCache.set(ref,j);return j;
+}
+/* where the back button goes from a book page */
+function bookUp(ref){const j=bkCache.get(ref);if(j&&j.up)return 'book-'+j.up;return ref.includes(':')?'book-'+ref.slice(0,ref.lastIndexOf(':')):'duas-b'}
+function renderBook(ref){
+  const slug=ref.split(':')[0],B=BOOKS.flatMap(g=>g[2]).find(b=>b[0]===slug);
+  if(!B||!bkBase())return false;
+  setHeader(esc(B[1]),true);noJump();
+  const hero=(path,t,ar,sub)=>`<div class="lib-hero bk-hero">${path?`<small>${esc(path)}</small>`:''}<h1>${esc(t)}</h1>${ar?`<div class="bk-har">${esc(ar)}</div>`:''}${sub?`<p>${esc(sub)}</p>`:''}</div>`;
+  const cached=bkCache.get(ref);
+  if(!cached)app.innerHTML=hero('',B[1],B[2],B[3])+'<div class="bk-load">Opening the book…</div>';
+  const draw=j=>{
+    if(location.hash.slice(1)!=='book-'+ref)return;
+    const unit=j.unit||(slug==='nahj-al-balagha'?'Section':'Hadith'),many=n=>n.toLocaleString()+' '+(slug==='nahj-al-balagha'?(n===1?'section':'sections'):'hadith');
+    const top=ref===slug;
+    let h=hero(top?'':j.path.join(' · '),top?B[1]:j.title.en,top?B[2]:j.title.ar,top?B[3]+' · '+many(j.count):many(j.count));
+    if(j.children&&j.children.length)h+='<div class="list">'+j.children.map((c,i)=>`<a class="item bk-row" href="#book-${esc(c.ref)}"><div class="num"><span>${i+1}</span></div><div class="t"><b>${esc(c.title.en)}</b><small>${many(c.count)}</small></div>${c.title.ar?`<div class="dur bk-ar">${esc(c.title.ar)}</div>`:''}<span class="dcat-go">›</span></a>`).join('')+'</div>';
+    if(j.items&&j.items.length)h+='<div class="bk-page">'+j.items.map(x=>`<div class="bk-it"><span class="no">${unit} ${esc(x.n)}</span>${x.ar?`<div class="ar">${esc(x.ar)}</div>`:''}${x.en?`<div class="en">${esc(x.en)}</div>`:''}</div>`).join('')+'</div><div class="hint" style="margin:14px 2px">The Arabic is the original text; the English is a machine translation.</div>';
+    app.innerHTML=h;document.body.classList.toggle('bk-read',!!(j.items&&j.items.length));
+  };
+  if(cached)draw(cached);
+  else bkGet(ref).then(draw).catch(()=>{if(location.hash.slice(1)==='book-'+ref)app.innerHTML=hero('',B[1],B[2],B[3])+'<div class="bk-load">Could not open the book. Check your internet connection and try again.<br><button class="btn" id="bkRetry" style="margin-top:14px">Try again</button></div>';const b=$('bkRetry');if(b)b.onclick=()=>renderBook(ref)});
+  return true;
+}
 window.XR=function(h){
   if(h===''||h==='today'){renderToday();return true}
   if(h==='calendar'){renderCalendar();return true}
@@ -931,10 +969,11 @@ window.XR=function(h){
   if(h==='duas'){renderDuas();return true}
   if(h.startsWith('duas-')){renderDuas(h.slice(5));return true}
   if(h.startsWith('dua-'))return renderDua(h.slice(4));
+  if(h.startsWith('book-'))return renderBook(decodeURIComponent(h.slice(5)));
   if(h==='prayer'){renderPrayer();return true}
   if(h==='qibla'){renderQibla();return true}
   return false;
 };
 setInterval(tick,1000);
-window.QX={meritsHTML,autoLocate,locateMe,get LOC(){return LOC},get ALERTS(){return ALERTS},timesFor,PR,nextPrayer,fmt,DAILY,LIST,UD,DU,slotFor,get AZ(){return AZ},playAlert,stopAlert,hijriToday:()=>HFMT?hijriToday():null,hijriStr,eventsOn,evTitle,HMU,HM};
+window.QX={bookUp,meritsHTML,autoLocate,locateMe,get LOC(){return LOC},get ALERTS(){return ALERTS},timesFor,PR,nextPrayer,fmt,DAILY,LIST,UD,DU,slotFor,get AZ(){return AZ},playAlert,stopAlert,hijriToday:()=>HFMT?hijriToday():null,hijriStr,eventsOn,evTitle,HMU,HM};
 })();

@@ -48,6 +48,19 @@ if (existsSync(cdir)) {
   console.log(`books loaded: ${HAD.size} hadith in ${CHAP.size} chapters`);
 } else console.warn('corpus/ not found: references will be shorter and "View in book" is off');
 
+// table of contents: parent ref -> child refs (books > volumes > chapters), and how many hadith sit under each
+const KIDS = new Map(), COUNT = new Map();
+for (const [ch, list] of CHAP) {
+  const p = ch.split(':');
+  for (let i = 1; i <= p.length; i++) {
+    const node = p.slice(0, i).join(':');
+    COUNT.set(node, (COUNT.get(node) || 0) + list.length);
+    if (i > 1) { const par = p.slice(0, i - 1).join(':'); if (!KIDS.has(par)) KIDS.set(par, new Set()); KIDS.get(par).add(node); }
+  }
+}
+const byNum = (a, b) => { const x = a.split(':'), y = b.split(':'); return (+x[x.length - 1] || 0) - (+y[y.length - 1] || 0); };
+const kids = (ref) => [...(KIDS.get(ref) || [])].sort(byNum);
+
 const nice = (t) => (t && t === t.toUpperCase() && /[A-Z]/.test(t) ? t.toLowerCase().replace(/(^|[\s-])([a-z])/g, (m, a, b) => a + b.toUpperCase()).replace(/\b(Of|And|The|In|On|To|From|For|With|About|A|An)\b/g, (w, x, i) => (i ? w.toLowerCase() : w)) : t || '');
 // "al-kafi:1:1:1:2" -> { book, parts:[...], cite:"Al-Kafi · Volume One · The Book of Intellect and Ignorance · Chapter 1 · Hadith 2" }
 function cite(ref) {
@@ -63,7 +76,34 @@ function cite(ref) {
   return { book, parts, cite: [book, ...parts].join(' · ') };
 }
 
-const SYSTEM = `You are the assistant inside "Quran & Duas", a Shia (Ithna Ashari) app with the Holy Quran, duas, ziyarat, aamaal, namaz and the Sahifa Sajjadiya. The app is dedicated to Imam-e-Zamana (a.t.f.s.).
+// title of a volume / book / chapter node, e.g. "al-kafi:1:1" -> {en:"The Book of Intellect and Ignorance", ar:"..."}
+function nodeTitle(ref) {
+  const t = TITLES[ref] || {}, p = ref.split(':');
+  if (p.length === 1) return { en: t.en || ref, ar: t.ar || '' };
+  return { en: nice(t.en) || (CHAP.has(ref) ? 'Chapter ' : 'Part ') + p[p.length - 1], ar: t.ar || '' };
+}
+function chapterItems(ch) {
+  const unit = ch.split(':')[0] === 'nahj-al-balagha' ? 'Section' : 'Hadith';
+  return { unit, items: (CHAP.get(ch) || []).map((r) => { const x = HAD.get(r); return { ref: r, n: r.split(':').pop(), ar: x.ar, en: x.en }; }) };
+}
+// one level of a book: its parts, or the hadith when the node is a chapter
+function toc(ref) {
+  if (!COUNT.has(ref)) return null;
+  // skip levels that hold a single unnamed part
+  let at = ref, ks = kids(at);
+  while (ks.length === 1 && !CHAP.has(at)) { at = ks[0]; ks = kids(at); }
+  const p = ref.split(':'), slug = p[0];
+  const path = []; for (let i = 1; i < p.length; i++) path.push(nodeTitle(p.slice(0, i).join(':')).en);
+  // where "back" goes: the nearest level above that is not skipped
+  let up = p.length > 1 ? p.slice(0, -1).join(':') : '';
+  while (up.includes(':') && kids(up.slice(0, up.lastIndexOf(':'))).length === 1) up = up.slice(0, up.lastIndexOf(':'));
+  const out = { ref, up, book: nodeTitle(slug).en, path, title: nodeTitle(ref), count: COUNT.get(ref),
+    children: ks.map((k) => ({ ref: k, title: nodeTitle(k), count: COUNT.get(k), leaf: CHAP.has(k) && !KIDS.has(k) })) };
+  if (CHAP.has(at)) Object.assign(out, chapterItems(at));
+  return out;
+}
+
+const SYSTEM = `You are HYDER AI, the assistant inside "Quran & Duas", a Shia (Ithna Ashari) app with the Holy Quran, duas, ziyarat, aamaal, namaz and the Sahifa Sajjadiya. The app is dedicated to Imam-e-Zamana (a.t.f.s.).
 
 Your library
 You can search a library of classical Shia hadith books (al-Kafi, Man La Yahduruhu al-Faqih, Tahdhib al-Ahkam, al-Istibsar, Nahj al-Balagha, the Amali of Saduq and Mufid, al-Khisal, al-Tawhid, Kamal al-Din, Uyun Akhbar al-Rida, Ma'ani al-Akhbar, Thawab al-A'mal, Kamil al-Ziyarat, Kitab al-Ghayba of Nu'mani and Tusi, and others). Each passage is labelled like [Al-Kafi 1:1:1:2] = book, then volume:book:chapter:hadith.
@@ -79,6 +119,7 @@ How to answer
 - Cite where things come from: Quran as surah:verse, hadith with the book (e.g. al-Kafi, Bihar al-Anwar, Nahj al-Balagha) when you are confident. Never invent a hadith, a chain, a verse or a reference. If you are not sure, say so.
 - For fiqh questions (rulings: halal/haram, how to pray, khums, fasting, etc.) give the general position if it is well known, say that details differ between maraji, and tell the user to follow their own marja's risala or office. Never issue a fatwa.
 - Do not quote long Arabic passages from memory; point the user to the page in the app instead.
+- Your name is HYDER AI. If asked who you are, say you are HYDER AI, the assistant of the Quran & Duas app.
 - Stay on Islam, the Quran, duas, ziyarat, history of the Ahl al-Bayt (a.s.) and using this app. Politely decline anything else.
 
 Linking to pages in the app
@@ -103,7 +144,7 @@ function allow(ip) {
 }
 
 function send(res, code, obj) {
-  res.writeHead(code, { 'Content-Type': 'application/json; charset=utf-8', 'Access-Control-Allow-Origin': '*', 'Access-Control-Allow-Headers': 'Content-Type', 'Access-Control-Allow-Methods': 'POST, OPTIONS' });
+  res.writeHead(code, { 'Content-Type': 'application/json; charset=utf-8', 'Access-Control-Allow-Origin': '*', 'Access-Control-Allow-Headers': 'Content-Type', 'Access-Control-Allow-Methods': 'GET, POST, OPTIONS' });
   res.end(JSON.stringify(obj));
 }
 
@@ -160,6 +201,10 @@ async function ask(messages) {
 http.createServer(async (req, res) => {
   if (req.method === 'OPTIONS') return send(res, 204, {});
   if (req.method === 'GET' && req.url === '/health') return send(res, 200, { ok: true, model: MODEL, hadith: HAD.size });
+  if (req.method === 'GET' && req.url.startsWith('/toc?')) {
+    const t = toc(new URL(req.url, 'http://x').searchParams.get('ref') || '');
+    return t ? send(res, 200, t) : send(res, 404, { error: 'Not found' });
+  }
   if (req.method === 'GET' && req.url.startsWith('/chapter?')) {
     const ref = new URL(req.url, 'http://x').searchParams.get('ref') || '';
     const h = HAD.get(ref); if (!h) return send(res, 404, { error: 'Not found' });

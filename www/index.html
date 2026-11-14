@@ -295,6 +295,22 @@ body.sheet-lock{overflow:hidden}
 
 .pbar{position:fixed;left:8px;right:8px;bottom:calc(64px + env(safe-area-inset-bottom));z-index:16;background:var(--card);border:1px solid var(--line);border-radius:16px;box-shadow:0 6px 24px rgba(0,0,0,.15);display:none;align-items:center;gap:4px;padding:8px 10px;max-width:640px;margin:0 auto}
 .pbar.show{display:flex}
+.sheet.ask{display:none;flex-direction:column;height:calc(100dvh - env(safe-area-inset-top) - 40px);max-height:none;overflow:hidden;padding:8px 16px calc(12px + env(safe-area-inset-bottom))}.sheet.ask.open{display:flex}
+.ask-h{display:flex;flex-direction:column;gap:2px;margin:0 44px 10px 2px}.ask-h b{font-size:20px}.ask-h small{color:var(--muted);font-size:12.5px}
+.ask-log{flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch;overscroll-behavior:contain;display:flex;flex-direction:column;gap:10px;padding:4px 2px 10px}
+.ask-m{max-width:88%;padding:10px 13px;border-radius:16px;font-size:15px;line-height:1.5;white-space:normal;word-wrap:break-word}
+.ask-m.u{align-self:flex-end;background:var(--fill,var(--accent));color:#fff;border-bottom-right-radius:5px}
+.ask-m.a{align-self:flex-start;background:var(--bg);color:var(--ink);border:1px solid var(--line);border-bottom-left-radius:5px}
+.ask-m.a a.alink{display:inline-block;margin:2px 0;padding:1px 8px;border-radius:999px;background:var(--accent-soft);color:var(--accent);font-weight:600;font-size:14px;text-decoration:none}
+.ask-m.a ul{margin:4px 0;padding-left:20px}.ask-m.err{border-color:#c0392b;color:#c0392b}
+.ask-m .ur,.ask-m[dir=rtl]{font-family:'Noto Nastaliq Urdu',serif;line-height:2.1}
+.ask-sug{display:flex;flex-wrap:wrap;gap:8px}.ask-sug button{padding:8px 12px;border-radius:999px;background:var(--bg);border:1px solid var(--line);color:var(--ink);font-size:13.5px;text-align:left}
+.ask-dots span{display:inline-block;width:7px;height:7px;margin:0 2px;border-radius:50%;background:var(--muted);animation:askd 1s infinite}.ask-dots span:nth-child(2){animation-delay:.15s}.ask-dots span:nth-child(3){animation-delay:.3s}@keyframes askd{0%,80%{opacity:.25}40%{opacity:1}}
+.ask-in{display:flex;gap:8px;align-items:flex-end;padding-top:8px;border-top:1px solid var(--line)}
+.ask-in textarea{flex:1;resize:none;max-height:120px;padding:11px 14px;border-radius:20px;border:1px solid var(--line);background:var(--bg);color:var(--ink);font:inherit;font-size:16px}
+.ask-in button{width:44px;height:44px;border-radius:50%;display:grid;place-items:center;background:var(--fill,var(--accent));color:#fff;flex:none}.ask-in button:disabled{opacity:.5}
+.ask-in svg{width:20px;height:20px;stroke:currentColor;fill:none;stroke-width:2.4;stroke-linecap:round;stroke-linejoin:round}
+.ask-note{font-size:11.5px;color:var(--muted);margin-top:6px;text-align:center}.ask-note button{color:var(--accent);font-size:11.5px;text-decoration:underline;margin-left:4px}
 .asbar{position:fixed;left:50%;transform:translateX(-50%);bottom:calc(74px + env(safe-area-inset-bottom));z-index:17;display:flex;align-items:center;gap:4px;padding:6px;border-radius:999px;background:var(--card);border:1px solid var(--line);box-shadow:0 6px 24px rgba(0,0,0,.18)}
 .asbar[hidden]{display:none}
 body.playing .asbar{bottom:calc(142px + env(safe-area-inset-bottom))}
@@ -305,6 +321,47 @@ body.playing .asbar{bottom:calc(142px + env(safe-area-inset-bottom))}
 .asbar{overflow:hidden;padding-top:9px}.as-prog{position:absolute;left:0;right:0;top:0;height:4px;background:var(--line)}.as-prog i{display:block;height:100%;width:0;background:var(--fill,var(--accent));transition:width .4s linear}
 .as-sp{display:flex;flex-direction:column;align-items:center;min-width:84px;line-height:1.15}#asLeft{font-weight:600;color:var(--ink)!important}.as-sp b{font-size:17px}.as-sp small{font-size:10.5px;color:var(--muted)}
 #asBtn.as-txt{flex:none;height:32px;padding:0 12px;margin-right:4px;border-radius:999px;font-size:13px;font-weight:600;white-space:nowrap;color:var(--accent);background:var(--bg);border:1.5px solid var(--accent)}
+.ask-fab{position:fixed;right:14px;bottom:calc(76px + env(safe-area-inset-bottom));z-index:16;display:flex;align-items:center;gap:6px;height:44px;padding:0 16px 0 12px;border-radius:999px;background:var(--fill,var(--accent));color:#fff;font-weight:700;font-size:14px;box-shadow:0 6px 18px rgba(0,0,0,.22)}
+.ask-fab[hidden]{display:none}.ask-fab svg{width:20px;height:20px;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+body.playing .ask-fab{bottom:calc(146px + env(safe-area-inset-bottom))}
+body.sheet-lock .ask-fab,body.as-on .ask-fab,body.reading .ask-fab{display:none}
+.sheet.ask{display:none;flex-direction:column;height:calc(100dvh - env(safe-area-inset-top) - 24px);padding:8px 14px calc(10px + env(safe-area-inset-bottom));overflow:hidden}
+.sheet.ask.open{display:flex}
+.ask-h{display:flex;flex-direction:column;gap:2px;padding:2px 44px 10px 4px;border-bottom:1px solid var(--line)}.ask-h b{font-size:17px}.ask-h small{color:var(--muted);font-size:12.5px}
+.ask-log{flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch;overscroll-behavior:contain;padding:12px 2px;display:flex;flex-direction:column;gap:12px}
+.ask-m{max-width:92%;padding:10px 13px;border-radius:16px;line-height:1.5;font-size:15px;white-space:pre-wrap;word-wrap:break-word}
+.ask-m.u{align-self:flex-end;background:var(--fill,var(--accent));color:#fff;border-bottom-right-radius:5px}
+.ask-m.a{align-self:flex-start;background:var(--bg);border:1px solid var(--line);border-bottom-left-radius:5px;white-space:normal}
+.ask-m.a p{margin:0 0 8px}.ask-m.a p:last-child{margin:0}.ask-m.a ul{margin:4px 0 8px;padding-left:20px}
+.ask-m.a a.alink{color:var(--accent);font-weight:600;text-decoration:underline}
+.ask-m sup button{font-size:11px;font-weight:700;min-width:18px;height:18px;padding:0 4px;margin:0 1px;border-radius:6px;background:var(--accent-soft);color:var(--accent);vertical-align:2px}
+.ask-refs{margin-top:10px;border-top:1px dashed var(--line);padding-top:8px;display:flex;flex-direction:column;gap:6px}
+.ask-ref{border:1px solid var(--line);border-radius:12px;background:var(--card);overflow:hidden}
+.ask-ref>button{display:flex;gap:8px;width:100%;text-align:left;padding:8px 10px;font-size:13px;color:var(--ink);align-items:baseline}
+.ask-ref>button i{font-style:normal;font-weight:700;color:var(--accent);flex:none}.ask-ref>button small{color:var(--muted)}
+.ask-ref .rb{display:none;padding:2px 12px 12px}.ask-ref.open .rb{display:block}
+.ask-ref .rb .ar{font-family:IndoPak,serif;font-size:21px;line-height:2;direction:rtl;text-align:right;margin:4px 0 8px}
+.ask-ref .rb .en{font-size:14px;line-height:1.55}.ask-ref .rb .mt{display:block;margin-top:6px;font-size:11.5px;color:var(--muted)}
+.ask-ex{display:flex;flex-wrap:wrap;gap:8px;margin-top:4px}.ask-ex button{padding:8px 12px;border-radius:999px;background:var(--bg);border:1px solid var(--line);font-size:13.5px;color:var(--ink);text-align:left}
+.ask-in{display:flex;gap:8px;align-items:flex-end;padding-top:8px;border-top:1px solid var(--line)}
+.ask-in textarea{flex:1;resize:none;max-height:120px;min-height:44px;padding:11px 14px;border-radius:22px;border:1px solid var(--line);background:var(--bg);color:var(--ink);font:inherit;font-size:15.5px;line-height:1.35}
+.ask-in button{width:44px;height:44px;border-radius:50%;background:var(--fill,var(--accent));color:#fff;display:grid;place-items:center;flex:none}.ask-in button:disabled{opacity:.5}
+.ask-in svg{width:20px;height:20px;stroke:currentColor;fill:none;stroke-width:2.4;stroke-linecap:round;stroke-linejoin:round}
+.ask-foot{font-size:11.5px;color:var(--muted);padding:6px 4px 0;line-height:1.45}.ask-foot a{color:var(--accent);font-weight:600}.ask-foot button{float:right;color:var(--muted);font-size:11.5px;text-decoration:underline}
+.ask-dots{display:inline-flex;gap:4px}.ask-dots i{width:7px;height:7px;border-radius:50%;background:var(--muted);animation:askb 1s infinite}.ask-dots i:nth-child(2){animation-delay:.15s}.ask-dots i:nth-child(3){animation-delay:.3s}
+@keyframes askb{0%,80%,100%{opacity:.25}40%{opacity:1}}
+.sheet.book{display:none;flex-direction:column;z-index:23;height:calc(100dvh - env(safe-area-inset-top) - 24px);padding:8px 14px calc(10px + env(safe-area-inset-bottom));overflow:hidden}.sheet.book.open{display:flex}
+.bk-h{display:flex;flex-direction:column;gap:3px;padding:2px 44px 10px 4px;border-bottom:1px solid var(--line)}.bk-h small{color:var(--muted);font-size:12px;line-height:1.4}.bk-h b{font-size:17px}.bk-h span{font-family:IndoPak,serif;font-size:20px;direction:rtl;color:var(--muted)}
+.bk-list{flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch;overscroll-behavior:contain;padding:10px 2px;display:flex;flex-direction:column;gap:10px}
+.bk-it{border:1px solid var(--line);border-radius:14px;padding:10px 12px;background:var(--card)}.bk-it.on{border:2px solid var(--accent);background:var(--accent-soft)}
+.bk-it .no{font-size:12px;font-weight:700;color:var(--accent)}.bk-it .ar{font-family:IndoPak,serif;font-size:22px;line-height:2;direction:rtl;text-align:right;margin:4px 0 6px}.bk-it .en{font-size:14.5px;line-height:1.55}
+.ask-ref .cite{display:block;font-size:13px;line-height:1.45;padding:8px 10px 2px}.ask-ref .cite i{font-style:normal;font-weight:700;color:var(--accent);margin-right:4px}
+.ask-ref .acts{display:flex;gap:8px;padding:4px 10px 9px}.ask-ref .acts button{font-size:12.5px;font-weight:600;padding:5px 10px;border-radius:999px;border:1px solid var(--line);background:var(--bg);color:var(--accent)}
+.dcats.grid .dcat.wide{grid-column:1/-1;flex-direction:row;align-items:center;gap:12px;min-height:0;padding:16px 14px}.dcats.grid .dcat.wide .dcat-u{margin-left:auto;padding-right:44px;font-size:17px}
+.bk-hero small{display:block;color:var(--muted);font-size:12.5px;line-height:1.5;margin-bottom:4px}.bk-har{font-family:IndoPak,serif;font-size:24px;line-height:1.9;direction:rtl;color:var(--accent)}.bk-row .bk-ar{font-family:IndoPak,serif;font-size:19px;direction:rtl;max-width:42%;text-align:right;line-height:1.7}.bk-row .t b{white-space:normal}.bk-page{display:flex;flex-direction:column;gap:10px;margin-top:6px}
+body.bk-read .ask-fab{display:none}
+.bk-load{padding:30px;text-align:center;color:var(--muted)}
+.ai-row{display:flex;align-items:center;gap:12px;flex-wrap:wrap}.ai-nb{color:#fff;opacity:.9;font-size:13px;text-decoration:underline}.ai-ban{cursor:pointer}
 #asBtn.on{background:var(--fill,var(--accent));color:#fff;border-color:var(--fill,var(--accent))}
 .naqsh{margin:4px 0 16px;padding:12px;border-radius:16px;background:var(--card);border:1px solid var(--line);text-align:center}
 .naqsh .nq-h,.nq-card .nq-t{display:flex;justify-content:space-between;align-items:baseline;gap:8px;margin:0 2px 10px}
@@ -607,6 +664,7 @@ body .ayah-card .v-en{display:block!important}
   <button id="pClose" aria-label="Close player"><svg viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></svg></button>
 </div>
 <div class="alertbar" id="alertbar"><b id="alertTxt"></b><button id="alertStop">Stop</button></div>
+</div>
 <div class="asbar" id="asBar" hidden role="toolbar" aria-label="Auto scroll">
   <div class="as-prog"><i id="asProg"></i></div>
   <button id="asPlay" aria-label="Pause or resume"></button>
@@ -614,6 +672,22 @@ body .ayah-card .v-en{display:block!important}
   <div class="as-sp"><b id="asMin"></b><small>min per juz</small><small id="asLeft"></small></div>
   <button id="asMore" aria-label="More minutes (slower)">+</button>
   <button id="asClose" aria-label="Stop auto-scroll"><svg viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></svg></button>
+</div>
+<button class="ask-fab" id="askFab" aria-label="Ask the assistant"><svg viewBox="0 0 24 24"><path d="M4 5.5A2.5 2.5 0 0 1 6.5 3h11A2.5 2.5 0 0 1 20 5.5v8a2.5 2.5 0 0 1-2.5 2.5H10l-4.5 4v-4h0A1.5 1.5 0 0 1 4 14.5z"/><path d="M8.5 8.5h7M8.5 11.5h4.5"/></svg><span>HYDER AI</span></button>
+<div class="sheet ask" id="askSheet" role="dialog" aria-label="HYDER AI">
+  <div class="np-grab"></div>
+  <button class="np-x" id="askClose" aria-label="Close"><svg viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></svg></button>
+  <div class="ask-h"><b>HYDER AI</b><small>Answers from classical hadith books, with references</small></div>
+  <div class="ask-log" id="askLog"></div>
+  <form class="ask-in" id="askForm"><textarea id="askQ" rows="1" placeholder="Ask in English or اردو…" maxlength="1500"></textarea><button id="askSend" aria-label="Send"><svg viewBox="0 0 24 24"><path d="M5 12h13M13 6l6 6-6 6"/></svg></button></form>
+  <div class="ask-foot">English in the references is machine-translated from the Arabic. For rulings, follow your marja. <a href="#duas-r" id="askNb">More books: NotebookLM ›</a> <button type="button" id="askClear">Clear chat</button></div>
+</div>
+<div class="sheet book" id="bookSheet" role="dialog" aria-label="Book">
+  <div class="np-grab"></div>
+  <button class="np-x" id="bookClose" aria-label="Back to the answer"><svg viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></svg></button>
+  <div class="bk-h"><small id="bkPath"></small><b id="bkTitle"></b><span id="bkTitleAr"></span></div>
+  <div class="bk-list" id="bkList"></div>
+  <div class="ask-foot">The Arabic is the original text; the English is a machine translation.</div>
 </div>
 <nav class="tabbar" id="tabbar">
   <a href="#today" data-tab="today"><svg viewBox="0 0 24 24"><path d="M4 11l8-6 8 6v8a1 1 0 0 1-1 1h-4v-6h-6v6H5a1 1 0 0 1-1-1z"/></svg>Today</a>
@@ -1006,10 +1080,10 @@ const AS={on:false,run:false,raf:0,acc:0,last:0,ratio:0,lastRatio:0,stuck:0,min:
     if(step>=1){AS.acc-=step;const y=window.scrollY;window.scrollBy(0,step);
       if(window.scrollY===y){if((AS.stuck+=dt)>2500){AS.pause();toast('Reached the end');return}}else AS.stuck=0}
     AS.raf=requestAnimationFrame(AS.tick)},
-  start(){this.on=true;$('asBar').hidden=false;this.measure();this.resume()},
+  start(){this.on=true;document.body.classList.add('as-on');$('asBar').hidden=false;this.measure();this.resume()},
   resume(){this.run=true;this.last=0;this.stuck=0;this.wake(true);cancelAnimationFrame(this.raf);this.raf=requestAnimationFrame(this.tick);this.draw()},
   pause(){this.run=false;cancelAnimationFrame(this.raf);this.wake(false);this.draw()},
-  stop(){if(!this.on)return;this.pause();this.on=false;$('asBar').hidden=true;this.draw()},
+  stop(){if(!this.on)return;this.pause();this.on=false;document.body.classList.remove('as-on');$('asBar').hidden=true;this.draw()},
   speed(d){const st=[10,12,15,18,20,22,25,28,30,35,40,45,50,60];let i=st.indexOf(this.min);if(i<0)i=st.indexOf(40);i=Math.max(0,Math.min(st.length-1,i+d));this.min=st[i];store.set('asMin2',this.min);this.draw()}};
 $('asBtn').onclick=()=>AS.on?AS.stop():AS.start();
 $('asPlay').onclick=()=>AS.run?AS.pause():AS.resume();
@@ -1019,11 +1093,11 @@ let asHeld=false;addEventListener('touchstart',e=>{if(AS.run&&!e.target.closest(
 addEventListener('touchend',()=>{if(asHeld){asHeld=false;setTimeout(()=>{if(AS.on&&!AS.run)AS.resume()},600)}},{passive:true});
 addEventListener('wheel',()=>{AS.acc=0},{passive:true});
 document.addEventListener('visibilitychange',()=>{if(document.hidden&&AS.run)AS.pause()});
-function setHeader(html,reader){{const b=$('jzBar');if(b)b.hidden=true;document.body.classList.remove('reading')}$('title').innerHTML=html;$('backBtn').style.display=reader?'':'none';$('jumpBtn').style.display=reader?'':'none';$('asBtn').style.display=reader&&/^#(surah|juz|dua)-/.test(location.hash)?'':'none';AS.stop()}
+function setHeader(html,reader){{const b=$('jzBar');if(b)b.hidden=true;document.body.classList.remove('reading','bk-read')}$('title').innerHTML=html;$('backBtn').style.display=reader?'':'none';$('jumpBtn').style.display=reader?'':'none';$('asBtn').style.display=reader&&/^#(surah|juz|dua)-/.test(location.hash)?'':'none';AS.stop()}
 function route(){
   const h=location.hash.slice(1),m=h.match(/^surah-(\d{1,3})(?:-(\d{1,3}))?$/);
   closeSheets();
-  const tab=(h===''||h==='today'||h==='calendar')?'today':/^(dua|duas)/.test(h)?'duas':h==='prayer'?'prayer':h==='qibla'?'qibla':'quran';
+  const tab=(h===''||h==='today'||h==='calendar')?'today':/^(dua|duas|book)/.test(h)?'duas':h==='prayer'?'prayer':h==='qibla'?'qibla':'quran';
   document.querySelectorAll('#tabbar a').forEach(a=>a.classList.toggle('on',a.dataset.tab===tab));
   if(obs&&tab!=='quran'){obs.disconnect();obs=null}
   if(window.XR&&window.XR(h)){window.scrollTo(0,0);return}
@@ -1054,11 +1128,11 @@ function ctxSettings(){drawOff();
 function closeSheets(){document.querySelectorAll('.sheet,.sheet-bg').forEach(x=>{x.classList.remove('open');if(x.classList.contains('sheet'))x.style.transform=''});document.body.classList.remove('sheet-lock')}
 /* swipe a sheet down to close it (when it is scrolled to the top) */
 (function(){let sh=null,y0=0,dy=0;
-  document.addEventListener('touchstart',e=>{const t=e.target.closest('.sheet.open');if(!t||e.target.closest('input,select,[type=range]'))return;if(t.scrollTop>0&&!e.target.closest('.np-grab,.np-head'))return;sh=t;y0=e.touches[0].clientY;dy=0},{passive:true});
+  document.addEventListener('touchstart',e=>{const t=e.target.closest('.sheet.open');if(!t||e.target.closest('input,select,[type=range]'))return;if(t.scrollTop>0&&!e.target.closest('.np-grab,.np-head'))return;if(t.id==='askSheet'&&!e.target.closest('.np-grab,.ask-h'))return;sh=t;y0=e.touches[0].clientY;dy=0},{passive:true});
   document.addEventListener('touchmove',e=>{if(!sh)return;dy=e.touches[0].clientY-y0;if(dy>0&&(sh.scrollTop<=0)){sh.classList.add('dragging');sh.style.transform=`translateX(-50%) translateY(${dy}px)`}else if(dy<0){sh.style.transform='';sh.classList.remove('dragging')}},{passive:true});
-  document.addEventListener('touchend',()=>{if(!sh)return;const s=sh;sh=null;s.classList.remove('dragging');if(dy>110){s.classList.add('closing');s.style.transform='translateX(-50%) translateY(100%)';setTimeout(()=>{s.classList.remove('closing');closeSheets()},200)}else s.style.transform='';dy=0},{passive:true});
+  document.addEventListener('touchend',()=>{if(!sh)return;const s=sh;sh=null;s.classList.remove('dragging');if(dy>110){s.classList.add('closing');s.style.transform='translateX(-50%) translateY(100%)';setTimeout(()=>{s.classList.remove('closing');if(s.id==='bookSheet'){s.classList.remove('open');s.style.transform=''}else closeSheets()},200)}else s.style.transform='';dy=0},{passive:true});
 })();
-$('backBtn').onclick=()=>{const c=location.hash.slice(1);let t='home';if(/^dua-/.test(c)){const d=LISTX().find(x=>x.id===c.slice(4));t=d&&d.grp?'duas-'+d.grp:'duas'}else if(/^duas-/.test(c))t='duas';else if(c==='calendar')t='today';location.hash=t};
+$('backBtn').onclick=()=>{const c=location.hash.slice(1);let t='home';if(/^dua-/.test(c)){const d=LISTX().find(x=>x.id===c.slice(4));t=d&&d.grp?'duas-'+d.grp:'duas'}else if(/^duas-/.test(c))t='duas';else if(/^book-/.test(c))t=window.QX&&QX.bookUp?QX.bookUp(decodeURIComponent(c.slice(5))):'duas-b';else if(c==='calendar')t='today';location.hash=t};
 $('setBtn').onclick=()=>openSheet('setSheet');
 $('jumpBtn').onclick=()=>{$('jumpLbl').textContent=`Verse (1–${META[curS-1][4]})`;$('jumpIn').max=META[curS-1][4];$('jumpIn').value='';openSheet('jumpSheet');setTimeout(()=>$('jumpIn').focus(),50)};
 $('jumpForm').onsubmit=e=>{e.preventDefault();const v=Math.max(1,Math.min(+$('jumpIn').value||1,META[curS-1][4]));closeSheets();const el=$('v'+v);if(el){el.scrollIntoView({behavior:'smooth'});el.classList.remove('flash');void el.offsetWidth;el.classList.add('flash')}};
@@ -1132,12 +1206,77 @@ $('npRecs').onclick=e=>{const b=e.target.closest('[data-rec]');if(!b||b.dataset.
 $('npSpd').onclick=e=>{const b=e.target.closest('[data-rate]');if(!b)return;P.rate=+b.dataset.rate;store.set('rate',P.rate);applyRate();drawNP()};
 $('npRep').onclick=()=>{P.repeat=!P.repeat;showBar();drawNP()};$('npCont').onclick=()=>{P.cont=!P.cont;showBar();drawNP()};
 $('npClose').onclick=()=>closeSheets();
+/* ---------- Assistant: chat with the Shia library (server: server/assistant) ---------- */
+const ASK_BASE='https://144-24-19-101.sslip.io',ASK_URL=ASK_BASE&&ASK_BASE.indexOf('__')!==0?ASK_BASE.replace(/\/$/,'')+'/ask':'';
+if(!ASK_URL)$('askFab').hidden=true;
+const ASK={log:(()=>{try{return JSON.parse(localStorage.getItem('qr_askLog')||'[]')}catch(e){return[]}})(),busy:false};
+const askSave=()=>{try{localStorage.setItem('qr_askLog',JSON.stringify(ASK.log.slice(-30)))}catch(e){}};
+const askLinkHref=id=>/^surah-(\d+)(?:-(\d+))?$/.test(id)||/^juz-\d+$/.test(id)?'#'+id:'#dua-'+id;
+const askLinkName=id=>{let m;if((m=id.match(/^surah-(\d+)(?:-(\d+))?$/)))return META[m[1]-1]?META[m[1]-1][1]+(m[2]?' '+m[1]+':'+m[2]:''):id;if((m=id.match(/^juz-(\d+)$/)))return 'Juz '+m[1];const d=window.QX&&QX.LIST&&QX.LIST.find(x=>x.id===id);return d?d.name:id};
+function askFmt(t,refs){
+  let h=esc(t);
+  h=h.replace(/\[\[([a-z0-9-]+)\]\]/gi,(a,id)=>`<a class="alink" href="${askLinkHref(id)}" data-close="1">${esc(askLinkName(id))}</a>`);
+  h=h.replace(/((?:\[\d{1,2}\])+)/g,g=>'<sup>'+g.match(/\d+/g).filter(n=>refs&&refs.some(r=>r.n==n)).map(n=>`<button type="button" data-ref="${n}">${n}</button>`).join('')+'</sup>');
+  h=h.replace(/\*\*([^*]+)\*\*/g,'<b>$1</b>');
+  const out=[];let ul=false;
+  h.split(/\n/).forEach(l=>{const m=l.match(/^\s*[-*•]\s+(.*)/);if(m){if(!ul){out.push('<ul>');ul=true}out.push('<li>'+m[1]+'</li>')}else{if(ul){out.push('</ul>');ul=false}if(l.trim())out.push('<p>'+l+'</p>')}});
+  if(ul)out.push('</ul>');return out.join('');
+}
+function askDraw(){
+  const L=$('askLog');
+  if(!ASK.log.length){L.innerHTML=`<div class="ask-m a"><p>Assalamu alaykum. I am HYDER AI. Ask me anything about the Quran, hadith, duas, ziyarat or the Ahl al-Bayt (a.s.). I search classical books such as al-Kafi, Nahj al-Balagha and Man La Yahduruhu al-Faqih and show you the references.</p></div>
+    <div class="ask-ex">${['What did Imam Ali (a.s.) say about patience?','Virtues of visiting Imam Husain (a.s.)','What is the reward of Ziyarat Ashura?','اہل بیتؑ سے محبت کے بارے میں حدیث'].map(q=>`<button type="button" data-q="${esc(q)}">${esc(q)}</button>`).join('')}</div>`;return}
+  L.innerHTML=ASK.log.map((m,i)=>m.role==='user'?`<div class="ask-m u">${esc(m.text)}</div>`:
+    `<div class="ask-m a" data-i="${i}">${askFmt(m.text,m.refs)}${m.refs&&m.refs.length?`<div class="ask-refs"><b style="font-size:12.5px;color:var(--muted)">References</b>${m.refs.map(r=>`<div class="ask-ref" data-n="${r.n}"><span class="cite"><i>[${r.n}]</i>${esc(r.cite||r.label)}</span><div class="acts">${r.book&&r.ref?`<button type="button" data-book="${esc(r.ref)}">View in book ›</button>`:''}<button type="button" data-peek="1">Show text</button></div><div class="rb">${r.ar?`<div class="ar">${esc(r.ar)}</div>`:''}${r.en?`<div class="en">${esc(r.en)}</div><small class="mt">English: machine translation of the Arabic</small>`:''}</div></div>`).join('')}</div>`:''}</div>`).join('')
+    +(ASK.busy?'<div class="ask-m a"><span class="ask-dots"><i></i><i></i><i></i></span></div>':'');
+  L.scrollTop=L.scrollHeight;
+}
+async function askSend(q){
+  q=(q||'').trim();if(!q||ASK.busy)return;
+  ASK.log.push({role:'user',text:q});ASK.busy=true;askDraw();$('askQ').value='';$('askSend').disabled=true;
+  let ans;
+  try{
+    if(!ASK_URL)throw new Error('The assistant is being set up. Please try again soon.');
+    const r=await fetch(ASK_URL,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({messages:ASK.log.slice(-10).map(m=>({role:m.role,text:m.text}))})});
+    const j=await r.json().catch(()=>({}));
+    if(!r.ok)throw new Error(j.error||'The assistant is not available right now.');
+    ans={role:'assistant',text:j.text||'',refs:j.refs||[]};
+  }catch(e){ans={role:'assistant',text:(e&&e.message&&!/fetch|network|load failed/i.test(e.message))?e.message:'Could not reach the assistant. Check your internet connection and try again.',refs:[]}}
+  ASK.busy=false;ASK.log.push(ans);askSave();askDraw();$('askSend').disabled=false;
+}
+function askOpen(){openSheet('askSheet');askDraw();setTimeout(()=>{try{$('askQ').focus({preventScroll:true})}catch(e){}},250)}
+$('askFab').onclick=askOpen;
+$('askClose').onclick=()=>closeSheets();
+$('askForm').onsubmit=e=>{e.preventDefault();askSend($('askQ').value)};
+$('askQ').addEventListener('keydown',e=>{if(e.key==='Enter'&&!e.shiftKey&&!e.isComposing){e.preventDefault();askSend($('askQ').value)}});
+$('askQ').addEventListener('input',e=>{const t=e.target;t.style.height='auto';t.style.height=Math.min(120,t.scrollHeight)+'px'});
+$('askClear').onclick=()=>{ASK.log=[];askSave();askDraw()};
+$('askNb').onclick=()=>closeSheets();
+$('askLog').onclick=e=>{
+  const q=e.target.closest('[data-q]');if(q){askSend(q.dataset.q);return}
+  const a=e.target.closest('a[data-close]');if(a){closeSheets();return}
+  const sb=e.target.closest('sup button[data-ref]');if(sb){const box=sb.closest('.ask-m').querySelector(`.ask-ref[data-n="${sb.dataset.ref}"]`);if(box){box.scrollIntoView({behavior:'smooth',block:'center'});box.animate([{background:'var(--accent-soft)'},{background:'var(--card)'}],{duration:1400})}return}
+  const pk=e.target.closest('[data-peek]');if(pk){const box=pk.closest('.ask-ref');box.classList.toggle('open');pk.textContent=box.classList.contains('open')?'Hide text':'Show text';return}
+  const bk=e.target.closest('[data-book]');if(bk)bookOpen(bk.dataset.book);
+};
+document.addEventListener('click',e=>{const b=e.target.closest('[data-ask]');if(b&&!e.target.closest('a'))askOpen()});
+async function bookOpen(ref){
+  const S=$('bookSheet');S.classList.add('open');$('bkPath').textContent='';$('bkTitle').textContent='';$('bkTitleAr').textContent='';$('bkList').innerHTML='<div class="bk-load">Opening the book…</div>';
+  try{
+    const r=await fetch(ASK_BASE.replace(/\/$/,'')+'/chapter?ref='+encodeURIComponent(ref));const j=await r.json();if(!r.ok)throw new Error(j.error||'');
+    $('bkPath').textContent=[j.book,...(j.path||[]).slice(0,-1)].join(' · ');$('bkTitle').textContent=j.title.en||'';$('bkTitleAr').textContent=j.title.ar||'';
+    $('bkList').innerHTML=j.items.map(x=>`<div class="bk-it${x.ref===ref?' on':''}" data-r="${esc(x.ref)}"><span class="no">${j.book==='Nahj al-Balagha'?'Section':'Hadith'} ${esc(x.n)}</span>${x.ar?`<div class="ar">${esc(x.ar)}</div>`:''}${x.en?`<div class="en">${esc(x.en)}</div>`:''}</div>`).join('');
+    const on=$('bkList').querySelector('.bk-it.on');if(on)setTimeout(()=>on.scrollIntoView({block:'start'}),60);
+  }catch(e){$('bkList').innerHTML='<div class="bk-load">Could not open the book right now. Please try again.</div>'}
+}
+$('bookClose').onclick=()=>$('bookSheet').classList.remove('open');
+window.QAsk={open:askOpen,base:ASK_URL?ASK_BASE.replace(/\/$/,''):''};
 $('npGo').onclick=()=>{closeSheets();location.hash='surah-'+P.s+'-'+P.v};
 $('npStop').onclick=()=>{closeSheets();stopPlayer()};
 
 $('pClose').onclick=stopPlayer;
 /*pGo handled by now-playing panel*/
-window.Q={icon,dfavBtn,playVerse,P,WU,AR,EN,UR,META,esc,arNum,setHeader,store,S,toast,app,$,ARX,BISMX,endMark,readbar,route};window.__BISM=BISM;
+window.Q={openSheet,closeSheets,icon,dfavBtn,playVerse,P,WU,AR,EN,UR,META,esc,arNum,setHeader,store,S,toast,app,$,ARX,BISMX,endMark,readbar,route};window.__BISM=BISM;
 window.addEventListener('hashchange',route);
 applySettings();
 if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',route);else setTimeout(route,0);
@@ -1521,20 +1660,20 @@ function duaSpot(){const n=new Date(),day=n.getDay(),hr=n.getHours();
     :hr<12?['dua-e-ahad','Recommended this morning']:['ziyarat-ashura','Recommended today'];
   const d=LIST.find(x=>x.id===pick[0]);if(!d)return'';
   return `<a class="continue dspot" href="#dua-${d.id}"><div class="t2"><small>${pick[1]}</small><b>${esc(d.name)}</b></div><div class="dsu">${d.ur}</div>${icon.arrow}</a>`}
-const DTABS=[['e','Every Day'],['t','Taqibaat'],['n','Namaz'],['d','Duas'],['z','Ziyarat'],['a','Aamaal'],['m','Munajaat'],['s','Sahifa'],['h','99 Names']];
-const DCAT={e:['Every Day Recitations','روزانہ کے اعمال','Duas to read every day','ر'],t:['Taqibaat e Namaz','تعقیباتِ نماز','Duas and dhikr after each prayer','ت'],d:['Duas','دعائیں','Daily, weekly & special supplications','د'],z:['Ziyarat','زیارات','Salutations to the Prophet & Ahlul Bayt','ز'],s:['Sahifa Sajjadiya','صحیفۂ سجادیہ','Imam Zainul Abideen (a.s.) · 61 duas, 7 days, 15 munajat','ص'],a:['Aamaal','اعمال','Deeds for special days & nights','ع'],m:['Munajaat','مناجات','Whispered prayers of Imam Ali & Imam Sajjad (a.s.)','م'],n:['Namaz','نماز','Prayers, taqibaat & qunoot','ن'],h:['99 Names','اسمائے حسنیٰ','Names of Allah with meanings & benefits','ا'],r:['AI Research Notebooks','تحقیقی نوٹ بُکس','ShiaLM on Google NotebookLM · ask questions of classical books','✦']};
+const DTABS=[['h','99 Names'],['e','Every Day'],['t','Taqibaat'],['n','Namaz'],['d','Duas'],['z','Ziyarat'],['a','Aamaal'],['m','Munajaat'],['s','Sahifa'],['b','Books']];
+const DCAT={e:['Every Day Recitations','روزانہ کے اعمال','Duas to read every day','ر'],t:['Taqibaat e Namaz','تعقیباتِ نماز','Duas and dhikr after each prayer','ت'],d:['Duas','دعائیں','Daily, weekly & special supplications','د'],z:['Ziyarat','زیارات','Salutations to the Prophet & Ahlul Bayt','ز'],s:['Sahifa Sajjadiya','صحیفۂ سجادیہ','Imam Zainul Abideen (a.s.) · 61 duas, 7 days, 15 munajat','ص'],a:['Aamaal','اعمال','Deeds for special days & nights','ع'],m:['Munajaat','مناجات','Whispered prayers of Imam Ali & Imam Sajjad (a.s.)','م'],n:['Namaz','نماز','Prayers, taqibaat & qunoot','ن'],h:['99 Names','اسمائے حسنیٰ','Names of Allah with meanings & benefits','ا'],b:['Books','کتابیں','23 classical hadith books · Arabic with English','ك'],r:['AI Research Notebooks','تحقیقی نوٹ بُکس','ShiaLM on Google NotebookLM · ask questions of classical books','✦']};
 const NOTEBOOKS=[["991380e6-3141-43c5-8ff4-8882ede2326d", "Holy Quran · Tafseer", "Quranic commentary and exegesis"], ["7e16985a-b1c5-430d-8685-184a64a6980c", "Basa'ir al-Darajat", "al-Saffar on the virtues of the Ahlul Bayt (a.s.)"], ["bc110ba0-ecda-4c25-b738-b5154cf16c76", "Mir'at al-Uqool", "Allama Majlisi's commentary on al-Kafi · 24 volumes (Arabic)"], ["0c5d849e-a657-416a-b128-3c74a5035741", "Safinat al-Bihar", "Shaykh Abbas Qummi's index of Bihar al-Anwar · 8 volumes"], ["84c60541-e06d-4e83-ae44-3fe6614fd53d", "The Amali", "Dictations of Saduq, Mufid and Tusi"], ["49752979-f698-48ba-bcf5-64df6da1971f", "Shaykh Saduq (r.a.)", "Collected works of al-Shaykh al-Saduq"], ["a75a5426-4f2c-4895-8dd3-78ec0ab31e09", "Nahj al-Balagha", "Sermons, letters and sayings of Imam Ali (a.s.)"], ["8ae34cf8-c283-42ee-8f7f-b0ddd5b30bd1", "Virtues of the Five (a.s.)", "From the Sihah al-Sittah · 3 volumes"], ["06e04aab-714e-4475-92a0-007973a17ec1", "Mahdaviyat", "On Imam al-Mahdi (a.t.f.s.)"], ["21f14960-6d8b-47a5-92fc-ee4441e8c93b", "I'tiqadat", "Beliefs, by Saduq and Majlisi"], ["89ee2444-82fc-4f30-892d-c91202ac2359", "Bihar al-Anwar", "Allama Majlisi's hadith encyclopedia · 110 volumes"], ["3df041d1-9621-4501-b6c0-13fff62e3548", "Ayatullah Sistani", "Tauzeeh al-Masael and other books"], ["f9ad8a9b-b533-43aa-8de7-cc24fb628305", "A Shi'ite Encyclopedia", "Questions and answers on Shia beliefs"], ["14d5f383-c902-4400-8548-5e49775c2997", "Wasa'il al-Shi'a", "Hadith on law and practice · 30 volumes"], ["49c6f15f-f2f5-4b82-819e-3bc063c479e0", "Man La Yahduruhu al-Faqih", "Shaykh Saduq's hadith collection · 4 volumes"], ["f5c79bdb-a1ae-422b-b7f3-15dc87ebf106", "Usool al-Kafi", "Shaykh Kulayni's al-Kafi · 8 volumes"]];
-const DICON={"m": "<path d=\"M20 14.5A8 8 0 1 1 9.5 4a6.5 6.5 0 0 0 10.5 10.5z\"/><path d=\"M17 3.5l.6 1.4 1.4.6-1.4.6-.6 1.4-.6-1.4-1.4-.6 1.4-.6z\"/>", "d": "<path d=\"M8 13V6.5a1.5 1.5 0 0 1 3 0V12M11 11V4.5a1.5 1.5 0 0 1 3 0V12M14 11.5V6.5a1.5 1.5 0 0 1 3 0v7.5a6 6 0 0 1-6 6h-.5a5.5 5.5 0 0 1-4.6-2.5L4 14.5a1.5 1.5 0 0 1 2.5-1.6L8 15\"/>", "z": "<path d=\"M4 20h16M6 20v-7a6 6 0 0 1 12 0v7M12 7V4M10.5 4.5h3M9 20v-4a3 3 0 0 1 6 0v4\"/>", "s": "<path d=\"M4 5.5A2.5 2.5 0 0 1 6.5 3H20v15H6.5A2.5 2.5 0 0 0 4 20.5zM4 20.5A2.5 2.5 0 0 0 6.5 23H20v-5M9 8h7M9 11.5h5\"/>", "a": "<path d=\"M20 14.5A8 8 0 1 1 9.5 4a6.5 6.5 0 0 0 10.5 10.5zM17 3l.7 1.6 1.7.2-1.3 1.1.4 1.7-1.5-.9-1.5.9.4-1.7-1.3-1.1 1.7-.2z\"/>", "n": "<path d=\"M5 21V10l7-6 7 6v11zM9 21v-5a3 3 0 0 1 6 0v5M5 21h14\"/>", "h": "<path d=\"M12 2.5l2.4 5 5.4.7-4 3.8 1 5.4L12 14.8 7.2 17.4l1-5.4-4-3.8 5.4-.7z\"/>", "e": "<path d=\"M12 3v2M12 19v2M4.2 7l1.7 1M18.1 15l1.7 1M3 12h2M19 12h2M4.2 17l1.7-1M18.1 9l1.7-1\"/><circle cx=\"12\" cy=\"12\" r=\"4\"/>", "t": "<path d=\"M12 21a9 9 0 1 1 0-18 9 9 0 0 1 0 18zM12 7v5l3 2\"/>"};const DTINT={"m": "#6c5ce7", "d": "#2f7dd1", "z": "#16a085", "s": "#8e44ad", "a": "#d68910", "n": "#c0392b", "h": "#2c7a7b", "e": "#e67e22", "t": "#3d5afe"};
+const DICON={"b": "<path d=\"M5 4h4v16H5zM9 4h4v16H9zM14.2 6.2l3.8-1 3.6 13.6-3.8 1z\"/>", "m": "<path d=\"M20 14.5A8 8 0 1 1 9.5 4a6.5 6.5 0 0 0 10.5 10.5z\"/><path d=\"M17 3.5l.6 1.4 1.4.6-1.4.6-.6 1.4-.6-1.4-1.4-.6 1.4-.6z\"/>", "d": "<path d=\"M8 13V6.5a1.5 1.5 0 0 1 3 0V12M11 11V4.5a1.5 1.5 0 0 1 3 0V12M14 11.5V6.5a1.5 1.5 0 0 1 3 0v7.5a6 6 0 0 1-6 6h-.5a5.5 5.5 0 0 1-4.6-2.5L4 14.5a1.5 1.5 0 0 1 2.5-1.6L8 15\"/>", "z": "<path d=\"M4 20h16M6 20v-7a6 6 0 0 1 12 0v7M12 7V4M10.5 4.5h3M9 20v-4a3 3 0 0 1 6 0v4\"/>", "s": "<path d=\"M4 5.5A2.5 2.5 0 0 1 6.5 3H20v15H6.5A2.5 2.5 0 0 0 4 20.5zM4 20.5A2.5 2.5 0 0 0 6.5 23H20v-5M9 8h7M9 11.5h5\"/>", "a": "<path d=\"M20 14.5A8 8 0 1 1 9.5 4a6.5 6.5 0 0 0 10.5 10.5zM17 3l.7 1.6 1.7.2-1.3 1.1.4 1.7-1.5-.9-1.5.9.4-1.7-1.3-1.1 1.7-.2z\"/>", "n": "<path d=\"M5 21V10l7-6 7 6v11zM9 21v-5a3 3 0 0 1 6 0v5M5 21h14\"/>", "h": "<path d=\"M12 2.5l2.4 5 5.4.7-4 3.8 1 5.4L12 14.8 7.2 17.4l1-5.4-4-3.8 5.4-.7z\"/>", "e": "<path d=\"M12 3v2M12 19v2M4.2 7l1.7 1M18.1 15l1.7 1M3 12h2M19 12h2M4.2 17l1.7-1M18.1 9l1.7-1\"/><circle cx=\"12\" cy=\"12\" r=\"4\"/>", "t": "<path d=\"M12 21a9 9 0 1 1 0-18 9 9 0 0 1 0 18zM12 7v5l3 2\"/>"};const DTINT={"m": "#6c5ce7", "d": "#2f7dd1", "z": "#16a085", "s": "#8e44ad", "a": "#d68910", "n": "#c0392b", "h": "#2c7a7b", "e": "#e67e22", "t": "#3d5afe"};
 let dView=store.get('dView','grid');
 function renderDuas(g){
   if(g&&!DCAT[g])g=null;
   if(g){if(g!==dTab)dSec='';dTab=g;store.set('dTab',g)}
   setHeader(g?DCAT[g][0]:'<span class="lib-logo" role="img" aria-label=""></span>Library',!!g);
-  const cnt=g=>g==='e'?LIST.filter(x=>x.grp==='e').length+1:g==='h'?99:g==='r'?NOTEBOOKS.length:LIST.filter(x=>x.grp===g).length;
+  const cnt=g=>g==='e'?LIST.filter(x=>x.grp==='e').length+1:g==='h'?99:g==='b'?BOOKS.reduce((n,x)=>n+x[2].length,0):g==='r'?NOTEBOOKS.length:LIST.filter(x=>x.grp===g).length;
   const cats=`<div class="dcat-head"><b>Categories</b><div class="seg vseg"><button data-v="grid" class="${dView==='grid'?'on':''}">▦ Grid</button><button data-v="list" class="${dView==='list'?'on':''}">☰ List</button></div></div>
-   <div class="dcats ${dView}">${DTABS.map(([k])=>{const c=DCAT[k];return `<a class="dcat" href="#duas-${k}"><span class="dcat-m" style="--t:${DTINT[k]}"><svg viewBox="0 0 24 24" aria-hidden="true">${DICON[k]}</svg></span><span class="dcat-t"><b>${c[0]}</b><small>${c[2]}</small></span><span class="dcat-u">${c[1]}</span><span class="dcat-n">${cnt(k)}</span><span class="dcat-go">›</span></a>`}).join('')}</div>`;
+   <div class="dcats ${dView}">${DTABS.filter(([k])=>k!=='b'||bkBase()).map(([k])=>{const c=DCAT[k];return `<a class="dcat${k==='h'?' wide':''}" href="#duas-${k}"><span class="dcat-m" style="--t:${DTINT[k]}"><svg viewBox="0 0 24 24" aria-hidden="true">${DICON[k]}</svg></span><span class="dcat-t"><b>${c[0]}</b><small>${c[2]}</small></span><span class="dcat-u">${c[1]}</span><span class="dcat-n">${cnt(k)}</span><span class="dcat-go">›</span></a>`}).join('')}</div>`;
   app.innerHTML=`${g?`<div class="lib-hero"><h1>${DCAT[g][0]}</h1><p>${esc(DCAT[g][2])}</p></div>`:`<div class="lib-hero"><h1>Library</h1><p>Duas, ziyarat, aamaal, namaz &amp; the Sahifa</p></div>
-   <a class="ai-ban" href="#duas-r"><span class="ai-pill">✦ Google NotebookLM AI</span><b>AI Research Notebooks</b><span class="ai-d">Ask questions of 16 classical Shia books, from Bihar al-Anwar and al-Kafi to Nahj al-Balagha and tafseer.</span><span class="ai-go">Explore notebooks →</span></a>
+   <div class="ai-ban" role="button" tabindex="0" data-ask="1"><span class="ai-pill">✦ AI Assistant</span><b>HYDER AI</b><span class="ai-d">Ask any question and get answers from al-Kafi, Nahj al-Balagha, Man La Yahduruhu al-Faqih and 20 more classical books, with references.</span><span class="ai-row"><span class="ai-go">Ask a question →</span><a class="ai-nb" href="#duas-r">NotebookLM notebooks</a></span></div>
    ${duaSpot()}`}
    <div class="search">${icon.search}<input id="dq" type="search" placeholder="Search duas, ziyarat, namaz…" value="${esc(dQ)}" autocomplete="off"></div>
    ${g?'':`<div id="dcatw">${cats}</div>`}
@@ -1563,6 +1702,7 @@ function renderDuas(g){
         return `<a class="item dua-item${m?' snum':''}" href="#dua-${d.id}"><div class="num"><span>${m?m[1]:(d.mark||'د')}</span></div><div class="t"><b>${esc(m?m[2]:d.name)}</b>${sub?`<small>${esc(sub)}</small>`:''}</div><div class="dur">${d.ur||''}</div>${dfavBtn(d.id)}</a>`}).join('');
       $('dlist').querySelector('.sec-back').onclick=()=>{dSec='';draw();window.scrollTo(0,0)};
       return}
+    if(!q&&dTab==='b'){$('dlist').innerHTML=`<div class="hint" style="margin:0 2px 6px">The Arabic is the original text. The English is a machine translation of it, so read it as a guide. The books load from the internet.</div>`+BOOKS.map(([n,u,L])=>`<div class="dsec"><b>${esc(n)}</b><span>${u}</span></div>`+L.map(b=>`<a class="item bk-row" href="#book-${b[0]}"><div class="num"><span>ك</span></div><div class="t"><b>${esc(b[1])}</b><small>${esc(b[3])} · ${b[4].toLocaleString()} ${b[0]==='nahj-al-balagha'?'sections':'hadith'}</small></div><div class="dur bk-ar">${b[2]}</div><span class="dcat-go">›</span></a>`).join('')).join('');return}
     if(!q&&dTab==='h'){const N=DU['N_names-99'].segs.filter(x=>x.ar);
       $('dlist').innerHTML=`<a class="item dua-item" href="#dua-asma-ul-husna"><div class="t"><b>Open with meanings &amp; benefits</b><small>Allah has the Most Beautiful Names, so call Him by them (7:180)</small></div><div class="ar" style="font-family:'Noto Nastaliq Urdu',serif;font-size:15px;line-height:2">اسمائے حسنیٰ</div></a>`+
         N.map((x,i)=>`<a class="item nm99" href="#dua-asma-ul-husna"><span class="nn">${i||''}</span><div class="t"><b>${esc(x.tr)}</b><small>${esc(x.en.replace(/^\d+\.\s*/,''))}</small></div><div class="ar nar">${x.ar}</div></a>`).join('');
@@ -2070,6 +2210,43 @@ function updToday(){const el=$('todayCd');if(!el||!LOC)return;const np=nextPraye
   el.textContent=`Next prayer in ${h?h+' hr ':''}${m} min`}
 setInterval(()=>{if(location.hash===''||location.hash==='#today')updToday()},20000);
 
+/* ================= BOOKS: classical hadith books, read from the app's own server ================= */
+const BOOKS=[
+ ['The Four Books','کتبِ اربعہ',[['al-kafi','Al-Kafi','الكافي','Shaykh al-Kulayni',16254],['man-la-yahduruhu-al-faqih','Man La Yahduruhu al-Faqih','من لا يحضره الفقيه','Shaykh al-Saduq',6382],['tahdhib-al-ahkam','Tahdhib al-Ahkam','تهذيب الأحكام','Shaykh al-Tusi',13201],['al-istibsar','Al-Istibsar','الاستبصار','Shaykh al-Tusi',4220]]],
+ ['Nahj al-Balagha & Risalat al-Huquq','نہج البلاغہ و رسالۃ الحقوق',[['nahj-al-balagha','Nahj al-Balagha','نهج البلاغة','Imam Ali (a.s.) · compiled by Sharif al-Radi',2260],['risalat-al-huquq','Risalat al-Huquq','رسالة الحقوق','Imam Zayn al-Abidin (a.s.)',49]]],
+ ['Shaykh Saduq','شیخ صدوقؒ',[['al-amali-saduq','Al-Amali','الأمالي','Shaykh al-Saduq',1082],['al-khisal','Al-Khisal','الخصال','Shaykh al-Saduq',1282],['al-tawhid','Al-Tawhid','التوحيد','Shaykh al-Saduq',575],['uyun-akhbar-al-rida','Uyun Akhbar al-Rida','عيون أخبار الرضا','Shaykh al-Saduq',954],['kamal-al-din','Kamal al-Din wa Tamam al-Ni\'ma','كمال الدين وتمام النعمة','Shaykh al-Saduq',566],['maani-al-akhbar','Ma\'ani al-Akhbar','معاني الأخبار','Shaykh al-Saduq',829],['thawab-al-amal','Thawab al-A\'mal wa \'Iqab al-A\'mal','ثواب الأعمال وعقاب الأعمال','Shaykh al-Saduq',1106],['fadail-al-shia','Fada\'il al-Shi\'a','فضائل الشيعة','Shaykh al-Saduq',45],['sifat-al-shia','Sifat al-Shi\'a','صفات الشيعة','Shaykh al-Saduq',71]]],
+ ['Other','دیگر کتب',[['al-amali-mufid','Al-Amali','الأمالي','Shaykh al-Mufid',387],['kamil-al-ziyarat','Kamil al-Ziyarat','كامل الزيارات','Ibn Qulawayh al-Qummi',749],['kitab-al-ghayba-numani','Kitab al-Ghayba','كتاب الغيبة','Muhammad ibn Ibrahim al-Nu\'mani',468],['kitab-al-ghayba-tusi','Kitab al-Ghayba','كتاب الغيبة','Shaykh al-Tusi',774],['kitab-al-mumin','Kitab al-Mu\'min','كتاب المؤمن','Husayn ibn Sa\'id al-Ahwazi',201],['kitab-al-zuhd','Kitab al-Zuhd','كتاب الزهد','Husayn ibn Sa\'id al-Ahwazi',290],['kitab-al-duafa','Kitab al-Du\'afa\'','كتاب الضعفاء','Ahmad ibn al-Husayn al-Ghada\'iri',226],['mujam-al-ahadith-al-mutabara','Mu\'jam al-Ahadith al-Mu\'tabara','معجم الأحاديث المعتبرة','Muhammad Asif al-Muhsini',555]]]
+];
+function bkBase(){return (window.QAsk&&window.QAsk.base)||''}
+const bkCache=new Map();
+async function bkGet(ref){
+  if(bkCache.has(ref))return bkCache.get(ref);
+  const r=await fetch(bkBase()+'/toc?ref='+encodeURIComponent(ref));const j=await r.json();
+  if(!r.ok)throw new Error(j.error||'');
+  bkCache.set(ref,j);return j;
+}
+/* where the back button goes from a book page */
+function bookUp(ref){const j=bkCache.get(ref);if(j&&j.up)return 'book-'+j.up;return ref.includes(':')?'book-'+ref.slice(0,ref.lastIndexOf(':')):'duas-b'}
+function renderBook(ref){
+  const slug=ref.split(':')[0],B=BOOKS.flatMap(g=>g[2]).find(b=>b[0]===slug);
+  if(!B||!bkBase())return false;
+  setHeader(esc(B[1]),true);noJump();
+  const hero=(path,t,ar,sub)=>`<div class="lib-hero bk-hero">${path?`<small>${esc(path)}</small>`:''}<h1>${esc(t)}</h1>${ar?`<div class="bk-har">${esc(ar)}</div>`:''}${sub?`<p>${esc(sub)}</p>`:''}</div>`;
+  const cached=bkCache.get(ref);
+  if(!cached)app.innerHTML=hero('',B[1],B[2],B[3])+'<div class="bk-load">Opening the book…</div>';
+  const draw=j=>{
+    if(location.hash.slice(1)!=='book-'+ref)return;
+    const unit=j.unit||(slug==='nahj-al-balagha'?'Section':'Hadith'),many=n=>n.toLocaleString()+' '+(slug==='nahj-al-balagha'?(n===1?'section':'sections'):'hadith');
+    const top=ref===slug;
+    let h=hero(top?'':j.path.join(' · '),top?B[1]:j.title.en,top?B[2]:j.title.ar,top?B[3]+' · '+many(j.count):many(j.count));
+    if(j.children&&j.children.length)h+='<div class="list">'+j.children.map((c,i)=>`<a class="item bk-row" href="#book-${esc(c.ref)}"><div class="num"><span>${i+1}</span></div><div class="t"><b>${esc(c.title.en)}</b><small>${many(c.count)}</small></div>${c.title.ar?`<div class="dur bk-ar">${esc(c.title.ar)}</div>`:''}<span class="dcat-go">›</span></a>`).join('')+'</div>';
+    if(j.items&&j.items.length)h+='<div class="bk-page">'+j.items.map(x=>`<div class="bk-it"><span class="no">${unit} ${esc(x.n)}</span>${x.ar?`<div class="ar">${esc(x.ar)}</div>`:''}${x.en?`<div class="en">${esc(x.en)}</div>`:''}</div>`).join('')+'</div><div class="hint" style="margin:14px 2px">The Arabic is the original text; the English is a machine translation.</div>';
+    app.innerHTML=h;document.body.classList.toggle('bk-read',!!(j.items&&j.items.length));
+  };
+  if(cached)draw(cached);
+  else bkGet(ref).then(draw).catch(()=>{if(location.hash.slice(1)==='book-'+ref)app.innerHTML=hero('',B[1],B[2],B[3])+'<div class="bk-load">Could not open the book. Check your internet connection and try again.<br><button class="btn" id="bkRetry" style="margin-top:14px">Try again</button></div>';const b=$('bkRetry');if(b)b.onclick=()=>renderBook(ref)});
+  return true;
+}
 window.XR=function(h){
   if(h===''||h==='today'){renderToday();return true}
   if(h==='calendar'){renderCalendar();return true}
@@ -2077,15 +2254,17 @@ window.XR=function(h){
   if(h==='duas'){renderDuas();return true}
   if(h.startsWith('duas-')){renderDuas(h.slice(5));return true}
   if(h.startsWith('dua-'))return renderDua(h.slice(4));
+  if(h.startsWith('book-'))return renderBook(decodeURIComponent(h.slice(5)));
   if(h==='prayer'){renderPrayer();return true}
   if(h==='qibla'){renderQibla();return true}
   return false;
 };
 setInterval(tick,1000);
-window.QX={meritsHTML,autoLocate,locateMe,get LOC(){return LOC},get ALERTS(){return ALERTS},timesFor,PR,nextPrayer,fmt,DAILY,LIST,UD,DU,slotFor,get AZ(){return AZ},playAlert,stopAlert,hijriToday:()=>HFMT?hijriToday():null,hijriStr,eventsOn,evTitle,HMU,HM};
+window.QX={bookUp,meritsHTML,autoLocate,locateMe,get LOC(){return LOC},get ALERTS(){return ALERTS},timesFor,PR,nextPrayer,fmt,DAILY,LIST,UD,DU,slotFor,get AZ(){return AZ},playAlert,stopAlert,hijriToday:()=>HFMT?hijriToday():null,hijriStr,eventsOn,evTitle,HMU,HM};
 })();
 
 </script>
+
 <script src="capacitor.js"></script>
 <script src="native.js"></script>
 </body>

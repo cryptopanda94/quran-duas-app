@@ -63,6 +63,7 @@ sudo apt-get install -y caddy
 `/etc/caddy/Caddyfile`:
 ```
 ask.yourdomain.com {
+    encode gzip
     reverse_proxy 127.0.0.1:8787
 }
 ```
@@ -81,3 +82,11 @@ Test from anywhere: `curl https://ask.yourdomain.com/health`
 
 ## Updating the list of app pages
 `catalog.json` lists the app's Library pages so answers can link to them. Re-copy it when new duas are added.
+
+
+## Endpoints
+
+- `GET /health` - is it up
+- `POST /ask` - the HYDER AI chat
+- `GET /chapter?ref=` - the chapter around one hadith ("View in book")
+- `GET /toc?ref=` - one level of a book (volumes, chapters, or the hadith of a chapter) for the Books section of the app
