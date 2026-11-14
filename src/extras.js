@@ -387,7 +387,7 @@ function renderDuas(g){
   const cnt=g=>g==='e'?LIST.filter(x=>x.grp==='e').length+1:g==='h'?99:g==='b'?BK.length:g==='r'?NOTEBOOKS.length:LIST.filter(x=>x.grp===g).length;
   const cats=`<div class="dcat-head"><b>Categories</b><div class="seg vseg"><button data-v="grid" class="${dView==='grid'?'on':''}">▦ Grid</button><button data-v="list" class="${dView==='list'?'on':''}">☰ List</button></div></div>
    <div class="dcats ${dView}">${DTABS.filter(([k])=>k!=='b'||bkBase()).map(([k])=>{const c=DCAT[k];if(k==='b')return `<a class="dcat wide books" href="#duas-b"><span class="dcat-m" style="--t:${DTINT.b}"><svg viewBox="0 0 24 24" aria-hidden="true">${DICON.b}</svg></span><span class="dcat-t"><b>${c[0]}</b><small>${c[2]}</small><span class="dcat-u">${c[1]}</span></span><span class="bk-shelf" aria-hidden="true">${[0,4,16].map(i=>bkCover(BK[i])).join('')}</span><span class="dcat-n">${cnt(k)}</span><span class="dcat-go">›</span></a>`;return `<a class="dcat${k==='h'?' wide':''}" href="#duas-${k}"><span class="dcat-m" style="--t:${DTINT[k]}"><svg viewBox="0 0 24 24" aria-hidden="true">${DICON[k]}</svg></span><span class="dcat-t"><b>${c[0]}</b><small>${c[2]}</small></span><span class="dcat-u">${c[1]}</span><span class="dcat-n">${cnt(k)}</span><span class="dcat-go">›</span></a>`}).join('')}</div>`;
-  app.innerHTML=`${g?`<div class="lib-hero"><h1>${DCAT[g][0]}</h1><p>${esc(DCAT[g][2])}</p></div>`:`<div class="lib-hero"><h1>Library</h1><p>Duas, ziyarat, aamaal, namaz &amp; the Sahifa</p></div>
+  app.innerHTML=`${g?`<div class="lib-hero"><h1>${DCAT[g][0]}</h1><p>${esc(DCAT[g][2])}</p></div>`:`${pgBan('اَلْمَكْتَبَة','Library','Duas, Ziyarat & Books')}
    <div class="ai-ban hy" role="button" tabindex="0" data-ask="1"><span class="td-pat" aria-hidden="true"></span>
      <span class="hy-top"><span class="hy-av" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M12 2.5l1.9 5.6 5.6 1.9-5.6 1.9L12 17.5l-1.9-5.6L4.5 10l5.6-1.9z"/><path d="M18.5 14.5l.9 2.6 2.6.9-2.6.9-.9 2.6-.9-2.6-2.6-.9 2.6-.9z"/></svg></span><span class="hy-n"><b>HYDER AI</b><small>Answers with references from ${BK.length} classical books</small></span></span>
      <span class="hy-in"><span>Ask a question…</span><i aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M5 12h13M13 6l6 6-6 6"/></svg></i></span>
@@ -1026,5 +1026,5 @@ window.XR=function(h){
   return false;
 };
 setInterval(tick,1000);
-window.QX={bookUp,meritsHTML,autoLocate,locateMe,get LOC(){return LOC},get ALERTS(){return ALERTS},timesFor,PR,nextPrayer,fmt,DAILY,LIST,UD,DU,slotFor,get AZ(){return AZ},playAlert,stopAlert,hijriToday:()=>HFMT?hijriToday():null,hijriStr,eventsOn,evTitle,HMU,HM};
+window.QX={pgBan,bookUp,meritsHTML,autoLocate,locateMe,get LOC(){return LOC},get ALERTS(){return ALERTS},timesFor,PR,nextPrayer,fmt,DAILY,LIST,UD,DU,slotFor,get AZ(){return AZ},playAlert,stopAlert,hijriToday:()=>HFMT?hijriToday():null,hijriStr,eventsOn,evTitle,HMU,HM};
 })();
