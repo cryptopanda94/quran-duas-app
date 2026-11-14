@@ -322,7 +322,7 @@ body.playing .asbar{bottom:calc(142px + env(safe-area-inset-bottom))}
 .as-sp{display:flex;flex-direction:column;align-items:center;min-width:84px;line-height:1.15}#asLeft{font-weight:600;color:var(--ink)!important}.as-sp b{font-size:17px}.as-sp small{font-size:10.5px;color:var(--muted)}
 #asBtn.as-txt{flex:none;height:32px;padding:0 12px;margin-right:4px;border-radius:999px;font-size:13px;font-weight:600;white-space:nowrap;color:var(--accent);background:var(--bg);border:1.5px solid var(--accent)}
 .ask-fab{position:fixed;right:14px;bottom:calc(76px + env(safe-area-inset-bottom));z-index:16;display:flex;align-items:center;gap:5px;height:36px;padding:0 13px 0 10px;border-radius:999px;background:var(--fill,var(--accent));color:#fff;font-weight:700;font-size:12.5px;box-shadow:0 6px 18px rgba(0,0,0,.22)}
-.ask-fab[hidden]{display:none}.ask-fab svg{width:17px;height:17px;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.ask-fab[hidden]{display:none}.ask-fab svg{width:17px;height:17px;fill:currentColor;stroke:none}
 body.playing .ask-fab{bottom:calc(146px + env(safe-area-inset-bottom))}
 body.sheet-lock .ask-fab,body.as-on .ask-fab,body.reading .ask-fab{display:none}
 .sheet.ask{display:none;flex-direction:column;height:calc(100dvh - env(safe-area-inset-top) - 24px);padding:8px 14px calc(10px + env(safe-area-inset-bottom));overflow:hidden}
@@ -705,7 +705,7 @@ body .ayah-card .v-en{display:block!important}
   <button id="asMore" aria-label="More minutes (slower)">+</button>
   <button id="asClose" aria-label="Stop auto-scroll"><svg viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></svg></button>
 </div>
-<button class="ask-fab" id="askFab" aria-label="Ask the assistant"><svg viewBox="0 0 24 24"><path d="M4 5.5A2.5 2.5 0 0 1 6.5 3h11A2.5 2.5 0 0 1 20 5.5v8a2.5 2.5 0 0 1-2.5 2.5H10l-4.5 4v-4h0A1.5 1.5 0 0 1 4 14.5z"/><path d="M8.5 8.5h7M8.5 11.5h4.5"/></svg><span>HYDER AI</span></button>
+<button class="ask-fab" id="askFab" aria-label="Ask HYDER AI"><svg viewBox="0 0 24 24"><path d="M12 2.5l1.9 5.6 5.6 1.9-5.6 1.9L12 17.5l-1.9-5.6L4.5 10l5.6-1.9z"/><path d="M18.5 14.5l.9 2.6 2.6.9-2.6.9-.9 2.6-.9-2.6-2.6-.9 2.6-.9z"/></svg><span>HYDER AI</span></button>
 <div class="sheet ask" id="askSheet" role="dialog" aria-label="HYDER AI">
   <div class="np-grab"></div>
   <button class="np-x" id="askClose" aria-label="Close"><svg viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></svg></button>
@@ -817,7 +817,7 @@ function renderHome(){
   setHeader('Quran',false);
   const last=S.last;
   app.innerHTML=`
-   <div class="hero"><div class="ar">القرآن الكريم</div></div>
+   ${window.QX&&QX.pgBan?QX.pgBan('اَلْقُرْاٰنُ الْكَرِيْم','Holy Quran','114 Surahs · 30 Juz'):'<div class="hero"><div class="ar">القرآن الكريم</div></div>'}
    ${last?`<a class="continue" href="${S.ctx&&S.ctx.juz?`#juz-${S.ctx.juz}-${last.s}-${last.v}`:`#surah-${last.s}-${last.v}`}"><div style="flex:1"><small>Continue reading</small><b>${esc(META[last.s-1][1])} · Verse ${last.v}</b><small style="opacity:.85;margin-top:2px">Juz ${qInfo(quarterOf(last.s,last.v)).juz} · ${hizbLabel(qInfo(quarterOf(last.s,last.v)))}</small></div>${icon.arrow}</a>`:''}
    <div class="search">${icon.search}<input id="q" type="search" placeholder="Search surah, 2:255, or a word in English / Urdu / Arabic" value="${esc(S.q)}" autocomplete="off"></div>
    <div class="tabs" id="tabs">
@@ -1703,7 +1703,7 @@ function renderDuas(g){
   const cnt=g=>g==='e'?LIST.filter(x=>x.grp==='e').length+1:g==='h'?99:g==='b'?BK.length:g==='r'?NOTEBOOKS.length:LIST.filter(x=>x.grp===g).length;
   const cats=`<div class="dcat-head"><b>Categories</b><div class="seg vseg"><button data-v="grid" class="${dView==='grid'?'on':''}">▦ Grid</button><button data-v="list" class="${dView==='list'?'on':''}">☰ List</button></div></div>
    <div class="dcats ${dView}">${DTABS.filter(([k])=>k!=='b'||bkBase()).map(([k])=>{const c=DCAT[k];if(k==='b')return `<a class="dcat wide books" href="#duas-b"><span class="dcat-m" style="--t:${DTINT.b}"><svg viewBox="0 0 24 24" aria-hidden="true">${DICON.b}</svg></span><span class="dcat-t"><b>${c[0]}</b><small>${c[2]}</small><span class="dcat-u">${c[1]}</span></span><span class="bk-shelf" aria-hidden="true">${[0,4,16].map(i=>bkCover(BK[i])).join('')}</span><span class="dcat-n">${cnt(k)}</span><span class="dcat-go">›</span></a>`;return `<a class="dcat${k==='h'?' wide':''}" href="#duas-${k}"><span class="dcat-m" style="--t:${DTINT[k]}"><svg viewBox="0 0 24 24" aria-hidden="true">${DICON[k]}</svg></span><span class="dcat-t"><b>${c[0]}</b><small>${c[2]}</small></span><span class="dcat-u">${c[1]}</span><span class="dcat-n">${cnt(k)}</span><span class="dcat-go">›</span></a>`}).join('')}</div>`;
-  app.innerHTML=`${g?`<div class="lib-hero"><h1>${DCAT[g][0]}</h1><p>${esc(DCAT[g][2])}</p></div>`:`<div class="lib-hero"><h1>Library</h1><p>Duas, ziyarat, aamaal, namaz &amp; the Sahifa</p></div>
+  app.innerHTML=`${g?`<div class="lib-hero"><h1>${DCAT[g][0]}</h1><p>${esc(DCAT[g][2])}</p></div>`:`${pgBan('اَلْمَكْتَبَة','Library','Duas, Ziyarat & Books')}
    <div class="ai-ban hy" role="button" tabindex="0" data-ask="1"><span class="td-pat" aria-hidden="true"></span>
      <span class="hy-top"><span class="hy-av" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M12 2.5l1.9 5.6 5.6 1.9-5.6 1.9L12 17.5l-1.9-5.6L4.5 10l5.6-1.9z"/><path d="M18.5 14.5l.9 2.6 2.6.9-2.6.9-.9 2.6-.9-2.6-2.6-.9 2.6-.9z"/></svg></span><span class="hy-n"><b>HYDER AI</b><small>Answers with references from ${BK.length} classical books</small></span></span>
      <span class="hy-in"><span>Ask a question…</span><i aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M5 12h13M13 6l6 6-6 6"/></svg></i></span>
@@ -2342,7 +2342,7 @@ window.XR=function(h){
   return false;
 };
 setInterval(tick,1000);
-window.QX={bookUp,meritsHTML,autoLocate,locateMe,get LOC(){return LOC},get ALERTS(){return ALERTS},timesFor,PR,nextPrayer,fmt,DAILY,LIST,UD,DU,slotFor,get AZ(){return AZ},playAlert,stopAlert,hijriToday:()=>HFMT?hijriToday():null,hijriStr,eventsOn,evTitle,HMU,HM};
+window.QX={pgBan,bookUp,meritsHTML,autoLocate,locateMe,get LOC(){return LOC},get ALERTS(){return ALERTS},timesFor,PR,nextPrayer,fmt,DAILY,LIST,UD,DU,slotFor,get AZ(){return AZ},playAlert,stopAlert,hijriToday:()=>HFMT?hijriToday():null,hijriStr,eventsOn,evTitle,HMU,HM};
 })();
 
 </script>
