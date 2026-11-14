@@ -991,7 +991,7 @@ $('fontSeg').onclick=e=>{const b=e.target.closest('button');if(!b)return;S.font=
 $('trSw').onclick=()=>{S.showTr=!S.showTr;store.set('showTr',S.showTr);applySettings()};
 $('ruleSw').onclick=()=>{S.rules=!S.rules;store.set('rules',S.rules);applySettings()};
 $('setDone').onclick=()=>closeSheets();
-const AUD_MB={alafasy:221,sudais:157,abdulbasit:223,mujawwad:420};
+const AUD_MB={alafasy:221,sudais:157,abdulbasit:223,mujawwad:319};
 function audUrls(){return AUD.flatMap(x=>x.p.map(q=>q[0]))}
 function drawOff(){const box=$('offAud'),OA=window.NH&&NH.audio;if(!box)return;if(!OA){box.hidden=true;return}box.hidden=false;
   const st=OA.stats(audUrls()),sur=AUD.filter(x=>x.p.every(q=>OA.has(q[0]))).length,b=OA.busy(),all=st.n>=st.total;
