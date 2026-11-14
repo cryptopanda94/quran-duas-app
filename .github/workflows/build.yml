@@ -172,6 +172,8 @@ jobs:
           # the web app, served at https://quranduas.app (the server proxies to this folder)
           mkdir -p ../site/app
           cp www/index.html www/*.js www/*.mp3 ../site/app/
+          cp -r www/fonts ../site/app/
+          cp www/silent.wav ../site/app/ 2>/dev/null || true
           cd ../site
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"

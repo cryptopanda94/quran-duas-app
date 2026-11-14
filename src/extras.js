@@ -671,17 +671,18 @@ function autoLocate(resume){
 }
 function route2(){if(location.hash==='#qibla')renderQibla();else renderPrayer()}
 let editing=false;
+const pgBan=(ar,title,sub)=>`<div class="ai-ban td-ban pg-ban"><span class="td-pat" aria-hidden="true"></span><span class="td-top"><span class="td-logo" role="img" aria-label=""></span><span class="td-dt"><span class="td-wd">${esc(sub)}</span><b>${esc(title)}</b></span><span class="pg-ar">${ar}</span></span></div>`;
 function renderPrayer(){
   setHeader('Prayer times',false);
   if(!LOC||editing){
-    app.innerHTML=`<div class="hero"><div class="ar" style="font-family:IndoPak,serif">اَوْقَاتُ الصَّلٰوة</div><p>Choose your city to see prayer times</p></div><div class="card" id="pick"></div>
+    app.innerHTML=`${pgBan('اَوْقَاتُ الصَّلٰوة','Prayer Times','Choose your city')}<div class="card" id="pick"></div>
     ${LOC?'<button class="btn" id="cancelEdit">Cancel</button>':''}`;
     cityPicker($('pick'));if($('cancelEdit'))$('cancelEdit').onclick=()=>{editing=false;renderPrayer()};return;
   }
   const now=new Date(),T=timesFor(LOC,now),np=nextPrayer();
   let dstr='';try{dstr=now.toLocaleDateString([], {timeZone:LOC.tz,weekday:'long',day:'numeric',month:'long'})}catch(e){}
-  app.innerHTML=`
-   <div class="card loc" style="margin-top:16px"><b>📍 ${esc(LOC.name)}<br><small class="hint">${esc(dstr)}${window.NH&&LOC.auto!==false?' · 📡 automatic':''}</small></b><button class="btn" id="chg">Change</button></div>
+  app.innerHTML=`${pgBan('اَوْقَاتُ الصَّلٰوة','Prayer Times','Shia Ithna Ashari')}
+   <div class="card loc"><b>📍 ${esc(LOC.name)}<br><small class="hint">${esc(dstr)}${window.NH&&LOC.auto!==false?' · 📡 automatic':''}</small></b><button class="btn" id="chg">Change</button></div>
    <div class="next" id="nextBox"></div>
    <div class="card ptable">${PR.map(([k,n,u,main])=>`<div class="pr${main?'':' minor'}${np&&np.k===k?' now':''}"><span>${n}</span><span class="ur">${u}</span><b>${fmt(LOC,T[k])}</b>
       ${main?`<button class="bell${ALERTS[k]?' on':''}" data-k="${k}" aria-label="Azan alert for ${n}">${ALERTS[k]?icons.bell:icons.belloff}</button>`:'<span style="width:34px;flex:none"></span>'}</div>`).join('')}</div>
@@ -758,13 +759,13 @@ function qibla(lat,lng){const [kl,kg]=KAABA;const dl=dtr(kg-lng);
 function distKm(lat,lng){const [kl,kg]=KAABA,R=6371,a=Math.sin(dtr(kl-lat)/2)**2+Math.cos(dtr(lat))*Math.cos(dtr(kl))*Math.sin(dtr(kg-lng)/2)**2;return 2*R*Math.asin(Math.sqrt(a))}
 function renderQibla(){
   setHeader('Qibla direction',false);
-  if(!LOC||editing){app.innerHTML=`<div class="hero"><div class="ar" style="font-family:IndoPak,serif">قِبْلَه</div><p>Choose your city to find the Qibla</p></div><div class="card" id="pick"></div>${LOC?'<button class="btn" id="cancelEdit">Cancel</button>':''}`;
+  if(!LOC||editing){app.innerHTML=`${pgBan('قِبْلَه','Qibla Direction','Choose your city')}<div class="card" id="pick"></div>${LOC?'<button class="btn" id="cancelEdit">Cancel</button>':''}`;
     cityPicker($('pick'));if($('cancelEdit'))$('cancelEdit').onclick=()=>{editing=false;renderQibla()};return}
   const b=qibla(LOC.lat,LOC.lng),km=distKm(LOC.lat,LOC.lng);
   const card=['N','NE','E','SE','S','SW','W','NW'][Math.round(b/45)%8];
   const ticks=Array.from({length:72},(_,i)=>{const a=i*5,l=i%18===0?14:i%2===0?8:4;return`<line x1="150" y1="${22}" x2="150" y2="${22+l}" transform="rotate(${a} 150 150)" stroke="var(--muted)" stroke-width="${i%18===0?2:1}"/>`}).join('');
-  app.innerHTML=`
-   <div class="card loc" style="margin-top:16px"><b>📍 ${esc(LOC.name)}</b><button class="btn" id="chg">Change</button></div>
+  app.innerHTML=`${pgBan('قِبْلَه','Qibla Direction','Towards the Holy Kaaba')}
+   <div class="card loc"><b>📍 ${esc(LOC.name)}</b><button class="btn" id="chg">Change</button></div>
    <div class="card" style="text-align:center">
      <svg class="dial" id="qDial" viewBox="0 0 300 300">
        <g id="roseAll" style="transition:transform .15s ease-out;transform-origin:150px 150px">
