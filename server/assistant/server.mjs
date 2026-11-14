@@ -10,7 +10,7 @@
 //   FILE_SEARCH_STORE  the store printed by upload.mjs (fileSearchStores/...) - the books
 //   PORT             default 8787 (put HTTPS in front of it, e.g. Caddy or nginx)
 //   PER_MINUTE       questions per user per minute   (default 6)
-//   PER_DAY          questions per user per day      (default 60)
+//   PER_DAY          questions per user per day      (default 200)
 //   DAILY_CAP        questions for everyone per day  (default 3000) - protects your bill
 import http from 'node:http';
 import { readFileSync, readdirSync, existsSync } from 'node:fs';
@@ -23,7 +23,7 @@ const MODEL = process.env.GEMINI_MODEL || 'gemini-3.1-flash-lite';
 const STORE = process.env.FILE_SEARCH_STORE || '';
 if (!STORE) console.warn('FILE_SEARCH_STORE not set: answers will not search the books');
 const PORT = +(process.env.PORT || 8787);
-const PER_MIN = +(process.env.PER_MINUTE || 6), PER_DAY = +(process.env.PER_DAY || 60), CAP = +(process.env.DAILY_CAP || 3000);
+const PER_MIN = +(process.env.PER_MINUTE || 6), PER_DAY = +(process.env.PER_DAY || 200), CAP = +(process.env.DAILY_CAP || 3000);
 
 const here = dirname(fileURLToPath(import.meta.url));
 const CAT = JSON.parse(readFileSync(join(here, 'catalog.json'), 'utf8')); // [[id, name, note], ...]
@@ -163,14 +163,26 @@ function passages(text) {
 
 async function ask(messages) {
   const contents = messages.slice(-12).map((m) => ({ role: m.role === 'assistant' ? 'model' : 'user', parts: [{ text: String(m.text || '').slice(0, 2000) }] }));
-  const body = { systemInstruction: { parts: [{ text: SYSTEM }] }, contents, generationConfig: { temperature: 0.3, maxOutputTokens: 1200 } };
-  if (STORE) body.tools = [{ fileSearch: { fileSearchStoreNames: [STORE] } }];
-  const r = await fetch(`${process.env.GEMINI_BASE || 'https://generativelanguage.googleapis.com'}/v1beta/models/${encodeURIComponent(MODEL)}:generateContent`, {
-    method: 'POST', headers: { 'Content-Type': 'application/json', 'x-goog-api-key': KEY }, body: JSON.stringify(body), signal: AbortSignal.timeout(60000),
-  });
-  const j = await r.json().catch(() => ({}));
-  if (!r.ok) throw new Error((j.error && j.error.message) || 'Gemini HTTP ' + r.status);
-  const c = j.candidates && j.candidates[0];
+  const gen = async (system) => {
+    const body = { systemInstruction: { parts: [{ text: system }] }, contents, generationConfig: { temperature: 0.3, maxOutputTokens: 1200 } };
+    if (STORE) body.tools = [{ fileSearch: { fileSearchStoreNames: [STORE] } }];
+    const r = await fetch(`${process.env.GEMINI_BASE || 'https://generativelanguage.googleapis.com'}/v1beta/models/${encodeURIComponent(MODEL)}:generateContent`, {
+      method: 'POST', headers: { 'Content-Type': 'application/json', 'x-goog-api-key': KEY }, body: JSON.stringify(body), signal: AbortSignal.timeout(60000),
+    });
+    const j = await r.json().catch(() => ({}));
+    if (!r.ok) throw new Error((j.error && j.error.message) || 'Gemini HTTP ' + r.status);
+    return j.candidates && j.candidates[0];
+  };
+  const found = (x) => !!(x && x.groundingMetadata && (x.groundingMetadata.groundingChunks || []).length);
+  let c = await gen(SYSTEM);
+  // Gemini decides for itself whether to search. If it answered from memory, ask once more and insist on the books,
+  // so answers carry references that can be checked.
+  if (STORE && c && !found(c)) {
+    try {
+      const c2 = await gen(SYSTEM + '\n\nIMPORTANT for this reply: you have not searched the library yet. Search the library with the file search tool now, before answering, and base the answer on the passages you find, citing them. Do not answer from memory. If the question is only a greeting or about using the app, answer it normally.');
+      if (found(c2)) c = c2;
+    } catch (e) { console.error(new Date().toISOString(), 'retry failed:', e.message); }
+  }
   let text = c && c.content && c.content.parts ? c.content.parts.map((p) => p.text || '').join('') : '';
   if (!text) return { text: 'Sorry, I could not answer that. Please rephrase your question.', refs: [] };
 

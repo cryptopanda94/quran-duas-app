@@ -78,7 +78,7 @@ sudo netfilter-persistent save   # Ubuntu
 Test from anywhere: `curl https://ask.yourdomain.com/health`
 
 ## Limits (change in the service file)
-`PER_MINUTE` (6), `PER_DAY` (60) per user, `DAILY_CAP` (3000) for everyone — keeps the Gemini bill under control.
+`PER_MINUTE` (6), `PER_DAY` (200) per user, `DAILY_CAP` (3000) for everyone — keeps the Gemini bill under control.
 
 ## Updating the list of app pages
 `catalog.json` lists the app's Library pages so answers can link to them. Re-copy it when new duas are added.
