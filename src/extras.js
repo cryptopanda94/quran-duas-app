@@ -442,28 +442,28 @@ function renderDuas(g){
       const nrow=(d,j)=>{const m=/^(\d+)\.\s*(.*)$/.exec(d.name);return `<a class="item dua-item snum nmrow" href="#dua-${d.id}"><div class="num"><span>${m?m[1]:j+1}</span></div><div class="t"><b>${esc(m?m[2]:d.name)}</b>${d.sub&&!m&&dTab!=='a'?`<small>${esc(d.sub)}</small>`:''}${d.ur?`<span class="nm-ur">${d.ur}</span>`:''}</div>${dfavBtn(d.id)}</a>`};
       if('amszt'.includes(dTab)){
         const gs=[];items.forEach(d=>{if(d.sec&&(!gs.length||gs[gs.length-1].sec!==d.sec))gs.push({sec:d.sec,ur:d.secUr||'',its:[]});if(!gs.length)gs.push({sec:'',ur:'',its:[]});gs[gs.length-1].its.push(d)});
-        if(dTab==='z'){const ZG=[['Imam Husain (a.s.)','Ashura, Arbaeen, Warith and Nahiya','امام حسین علیہ السلام',['ziyarat-ashura','ziyarat-arbaeen','ziyarat-waritha','ziyarat-warith','ziyarat-nahiya']],
-          ['Imam Ali (a.s.)','Aminullah, the Day of Ghadir and the farewell','امام علی علیہ السلام',['ziyarat-aminullah','ziyarat-ghadir-long','ziyarat-ghadir-short','farewell-ali']],
-          ['Imam al-Kazim & Imam al-Jawad (a.s.)','Kazimayn','کاظمین',['ziyarat-kazim','ziyarat-kazim-2','ziyarat-jawad','ziyarat-jawad-2','ziyarat-jawad-3','ziyarat-kazim-jawad','farewell-kazim-jawad']],
-          ['Imam al-Hadi & Imam al-Askari (a.s.)','Samarra','سامرا',['ziyarat-hadi','ziyarat-askari','ziyarat-hadi-askari','ziyarat-narjis','ziyarat-hakimah','ziyarat-sayyid-muhammad','farewell-two-imams']],
-          ['Imam al-Mahdi (a.t.f.s.)','Aal-e-Yasin, after Fajr and the four deputies','امام مہدی عجل اللہ فرجہ',['ziyarat-aale-yasin','ziyarat-mahdi-fajr','ziyarat-four-deputies']],
-          ['Ziyarat Jamia','For all the Imams (a.s.), at any shrine','زیاراتِ جامعہ',['ziyarat-jamia-kabeera','ziyarat-jamia-sagheera','ziyarat-jamia-aimma','ziyarat-comprehensive-1','ziyarat-comprehensive-3','jamia-fifth']],
-          ['Salawat','Upon the Holy Prophet and the Imams (a.s.)','صلوات',['salawat-prophet','salawat-ali','salawat-fatima','salawat-hasan-husayn','salawat-kazim','salawat-jawad','salawat-mahdi','salawat-imams']],
-          ['Other shrines & general','Lady Masumah, Shah Abd al-Azim, Salman and more','دیگر زیارات',['ziyarat-masuma','ziyarat-abd-azim','ziyarat-salman','ziyarat-graves','dua-after-ziyarah']]];
+        if(dTab==='z'){const ZG=[['Imam Husain (a.s.)','Ashura, Arbaeen, Warith and Nahiya','امام حسین علیہ السلام',['ziyarat-ashura','ziyarat-arbaeen','ziyarat-waritha','ziyarat-warith','ziyarat-nahiya'],'Imam Husain','امام حسینؑ'],
+          ['Imam Ali (a.s.)','Aminullah, the Day of Ghadir and the farewell','امام علی علیہ السلام',['ziyarat-aminullah','ziyarat-ghadir-long','ziyarat-ghadir-short','farewell-ali'],'Imam Ali','امام علیؑ'],
+          ['Imam al-Kazim & Imam al-Jawad (a.s.)','Kazimayn','کاظمین',['ziyarat-kazim','ziyarat-kazim-2','ziyarat-jawad','ziyarat-jawad-2','ziyarat-jawad-3','ziyarat-kazim-jawad','farewell-kazim-jawad'],'Kazimayn','کاظمین'],
+          ['Imam al-Hadi & Imam al-Askari (a.s.)','Samarra','سامرا',['ziyarat-hadi','ziyarat-askari','ziyarat-hadi-askari','ziyarat-narjis','ziyarat-hakimah','ziyarat-sayyid-muhammad','farewell-two-imams'],'Samarra','سامرا'],
+          ['Imam al-Mahdi (a.t.f.s.)','Aal-e-Yasin, after Fajr and the four deputies','امام مہدی عجل اللہ فرجہ',['ziyarat-aale-yasin','ziyarat-mahdi-fajr','ziyarat-four-deputies'],'Imam al-Mahdi','امام مہدیؑ'],
+          ['Ziyarat Jamia','For all the Imams (a.s.), at any shrine','زیاراتِ جامعہ',['ziyarat-jamia-kabeera','ziyarat-jamia-sagheera','ziyarat-jamia-aimma','ziyarat-comprehensive-1','ziyarat-comprehensive-3','jamia-fifth'],'Jamia','جامعہ'],
+          ['Salawat','Upon the Holy Prophet and the Imams (a.s.)','صلوات',['salawat-prophet','salawat-ali','salawat-fatima','salawat-hasan-husayn','salawat-kazim','salawat-jawad','salawat-mahdi','salawat-imams'],'Salawat','صلوات'],
+          ['Other shrines & general','Lady Masumah, Shah Abd al-Azim, Salman and more','دیگر زیارات',['ziyarat-masuma','ziyarat-abd-azim','ziyarat-salman','ziyarat-graves','dua-after-ziyarah'],'Other shrines','دیگر']];
           gs.length=0;const used=new Set();
-          ZG.forEach(([sec,sub,ur,ids])=>{const its=ids.map(id=>items.find(x=>x.id===id)).filter(Boolean);its.forEach(x=>used.add(x.id));if(its.length)gs.push({sec,sub,ur,its})});
+          ZG.forEach(([sec,sub,ur,ids,tile,tur])=>{const its=ids.map(id=>items.find(x=>x.id===id)).filter(Boolean);its.forEach(x=>used.add(x.id));if(its.length)gs.push({sec,sub,ur,its,tile,tur})});
           const rest=items.filter(x=>!used.has(x.id));if(rest.length){const o=gs.find(g=>g.sec==='Other shrines & general');o?o.its.push(...rest):gs.push({sec:'Other',sub:'',ur:'',its:rest})}}
-        if(gs.length<2){$('dlist').innerHTML=items.map(nrow).join('');app.querySelectorAll('.dtabs .tab').forEach(b=>b.classList.toggle('on',b.dataset.g===dTab));return}
-        if(dTab==='a'){
+        if(dTab==='a'||dTab==='z'){
           const cur=gs[+String(dSec).slice(1)];
           if(/^g\d+$/.test(dSec)&&cur){
-            $('dlist').innerHTML=`<button type="button" class="am-back">‹ All months</button><div class="am-h"><b>${esc(cur.sec)}</b><span>${cur.ur}</span></div>`+cur.its.map(nrow).join('');
+            $('dlist').innerHTML=`<button type="button" class="am-back">${dTab==='a'?'‹ All months':'‹ All ziyarat'}</button><div class="am-h"><b>${esc(cur.sec)}</b><span>${cur.ur}</span></div>`+cur.its.map(nrow).join('');
             $('dlist').querySelector('.am-back').onclick=()=>{dSec='';draw();window.scrollTo(0,0)};
           } else {
-            $('dlist').innerHTML=`<div class="am-grid">${gs.map((g2,i)=>`<button type="button" class="am-t" data-i="${i}"><span class="am-u">${g2.ur}</span><b>${esc(g2.sec.replace(/\s*\(.*\)/,''))}</b><small>${g2.its.length} ${g2.its.length>1?'aamaal':'amal'}</small></button>`).join('')}</div>`;
+            $('dlist').innerHTML=`<div class="am-grid">${gs.map((g2,i)=>`<button type="button" class="am-t" data-i="${i}"><span class="am-u">${g2.tur||g2.ur}</span><b>${esc(g2.tile||g2.sec.replace(/\s*\(.*\)/,''))}</b><small>${g2.its.length} ${dTab==='z'?'ziyarat':g2.its.length>1?'aamaal':'amal'}</small></button>`).join('')}</div>`;
             $('dlist').querySelectorAll('.am-t').forEach(b=>b.onclick=()=>{dSec='g'+b.dataset.i;draw();window.scrollTo(0,0)});
           }
           app.querySelectorAll('.dtabs .tab').forEach(b=>b.classList.toggle('on',b.dataset.g===dTab));return}
+        if(gs.length<2){$('dlist').innerHTML=items.map(nrow).join('');app.querySelectorAll('.dtabs .tab').forEach(b=>b.classList.toggle('on',b.dataset.g===dTab));return}
         const SD={'Supplications':'Duas 1–61','Supplications for the Days of the Week':'Sunday to Saturday','Fifteen Whispered Prayers':'Munajat 1–15 · Imam Zainul Abideen (a.s.)','Munajaat of Imam Ali (a.s.)':'In Masjid Kufa, and the Munajaat in verse'};
         const strip=n=>n.replace(/^\d+\.\s*/,'');const cut=(t,n)=>t.length>n?t.slice(0,n).replace(/\s+\S*$/,'')+'…':t;
         $('dlist').innerHTML=`<div class="accs">${gs.map((g2,i)=>row('g'+i,DICON[dTab],DTINT[dTab],esc(g2.sec),esc(g2.sub||SD[g2.sec]||(dTab==='a'?'':cut(strip(g2.its[0].name),44)+(g2.its.length>1?' and more':''))),g2.ur,g2.its.length,g2.its.map(nrow).join(''))).join('')}</div>`;
