@@ -1176,10 +1176,41 @@ function renderFiqh(){
   setHeader('Fiqh',true);
   const FQ='<path d="M12 3v18M5 7h14M5 7l-2.5 6a3 3 0 0 0 5 0zM19 7l-2.5 6a3 3 0 0 0 5 0zM8 21h8"/>';
   const T=[['Islamic Laws','Ayatullah Sayyid Ali al-Sistani','آیت اللہ سیستانی','Fourth edition, English · on sistani.org','https://www.sistani.org/files-new/book-pdf/english-islamic-laws-2023.pdf','#1d6fb0'],
-           ['Practical Laws of Islam','Ayatullah Sayyid Ali Khamenei','آیت اللہ خامنہ ای','Questions and answers, English · on leader.ir','https://www.leader.ir/en/book/23','#3b7a57']];
+           ['Practical Laws of Islam','Ayatullah Sayyid Ali Khamenei','آیت اللہ خامنہ ای','2,096 questions and answers, in the app','#fiqh-k','#3b7a57']];
   app.innerHTML=`<div class="ai-ban td-ban pg-ban sb"><span class="td-pat" aria-hidden="true"></span><span class="td-top"><span class="sb-ic" aria-hidden="true"><svg viewBox="0 0 24 24">${FQ}</svg></span><span class="td-dt"><span class="td-wd">Islamic laws of the maraji</span><b>Fiqh</b><span class="sb-ur">فقہ</span></span></span></div>
-   <div class="fq-grid">${T.map(([t,by,ur,sub,url,c])=>`<a class="fq-t" href="${url}" target="_blank" rel="noopener"><span class="dcat-m" style="--t:${c}"><svg viewBox="0 0 24 24" aria-hidden="true">${FQ}</svg></span><span class="am-u">${ur}</span><b>${esc(t)}</b><small>${esc(by)}</small><em>${esc(sub)}</em><span class="fq-go">Open ›</span></a>`).join('')}</div>
-   <div class="hint" style="margin:16px 4px;line-height:1.6">Each book opens on the marja's own website, in your browser. For rulings, follow your own marja.</div>`;
+   <div class="fq-grid">${T.map(([t,by,ur,sub,url,c])=>`<a class="fq-t" href="${url}"${url[0]==='#'?'':' target="_blank" rel="noopener"'}><span class="dcat-m" style="--t:${c}"><svg viewBox="0 0 24 24" aria-hidden="true">${FQ}</svg></span><span class="am-u">${ur}</span><b>${esc(t)}</b><small>${esc(by)}</small><em>${esc(sub)}</em><span class="fq-go">Open ›</span></a>`).join('')}</div>
+   <div class="hint" style="margin:16px 4px;line-height:1.6">Islamic Laws opens on sistani.org, in your browser. Practical Laws of Islam opens here in the app. For rulings, follow your own marja.</div>`;
+}
+/* Practical Laws of Islam (leader.ir ebook, 22 July 2024), shown as questions and answers. The text is loaded when first opened. */
+let FQB=null,fqQ='';
+function fqLoad(){return FQB?Promise.resolve(FQB):fetch('fiqh-khamenei.json').then(r=>{if(!r.ok)throw 0;return r.json()}).then(j=>(FQB=j))}
+function fqItem(x){
+  if(x.q!=null)return `<div class="fq-qa"><span class="fq-n">Q ${x.n}</span><div class="fq-q">${esc(x.q).replace(/\n/g,'<br>')}</div><div class="fq-a"><b>A</b><div>${esc(x.a).replace(/\n/g,'<br>')}</div></div></div>`;
+  if(x.w!=null)return `<div class="fq-qa fq-g"><div class="fq-q">${esc(x.w)}</div><div class="fq-gd">${esc(x.d)}</div></div>`;
+  if(x.h!=null)return `<div class="note h"><span class="nen">${esc(x.h)}</span></div>`;
+  return `<div class="note"><span class="nen">${esc(x.p||'').replace(/\n/g,'<br>')}</div>`;
+}
+function renderFiqhBook(path){
+  const FQ='<path d="M12 3v18M5 7h14M5 7l-2.5 6a3 3 0 0 0 5 0zM19 7l-2.5 6a3 3 0 0 0 5 0zM8 21h8"/>';
+  const ban=(k,t)=>`<div class="ai-ban td-ban pg-ban sb"><span class="td-pat" aria-hidden="true"></span><span class="td-top"><span class="sb-ic" aria-hidden="true"><svg viewBox="0 0 24 24">${FQ}</svg></span><span class="td-dt"><span class="td-wd">${esc(k)}</span><b>${esc(t)}</b></span></span></div>`;
+  const cr=`<div class="hint bk-cr">Source: <i>Practical Laws of Islam</i>, <a href="https://www.leader.ir/en/book/23" target="_blank" rel="noopener">www.Leader.ir</a>, edition of 22 July 2024. The questions and answers are shown as published. For rulings, follow your own marja.</div>`;
+  setHeader('Practical Laws of Islam',true);
+  if(!FQB){app.innerHTML=ban('Ayatullah Sayyid Ali Khamenei','Practical Laws of Islam')+'<div class="bk-load">Opening the book…</div>';
+    fqLoad().then(()=>{if(location.hash.slice(1).startsWith('fiqh-k'))renderFiqhBook(path)}).catch(()=>{app.innerHTML=ban('Ayatullah Sayyid Ali Khamenei','Practical Laws of Islam')+'<div class="bk-load">Could not open the book. Please try again.</div>'});return}
+  const P=FQB.parts,[pi,ci]=path?path.split('-').map(Number):[],part=P[pi],cnt=c=>c.items.filter(x=>x.q!=null||x.w!=null).length,tot=p=>cnt(p)+p.ch.reduce((a,c)=>a+cnt(c),0);
+  const rowA=(href,n,t,sub)=>`<a class="item dua-item snum nmrow" href="${href}"><div class="num"><span>${n}</span></div><div class="t"><b>${esc(t)}</b>${sub?`<small>${sub}</small>`:''}</div><span class="dcat-go">›</span></a>`;
+  if(!part){
+    const q=fqQ.trim().toLowerCase();let body;
+    if(q.length>1){const hits=[];P.forEach((p,i)=>[p,...p.ch].forEach((c,j)=>c.items.forEach(x=>{if(hits.length<60&&((x.q||x.w||'')+' '+(x.a||x.d||'')).toLowerCase().includes(q))hits.push([p.t+(j?' · '+c.t:''),x])})));
+      body=hits.length?`<div class="bm-sum">${hits.length>=60?'First 60 results':hits.length+' result'+(hits.length>1?'s':'')}</div>`+hits.map(([w,x])=>`<div class="fq-w">${esc(w)}</div>`+fqItem(x)).join(''):'<div class="hint" style="padding:20px 4px;text-align:center">Nothing found. Try another word.</div>';
+    } else body=`<div class="list">${P.map((p,i)=>rowA('#fiqh-k-'+i,i+1,p.t,p.g?tot(p)+' terms':tot(p)+' question'+(tot(p)===1?'':'s')+(p.ch.length?' · '+p.ch.length+' sections':''))).join('')}</div>`;
+    app.innerHTML=ban('Ayatullah Sayyid Ali Khamenei','Practical Laws of Islam')+`<div class="search">${icon.search}<input id="fqq" type="search" placeholder="Search the questions and answers…" value="${esc(fqQ)}" autocomplete="off"></div><div id="fqb">${body}</div>`+cr;
+    const inp=$('fqq');inp.oninput=()=>{fqQ=inp.value;clearTimeout(inp._t);inp._t=setTimeout(()=>{const y=scrollY;renderFiqhBook('');const n=$('fqq');n.focus();n.setSelectionRange(n.value.length,n.value.length);scrollTo(0,y)},250)};
+    return}
+  const ch=ci!=null&&!isNaN(ci)?part.ch[ci]:null;
+  if(ch){const nx=part.ch[ci+1],pv=part.ch[ci-1];
+    app.innerHTML=ban(part.t,ch.t)+`<div class="dbody fqb">${ch.items.map(fqItem).join('')}</div><div class="tp-nav">${pv?`<a href="#fiqh-k-${pi}-${ci-1}">‹ Previous</a>`:'<span></span>'}<a href="#fiqh-k-${pi}">All sections</a>${nx?`<a href="#fiqh-k-${pi}-${ci+1}">Next ›</a>`:'<span></span>'}</div>`+cr;return}
+  app.innerHTML=ban('Practical Laws of Islam',part.t)+(part.ch.length?`<div class="list">${part.ch.map((c,j)=>rowA('#fiqh-k-'+pi+'-'+j,j+1,c.t,cnt(c)+' question'+(cnt(c)===1?'':'s'))).join('')}</div>`:'')+(part.items.length?`<div class="dbody fqb">${part.items.map(fqItem).join('')}</div>`:'')+cr;
 }
 function renderMarks(){
   setHeader('Bookmarks',true);
@@ -1192,6 +1223,7 @@ window.XR=function(h){
   if(h==='calendar'){renderCalendar();return true}
   if(h==='favs'){renderFavs();return true}
   if(h==='fiqh'){renderFiqh();return true}
+  if(h==='fiqh-k'||h.startsWith('fiqh-k-')){renderFiqhBook(h.slice(6).replace(/^-/,''));return true}
   if(h==='marks'){renderMarks();return true}
   if(h!=='prayer'&&h!=='qibla')editing=false;
   if(h==='duas'){renderDuas();return true}
