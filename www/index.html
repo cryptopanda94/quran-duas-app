@@ -59,7 +59,7 @@ html,body{overscroll-behavior:none;-webkit-tap-highlight-color:transparent}
 html,body{margin:0;background:var(--bg);color:var(--ink);font-family:Inter,system-ui,sans-serif;-webkit-text-size-adjust:100%}
 button{font:inherit;color:inherit;background:none;border:0;cursor:pointer}
 a{color:inherit;text-decoration:none}
-.wrap{max-width:820px;margin:0 auto;padding:0 16px 110px}
+.wrap{max-width:820px;margin:0 auto;padding:0 16px 126px}
 header.top{position:sticky;top:0;z-index:10;background:color-mix(in srgb,var(--bg) 92%,transparent);backdrop-filter:blur(8px);border-bottom:1px solid var(--line)}
 header .bar{max-width:820px;margin:0 auto;display:flex;align-items:center;gap:8px;padding:10px 16px}
 header h1{font-size:17px;font-weight:600;margin:0;flex:1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
@@ -142,7 +142,7 @@ mark{background:var(--hl);color:inherit;border-radius:3px;padding:0 1px}
 .seg button.on{background:var(--fill,var(--accent));color:#fff}
 :is([data-theme=dark],[data-theme=black],[data-theme=maroon]) .seg button.on{color:#0d1a16}
 input[type=range]{accent-color:var(--accent);width:150px}
-.toast{position:fixed;bottom:calc(84px + env(safe-area-inset-bottom));left:50%;transform:translateX(-50%);background:var(--ink);color:var(--bg);padding:10px 16px;border-radius:10px;font-size:14px;z-index:30;opacity:0;transition:opacity .2s;pointer-events:none}
+.toast{position:fixed;bottom:calc(98px + env(safe-area-inset-bottom));left:50%;transform:translateX(-50%);background:var(--ink);color:var(--bg);padding:10px 16px;border-radius:10px;font-size:14px;z-index:30;opacity:0;transition:opacity .2s;pointer-events:none}
 .toast.show{opacity:1}
 .foot{color:var(--muted);font-size:12px;text-align:center;margin-top:36px;line-height:1.6}
 .jumpbox{display:flex;gap:8px}
@@ -293,7 +293,7 @@ body.sheet-lock{overflow:hidden}
 .aa{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
 .aa .btn{display:inline-flex;align-items:center;gap:6px}
 
-.pbar{position:fixed;left:8px;right:8px;bottom:calc(64px + env(safe-area-inset-bottom));z-index:16;background:var(--card);border:1px solid var(--line);border-radius:16px;box-shadow:0 6px 24px rgba(0,0,0,.15);display:none;align-items:center;gap:4px;padding:8px 10px;max-width:640px;margin:0 auto}
+.pbar{position:fixed;left:12px;right:12px;bottom:calc(84px + env(safe-area-inset-bottom));z-index:16;background:var(--card);border:1px solid var(--line);border-radius:16px;box-shadow:0 6px 24px rgba(0,0,0,.15);display:none;align-items:center;gap:4px;padding:8px 10px;max-width:640px;margin:0 auto}
 .pbar.show{display:flex}
 .sheet.ask{display:none;flex-direction:column;height:calc(100dvh - env(safe-area-inset-top) - 40px);max-height:none;overflow:hidden;padding:8px 16px calc(12px + env(safe-area-inset-bottom))}.sheet.ask.open{display:flex}
 .ask-h{display:flex;flex-direction:column;gap:2px;margin:0 44px 10px 2px}.ask-h b{font-size:20px}.ask-h small{color:var(--muted);font-size:12.5px}
@@ -311,9 +311,9 @@ body.sheet-lock{overflow:hidden}
 .ask-in button{width:44px;height:44px;border-radius:50%;display:grid;place-items:center;background:var(--fill,var(--accent));color:#fff;flex:none}.ask-in button:disabled{opacity:.5}
 .ask-in svg{width:20px;height:20px;stroke:currentColor;fill:none;stroke-width:2.4;stroke-linecap:round;stroke-linejoin:round}
 .ask-note{font-size:11.5px;color:var(--muted);margin-top:6px;text-align:center}.ask-note button{color:var(--accent);font-size:11.5px;text-decoration:underline;margin-left:4px}
-.asbar{position:fixed;left:50%;transform:translateX(-50%);bottom:calc(74px + env(safe-area-inset-bottom));z-index:17;display:flex;align-items:center;gap:4px;padding:6px;border-radius:999px;background:var(--card);border:1px solid var(--line);box-shadow:0 6px 24px rgba(0,0,0,.18)}
+.asbar{position:fixed;left:50%;transform:translateX(-50%);bottom:calc(92px + env(safe-area-inset-bottom));z-index:17;display:flex;align-items:center;gap:4px;padding:6px;border-radius:999px;background:var(--card);border:1px solid var(--line);box-shadow:0 6px 24px rgba(0,0,0,.18)}
 .asbar[hidden]{display:none}
-body.playing .asbar{bottom:calc(142px + env(safe-area-inset-bottom))}
+body.playing .asbar{bottom:calc(160px + env(safe-area-inset-bottom))}
 .asbar button{width:40px;height:40px;border-radius:50%;display:grid;place-items:center;font-size:22px;font-weight:600;color:var(--ink);background:var(--bg)}
 .asbar #asPlay{background:var(--fill,var(--accent));color:#fff}
 .asbar svg{width:20px;height:20px;stroke:currentColor;fill:none;stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round}
@@ -321,9 +321,9 @@ body.playing .asbar{bottom:calc(142px + env(safe-area-inset-bottom))}
 .asbar{overflow:hidden;padding-top:9px}.as-prog{position:absolute;left:0;right:0;top:0;height:4px;background:var(--line)}.as-prog i{display:block;height:100%;width:0;background:var(--fill,var(--accent));transition:width .4s linear}
 .as-sp{display:flex;flex-direction:column;align-items:center;min-width:84px;line-height:1.15}#asLeft{font-weight:600;color:var(--ink)!important}.as-sp b{font-size:17px}.as-sp small{font-size:10.5px;color:var(--muted)}
 #asBtn.as-txt{flex:none;height:32px;padding:0 12px;margin-right:4px;border-radius:999px;font-size:13px;font-weight:600;white-space:nowrap;color:var(--accent);background:var(--bg);border:1.5px solid var(--accent)}
-.ask-fab{position:fixed;right:14px;bottom:calc(76px + env(safe-area-inset-bottom));z-index:16;display:flex;align-items:center;gap:5px;height:36px;padding:0 13px 0 10px;border-radius:999px;background:var(--fill,var(--accent));color:#fff;font-weight:700;font-size:12.5px;box-shadow:0 6px 18px rgba(0,0,0,.22)}
+.ask-fab{position:fixed;right:16px;bottom:calc(92px + env(safe-area-inset-bottom));z-index:16;display:flex;align-items:center;gap:5px;height:36px;padding:0 13px 0 10px;border-radius:999px;background:var(--fill,var(--accent));color:#fff;font-weight:700;font-size:12.5px;box-shadow:0 6px 18px rgba(0,0,0,.22)}
 .ask-fab[hidden]{display:none}.ask-fab svg{width:17px;height:17px;fill:currentColor;stroke:none}
-body.playing .ask-fab{bottom:calc(146px + env(safe-area-inset-bottom))}
+body.playing .ask-fab{bottom:calc(164px + env(safe-area-inset-bottom))}
 body.sheet-lock .ask-fab,body.as-on .ask-fab,body.reading .ask-fab{display:none}
 .sheet.ask{display:none;flex-direction:column;height:calc(100dvh - env(safe-area-inset-top) - 24px);padding:8px 14px calc(10px + env(safe-area-inset-bottom));overflow:hidden}
 .sheet.ask.open{display:flex}
@@ -519,7 +519,7 @@ body.reading .verse{scroll-margin-top:100px}
 .spdmenu div{display:grid;grid-template-columns:repeat(4,auto);gap:6px}
 .pbar .spdmenu button{width:auto;height:34px;padding:0 10px;border-radius:9px;border:1px solid var(--line);font-size:13.5px;font-weight:600;color:var(--ink);font-variant-numeric:tabular-nums}
 .pbar .spdmenu button.on{background:var(--accent);border-color:var(--accent);color:#fff}
-body.playing .wrap{padding-bottom:180px}
+body.playing .wrap{padding-bottom:198px}
 
 .uv{padding:14px 0 6px}
 .uv .v-ar{text-align:center;margin:0 auto 10px}
@@ -615,6 +615,22 @@ body.bk-xar.bk-xur .bk-it.noen .ar,body.bk-xar.bk-xen .bk-it.nour .ar,body.bk-xa
 .bk-it :is(.noen-n,.nour-n){font-size:12.5px;color:var(--muted);font-style:italic;margin-top:2px}
 .bk-it .ur,.bk-it .nour-n{font-family:'Noto Nastaliq Urdu',serif;direction:rtl;text-align:right;font-style:normal}
 .bk-it .ur{font-size:calc(var(--bk-en) + 6px);line-height:2.4;margin-top:6px}.bk-it .nour-n{line-height:2.2}
+.accs{grid-column:1/-1;display:flex;flex-direction:column;gap:10px}
+.acc{border:1px solid var(--line);border-radius:18px;background:var(--card);box-shadow:0 2px 8px rgba(0,0,0,.05);overflow:hidden}
+.acc-h{width:100%;display:flex;align-items:center;gap:12px;padding:14px;text-align:left;color:var(--ink)}
+.acc-h .dcat-m{flex:none;margin:0}.acc-t{flex:1;min-width:0;display:flex;flex-direction:column;gap:2px}.acc-t b{font-size:16.5px;line-height:1.25}.acc-t small{color:var(--muted);font-size:12.5px}
+.acc-u{font-family:'Noto Nastaliq Urdu',serif;font-size:13px;line-height:1.9;color:var(--accent);direction:rtl;text-align:left;white-space:nowrap}
+.acc-body .item .dur{max-width:34%;white-space:normal;text-align:right;font-size:13px}
+.acc-h .dcat-n{position:static;flex:none}.acc-ch{flex:none;width:20px;height:20px;fill:none;stroke:var(--muted);stroke-width:2;stroke-linecap:round;stroke-linejoin:round;transition:transform .25s}
+.acc.open .acc-ch{transform:rotate(180deg)}.acc.open .acc-h{border-bottom:1px solid var(--line);background:var(--accent-soft)}
+.acc-sc{position:relative}.acc-body{max-height:min(54vh,470px);overflow-y:auto;-webkit-overflow-scrolling:touch;overscroll-behavior:contain;padding:10px 16px 10px 10px;display:flex;flex-direction:column;gap:8px;scrollbar-width:none;animation:accIn .22s ease}.acc-body::-webkit-scrollbar{display:none}
+@keyframes accIn{from{opacity:0;transform:translateY(-6px)}}
+.acc-bar{position:absolute;right:5px;top:10px;bottom:10px;width:4px;border-radius:99px;background:color-mix(in srgb,var(--accent) 12%,transparent);display:none}.acc-sc.scroll .acc-bar{display:block}
+.acc-bar i{position:absolute;left:0;width:100%;border-radius:99px;background:color-mix(in srgb,var(--accent) 55%,transparent);transition:top .08s linear}
+.acc-more{position:absolute;left:0;right:0;bottom:0;height:54px;display:none;align-items:flex-end;justify-content:center;padding-bottom:5px;pointer-events:none;background:linear-gradient(transparent,var(--card) 82%);transition:opacity .2s}
+.acc-sc.scroll .acc-more{display:flex}.acc-sc.end .acc-more{opacity:0}
+.acc-more svg{width:22px;height:22px;fill:none;stroke:var(--accent);stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round;animation:accNudge 1.5s ease-in-out infinite}
+@keyframes accNudge{50%{transform:translateY(4px)}}@media(prefers-reduced-motion:reduce){.acc-more svg,.acc-body{animation:none}}
 .tparts .tp-ar{font-family:IndoPak,serif;font-size:25px;line-height:1.9;margin-top:4px;direction:rtl;text-align:right;color:var(--accent);display:block}
 .tp-nav{display:flex;justify-content:space-between;align-items:center;gap:8px;margin:18px 2px 6px}.tp-nav a{padding:10px 14px;border:1px solid var(--line);border-radius:999px;background:var(--card);color:var(--accent);font-weight:600;font-size:14px;text-decoration:none}.tp-nav span{flex:0 0 70px}
 .sheet.bks{padding:10px 18px calc(18px + env(safe-area-inset-bottom));border-radius:28px 28px 0 0;background:var(--bg);box-shadow:0 -18px 50px rgba(0,0,0,.22)}
@@ -645,14 +661,77 @@ body.bk-xar.bk-xur .bk-it.noen .ar,body.bk-xar.bk-xen .bk-it.nour .ar,body.bk-xa
 .bks-th button.on{color:var(--ink);font-weight:600}.bks-th button.on i{box-shadow:0 0 0 2px var(--bg),0 0 0 4.5px var(--accent)}
 .bks-f{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-top:16px}.bks-f #bkSetReset{padding:13px 16px;color:var(--muted);font-weight:600;font-size:15px}
 .bks-done{flex:1;max-width:240px;padding:14px;border-radius:16px;font-weight:700;font-size:16px;color:#fff;background:linear-gradient(135deg,var(--accent),color-mix(in srgb,var(--accent) 62%,#000));box-shadow:0 8px 20px color-mix(in srgb,var(--accent) 30%,transparent)}
-.tg3{display:grid;grid-template-columns:repeat(3,1fr);gap:9px;margin-top:18px}
-.tg3i{position:relative;aspect-ratio:1/1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:5px;padding:10px 6px;min-width:0;text-align:center;border:1px solid var(--line);border-radius:18px;background:var(--card);box-shadow:0 2px 8px rgba(0,0,0,.05);color:var(--ink);text-decoration:none}.tg3i:active{transform:scale(.98)}
-.tg3i b{font-size:13.5px;line-height:1.25}.tg3i .tg-u{font-family:'Noto Nastaliq Urdu',serif;font-size:12px;line-height:1.7;color:var(--accent);direction:rtl}
-.tg-i{width:42px;height:42px;border-radius:13px;display:grid;place-items:center;font-size:22px;line-height:1;background:color-mix(in srgb,var(--t) 16%,transparent)}.tg-i.sv svg{width:22px;height:22px;fill:none;stroke:var(--t);stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
-.tg3i .dcat-n{position:absolute;top:7px;right:7px;font-size:10.5px;padding:1px 6px}
-.tg3i.hy{background:linear-gradient(135deg,#1f6fb5,#12426f);border-color:transparent;color:#fff}.tg3i.hy .tg-u{color:rgba(255,255,255,.85)}.tg3i.hy .tg-i{background:rgba(255,255,255,.16)}
-@media(max-width:360px){.tg3i b{font-size:12px}.tg-i{width:36px;height:36px;font-size:19px}}
-@media(min-width:700px){.tg3{grid-template-columns:repeat(6,1fr)}}
+/* ---- floating bottom bar ---- */
+.tabbar{left:12px;right:12px;bottom:calc(10px + env(safe-area-inset-bottom));max-width:520px;margin:0 auto;padding:6px;gap:2px;border:1px solid var(--line);border-radius:26px;background:color-mix(in srgb,var(--card) 86%,transparent);-webkit-backdrop-filter:blur(18px) saturate(1.4);backdrop-filter:blur(18px) saturate(1.4);box-shadow:0 14px 34px rgba(0,0,0,.16),0 2px 6px rgba(0,0,0,.06)}
+.tabbar a{max-width:none;gap:2px;padding:7px 0 6px;border-radius:20px;font-size:10.5px;font-weight:600;letter-spacing:.01em;transition:background .25s,color .25s}
+.tabbar a svg,.tabbar a .tab-logo{padding:2px 0;background-color:transparent!important;transition:transform .25s}
+.tabbar a svg{width:22px;height:22px}
+.tabbar a.on{background:color-mix(in srgb,var(--accent) 13%,transparent);color:var(--accent);color:color-mix(in srgb,var(--accent) 80%,var(--ink))}
+.tabbar a.on svg{stroke-width:2.1;transform:translateY(-1px)}.tabbar a:active{transform:scale(.96)}
+body:after{content:'';position:fixed;left:0;right:0;bottom:0;height:calc(96px + env(safe-area-inset-bottom));z-index:14;pointer-events:none;background:linear-gradient(transparent,var(--bg) 78%)}
+body.reading:after,body.sheet-lock:after{display:none}
+/* ---- book banner with the cover ---- */
+.bk-ban{position:relative;overflow:hidden;display:flex;align-items:center;gap:16px;margin:14px 0 14px;padding:16px 18px;border-radius:26px;color:#fff;background:linear-gradient(140deg,color-mix(in srgb,var(--c1) 82%,#000),color-mix(in srgb,var(--c2) 74%,#000));box-shadow:0 16px 34px color-mix(in srgb,var(--c2) 34%,transparent),inset 0 1px 0 rgba(255,255,255,.16)}
+.bk-ban:before{content:'';position:absolute;right:-70px;top:-100px;width:280px;height:280px;border-radius:50%;background:radial-gradient(circle,rgba(255,255,255,.2),transparent 66%)}
+.bk-ban>*{position:relative}.bk-ban .bkcov{width:54px;height:78px;box-shadow:0 10px 22px rgba(0,0,0,.42),inset 4px 0 0 rgba(0,0,0,.22),inset 5px 0 0 rgba(255,255,255,.08)}.bk-ban .bkcov span{font-size:12px}
+.bk-ban.top{padding:20px 18px}.bk-ban.top .bkcov{width:104px;height:150px;transform:rotate(-3deg)}.bk-ban.top .bkcov span{font-size:21px}
+.bk-bt{flex:1;min-width:0}.bk-bt small{display:block;font-size:12px;line-height:1.45;color:rgba(255,255,255,.76);margin-bottom:4px}.bk-bt h1{margin:0;font-size:20px;line-height:1.22;letter-spacing:-.3px;font-weight:800}.bk-ban.top h1{font-size:27px;letter-spacing:-.6px}
+.bk-ban .bk-har{color:#f1dc9c;font-size:22px;line-height:1.8;text-align:left}.bk-ban.top .bk-har{font-size:26px}.bk-bt p{margin:4px 0 0;font-size:13px;line-height:1.45;color:rgba(255,255,255,.82)}
+/* ---- Today page ---- */
+.tcard.th{position:relative;overflow:hidden;border-radius:30px;padding:18px 18px 16px;margin:14px 0 4px;box-shadow:0 20px 40px color-mix(in srgb,var(--fill,var(--accent)) 30%,transparent),inset 0 1px 0 rgba(255,255,255,.26)}
+.tcard.th:before{content:'';position:absolute;right:-70px;top:-110px;width:300px;height:300px;border-radius:50%;background:radial-gradient(circle,rgba(255,255,255,.26),transparent 66%);pointer-events:none}
+.th>*{position:relative}.th .td-pat{position:absolute;-webkit-mask-image:linear-gradient(120deg,transparent 30%,#000);mask-image:linear-gradient(120deg,transparent 30%,#000)}
+.th a{color:inherit;text-decoration:none}
+.th-top{display:flex;justify-content:space-between;align-items:center;gap:8px;font-size:12.5px;font-weight:600}.th-top b{opacity:.92;font-weight:600;white-space:nowrap}
+.th-hj{display:inline-flex;align-items:center;gap:6px;padding:6px 11px;border-radius:99px;background:rgba(255,255,255,.15);border:1px solid rgba(255,255,255,.22);white-space:nowrap}.th-hj svg{width:13px;height:13px;fill:currentColor}
+.th-mid{display:flex;align-items:center;gap:18px;margin:16px 0 16px}
+.th-ring{position:relative;flex:none;width:132px;height:132px}.th-ring svg{width:100%;height:100%;transform:rotate(-90deg);fill:none;stroke-width:8;stroke-linecap:round}.th-ring .bg{stroke:rgba(255,255,255,.17)}.th-ring .fg{stroke:currentColor;transition:stroke-dashoffset .8s ease}
+.th-ring .in{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center}.th-ring small{font-size:10px;letter-spacing:.2em;text-transform:uppercase;opacity:.78;font-weight:700}.th-ring .in b{font-size:25px;letter-spacing:-.4px;line-height:1.2}.th-ring .in span{font-size:13px;font-weight:600;opacity:.92}
+.th-cd{display:flex;flex-direction:column;min-width:0}.th-cd small{font-size:11.5px;letter-spacing:.08em;text-transform:uppercase;opacity:.8;font-weight:600}.th-cd b{font-size:33px;letter-spacing:-1.1px;line-height:1.15;margin:1px 0 7px;font-variant-numeric:tabular-nums}.th-cd b i{font-style:normal;font-size:16px;font-weight:600;opacity:.8;letter-spacing:0;margin:0 6px 0 1px}
+.th-cd span{display:inline-flex;align-items:center;gap:5px;font-size:12.5px;font-weight:600;opacity:.92;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.th-cd span svg{flex:none;width:14px;height:14px;fill:none;stroke:currentColor;stroke-width:1.8}
+.th-tl{display:flex;position:relative;padding-top:14px;text-align:center}.th-tl:before{content:'';position:absolute;left:10%;right:10%;top:5px;height:2px;border-radius:2px;background:rgba(255,255,255,.24)}
+.th-tl span{flex:1;position:relative;min-width:0}.th-tl span:before{content:'';position:absolute;left:50%;top:-14px;width:10px;height:10px;margin-left:-5px;border-radius:50%;box-sizing:border-box;border:2px solid rgba(255,255,255,.6);background:var(--fill,var(--accent))}
+.th-tl .dn:before{background:rgba(255,255,255,.6)}.th-tl .nx:before{background:#fff;border-color:#fff;box-shadow:0 0 0 5px rgba(255,255,255,.22)}
+.th-tl small{display:block;font-size:10.5px;opacity:.76;font-weight:600}.th-tl b{font-size:13px;font-variant-numeric:tabular-nums}.th-tl .nx small{opacity:1}.th-tl .dn{opacity:.72}
+.th-set{display:flex;flex-direction:column;gap:4px;margin-top:16px}.th-set b{font-size:28px;letter-spacing:-.6px}.th-set small{font-size:14px;opacity:.9}
+.th-lbl{display:flex;justify-content:space-between;align-items:baseline;gap:10px;margin:22px 4px 10px}.th-lbl b{font-size:18px;letter-spacing:-.3px}.th-lbl a{font-size:12.5px;font-weight:700;color:var(--accent);text-decoration:none;white-space:nowrap}
+.ay2{border-radius:26px;padding:18px 16px 14px;margin:0;text-align:center;box-shadow:0 8px 26px rgba(0,0,0,.06)}
+.ay-orn{display:flex;align-items:center;justify-content:center;gap:10px;color:var(--gold);font-size:10.5px;font-weight:800;letter-spacing:.2em;text-transform:uppercase}.ay-orn:before,.ay-orn:after{content:'';width:34px;height:1px;background:linear-gradient(90deg,transparent,var(--gold))}.ay-orn:after{transform:scaleX(-1)}
+.ay2 .v-ar{text-align:center;margin:8px 0 4px}.ay-en{font-family:Georgia,'Times New Roman',serif;font-style:italic;font-size:calc(var(--en-size) + .5px);line-height:1.55;color:var(--ink);opacity:.9;padding:0 4px}.ay2 .v-ur{text-align:center;margin-top:6px}
+.ay-ft{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-top:14px;padding-top:12px;border-top:1px solid var(--line)}.ay-ft a{font-size:12.5px;font-weight:700;color:var(--accent);text-decoration:none}.ay-ft span{display:flex;gap:8px}
+.ay-ft button{width:38px;height:38px;border-radius:50%;display:grid;place-items:center;background:var(--accent-soft);color:var(--accent)}.ay-ft button svg{width:17px;height:17px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+.ay-ft button.p{background:var(--fill,var(--accent));color:#fff;box-shadow:0 6px 14px color-mix(in srgb,var(--fill,var(--accent)) 35%,transparent)}.ay-ft button.p svg{fill:currentColor;stroke:none}
+.th-ct{display:flex;align-items:center;gap:13px;margin-top:12px;padding:13px 14px;border-radius:22px;background:var(--card);border:1px solid var(--line);box-shadow:0 4px 16px rgba(0,0,0,.05);color:var(--ink);text-decoration:none}
+.th-ct i{flex:none;width:44px;height:44px;border-radius:14px;display:grid;place-items:center;background:var(--fill,var(--accent));color:#fff}.th-ct i svg{width:21px;height:21px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+.th-ct .pg{flex:1;min-width:0;display:flex;flex-direction:column}.th-ct small{font-size:11.5px;color:var(--muted);font-weight:600}.th-ct b{font-size:15.5px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.th-ct .bar{height:4px;border-radius:9px;background:var(--line);margin-top:6px;overflow:hidden}.th-ct .bar em{display:block;height:100%;border-radius:9px;background:var(--accent)}
+.th-ct .ch{flex:none;width:18px;height:18px;fill:none;stroke:var(--muted);stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+:is([data-theme=dark],[data-theme=black],[data-theme=maroon]) :is(.ay-ft button.p,.th-ct i){color:#0d1a16}
+:is([data-theme=dark],[data-theme=black],[data-theme=maroon]) .tcard.th{color:#0d1a16}
+:is([data-theme=dark],[data-theme=black],[data-theme=maroon]) .th-hj{background:rgba(13,26,22,.1);border-color:rgba(13,26,22,.18)}
+:is([data-theme=dark],[data-theme=black],[data-theme=maroon]) .th-ring .bg{stroke:rgba(13,26,22,.14)}
+:is([data-theme=dark],[data-theme=black],[data-theme=maroon]) .th-tl:before{background:rgba(13,26,22,.2)}
+:is([data-theme=dark],[data-theme=black],[data-theme=maroon]) .th-tl span:before{border-color:rgba(13,26,22,.5)}
+:is([data-theme=dark],[data-theme=black],[data-theme=maroon]) .th-tl .dn:before{background:rgba(13,26,22,.5)}
+:is([data-theme=dark],[data-theme=black],[data-theme=maroon]) .th-tl .nx:before{background:#0d1a16;border-color:#0d1a16;box-shadow:0 0 0 5px rgba(13,26,22,.16)}
+.tg3{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+.tg3i{position:relative;aspect-ratio:1/1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;padding:10px 6px;min-width:0;text-align:center;border:1px solid var(--line);border-radius:24px;background:var(--card);box-shadow:0 4px 16px rgba(0,0,0,.05);color:var(--ink);text-decoration:none}.tg3i:active{transform:scale(.97)}
+.tg3:not(.all) .tg3i.x{display:none}
+.tg3i b{font-size:13.5px;line-height:1.25}.tg3i .tg-u{font-family:'Noto Nastaliq Urdu',serif;font-size:11px;line-height:1.6;color:var(--muted);direction:rtl;margin-top:-3px}
+.tg-i{width:46px;height:46px;border-radius:50%;display:grid;place-items:center;background:color-mix(in srgb,var(--t) 15%,transparent)}.tg-i svg{width:22px;height:22px;fill:none;stroke:var(--t);stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+.tg3i .dcat-n{position:absolute;top:9px;right:10px;font-size:10px;padding:0;background:none;color:var(--muted);font-weight:700}
+.tg3i.hy{background:linear-gradient(150deg,color-mix(in srgb,var(--fill,var(--accent)) 92%,#fff),color-mix(in srgb,var(--fill,var(--accent)) 52%,#04121f));border-color:transparent;color:#fff;box-shadow:0 12px 26px color-mix(in srgb,var(--fill,var(--accent)) 32%,transparent)}.tg3i.hy .tg-u{color:rgba(255,255,255,.82)}.tg3i.hy .tg-i{background:rgba(255,255,255,.18)}
+:is([data-theme=dark],[data-theme=black],[data-theme=maroon]) .tg3i.hy{color:#0d1a16}:is([data-theme=dark],[data-theme=black],[data-theme=maroon]) .tg3i.hy .tg-u{color:rgba(13,26,22,.75)}:is([data-theme=dark],[data-theme=black],[data-theme=maroon]) .tg3i.hy .tg-i{--t:#0d1a16;background:rgba(0,0,0,.12)}
+.tg-more{display:flex;align-items:center;justify-content:center;gap:6px;width:100%;margin-top:10px;padding:12px;border-radius:16px;border:1px solid var(--line);background:var(--card);color:var(--accent);font-weight:700;font-size:14px}.tg-more:after{content:'';width:8px;height:8px;border-right:2px solid currentColor;border-bottom:2px solid currentColor;transform:rotate(45deg) translate(-2px,-2px)}.tg-more.up:after{transform:rotate(-135deg) translate(-2px,-2px)}
+/* compact prayer card */
+.tcard.th{padding:14px 16px 12px;border-radius:26px;margin:12px 0 2px}
+.th-hj{padding:5px 10px;gap:6px}.th-hj svg{fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}.th-hj i{font-style:normal;font-size:15px;line-height:1;opacity:.85;margin-left:1px}
+.th-mid{gap:16px;margin:10px 0 10px}.th-ring{width:90px;height:90px}.th-ring svg{stroke-width:9}
+.th-ring small{font-size:8.5px;letter-spacing:.16em}.th-ring .in b{font-size:19px}.th-ring .in span{font-size:11px}
+.th-cd small{font-size:10.5px}.th-cd b{font-size:28px;letter-spacing:-.9px;margin:0 0 4px}.th-cd b i{font-size:14px}
+.th-tl{padding-top:13px}.th-tl small{font-size:10px}.th-tl b{font-size:12.5px}
+.th-lbl{margin:18px 4px 9px}
+@media(max-width:360px){.tg3i b{font-size:12px}.tg-i{width:40px;height:40px}.th-ring{width:80px;height:80px}.th-cd b{font-size:24px}.th-mid{gap:12px}}
+@media(min-width:700px){.tg3{grid-template-columns:repeat(6,1fr)}.tg3 .tg3i.x{display:flex!important}.tg-more{display:none}}
 .tgrid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:18px}
 .tgi{display:flex;flex-direction:column;align-items:flex-start;gap:6px;padding:14px 13px;min-width:0;border:1px solid var(--line);border-radius:18px;background:var(--card);box-shadow:0 2px 8px rgba(0,0,0,.05);color:var(--ink);text-decoration:none}.tgi:active{transform:scale(.99)}
 .tgi b{font-size:16.5px;line-height:1.3;margin-top:4px}.tgi small{color:var(--muted);font-size:12.5px;line-height:1.4}
@@ -1285,7 +1364,7 @@ function closeSheets(){document.querySelectorAll('.sheet,.sheet-bg').forEach(x=>
   document.addEventListener('touchmove',e=>{if(!sh)return;dy=e.touches[0].clientY-y0;if(dy>0&&(sh.scrollTop<=0)){sh.classList.add('dragging');sh.style.transform=`translateX(-50%) translateY(${dy}px)`}else if(dy<0){sh.style.transform='';sh.classList.remove('dragging')}},{passive:true});
   document.addEventListener('touchend',()=>{if(!sh)return;const s=sh;sh=null;s.classList.remove('dragging');if(dy>110){s.classList.add('closing');s.style.transform='translateX(-50%) translateY(100%)';setTimeout(()=>{s.classList.remove('closing');if(s.id==='bookSheet'){s.classList.remove('open');s.style.transform=''}else closeSheets()},200)}else s.style.transform='';dy=0},{passive:true});
 })();
-$('backBtn').onclick=()=>{const c=location.hash.slice(1);let t='home';if(/^dua-.*~/.test(c))t=c.slice(0,c.indexOf('~'));else if(/^dua-/.test(c)){const d=LISTX().find(x=>x.id===c.slice(4));t=d&&d.grp?'duas-'+d.grp:'duas'}else if(/^duas-/.test(c))t='duas';else if(/^book-/.test(c))t=window.QX&&QX.bookUp?QX.bookUp(decodeURIComponent(c.slice(5))):'duas-b';else if(c==='calendar')t='today';location.hash=t};
+$('backBtn').onclick=()=>{const c=location.hash.slice(1);let t='home';if(/^dua-.*~/.test(c))t=c.slice(0,c.indexOf('~'));else if(/^dua-/.test(c)){const d=LISTX().find(x=>x.id===c.slice(4)),f=window.QX&&QX.duaFrom&&QX.duaFrom(c);t=f||(d&&d.grp?'duas-'+d.grp:'duas')}else if(/^duas-/.test(c))t='duas';else if(/^book-/.test(c))t=window.QX&&QX.bookUp?QX.bookUp(decodeURIComponent(c.slice(5))):'duas-b';else if(c==='calendar')t='today';location.hash=t};
 $('setBtn').onclick=()=>openSheet('setSheet');
 /* reading settings for book pages */
 function bkSetDraw(){
@@ -1856,9 +1935,12 @@ const DCAT={e:['Every Day Recitations','روزانہ کے اعمال','Duas to r
 const NOTEBOOKS=[["991380e6-3141-43c5-8ff4-8882ede2326d", "Holy Quran · Tafseer", "Quranic commentary and exegesis"], ["7e16985a-b1c5-430d-8685-184a64a6980c", "Basa'ir al-Darajat", "al-Saffar on the virtues of the Ahlul Bayt (a.s.)"], ["bc110ba0-ecda-4c25-b738-b5154cf16c76", "Mir'at al-Uqool", "Allama Majlisi's commentary on al-Kafi · 24 volumes (Arabic)"], ["0c5d849e-a657-416a-b128-3c74a5035741", "Safinat al-Bihar", "Shaykh Abbas Qummi's index of Bihar al-Anwar · 8 volumes"], ["84c60541-e06d-4e83-ae44-3fe6614fd53d", "The Amali", "Dictations of Saduq, Mufid and Tusi"], ["49752979-f698-48ba-bcf5-64df6da1971f", "Shaykh Saduq (r.a.)", "Collected works of al-Shaykh al-Saduq"], ["a75a5426-4f2c-4895-8dd3-78ec0ab31e09", "Nahj al-Balagha", "Sermons, letters and sayings of Imam Ali (a.s.)"], ["8ae34cf8-c283-42ee-8f7f-b0ddd5b30bd1", "Virtues of the Five (a.s.)", "From the Sihah al-Sittah · 3 volumes"], ["06e04aab-714e-4475-92a0-007973a17ec1", "Mahdaviyat", "On Imam al-Mahdi (a.t.f.s.)"], ["21f14960-6d8b-47a5-92fc-ee4441e8c93b", "I'tiqadat", "Beliefs, by Saduq and Majlisi"], ["89ee2444-82fc-4f30-892d-c91202ac2359", "Bihar al-Anwar", "Allama Majlisi's hadith encyclopedia · 110 volumes"], ["3df041d1-9621-4501-b6c0-13fff62e3548", "Ayatullah Sistani", "Tauzeeh al-Masael and other books"], ["f9ad8a9b-b533-43aa-8de7-cc24fb628305", "A Shi'ite Encyclopedia", "Questions and answers on Shia beliefs"], ["14d5f383-c902-4400-8548-5e49775c2997", "Wasa'il al-Shi'a", "Hadith on law and practice · 30 volumes"], ["49c6f15f-f2f5-4b82-819e-3bc063c479e0", "Man La Yahduruhu al-Faqih", "Shaykh Saduq's hadith collection · 4 volumes"], ["f5c79bdb-a1ae-422b-b7f3-15dc87ebf106", "Usool al-Kafi", "Shaykh Kulayni's al-Kafi · 8 volumes"]];
 const DICON={"b": "<path d=\"M5 4h4v16H5zM9 4h4v16H9zM14.2 6.2l3.8-1 3.6 13.6-3.8 1z\"/>", "m": "<path d=\"M20 14.5A8 8 0 1 1 9.5 4a6.5 6.5 0 0 0 10.5 10.5z\"/><path d=\"M17 3.5l.6 1.4 1.4.6-1.4.6-.6 1.4-.6-1.4-1.4-.6 1.4-.6z\"/>", "d": "<path d=\"M8 13V6.5a1.5 1.5 0 0 1 3 0V12M11 11V4.5a1.5 1.5 0 0 1 3 0V12M14 11.5V6.5a1.5 1.5 0 0 1 3 0v7.5a6 6 0 0 1-6 6h-.5a5.5 5.5 0 0 1-4.6-2.5L4 14.5a1.5 1.5 0 0 1 2.5-1.6L8 15\"/>", "z": "<path d=\"M4 20h16M6 20v-7a6 6 0 0 1 12 0v7M12 7V4M10.5 4.5h3M9 20v-4a3 3 0 0 1 6 0v4\"/>", "s": "<path d=\"M4 5.5A2.5 2.5 0 0 1 6.5 3H20v15H6.5A2.5 2.5 0 0 0 4 20.5zM4 20.5A2.5 2.5 0 0 0 6.5 23H20v-5M9 8h7M9 11.5h5\"/>", "a": "<path d=\"M20 14.5A8 8 0 1 1 9.5 4a6.5 6.5 0 0 0 10.5 10.5zM17 3l.7 1.6 1.7.2-1.3 1.1.4 1.7-1.5-.9-1.5.9.4-1.7-1.3-1.1 1.7-.2z\"/>", "n": "<path d=\"M5 21V10l7-6 7 6v11zM9 21v-5a3 3 0 0 1 6 0v5M5 21h14\"/>", "h": "<path d=\"M12 2.5l2.4 5 5.4.7-4 3.8 1 5.4L12 14.8 7.2 17.4l1-5.4-4-3.8 5.4-.7z\"/>", "e": "<path d=\"M12 3v2M12 19v2M4.2 7l1.7 1M18.1 15l1.7 1M3 12h2M19 12h2M4.2 17l1.7-1M18.1 9l1.7-1\"/><circle cx=\"12\" cy=\"12\" r=\"4\"/>", "t": "<path d=\"M12 21a9 9 0 1 1 0-18 9 9 0 0 1 0 18zM12 7v5l3 2\"/>"};const DTINT={"b": "#b07a2a", "m": "#6c5ce7", "d": "#2f7dd1", "z": "#16a085", "s": "#8e44ad", "a": "#d68910", "n": "#c0392b", "h": "#2c7a7b", "e": "#e67e22", "t": "#3d5afe"};
 let dView=store.get('dView','grid');
+/* which list a dua page was opened from, so Back returns there */
+const NAV={cur:location.hash.slice(1),from:{}};
+window.addEventListener('hashchange',()=>{const n=location.hash.slice(1);if(/^dua-/.test(n)&&/^duas-/.test(NAV.cur))NAV.from[n]=NAV.cur;NAV.cur=n});
 function renderDuas(g){
   if(g&&!DCAT[g])g=null;
-  if(g){if(g!==dTab)dSec='';dTab=g;store.set('dTab',g)}
+  if(g){if(g!==dTab||!/^dua-/.test(NAV.cur))dSec='';dTab=g;store.set('dTab',g)}
   setHeader(g?DCAT[g][0]:'<span class="lib-logo" role="img" aria-label=""></span>Library',!!g);
   const cnt=g=>g==='e'?LIST.filter(x=>x.grp==='e').length+1:g==='h'?99:g==='b'?BK.length:g==='r'?NOTEBOOKS.length:LIST.filter(x=>x.grp===g).length;
   const cats=`<div class="dcat-head"><b>Categories</b><div class="seg vseg"><button data-v="grid" class="${dView==='grid'?'on':''}">▦ Grid</button><button data-v="list" class="${dView==='list'?'on':''}">☰ List</button></div></div>
@@ -1904,11 +1986,22 @@ function renderDuas(g){
       $('dlist').innerHTML=`<a class="item dua-item" href="#dua-asma-ul-husna"><div class="t"><b>Open with meanings &amp; benefits</b><small>Allah has the Most Beautiful Names, so call Him by them (7:180)</small></div><div class="ar" style="font-family:'Noto Nastaliq Urdu',serif;font-size:15px;line-height:2">اسمائے حسنیٰ</div></a>`+
         N.map((x,i)=>`<a class="item nm99" href="#dua-asma-ul-husna"><span class="nn">${i||''}</span><div class="t"><b>${esc(x.tr)}</b><small>${esc(x.en.replace(/^\d+\.\s*/,''))}</small></div><div class="ar nar">${x.ar}</div></a>`).join('');
       app.querySelectorAll('.dtabs .tab').forEach(b=>b.classList.toggle('on',b.dataset.g===dTab));return}
+    if(!q&&dTab==='d'){
+      const CAL='<rect x="4" y="5" width="16" height="15" rx="3"/><path d="M4 10h16M8 3v4M16 3v4M8 14h2M14 14h2M8 17h2"/>';
+      const wk=DAY_IDS.map((id,i)=>{const x=LIST.find(z=>z.id===id);return x?`<a class="item dua-item snum" href="#dua-${x.id}"><div class="num"><span>${i+1}</span></div><div class="t"><b>Supplication for ${DAY_EN[i]}</b><small>Imam Zainul Abideen (a.s.) · Sahifa Sajjadiya</small></div><div class="dur">${DAY_UR[i]} کی دعا</div>${dfavBtn(x.id)}</a>`:''}).join('');
+      const all=items.map(d=>`<a class="item dua-item" href="#dua-${d.id}"><div class="num"><span>${d.mark||'د'}</span></div><div class="t"><b>${esc(d.name)}</b>${d.sub?`<small>${esc(d.sub)}</small>`:''}</div><div class="dur">${d.ur||''}</div>${dfavBtn(d.id)}</a>`).join('');
+      const row=(k,ic,t,n,sub,ur,c,body)=>`<div class="acc${dSec===k?' open':''}" data-acc="${k}"><button type="button" class="acc-h" aria-expanded="${dSec===k}"><span class="dcat-m" style="--t:${t}"><svg viewBox="0 0 24 24" aria-hidden="true">${ic}</svg></span><span class="acc-t"><b>${n}</b><small>${sub}</small><span class="acc-u">${ur}</span></span><span class="dcat-n">${c}</span><svg class="acc-ch" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg></button>${dSec===k?`<div class="acc-sc"><div class="acc-body">${body}</div><span class="acc-bar" aria-hidden="true"><i></i></span><span class="acc-more" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg></span></div>`:''}</div>`;
+      $('dlist').innerHTML=`<div class="accs">${row('week',CAL,'#c2742c','Duas for each day of the week','Sunday to Saturday','ہفتے کے دنوں کی دعائیں',7,wk)}${row('all',DICON.d,DTINT.d,'Duas','Kumayl, Tawassul, Nudba, Qunoot and more','دعائیں',items.length,all)}</div>`;
+      $('dlist').querySelectorAll('.acc-h').forEach(b=>b.onclick=()=>{const k=b.parentNode.dataset.acc;dSec=dSec===k?'':k;draw();const o=$('dlist').querySelector('.acc.open');if(o){const r=o.getBoundingClientRect();if(r.top<70||r.bottom>innerHeight-86)window.scrollTo({top:scrollY+r.top-78,behavior:'smooth'})}});
+      const sc=$('dlist').querySelector('.acc-sc');
+      if(sc){const bd=sc.querySelector('.acc-body'),th=sc.querySelector('.acc-bar i'),up=()=>{const H=bd.scrollHeight,h=bd.clientHeight,more=H>h+4;sc.classList.toggle('scroll',more);sc.classList.toggle('end',!more||bd.scrollTop+h>=H-6);if(more){th.style.height=Math.max(12,h/H*100)+'%';th.style.top=(bd.scrollTop/H*100)+'%'}};
+        bd.onscroll=up;bd.scrollTop=store.get('dAccY',0)*(dSec===store.get('dAccK','')?1:0);up();bd.addEventListener('click',()=>{store.set('dAccY',bd.scrollTop);store.set('dAccK',dSec)})}
+      app.querySelectorAll('.dtabs .tab').forEach(b=>b.classList.toggle('on',b.dataset.g===dTab));
+      return}
     const tsx=!q&&dTab==='e'?todaySahifa():null;
     $('dlist').innerHTML=(tsx&&tsx.d?`<a class="item dua-item tday" href="#dua-${tsx.d.id}"><div class="num"><span>${tsx.d.mark||'ص'}</span></div><div class="t"><b>Today's supplication · ${DAY_EN[tsx.i]}</b><small>Sahifa Sajjadiya · Imam Zainul Abideen (a.s.) · with Naqsh</small></div><div class="dur">${DAY_UR[tsx.i]} کی دعا</div></a>`:'')+items.map(d=>(d.sec&&!q&&d.sec!==lastSec?(lastSec=d.sec,`<div class="dsec"><b>${esc(d.sec)}</b><span>${d.secUr||''}</span></div>`):'')+(()=>{const m=d.grp==='s'&&/^(\d+)\.\s*(.*)$/.exec(d.name),sub=m?'':d.sub;
       return `<a class="item dua-item${m?' snum':''}" href="#dua-${d.id}"><div class="num"><span>${m?m[1]:(d.mark||'د')}</span></div><div class="t"><b>${esc(m?m[2]:d.name)}</b>${sub?`<small>${esc(sub)}</small>`:''}</div>`})()+`<div class="dur">${d.ur||''}</div>${dfavBtn(d.id)}</a>`).join('')
       ||'<div class="hint" style="padding:20px 4px;text-align:center">Nothing found — try another name (e.g. Kumayl, Ashura, Kisa).</div>';
-    if(!q&&dTab==='d')$('dlist').insertAdjacentHTML('afterbegin',`<div class="dsec"><b>Duas for each day of the week</b><span>ہفتے کے دنوں کی دعائیں</span></div>`+DAY_IDS.map((id,i)=>{const x=LIST.find(z=>z.id===id);return x?`<a class="item dua-item snum" href="#dua-${x.id}"><div class="num"><span>${i+1}</span></div><div class="t"><b>Supplication for ${DAY_EN[i]}</b><small>Imam Zainul Abideen (a.s.) · Sahifa Sajjadiya</small></div><div class="dur">${DAY_UR[i]} کی دعا</div>${dfavBtn(x.id)}</a>`:''}).join('')+`<div class="dsec"><b>Duas</b><span>دعائیں</span></div>`);
     app.querySelectorAll('.dtabs .tab').forEach(b=>b.classList.toggle('on',!q&&b.dataset.g===dTab));
   };
   app.querySelectorAll('.dtabs .tab').forEach(b=>b.onclick=()=>{dTab=b.dataset.g;dSec='';store.set('dTab',dTab);dQ='';$('dq').value='';draw()});
@@ -2390,38 +2483,44 @@ function renderToday(){
   const ar=vs.map(v=>`${Q.ARX()[A.s-1][v-1]} <span class="end">${Q.endMark(v)}</span>`).join(' ');
   const en=vs.map(v=>EN[A.s-1][v-1]).join(' '),ur=vs.map(v=>UR[A.s-1][v-1]).join(' ');
   let pr='';
-  if(LOC){const T=timesFor(LOC,now),np=nextPrayer();
-    pr=`<a class="tcard prayer-card" href="#prayer"><div class="tlabel">${esc(LOC.name)}</div>
-      <div class="tbig">${np?np.n:''} <span>${np?fmt(LOC,np.t):''}</span></div><div class="tsub" id="todayCd"></div>
-      <div class="prow">${PR.filter(p=>p[3]).map(([k,n])=>`<div class="pc${np&&np.k===k?' nx':''}"><small>${n}</small><b>${fmt(LOC,T[k]).replace(/\s*([AaPp]\.?\s?[Mm]\.?)$/,'<i>$1</i>')}</b></div>`).join('')}</div></a>`;
-  } else pr=`<a class="tcard" href="#prayer"><div class="tlabel">Prayer times</div><div class="tsub">Choose your city to see today's prayer times and azan alerts ›</div></a>`;
+  let wd='',md='',sd='';try{wd=now.toLocaleDateString([], {weekday:'long'});md=now.toLocaleDateString([], {month:'long',day:'numeric'});sd=now.toLocaleDateString([], {weekday:'short',day:'numeric',month:'short'})}catch(e){md=dstr;sd=dstr}
+  const ht=HFMT?hijriToday():null;
+  const PIN='<svg viewBox="0 0 24 24"><path d="M12 21s7-6.2 7-11.5A7 7 0 0 0 5 9.5C5 14.8 12 21 12 21z"/><circle cx="12" cy="9.5" r="2.4"/></svg>';
+  const hj=`<span class="th-top"><a class="th-hj" href="#calendar" aria-label="Open the calendar"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="4" y="5" width="16" height="15" rx="3"/><path d="M4 10h16M8 3v4M16 3v4"/></svg>${ht?hijriStr(ht):esc(wd)}<i>›</i></a><b>${esc(sd)}</b></span>`;
+  if(LOC){const T=timesFor(LOC,now),np=nextPrayer(),main=PR.filter(p=>p[3]);
+    pr=`<div class="tcard prayer-card th"><span class="td-pat" aria-hidden="true"></span>${hj}
+      <a class="th-mid" href="#prayer"><span class="th-ring"><svg viewBox="0 0 138 138" aria-hidden="true"><circle cx="69" cy="69" r="61" class="bg"/><circle cx="69" cy="69" r="61" class="fg" id="todayRing" stroke-dasharray="383.3" stroke-dashoffset="383.3"/></svg><span class="in"><small>Next</small><b>${np?np.n:''}</b><span>${np?fmt(LOC,np.t):''}</span></span></span>
+        <span class="th-cd"><small>Starts in</small><b id="todayCd"></b><span>${PIN}${esc(LOC.name.split(',')[0])}</span></span></a>
+      <a class="th-tl" href="#prayer">${main.map(([k,n])=>`<span class="${np&&np.k===k&&T[k]>now?'nx':T[k]<=now?'dn':''}"><small>${n}</small><b>${fmt(LOC,T[k]).replace(/\s*([AaPp]\.?\s?[Mm]\.?)$/,'')}</b></span>`).join('')}</a></div>`;
+  } else pr=`<div class="tcard prayer-card th"><span class="td-pat" aria-hidden="true"></span>${hj}<a class="th-set" href="#prayer"><b>${esc(md)}</b><small>Choose your city to see today's prayer times and azan alerts ›</small></a></div>`;
   const last=Q.S.last;
   const dow=now.getDay(), todays=['dua-e-ahad',...(WEEK_DUAS[dow]||[]),'ziyarat-ashura','ziyarat-waritha'];
-  const ht=HFMT?hijriToday():null, tev=ht?eventsOn(ht):[], up=HFMT?upcoming(4,60).filter(x=>x.i>0).slice(0,3):[];
-  let wd='',md='';try{wd=now.toLocaleDateString([], {weekday:'long'});md=now.toLocaleDateString([], {month:'long',day:'numeric'})}catch(e){md=dstr}
-  app.innerHTML=`<a class="ai-ban td-ban" href="#calendar"><span class="td-pat" aria-hidden="true"></span>
-     <span class="td-top"><span class="td-logo" role="img" aria-label="Quran &amp; Duas"></span><span class="td-dt"><span class="td-wd">${esc(wd)}</span><b>${esc(md)}</b></span></span>
-     ${ht?`<span class="td-h"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20 14.5A8 8 0 1 1 9.5 4a6.5 6.5 0 0 0 10.5 10.5z"/></svg><span>${hijriStr(ht)}</span><span class="td-u">${ht.d} ${HMU[ht.m-1]}</span></span>`:''}</a>
+  const tev=ht?eventsOn(ht):[], up=HFMT?upcoming(4,60).filter(x=>x.i>0).slice(0,3):[];
+
+  app.innerHTML=`${pr}
    ${tev.map(e=>`<a class="ev ${e[1]===1?'joy':e[1]===0?'grief':'other'}" href="#calendar" style="display:block"><div class="evd">Today</div><div class="evt">${esc(e[2]).replace(/\n+/g,'<br>')}</div></a>`).join('')}
-   ${pr}
-   <div class="tcard ayah-card">
-     <div class="tlabel">Ayah of the day · ${esc(META[A.s-1][1])} ${ref}</div>
-     <div class="v-ar" style="text-align:center;margin:8px 0 10px">${ar}</div>
-     <div class="v-en" style="text-align:center">${esc(en)}</div>
-     <div class="v-ur qur" style="text-align:center;margin-top:6px">${esc(ur)}</div>
-     <div class="tact"><button class="listen" id="ayPlay">${Q.icon?'':''}▶ Listen</button><a class="btn" href="#surah-${A.s}-${A.a}">Open in Quran</a><button class="btn" id="ayCopy">Copy</button></div>
-   </div>
-   ${last?`<a class="continue" href="#surah-${last.s}-${last.v}"><div style="flex:1"><small>Continue reading</small><b>${esc(META[last.s-1][1])} · Verse ${last.v}</b></div>›</a>`:''}
-   ${HFMT?`<div class="tcard tcal" id="tcal"></div>`:''}
-   <div class="tg3">${(()=>{
-     const em=(e,t)=>`<span class="tg-i" style="--t:${t||'#2f7fc4'}">${e}</span>`,sv=k=>`<span class="tg-i sv" style="--t:${DTINT[k]}"><svg viewBox="0 0 24 24" aria-hidden="true">${DICON[k]}</svg></span>`;
-     const cat=k=>[`#duas-${k}`,sv(k),DCAT[k][0].replace(' Recitations','').replace(' e Namaz','').replace(' Sajjadiya',''),DCAT[k][1],k==='b'?BK.length:k==='h'?99:k==='e'?LIST.filter(x=>x.grp==='e').length+1:LIST.filter(x=>x.grp===k).length];
+   <div class="th-lbl"><b>Explore</b></div>
+   <div class="tg3${store.get('tgAll',false)?' all':''}" id="tg3">${(()=>{
+     const IC={q:'<path d="M4 5.5C6.5 4 9.5 4 12 6c2.5-2 5.5-2 8-.5V19c-2.5-1.5-5.5-1.5-8 .5-2.5-2-5.5-2-8-.5z"/><path d="M12 6v13.5"/>',p:'<path d="M5 20v-7a7 7 0 0 1 14 0v7M3 20h18M12 6V3M10 20v-4a2 2 0 0 1 4 0v4"/>',k:'<circle cx="12" cy="12" r="9"/><path d="M15.5 8.5l-2 5-5 2 2-5z"/>',ai:'<path d="M12 3l1.8 5.2L19 10l-5.2 1.8L12 17l-1.8-5.2L5 10l5.2-1.8zM19 16l.7 2.3L22 19l-2.3.7L19 22l-.7-2.3L16 19l2.3-.7z"/>',tb:'<circle cx="12" cy="4.5" r="1.5"/><circle cx="17" cy="6.8" r="1.5"/><circle cx="19" cy="12" r="1.5"/><circle cx="17" cy="17.2" r="1.5"/><circle cx="7" cy="6.8" r="1.5"/><circle cx="5" cy="12" r="1.5"/><circle cx="7" cy="17.2" r="1.5"/><circle cx="12" cy="19.5" r="1.5"/>',cal:'<rect x="4" y="5" width="16" height="15" rx="3"/><path d="M4 10h16M8 3v4M16 3v4"/>',fv:'<path d="M12 20s-7-4.4-7-10a4 4 0 0 1 7-2.5A4 4 0 0 1 19 10c0 5.6-7 10-7 10z"/>',bm:'<path d="M7 4h10a1 1 0 0 1 1 1v15l-6-4-6 4V5a1 1 0 0 1 1-1z"/>'};
+     const sv=(d,t)=>`<span class="tg-i" style="--t:${t}"><svg viewBox="0 0 24 24" aria-hidden="true">${d}</svg></span>`;
+     const cat=k=>[`#duas-${k}`,sv(DICON[k],DTINT[k]),DCAT[k][0].replace(' Recitations','').replace(' e Namaz','').replace(' Sajjadiya',''),DCAT[k][1],k==='b'?BK.length:k==='h'?99:k==='e'?LIST.filter(x=>x.grp==='e').length+1:k==='d'?LIST.filter(x=>x.grp==='d').length+7:LIST.filter(x=>x.grp===k).length];
      const fv=(S.favs||[]).length+(S.dfavs||[]).length,bm=(S.marks||[]).length,ai=window.QAsk&&QAsk.base;
-     const T=[['#home',em('📖'),'Holy Quran','قرآن مجید',0,'surahs'],['#prayer',em('🕌'),'Prayer','اوقات نماز'],['#qibla',em('🧭'),'Qibla','قبلہ'],
-       ai?['ask',em('✨'),'HYDER AI','حیدر اے آئی',0,'','hy']:0,ai?cat('b'):0,cat('h'),...['e','t','n','d','z','a','m','s'].map(cat),
-       ['tasbih',em('📿'),'Tasbih','تسبیح'],HFMT?['#calendar',em('🗓️'),'Calendar','کیلنڈر']:0,['#home',em('❤️'),'Favourites','پسندیدہ',fv,'favs'],['#home',em('🔖'),'Bookmarks','نشانیاں',bm,'marks']].filter(Boolean);
-     return T.map(t=>`<a class="tg3i${t[6]?' '+t[6]:''}" href="${t[0][0]==='#'?t[0]:'#'}" data-tg="${t[0][0]==='#'?'':t[0]}" data-tab="${t[5]||''}">${t[1]}<b>${t[2]}</b><span class="tg-u">${t[3]}</span>${t[4]?`<span class="dcat-n">${t[4]}</span>`:''}</a>`).join('')})()}</div>
-   <div class="tlabel" style="margin:20px 4px 10px">Recommended acts</div>
+     const T=[['#home',sv(IC.q,'#1d6fb0'),'Holy Quran','قرآن مجید',0,'surahs'],['#prayer',sv(IC.p,'#0f8f7a'),'Prayer','اوقات نماز'],['#qibla',sv(IC.k,'#c2742c'),'Qibla','قبلہ'],
+       ai?['ask',sv(IC.ai,'#fff'),'HYDER AI','حیدر اے آئی',0,'','hy']:0,ai?cat('b'):0,cat('d'),cat('z'),cat('n'),cat('t'),cat('e'),cat('a'),cat('m'),cat('s'),cat('h'),
+       ['tasbih',sv(IC.tb,'#b45a3c'),'Tasbih','تسبیح'],HFMT?['#calendar',sv(IC.cal,'#2a78d0'),'Calendar','کیلنڈر']:0,['#home',sv(IC.fv,'#d1495b'),'Favourites','پسندیدہ',fv,'favs'],['#home',sv(IC.bm,'#1d6fb0'),'Bookmarks','نشانیاں',bm,'marks']].filter(Boolean);
+     return T.map((t,i)=>`<a class="tg3i${t[6]?' '+t[6]:''}${i>5?' x':''}" href="${t[0][0]==='#'?t[0]:'#'}" data-tg="${t[0][0]==='#'?'':t[0]}" data-tab="${t[5]||''}">${t[1]}<b>${t[2]}</b><span class="tg-u">${t[3]}</span>${t[4]?`<span class="dcat-n">${t[4]}</span>`:''}</a>`).join('')})()}</div>
+   <button type="button" class="tg-more" id="tgMore"></button>
+   <div class="th-lbl"><b>Ayah of the day</b><a href="#surah-${A.s}-${A.a}">${esc(META[A.s-1][1])} ${ref}</a></div>
+   <div class="tcard ayah-card ay2">
+     <div class="ay-orn">Today's verse</div>
+     <div class="v-ar">${ar}</div>
+     <div class="ay-en">${esc(en)}</div>
+     <div class="v-ur qur">${esc(ur)}</div>
+     <div class="ay-ft"><a href="#surah-${A.s}-${A.a}">Open in Quran ›</a><span><button class="p" id="ayPlay" aria-label="Listen"><svg viewBox="0 0 24 24"><path d="M8 5.5v13l11-6.5z"/></svg></button><button id="ayCopy" aria-label="Copy"><svg viewBox="0 0 24 24"><rect x="9" y="9" width="11" height="11" rx="2.5"/><path d="M5 15V6.5A2.5 2.5 0 0 1 7.5 4H15"/></svg></button><button id="ayShare" aria-label="Share"><svg viewBox="0 0 24 24"><path d="M12 15V4M8 8l4-4 4 4M5 13v5a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-5"/></svg></button></span></div>
+   </div>
+   ${last?`<a class="th-ct" href="#surah-${last.s}-${last.v}"><i><svg viewBox="0 0 24 24"><path d="M4 5.5C6.5 4 9.5 4 12 6c2.5-2 5.5-2 8-.5V19c-2.5-1.5-5.5-1.5-8 .5-2.5-2-5.5-2-8-.5z"/><path d="M12 6v13.5"/></svg></i><span class="pg"><small>Continue reading</small><b>${esc(META[last.s-1][1])} · Verse ${last.v}</b><span class="bar"><em style="width:${Math.max(3,Math.min(100,Math.round(last.v/Q.ARX()[last.s-1].length*100)))}%"></em></span></span><svg class="ch" viewBox="0 0 24 24"><path d="M9 6l6 6-6 6"/></svg></a>`:''}
+   ${HFMT?`<div class="tcard tcal" id="tcal"></div>`:''}
+   <div class="th-lbl"><b>Recommended acts</b><a id="actN"></a></div>
    <div class="card acts" id="acts">${(()=>{const dk='acts:'+civ(new Date()).join('-'),done=store.get(dk,{});
      const A=[['zahra','Tasbih of Fatima Zahra (s.a.)','34 Allahu Akbar · 33 Alhamdulillah · 33 SubhanAllah','t:zahra'],['kursi','Ayat ul Kursi','Surah al-Baqarah 2:255','h:dua-ayat-kursi'],['ikhlas','Surah al-Ikhlas','Surah 112','h:surah-112'],['salawat','Salawat','Blessings on Muhammad and his family','t:salawat'],['istighfar','Istighfar','Astaghfirullaha Rabbi wa atubu ilayh','t:istighfar'],['shukr','Sajdah of gratitude','Say "Shukran lillah" three times in sajdah','']];
      const BEAD='<svg viewBox="0 0 24 24"><circle cx="12" cy="4" r="1.6"/><circle cx="17.2" cy="6.2" r="1.6"/><circle cx="19.4" cy="11.4" r="1.6"/><circle cx="17.2" cy="16.6" r="1.6"/><circle cx="6.8" cy="6.2" r="1.6"/><circle cx="4.6" cy="11.4" r="1.6"/><circle cx="6.8" cy="16.6" r="1.6"/><circle cx="12" cy="18.8" r="1.6"/></svg>',BOOK='<svg viewBox="0 0 24 24" class="ln"><path d="M5 4.5A2.5 2.5 0 0 1 7.5 2H19v16H7.5A2.5 2.5 0 0 0 5 20.5zM5 20.5A2.5 2.5 0 0 0 7.5 23H19v-5M9 7h6"/></svg>';
@@ -2432,14 +2531,20 @@ function renderToday(){
   app.querySelectorAll('.tg3i').forEach(b=>b.onclick=e=>{const g=b.dataset.tg,t=b.dataset.tab;if(t)S.tab=t;if(g){e.preventDefault();if(g==='ask')window.QAsk&&QAsk.open();else if(g==='tasbih')tasbihOpen()}});
   if($('acts')){$('acts').querySelectorAll('[data-act]').forEach(b=>b.onclick=()=>{const a=b.dataset.act;if(a[0]==='t')tasbihOpen(a.slice(2));else location.hash=a.slice(2)});
     $('acts').querySelectorAll('[data-done]').forEach(b=>b.onclick=()=>{const dk='acts:'+civ(new Date()).join('-'),d=store.get(dk,{});d[b.dataset.done]=!d[b.dataset.done];store.set(dk,d);b.closest('.act').classList.toggle('ok',!!d[b.dataset.done]);b.setAttribute('aria-pressed',d[b.dataset.done]?'true':'false')})}
+  const tgm=()=>{const all=$('tg3').classList.contains('all');$('tgMore').innerHTML=all?'Show less':'Show all';$('tgMore').classList.toggle('up',all)};tgm();
+  $('tgMore').onclick=()=>{const all=!$('tg3').classList.contains('all');$('tg3').classList.toggle('all',all);store.set('tgAll',all);tgm()};
+  const actN=()=>{const n=$('acts').querySelectorAll('.act.ok').length,t=$('acts').querySelectorAll('.act').length;$('actN').textContent=`${n} of ${t} done`};actN();$('acts').addEventListener('click',()=>setTimeout(actN,0));
   $('ayPlay').onclick=()=>{Q.playVerse(A.s,A.a)};
+  $('ayShare').onclick=()=>{const t=`${vs.map(v=>Q.ARX()[A.s-1][v-1]).join(' ')}\n\n${en}\n— Quran ${ref} (${META[A.s-1][1]})`;if(navigator.share)navigator.share({text:t}).catch(()=>{});else $('ayCopy').click()};
   $('ayCopy').onclick=()=>{const t=`${vs.map(v=>Q.ARX()[A.s-1][v-1]).join(' ')}\n\n${en}\n\n${ur}\n— Quran ${ref} (${META[A.s-1][1]})`;
     try{navigator.clipboard.writeText(t).then(()=>toast('Ayah copied'),()=>toast('Copy not allowed here'))}catch(e){toast('Copy not allowed here')}};
   updToday();
 }
 function updToday(){const el=$('todayCd');if(!el||!LOC)return;const np=nextPrayer();if(!np)return;
-  const s=Math.max(0,Math.round((np.t-new Date())/1000)),h=Math.floor(s/3600),m=Math.floor(s%3600/60);
-  el.textContent=`Next prayer in ${h?h+' hr ':''}${m} min`}
+  const now=new Date(),s=Math.max(0,Math.round((np.t-now)/1000)),h=Math.floor(s/3600),m=Math.floor(s%3600/60);
+  el.innerHTML=(h?`${h}<i>h</i>`:'')+`${m}<i>m</i>`;
+  const rg=$('todayRing');if(rg){let prev=0;for(const d of [0,-1]){const T=timesFor(LOC,new Date(now.getTime()+d*86400e3));for(const [k,,,mn] of PR)if(mn&&T[k]<=now&&+T[k]>prev)prev=+T[k];if(prev)break}
+    const f=prev?Math.max(.02,Math.min(1,(now-prev)/(np.t-prev))):.02;rg.setAttribute('stroke-dashoffset',(383.3*(1-f)).toFixed(1))}}
 setInterval(()=>{if(location.hash===''||location.hash==='#today')updToday()},20000);
 
 /* ================= TASBIH ================= */
@@ -2530,21 +2635,21 @@ function renderBook(ref){
   const slug=ref.split(':')[0],B=BK.find(b=>b[0]===slug);
   if(!B||!bkBase())return false;
   setHeader(esc(B[1]),true);noJump();
-  const hero=(path,t,ar,sub)=>`<div class="lib-hero bk-hero">${path?`<small>${esc(path)}</small>`:''}<h1>${esc(t)}</h1>${ar?`<div class="bk-har">${esc(ar)}</div>`:''}${sub?`<p>${esc(sub)}</p>`:''}</div>`;
+  const hero=(path,t,ar,sub,top)=>`<div class="bk-ban${top?' top':''}" style="--c1:${B[7]};--c2:${B[8]}">${bkCover(B)}<div class="bk-bt">${path?`<small>${esc(path)}</small>`:''}<h1>${esc(t)}</h1>${ar?`<div class="bk-har">${esc(ar)}</div>`:''}${sub?`<p>${esc(sub)}</p>`:''}</div></div>`;
   const cached=bkCache.get(ref);
-  if(!cached)app.innerHTML=hero('',B[1],B[2],B[3])+'<div class="bk-load">Opening the book…</div>';
+  if(!cached)app.innerHTML=hero('',B[1],B[2],B[3],true)+'<div class="bk-load">Opening the book…</div>';
   const draw=j=>{
     if(location.hash.slice(1)!=='book-'+ref)return;
     const unit=j.unit||(slug==='nahj-al-balagha'?'Section':'Hadith'),many=n=>n.toLocaleString()+' '+(slug==='nahj-al-balagha'?(n===1?'section':'sections'):'hadith');
     const top=ref===slug;
-    let h=hero(top?'':j.path.join(' · '),top?B[1]:j.title.en,top?B[2]:j.title.ar,top?B[3]+' · '+many(j.count):many(j.count));
+    let h=hero(top?'':j.path.join(' · '),top?B[1]:j.title.en,top?B[2]:j.title.ar,top?B[3]+' · '+many(j.count):many(j.count),top);
     if(j.children&&j.children.length)h+='<div class="list">'+j.children.map((c,i)=>`<a class="item bk-row" href="#book-${esc(c.ref)}"><div class="num"><span>${i+1}</span></div><div class="t"><b>${esc(c.title.en)}</b><small>${many(c.count)}</small></div>${c.title.ar?`<div class="dur bk-ar">${esc(c.title.ar)}</div>`:''}<span class="dcat-go">›</span></a>`).join('')+'</div>';
     if(j.items&&j.items.length)h+='<div class="bk-page">'+j.items.map(x=>`<div class="bk-it${x.en?'':' noen'}${x.ur?'':' nour'}"><span class="no">${unit} ${esc(x.n)}</span>${x.ar?`<div class="ar">${esc(x.ar)}</div>`:''}${x.en?`<div class="en">${esc(x.en)}</div>`:'<div class="noen-n">English is not available for this one yet.</div>'}${x.ur?`<div class="ur">${esc(x.ur)}</div>`:'<div class="nour-n">اس کا اردو ترجمہ ابھی دستیاب نہیں۔</div>'}</div>`).join('')+'</div><div class="hint" style="margin:14px 2px">The Arabic is the original text; the English and Urdu are machine translations.</div>';
     app.innerHTML=h;document.body.classList.toggle('bk-read',!!(j.items&&j.items.length));
     store.set('bkLast',{ref,slug,title:top?B[1]:j.title.en,t:Date.now()});
   };
   if(cached)draw(cached);
-  else bkGet(ref).then(draw).catch(()=>{if(location.hash.slice(1)==='book-'+ref)app.innerHTML=hero('',B[1],B[2],B[3])+'<div class="bk-load">Could not open the book. Check your internet connection and try again.<br><button class="btn" id="bkRetry" style="margin-top:14px">Try again</button></div>';const b=$('bkRetry');if(b)b.onclick=()=>renderBook(ref)});
+  else bkGet(ref).then(draw).catch(()=>{if(location.hash.slice(1)==='book-'+ref)app.innerHTML=hero('',B[1],B[2],B[3],true)+'<div class="bk-load">Could not open the book. Check your internet connection and try again.<br><button class="btn" id="bkRetry" style="margin-top:14px">Try again</button></div>';const b=$('bkRetry');if(b)b.onclick=()=>renderBook(ref)});
   return true;
 }
 window.XR=function(h){
@@ -2560,7 +2665,7 @@ window.XR=function(h){
   return false;
 };
 setInterval(tick,1000);
-window.QX={tasbihOpen,pgBan,bookUp,meritsHTML,autoLocate,locateMe,get LOC(){return LOC},get ALERTS(){return ALERTS},timesFor,PR,nextPrayer,fmt,DAILY,LIST,UD,DU,slotFor,get AZ(){return AZ},playAlert,stopAlert,hijriToday:()=>HFMT?hijriToday():null,hijriStr,eventsOn,evTitle,HMU,HM};
+window.QX={duaFrom:h=>NAV.from[h]||'',tasbihOpen,pgBan,bookUp,meritsHTML,autoLocate,locateMe,get LOC(){return LOC},get ALERTS(){return ALERTS},timesFor,PR,nextPrayer,fmt,DAILY,LIST,UD,DU,slotFor,get AZ(){return AZ},playAlert,stopAlert,hijriToday:()=>HFMT?hijriToday():null,hijriStr,eventsOn,evTitle,HMU,HM};
 })();
 
 </script>
