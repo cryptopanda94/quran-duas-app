@@ -2008,7 +2008,7 @@ function renderDuas(g){
       if(dTab==='n'){
         const NS=[['Daily & Special Namaz','Namaz e Shab, Aayaat, Ghufaylah, Eid and more','#2f7dc4','<path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/><path d="M16 4.5l.6 1.7 1.7.6-1.7.6-.6 1.7-.6-1.7-1.7-.6 1.7-.6z"/>'],
           ['Namaz of the Masoomeen (a.s.)','The Holy Prophet, Lady Fatimah and the twelve Imams (a.s.)','#1f8a70','<path d="M12 3v2.5"/><path d="M6 20v-6a6 6 0 0 1 12 0v6"/><path d="M4 20h16M10 20v-3a2 2 0 0 1 4 0v3"/>'],
-          ['Namaz for Needs & Forgiveness','For needs, sustenance, forgiveness and difficulties','#b0568f','<path d="M12 20s-7-4.4-7-9.6A4 4 0 0 1 12 8a4 4 0 0 1 7 2.4C19 15.6 12 20 12 20z"/>']];
+          ['Namaz for Needs & Forgiveness','For needs, sustenance, forgiveness and difficulties','#b0568f','<path d="M7 20c-2-1.2-3-3.2-3-5.6V9.5a1.4 1.4 0 0 1 2.8 0V13l3.4-7.2a1.4 1.4 0 0 1 2.6 1.1L11 12"/><path d="M17 20c2-1.2 3-3.2 3-5.6V9.5a1.4 1.4 0 0 0-2.8 0V13l-3.4-7.2a1.4 1.4 0 0 0-2.6 1.1L13 12"/><path d="M7 20h10"/>']];
         $('dlist').innerHTML=`<div class="accs">${NS.map(([sec,sub,c,ic],i)=>{const its=items.filter(x=>x.sec===sec);
           return row('n'+i,ic,c,esc(sec),sub,its[0]?its[0].secUr||'':'',its.length,its.map((d,j)=>`<a class="item dua-item snum nmrow" href="#dua-${d.id}"><div class="num"><span>${j+1}</span></div><div class="t"><b>${esc(d.name)}</b>${d.sub?`<small>${esc(d.sub)}</small>`:''}<span class="nm-ur">${d.ur||''}</span></div>${dfavBtn(d.id)}</a>`).join(''))}).join('')}</div>`;
       } else
