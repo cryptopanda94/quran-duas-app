@@ -468,6 +468,10 @@ function renderDuas(g){
       app.querySelectorAll('.dtabs .tab').forEach(b=>b.classList.toggle('on',b.dataset.g===dTab));
       return}
     const tsx=!q&&dTab==='e'?todaySahifa():null;
+    if(!q&&dTab==='e'){
+      $('dlist').innerHTML=(tsx&&tsx.d?`<a class="ed-hero" href="#dua-${tsx.d.id}"><span class="ed-k">Today · ${DAY_EN[tsx.i]}</span><b>Dua for ${DAY_EN[tsx.i]}</b><span class="ed-u">${DAY_UR[tsx.i]} کی دعا</span><small>By Imam Zainul Abideen (a.s.), from Sahifa Sajjadiya. The Naqsh for the day is at the end.</small><span class="ed-go">Read now <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 6l6 6-6 6"/></svg></span></a>`:'')+
+        `<div class="ed-lbl">Read every day</div>`+items.map((d,j)=>`<a class="item dua-item snum nmrow" href="#dua-${d.id}"><div class="num"><span>${j+1}</span></div><div class="t"><b>${esc(d.name)}</b>${d.sub?`<small>${esc(d.sub)}</small>`:''}<span class="nm-ur">${d.ur||''}</span></div>${dfavBtn(d.id)}</a>`).join('');
+      app.querySelectorAll('.dtabs .tab').forEach(b=>b.classList.toggle('on',b.dataset.g===dTab));return}
     $('dlist').innerHTML=(tsx&&tsx.d?`<a class="item dua-item tday" href="#dua-${tsx.d.id}"><div class="num"><span>${tsx.d.mark||'ص'}</span></div><div class="t"><b>Today's supplication · ${DAY_EN[tsx.i]}</b><small>Sahifa Sajjadiya · Imam Zainul Abideen (a.s.) · with Naqsh</small></div><div class="dur">${DAY_UR[tsx.i]} کی دعا</div></a>`:'')+items.map(d=>(d.sec&&!q&&d.sec!==lastSec?(lastSec=d.sec,`<div class="dsec"><b>${esc(d.sec)}</b><span>${d.secUr||''}</span></div>`):'')+(()=>{const m=d.grp==='s'&&/^(\d+)\.\s*(.*)$/.exec(d.name),sub=m?'':d.sub;
       return `<a class="item dua-item${m?' snum':''}" href="#dua-${d.id}"><div class="num"><span>${m?m[1]:(d.mark||'د')}</span></div><div class="t"><b>${esc(m?m[2]:d.name)}</b>${sub?`<small>${esc(sub)}</small>`:''}</div>`})()+`<div class="dur">${d.ur||''}</div>${dfavBtn(d.id)}</a>`).join('')
       ||'<div class="hint" style="padding:20px 4px;text-align:center">Nothing found — try another name (e.g. Kumayl, Ashura, Kisa).</div>';
@@ -530,7 +534,6 @@ function renderDua(id){
     h+=readbar('dua',useAlt?D.alt.label:null);
     if(NLG.includes(d.grp)&&D.segs.some(x=>x.note!=null&&x.ur))h+=nlSeg();
     if(D.merits) h+=meritsHTML(D,d.id);
-    if(NAQSH[d.key]) h+=naqshHTML(d.key);
     h+=`<div class="dbody${d.grp==='n'?' steps':''}">`;
     if(useAlt&&D.alt.style==='own'){
       const segs=D.segs,L=D.alt.lines,noteH=s=>noteHTML(s.note,s.ur,s.h);
@@ -550,6 +553,7 @@ function renderDua(id){
              :verseHTML(s.ar,s.tr,useAlt?(after[i]||''):s.en,s.ur))).join('');
   }
   if(d.id!=='ayat-kursi')h+='</div>';
+  if(d.key&&NAQSH[d.key])h+=naqshHTML(d.key);
   if(d.n){const pv=PARTS.find(x=>x.parent===d.parent&&x.n===d.n-1&&x.n),nx=PARTS.find(x=>x.parent===d.parent&&x.n===d.n+1);
     h+=`<div class="tp-nav">${pv?`<a href="#dua-${pv.id}">‹ Dua ${pv.n}</a>`:'<span></span>'}<a href="#dua-${d.parent}">All ${d.of} duas</a>${nx?`<a href="#dua-${nx.id}">Dua ${nx.n} ›</a>`:'<span></span>'}</div>`}
   app.innerHTML=h;
