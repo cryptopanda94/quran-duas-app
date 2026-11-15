@@ -1992,29 +1992,23 @@ function renderDuas(g){
     if(!q&&g==='r'){const TG=['Quran & Tafseer','Virtues','24 volumes','8 volumes','Hadith dictations','Primary sources','Imam Ali (a.s.)','3 volumes','Imam al-Mahdi','Beliefs','110 volumes','Fiqh','Q & A','30 volumes','4 volumes','8 volumes'];$('dlist').innerHTML=`<div class="hint" style="margin:0 2px 14px">Public notebooks on Google NotebookLM, shared by Divine Pearls (ya-mahdi.net) as ShiaLM. Each opens in your browser and needs a Google account.</div><div class="nbgrid">`+NOTEBOOKS.map(([id,t,d],i)=>`<a class="nbc" href="https://notebook.google.com/notebook/${id}" target="_blank" rel="noopener"><div class="nbc-top"><span class="nbc-i">✦</span><span class="nbc-tag">${esc(TG[i]||'')}</span></div><b>${esc(t)}</b><small>${esc(d)}</small><span class="nbc-btn">Open NotebookLM →</span></a>`).join('')+'</div>';return}
     const items=q?LIST.filter((d,i,A)=>norm(d.name+' '+d.sub+' '+d.ur+' '+d.id).includes(q)&&(!d.key||A.findIndex(x=>x.key===d.key)===i)):LIST.filter(d=>d.grp===dTab);
     let lastSec='';
-    if(!q&&dTab==='s'){
-      const secs=[];LIST.filter(x=>x.grp==='s'&&x.sec).forEach(x=>{if(!secs.find(y=>y[0]===x.sec))secs.push([x.sec,x.secUr||'',(()=>{let c=0,on=false;LIST.forEach(z=>{if(z.grp!=='s')return;if(z.sec)on=z.sec===x.sec;if(on)c++});return c})()])});
-      const SD={'Supplications':'Duas 1–61','Supplications for the Days of the Week':'Sunday to Saturday','Fifteen Whispered Prayers':'Munajat 1–15'};
-      if(!dSec||!secs.find(y=>y[0]===dSec)){
-        $('dlist').innerHTML=secs.map(([n,u,c],i)=>`<div class="item sec-card" data-sec="${i}" role="button" tabindex="0"><div class="num"><span>${c}</span></div><div class="t"><b>${esc(n)}</b><small>${esc(SD[n]||'')}</small></div><div class="dur">${u}</div><span class="dcat-go">›</span></div>`).join('');
-        $('dlist').querySelectorAll('.sec-card').forEach(c=>c.onclick=()=>{dSec=secs[+c.dataset.sec][0];draw();window.scrollTo(0,0)});
-        return}
-      const cur=secs.find(y=>y[0]===dSec);
-      const its=LIST.filter(d=>d.grp==='s'&&d.sec===dSec||(d.grp==='s'&&!d.sec&&inSec(d,dSec)));
-      function inSec(d,n){const idx=LIST.indexOf(d);let sc='';for(let i=idx;i>=0;i--){if(LIST[i].grp==='s'&&LIST[i].sec){sc=LIST[i].sec;break}}return sc===n}
-      $('dlist').innerHTML=`<div class="sec-back" role="button" tabindex="0">‹ Sahifa Sajjadiya</div><div class="dsec"><b>${esc(cur[0])}</b><span>${cur[1]}</span></div>`+its.map(d=>{const m=/^(\d+)\.\s*(.*)$/.exec(d.name),sub=m?'':d.sub;
-        return `<a class="item dua-item${m?' snum':''}" href="#dua-${d.id}"><div class="num"><span>${m?m[1]:(d.mark||'د')}</span></div><div class="t"><b>${esc(m?m[2]:d.name)}</b>${sub?`<small>${esc(sub)}</small>`:''}</div><div class="dur">${d.ur||''}</div>${dfavBtn(d.id)}</a>`}).join('');
-      $('dlist').querySelector('.sec-back').onclick=()=>{dSec='';draw();window.scrollTo(0,0)};
-      return}
     if(!q&&dTab==='h'){const N=DU['N_names-99'].segs.filter(x=>x.ar);
       $('dlist').innerHTML=`<a class="item dua-item" href="#dua-asma-ul-husna"><div class="t"><b>Open with meanings &amp; benefits</b><small>Allah has the Most Beautiful Names, so call Him by them (7:180)</small></div><div class="ar" style="font-family:'Noto Nastaliq Urdu',serif;font-size:15px;line-height:2">اسمائے حسنیٰ</div></a>`+
         N.map((x,i)=>`<a class="item nm99" href="#dua-asma-ul-husna"><span class="nn">${i||''}</span><div class="t"><b>${esc(x.tr)}</b><small>${esc(x.en.replace(/^\d+\.\s*/,''))}</small></div><div class="ar nar">${x.ar}</div></a>`).join('');
       app.querySelectorAll('.dtabs .tab').forEach(b=>b.classList.toggle('on',b.dataset.g===dTab));return}
-    if(!q&&(dTab==='d'||dTab==='n')){
+    if(!q&&'dnamszt'.includes(dTab)){
       const CAL='<rect x="4" y="5" width="16" height="15" rx="3"/><path d="M4 10h16M8 3v4M16 3v4M8 14h2M14 14h2M8 17h2"/>';
       const wk=DAY_IDS.map((id,i)=>{const x=LIST.find(z=>z.id===id);return x?`<a class="item dua-item snum" href="#dua-${x.id}"><div class="num"><span>${i+1}</span></div><div class="t"><b>Supplication for ${DAY_EN[i]}</b><small>Imam Zainul Abideen (a.s.) · Sahifa Sajjadiya</small></div><div class="dur">${DAY_UR[i]} کی دعا</div>${dfavBtn(x.id)}</a>`:''}).join('');
       const all=items.map(d=>`<a class="item dua-item" href="#dua-${d.id}"><div class="num"><span>${d.mark||'د'}</span></div><div class="t"><b>${esc(d.name)}</b>${d.sub?`<small>${esc(d.sub)}</small>`:''}</div><div class="dur">${d.ur||''}</div>${dfavBtn(d.id)}</a>`).join('');
       const row=(k,ic,t,n,sub,ur,c,body)=>`<div class="acc${dSec===k?' open':''}" data-acc="${k}"><button type="button" class="acc-h" aria-expanded="${dSec===k}"><span class="dcat-m" style="--t:${t}"><svg viewBox="0 0 24 24" aria-hidden="true">${ic}</svg></span><span class="acc-t"><b>${n}</b><small>${sub}</small><span class="acc-u">${ur}</span></span><span class="dcat-n">${c}</span><svg class="acc-ch" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg></button>${dSec===k?`<div class="acc-sc"><div class="acc-body">${body}</div><span class="acc-bar" aria-hidden="true"><i></i></span><span class="acc-more" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg></span></div>`:''}</div>`;
+      const nrow=(d,j)=>{const m=/^(\d+)\.\s*(.*)$/.exec(d.name);return `<a class="item dua-item snum nmrow" href="#dua-${d.id}"><div class="num"><span>${m?m[1]:j+1}</span></div><div class="t"><b>${esc(m?m[2]:d.name)}</b>${d.sub&&!m&&dTab!=='a'?`<small>${esc(d.sub)}</small>`:''}${d.ur?`<span class="nm-ur">${d.ur}</span>`:''}</div>${dfavBtn(d.id)}</a>`};
+      if('amszt'.includes(dTab)){
+        const gs=[];items.forEach(d=>{if(d.sec&&(!gs.length||gs[gs.length-1].sec!==d.sec))gs.push({sec:d.sec,ur:d.secUr||'',its:[]});if(!gs.length)gs.push({sec:'',ur:'',its:[]});gs[gs.length-1].its.push(d)});
+        if(gs.length<2){$('dlist').innerHTML=items.map(nrow).join('');app.querySelectorAll('.dtabs .tab').forEach(b=>b.classList.toggle('on',b.dataset.g===dTab));return}
+        const SD={'Supplications':'Duas 1–61','Supplications for the Days of the Week':'Sunday to Saturday','Fifteen Whispered Prayers':'Munajat 1–15 · Imam Zainul Abideen (a.s.)','Munajaat of Imam Ali (a.s.)':'In Masjid Kufa, and the Munajaat in verse'};
+        const strip=n=>n.replace(/^\d+\.\s*/,'');const cut=(t,n)=>t.length>n?t.slice(0,n).replace(/\s+\S*$/,'')+'…':t;
+        $('dlist').innerHTML=`<div class="accs">${gs.map((g2,i)=>row('g'+i,DICON[dTab],DTINT[dTab],esc(g2.sec),esc(SD[g2.sec]||(dTab==='a'?'':cut(strip(g2.its[0].name),44)+(g2.its.length>1?' and more':''))),g2.ur,g2.its.length,g2.its.map(nrow).join(''))).join('')}</div>`;
+      } else
       if(dTab==='n'){
         const NS=[['Daily & Special Namaz','Namaz e Shab, Aayaat, Ghufaylah, Eid and more','#2f7dc4','<path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/><path d="M16 4.5l.6 1.7 1.7.6-1.7.6-.6 1.7-.6-1.7-1.7-.6 1.7-.6z"/>'],
           ['Namaz of the Masoomeen (a.s.)','The Holy Prophet, Lady Fatimah and the twelve Imams (a.s.)','#1f8a70','<path d="M12 3v2.5"/><path d="M6 20v-6a6 6 0 0 1 12 0v6"/><path d="M4 20h16M10 20v-3a2 2 0 0 1 4 0v3"/>'],
