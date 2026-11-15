@@ -223,6 +223,21 @@ async function ask(messages) {
   return { text, refs: refs.slice(0, 12) };
 }
 
+// A spoken question: Gemini writes down what was said, then the question goes through the usual path.
+async function transcribe(audio) {
+  const mime = /^audio\/(wav|x-wav|mp3|mpeg|aac|ogg|flac|aiff|mp4|webm)$/.test(String(audio.mime || '')) ? audio.mime : 'audio/wav';
+  const body = { contents: [{ role: 'user', parts: [{ inlineData: { mimeType: mime, data: String(audio.data || '') } },
+    { text: 'Write down exactly what the person asks in this recording, in the language they speak (English, Urdu or Arabic). It is a question about Islam, so spell names and terms the usual way (for example Imam Ali, Ziyarat Ashura, Ahl al-Bayt). Reply with the words only. If there is no clear speech, reply with the single word NONE.' }] }],
+    generationConfig: { temperature: 0, maxOutputTokens: 300 } };
+  const r = await fetch(`${process.env.GEMINI_BASE || 'https://generativelanguage.googleapis.com'}/v1beta/models/${encodeURIComponent(MODEL)}:generateContent`, {
+    method: 'POST', headers: { 'Content-Type': 'application/json', 'x-goog-api-key': KEY }, body: JSON.stringify(body), signal: AbortSignal.timeout(45000) });
+  const j = await r.json().catch(() => ({}));
+  if (!r.ok) throw new Error((j.error && j.error.message) || 'Gemini HTTP ' + r.status);
+  const c = j.candidates && j.candidates[0];
+  const t = (c && c.content && c.content.parts ? c.content.parts.map((p) => p.text || '').join('') : '').trim();
+  return /^none\.?$/i.test(t) ? '' : t.slice(0, 1500);
+}
+
 http.createServer(async (req, res) => {
   if (req.method === 'OPTIONS') return send(res, 204, {});
   if (req.method === 'GET' && req.url === '/health') return send(res, 200, { ok: true, model: MODEL, hadith: HAD.size });
@@ -240,14 +255,22 @@ http.createServer(async (req, res) => {
   }
   if (req.method !== 'POST' || req.url !== '/ask') return send(res, 404, { error: 'Not found' });
   let body = '';
-  req.on('data', (d) => { body += d; if (body.length > 40000) req.destroy(); });
+  req.on('data', (d) => { body += d; if (body.length > 3200000) req.destroy(); });   // room for a 60-second voice question
   req.on('end', async () => {
     try {
-      const { messages } = JSON.parse(body || '{}');
-      if (!Array.isArray(messages) || !messages.length || !String(messages[messages.length - 1].text || '').trim()) return send(res, 400, { error: 'Empty question' });
+      const { messages: msgs, audio } = JSON.parse(body || '{}');
+      const messages = Array.isArray(msgs) ? msgs : [];
+      const voice = !!(audio && audio.data);
+      if (!voice && (body.length > 40000 || !messages.length || !String(messages[messages.length - 1].text || '').trim())) return send(res, 400, { error: 'Empty question' });
       const ip = String(req.headers['x-forwarded-for'] || req.socket.remoteAddress || '').split(',')[0].trim();
       const lim = allow(ip); if (lim) return send(res, 429, { error: lim });
-      send(res, 200, await ask(messages));
+      let heard = '';
+      if (voice) {
+        heard = await transcribe(audio);
+        if (!heard) return send(res, 200, { heard: '', text: 'I could not hear a question in that recording. Please try again, a little closer to the microphone.', refs: [] });
+        messages.push({ role: 'user', text: heard });
+      }
+      send(res, 200, { ...(await ask(messages)), ...(voice ? { heard } : {}) });
     } catch (e) {
       console.error(new Date().toISOString(), e.message);
       send(res, 502, { error: 'The assistant is not available right now. Please try again shortly.' });
