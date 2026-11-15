@@ -617,6 +617,34 @@ body.bk-xar.bk-xur .bk-it.noen .ar,body.bk-xar.bk-xen .bk-it.nour .ar,body.bk-xa
 .bk-it .ur{font-size:calc(var(--bk-en) + 6px);line-height:2.4;margin-top:6px}.bk-it .nour-n{line-height:2.2}
 .tparts .tp-ar{font-family:IndoPak,serif;font-size:25px;line-height:1.9;margin-top:4px;direction:rtl;text-align:right;color:var(--accent);display:block}
 .tp-nav{display:flex;justify-content:space-between;align-items:center;gap:8px;margin:18px 2px 6px}.tp-nav a{padding:10px 14px;border:1px solid var(--line);border-radius:999px;background:var(--card);color:var(--accent);font-weight:600;font-size:14px;text-decoration:none}.tp-nav span{flex:0 0 70px}
+.sheet.bks{padding:10px 18px calc(18px + env(safe-area-inset-bottom));border-radius:28px 28px 0 0;background:var(--bg);box-shadow:0 -18px 50px rgba(0,0,0,.22)}
+.bks-grab{width:42px;height:5px;border-radius:99px;background:var(--line);margin:0 auto 12px}
+.bks-h{display:flex;align-items:center;gap:12px;margin-bottom:14px}.bks-h>div{flex:1;display:flex;flex-direction:column}.bks-h b{font-size:20px;letter-spacing:-.01em}.bks-h small{color:var(--muted);font-size:12.5px}
+.bks-ic{width:44px;height:44px;border-radius:14px;display:grid;place-items:center;background:linear-gradient(135deg,var(--accent),color-mix(in srgb,var(--accent) 62%,#000));box-shadow:0 6px 16px color-mix(in srgb,var(--accent) 35%,transparent)}.bks-ic svg{width:22px;height:22px;fill:none;stroke:#fff;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+.bks-x{width:36px;height:36px;border-radius:50%;background:var(--card);border:1px solid var(--line);display:grid;place-items:center}.bks-x svg{width:16px;height:16px;fill:none;stroke:var(--ink);stroke-width:2;stroke-linecap:round}
+.bks-pv{position:relative;border-radius:20px;padding:14px 16px 14px 20px;background:var(--card);border:1px solid var(--line);overflow:hidden;min-height:64px;max-height:190px}.bks-pv:before{content:"";position:absolute;left:0;top:0;bottom:0;width:5px;background:linear-gradient(var(--accent),color-mix(in srgb,var(--accent) 45%,transparent))}
+.bks-pv .p-ar{font-family:IndoPak,serif;font-size:var(--bk-ar);line-height:2.05;direction:rtl;text-align:right;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.bks-pv .p-en{font-size:var(--bk-en);line-height:1.55;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}.bks-pv .p-ur{font-family:'Noto Nastaliq Urdu',serif;font-size:calc(var(--bk-en) + 6px);line-height:2.3;direction:rtl;text-align:right;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.bks-l{font-size:11.5px;font-weight:700;letter-spacing:.09em;text-transform:uppercase;color:var(--muted);margin:16px 4px 8px}
+.bks-lang{display:grid;grid-template-columns:repeat(3,1fr);gap:9px}
+.bks-lang button{position:relative;display:flex;flex-direction:column;align-items:flex-start;gap:1px;padding:12px 12px 11px;border-radius:18px;background:var(--card);border:1.5px solid var(--line);color:var(--ink);text-align:left;transition:transform .15s,background .2s,border-color .2s}.bks-lang button:active{transform:scale(.97)}
+.bks-lang .g{font-style:normal;font-weight:700;font-size:22px;line-height:1.3;height:34px;display:flex;align-items:center;color:var(--accent)}.bks-lang .g.ar,.bks-lang .g.ur{font-family:system-ui,'Geeza Pro','Noto Sans Arabic',sans-serif;font-size:25px;font-weight:700;line-height:1}
+.bks-lang b{font-size:14.5px}.bks-lang small{font-size:11px;color:var(--muted)}
+.bks-lang .ck{position:absolute;top:10px;right:10px;width:20px;height:20px;border-radius:50%;border:1.5px solid var(--line);display:grid;place-items:center}
+.bks-lang button.on{background:linear-gradient(140deg,var(--accent),color-mix(in srgb,var(--accent) 64%,#000));border-color:transparent;color:#fff;box-shadow:0 8px 20px color-mix(in srgb,var(--accent) 30%,transparent)}.bks-lang button.on .g,.bks-lang button.on small{color:rgba(255,255,255,.92)}
+.bks-lang button.on .ck{background:#fff;border-color:#fff}.bks-lang button.on .ck:after{content:"";width:9px;height:5px;border-left:2px solid var(--accent);border-bottom:2px solid var(--accent);transform:rotate(-45deg) translate(1px,-1px)}
+.bks-card{background:var(--card);border:1px solid var(--line);border-radius:20px;padding:4px 14px}
+.bks-row{display:flex;align-items:center;gap:10px;padding:12px 0}.bks-row+.bks-row{border-top:1px solid var(--line)}.bks-row.off{opacity:.38;pointer-events:none}
+.bks-row .n{width:84px;font-size:14.5px;font-weight:600}.bks-row .a{font-style:normal;color:var(--muted);width:20px;text-align:center}.bks-row .a.s{font-size:12px}.bks-row .a.l{font-size:22px;font-weight:600}.bks-row .a.ar{font-family:system-ui,'Geeza Pro','Noto Sans Arabic',sans-serif;line-height:1}.bks-row .a.l.ar{font-size:24px}
+.bks-row input[type=range]{flex:1;min-width:0;height:28px;background:transparent;-webkit-appearance:none;appearance:none;--p:50%}
+.bks-row input[type=range]::-webkit-slider-runnable-track{height:6px;border-radius:99px;background:linear-gradient(to right,var(--accent) var(--p),var(--line) var(--p))}
+.bks-row input[type=range]::-moz-range-track{height:6px;border-radius:99px;background:var(--line)}.bks-row input[type=range]::-moz-range-progress{height:6px;border-radius:99px;background:var(--accent)}
+.bks-row input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:24px;height:24px;margin-top:-9px;border-radius:50%;background:#fff;border:1px solid rgba(0,0,0,.08);box-shadow:0 2px 8px rgba(0,0,0,.28)}
+.bks-row input[type=range]::-moz-range-thumb{width:22px;height:22px;border-radius:50%;background:#fff;border:1px solid rgba(0,0,0,.08);box-shadow:0 2px 8px rgba(0,0,0,.28)}
+.bks-th{display:flex;gap:10px;overflow-x:auto;padding:4px 2px 6px;scrollbar-width:none}.bks-th::-webkit-scrollbar{display:none}
+.bks-th button{flex:none;display:flex;flex-direction:column;align-items:center;gap:5px;font-size:11px;color:var(--muted)}.bks-th i{width:46px;height:46px;border-radius:50%;display:grid;place-items:center;font-style:normal;font-weight:700;font-size:14px;border:1px solid var(--line);box-shadow:0 0 0 0 var(--accent);transition:box-shadow .2s}
+.bks-th button.on{color:var(--ink);font-weight:600}.bks-th button.on i{box-shadow:0 0 0 2px var(--bg),0 0 0 4.5px var(--accent)}
+.bks-f{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-top:16px}.bks-f #bkSetReset{padding:13px 16px;color:var(--muted);font-weight:600;font-size:15px}
+.bks-done{flex:1;max-width:240px;padding:14px;border-radius:16px;font-weight:700;font-size:16px;color:#fff;background:linear-gradient(135deg,var(--accent),color-mix(in srgb,var(--accent) 62%,#000));box-shadow:0 8px 20px color-mix(in srgb,var(--accent) 30%,transparent)}
 .tg3{display:grid;grid-template-columns:repeat(3,1fr);gap:9px;margin-top:18px}
 .tg3i{position:relative;aspect-ratio:1/1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:5px;padding:10px 6px;min-width:0;text-align:center;border:1px solid var(--line);border-radius:18px;background:var(--card);box-shadow:0 2px 8px rgba(0,0,0,.05);color:var(--ink);text-decoration:none}.tg3i:active{transform:scale(.98)}
 .tg3i b{font-size:13.5px;line-height:1.25}.tg3i .tg-u{font-family:'Noto Nastaliq Urdu',serif;font-size:12px;line-height:1.7;color:var(--accent);direction:rtl}
@@ -675,6 +703,25 @@ body .ayah-card .v-en{display:block!important}
 <main class="wrap" id="app"></main>
 
 <div class="sheet-bg" id="sheetBg"></div>
+<div class="sheet bks" id="bkSetSheet" role="dialog" aria-label="Reading settings">
+  <div class="bks-grab"></div>
+  <div class="bks-h"><span class="bks-ic"><svg viewBox="0 0 24 24"><path d="M4 5.5C6.5 4 9.5 4 12 6c2.5-2 5.5-2 8-.5V19c-2.5-1.5-5.5-1.5-8 .5-2.5-2-5.5-2-8-.5z"/><path d="M12 6v13.5"/></svg></span><div><b>Reading</b><small>How this book looks</small></div><button class="bks-x" id="bkSetX" aria-label="Close"><svg viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></svg></button></div>
+  <div class="bks-pv" id="bkPv"></div>
+  <div class="bks-l">Show</div>
+  <div class="bks-lang" id="bkLang">
+    <button data-v="a"><i class="g ar">ع</i><b>Arabic</b><small>Original text</small><span class="ck"></span></button>
+    <button data-v="e"><i class="g">Aa</i><b>English</b><small>Translation</small><span class="ck"></span></button>
+    <button data-v="u"><i class="g ur">ٹ</i><b>اردو</b><small>Translation</small><span class="ck"></span></button>
+  </div>
+  <div class="bks-l">Text size</div>
+  <div class="bks-card">
+    <div class="bks-row" id="bkArRow"><span class="n">Arabic</span><i class="a s ar">ع</i><input type="range" id="bkArR" min="19" max="41" step="2" aria-label="Arabic text size"><i class="a l ar">ع</i></div>
+    <div class="bks-row" id="bkEnRow"><span class="n">Translation</span><i class="a s">A</i><input type="range" id="bkEnR" min="13" max="25" step="1" aria-label="Translation text size"><i class="a l">A</i></div>
+  </div>
+  <div class="bks-l">Theme</div>
+  <div class="bks-th" id="bkTh"></div>
+  <div class="bks-f"><button id="bkSetReset">Reset</button><button class="bks-done" id="bkSetDone">Done</button></div>
+</div>
 <div class="sheet qs" id="setSheet">
   <div class="stabs" id="sTabs"><button data-p="ar" class="on">Arabic</button><button data-p="tr">Translation</button><button data-p="th">Theme</button></div>
   <div class="sprev"><div class="sprev-l">Preview:</div><div class="v-ar">بِسْمِ اللّٰهِ الرَّحْمٰنِ الرَّحِيْمِ</div><div class="sprev-t" id="prevEn"></div></div>
@@ -1202,7 +1249,7 @@ function route(){
   if(m&&+m[1]>=1&&+m[1]<=114)renderSurah(+m[1],m[2]?Math.min(+m[2],META[+m[1]-1][4]):0);
   else{renderHome();window.scrollTo(0,0)}
 }
-function openSheet(id){if(id==='setSheet')ctxSettings();$('sheetBg').classList.add('open');const el=$(id);el.style.transform='';el.classList.add('open');el.scrollTop=0;document.body.classList.add('sheet-lock')}
+function openSheet(id){if(id==='setSheet'&&location.hash.startsWith('#book-')){id='bkSetSheet';bkSetDraw()}if(id==='setSheet')ctxSettings();$('sheetBg').classList.add('open');const el=$(id);el.style.transform='';el.classList.add('open');el.scrollTop=0;document.body.classList.add('sheet-lock')}
 /* Settings adapt to the page: on a dua/ziyarat page only show what that text actually has */
 function ctxSettings(){drawOff();
   const sh=$('setSheet');if(!sh)return;
@@ -1240,6 +1287,24 @@ function closeSheets(){document.querySelectorAll('.sheet,.sheet-bg').forEach(x=>
 })();
 $('backBtn').onclick=()=>{const c=location.hash.slice(1);let t='home';if(/^dua-.*~/.test(c))t=c.slice(0,c.indexOf('~'));else if(/^dua-/.test(c)){const d=LISTX().find(x=>x.id===c.slice(4));t=d&&d.grp?'duas-'+d.grp:'duas'}else if(/^duas-/.test(c))t='duas';else if(/^book-/.test(c))t=window.QX&&QX.bookUp?QX.bookUp(decodeURIComponent(c.slice(5))):'duas-b';else if(c==='calendar')t='today';location.hash=t};
 $('setBtn').onclick=()=>openSheet('setSheet');
+/* reading settings for book pages */
+function bkSetDraw(){
+  const A=S.bk.includes('a'),E=S.bk.includes('e'),U=S.bk.includes('u');
+  document.querySelectorAll('#bkLang [data-v]').forEach(b=>{const on=S.bk.includes(b.dataset.v);b.classList.toggle('on',on);b.setAttribute('aria-pressed',on)});
+  const rg=(id,v)=>{const r=$(id);r.value=v;r.style.setProperty('--p',((v-r.min)/(r.max-r.min)*100)+'%')};rg('bkArR',S.bkAr);rg('bkEnR',S.bkEn);
+  $('bkArRow').classList.toggle('off',!A);$('bkEnRow').classList.toggle('off',!(E||U));
+  const it=app.querySelector('.bk-it:not(.noen):not(.nour)')||app.querySelector('.bk-it:not(.noen)')||app.querySelector('.bk-it'),g=c=>{const x=it&&it.querySelector(c);return x?x.textContent:''};
+  const ar=g('.ar')||'بِسْمِ اللّٰهِ الرَّحْمٰنِ الرَّحِيْمِ',en=g('.en')||'In the name of Allah, the Beneficent, the Merciful.',ur=g('.ur')||'اللہ کے نام سے جو بڑا مہربان، نہایت رحم والا ہے۔';
+  $('bkPv').innerHTML=(A?`<div class="p-ar">${esc(ar.slice(0,90))}</div>`:'')+(E?`<div class="p-en">${esc(en.slice(0,220))}</div>`:'')+(U?`<div class="p-ur">${esc(ur.slice(0,90))}</div>`:'');
+  if(!$('bkTh').children.length)$('bkTh').innerHTML=[...$('thSeg').children].map(b=>`<button data-v="${b.dataset.v}"><i style="${b.querySelector('i').getAttribute('style')}">Aa</i>${esc(b.textContent.replace(/^Aa/,''))}</button>`).join('');
+  [...$('bkTh').children].forEach(b=>b.classList.toggle('on',b.dataset.v===S.theme));
+}
+$('bkLang').onclick=e=>{const b=e.target.closest('button');if(!b)return;const v=b.dataset.v,on=S.bk.includes(v);if(on&&S.bk.length===1){toast('Keep at least one on');return}S.bk=['a','e','u'].filter(k=>k===v?!on:S.bk.includes(k)).join('');store.set('bkShow2',S.bk);applySettings();bkSetDraw()};
+$('bkArR').oninput=e=>{S.bkAr=+e.target.value;store.set('bkAr',S.bkAr);applySettings();bkSetDraw()};
+$('bkEnR').oninput=e=>{S.bkEn=+e.target.value;store.set('bkEn',S.bkEn);applySettings();bkSetDraw()};
+$('bkTh').onclick=e=>{const b=e.target.closest('button');if(!b)return;const t=$('thSeg').querySelector(`[data-v="${b.dataset.v}"]`);if(t)t.click();bkSetDraw()};
+$('bkSetReset').onclick=()=>{S.bk='e';S.bkAr=25;S.bkEn=17;store.set('bkShow2','e');store.set('bkAr',25);store.set('bkEn',17);applySettings();bkSetDraw()};
+$('bkSetDone').onclick=$('bkSetX').onclick=()=>closeSheets();
 $('jumpBtn').onclick=()=>{$('jumpLbl').textContent=`Verse (1–${META[curS-1][4]})`;$('jumpIn').max=META[curS-1][4];$('jumpIn').value='';openSheet('jumpSheet');setTimeout(()=>$('jumpIn').focus(),50)};
 $('jumpForm').onsubmit=e=>{e.preventDefault();const v=Math.max(1,Math.min(+$('jumpIn').value||1,META[curS-1][4]));closeSheets();const el=$('v'+v);if(el){el.scrollIntoView({behavior:'smooth'});el.classList.remove('flash');void el.offsetWidth;el.classList.add('flash')}};
 $('sheetBg').onclick=closeSheets;
