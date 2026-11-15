@@ -174,7 +174,130 @@ function passages(text) {
   return [...map.values()].filter((p) => p.ar || p.en);
 }
 
+// ---------------- Search on this server ----------------
+// The server finds the passages itself and hands them to Gemini, so every answer about the books comes with
+// references that can be opened. (Left to itself, Gemini often answered from memory and returned none.)
+// A plain keyword index (BM25) over the English of every hadith plus its chapter title. Built once at startup.
+const STOP = new Set('the a an of and to in is it that he she they him his her their was were be been are for on as with from by at this which who whom said says say not or but had has have i you we them then when there upon unto shall will would may do does did so if what all one no nor into than its our your my me us also these those such any each other some most about after before over under very can could should'.split(' '));
+const stem = (w) => (w.length > 4 ? w.replace(/(ings|ing|edly|ed|ies|es|s)$/, (m) => (m === 'ies' ? 'y' : '')) : w);
+function terms(text) {
+  const out = [];
+  for (let w of String(text).toLowerCase().replace(/[’‘`]/g, "'").split(/[^a-z0-9']+/)) {
+    w = w.replace(/'/g, '');
+    if (w.length < 2 || STOP.has(w)) continue;
+    w = stem(w);
+    if (w.length > 1) out.push(w);
+  }
+  return out;
+}
+let IDX = null;
+function buildIndex() {
+  if (IDX) return IDX;
+  const t0 = Date.now(), m0 = process.memoryUsage().rss, refs = [...HAD.keys()].filter((r) => HAD.get(r).en), tmp = new Map(), len = new Float32Array(refs.length);   // only hadith that have English
+  refs.forEach((ref, i) => {
+    const h = HAD.get(ref), ch = ref.slice(0, ref.lastIndexOf(':')), tf = new Map();
+    const ts = terms(h.en), tt = terms(((TITLES[ch] || {}).en || ''));
+    for (const t of ts) tf.set(t, (tf.get(t) || 0) + 1);
+    for (const t of tt) tf.set(t, (tf.get(t) || 0) + 2);            // a word in the chapter title counts double
+    len[i] = ts.length + tt.length || 1;
+    for (const [t, n] of tf) { let q = tmp.get(t); if (!q) tmp.set(t, (q = [])); q.push(i, Math.min(n, 255)); }
+  });
+  const post = new Map(); for (const [t, q] of tmp) { post.set(t, Int32Array.from(q)); }
+  let total = 0; for (let i = 0; i < len.length; i++) total += len[i];
+  IDX = { refs, post, len, avg: total / (refs.length || 1) };
+  tmp.clear();
+  console.log(`search index: ${refs.length} hadith, ${post.size} words, ${Date.now() - t0} ms, about ${Math.round((process.memoryUsage().rss - m0) / 1048576)} MB`);
+  return IDX;
+}
+const BOOKS = new Map();   // slug -> name, e.g. al-kafi -> Al-Kafi
+function searchBooks(query, book, limit = 6) {
+  const { refs, post, len, avg } = buildIndex(), N = refs.length, score = new Map(), qt = [...new Set(terms(query))];
+  for (const t of qt) {
+    const q = post.get(t); if (!q) continue;
+    const df = q.length / 2, idf = Math.log(1 + (N - df + 0.5) / (df + 0.5));
+    for (let k = 0; k < q.length; k += 2) {
+      const i = q[k], f = q[k + 1];
+      score.set(i, (score.get(i) || 0) + idf * (f * 2.2) / (f + 1.2 * (0.25 + 0.75 * len[i] / avg)));
+    }
+  }
+  let hits = [...score.entries()];
+  if (book) hits = hits.filter(([i]) => refs[i].startsWith(book + ':'));
+  return hits.sort((a, b) => b[1] - a[1]).slice(0, limit).map(([i, sc]) => ({ h: HAD.get(refs[i]), sc }));
+}
+
+async function gemini(body, ms = 60000) {
+  const r = await fetch(`${process.env.GEMINI_BASE || 'https://generativelanguage.googleapis.com'}/v1beta/models/${encodeURIComponent(MODEL)}:generateContent`, {
+    method: 'POST', headers: { 'Content-Type': 'application/json', 'x-goog-api-key': KEY }, body: JSON.stringify(body), signal: AbortSignal.timeout(ms) });
+  const j = await r.json().catch(() => ({}));
+  if (!r.ok) throw new Error((j.error && j.error.message) || 'Gemini HTTP ' + r.status);
+  const c = j.candidates && j.candidates[0];
+  return c && c.content && c.content.parts ? c.content.parts.map((p) => p.text || '').join('') : '';
+}
+
+// Step 1: turn the question (any language, maybe a follow-up) into a few English keyword searches.
+async function plan(contents) {
+  const books = [...BOOKS].map(([slug, name]) => `${slug} = ${name}`).join('; ');
+  const sys = `You prepare searches for a library of classical Shia hadith books. The search matches exact English words in machine translations of Arabic hadith, not meaning.
+Read the conversation and reply with JSON only: {"search": true or false, "queries": ["..."], "book": ""}.
+- "search" is false only for greetings, thanks, or questions about how to use the app. For anything about Islam, hadith, the Imams, beliefs, virtues, worship, history or ethics it is true.
+- "queries": 4 different searches for the LAST user message (use the earlier messages only to understand it). Each is 3 to 7 plain English words that a relevant hadith or its chapter title would contain. Vary the wording between them with synonyms and the usual spellings, for example patience / forbearance / endure / affliction; night prayer / tahajjud / salat al-layl / prayer at night; Imam Husain / al-Husayn / visiting grave Karbala. No quotation marks, no book names.
+- "book": if the user asks for one particular book, its code from this list, otherwise "". ${books}`;
+  try {
+    const t = await gemini({ systemInstruction: { parts: [{ text: sys }] }, contents, generationConfig: { temperature: 0, maxOutputTokens: 300, responseMimeType: 'application/json' } }, 20000);
+    const j = JSON.parse(t.replace(/^```(?:json)?|```$/g, '').trim());
+    const queries = (Array.isArray(j.queries) ? j.queries : []).map((q) => String(q).slice(0, 120)).filter((q) => terms(q).length).slice(0, 5);
+    return { search: j.search !== false, queries, book: BOOKS.has(String(j.book || '')) ? String(j.book) : '' };
+  } catch (e) { console.error(new Date().toISOString(), 'plan failed:', e.message); return { search: true, queries: [], book: '' }; }
+}
+
+const LIB = `Your library
+With each question you are given passages that the app found in its library of 23 classical Shia hadith books (al-Kafi, Man La Yahduruhu al-Faqih, Tahdhib al-Ahkam, al-Istibsar, Nahj al-Balagha, the Amali of Saduq and Mufid, al-Khisal, al-Tawhid, Kamal al-Din, Uyun Akhbar al-Rida, Ma'ani al-Akhbar, Thawab al-A'mal, Kamil al-Ziyarat, Kitab al-Ghayba of Nu'mani and Tusi, and others). Each passage has a tag like [P3], its place in the book, the Arabic and an English machine translation.
+- Build the answer from the passages that really bear on the question. Ignore the ones that do not.
+- Put the tag straight after every statement you take from a passage, for example: The Imam (a.s.) said that patience is to faith as the head is to the body [P3]. Use several passages when they help.
+- Use only the tags you were given, written exactly like [P3]. Do not write a hadith's book-and-number yourself (such as "Al-Kafi 2:1:3:5"); the app shows the reference from the tag.
+- Never cite or quote a hadith that is not among the passages.
+- The English is a machine translation of the Arabic, so give a short faithful paraphrase instead of a long quotation.
+- If none of the passages answers the question, say plainly that the books searched did not give a clear text on it. You may then add a short general answer, marked as general knowledge, without any hadith reference.
+`;
+const SYSTEM2 = SYSTEM.replace(/Your library[\s\S]*?\nHow to answer/, LIB + '\nHow to answer')
+  .replace('- Cite where things come from: Quran as surah:verse, hadith with the book (e.g. al-Kafi, Bihar al-Anwar, Nahj al-Balagha) when you are confident.', '- Cite the Quran as surah:verse. Cite hadith only with the passage tags.');
+
+async function askBooks(messages) {
+  const hist = messages.slice(-12).map((m) => ({ role: m.role === 'assistant' ? 'model' : 'user', parts: [{ text: String(m.text || '').slice(0, 2000) }] }));
+  while (hist.length && hist[0].role !== 'user') hist.shift();
+  const q = String(messages[messages.length - 1].text || '').slice(0, 2000);
+  const pl = await plan(hist);
+  const found = [];   // refs shown to the model, in order: [Pn] = found[n-1]
+  if (pl.search) {
+    const lists = [...pl.queries, q].map((x) => { let r = searchBooks(x, pl.book, 6); if (pl.book && r.length < 3) r = r.concat(searchBooks(x, '', 4)); return r; });
+    for (let k = 0; k < 6 && found.length < 14; k++) for (const l of lists) { const x = l[k]; if (x && !found.includes(x.h.ref) && found.length < 14) found.push(x.h.ref); }
+  }
+  const pass = found.map((ref, i) => { const h = HAD.get(ref), ch = ref.slice(0, ref.lastIndexOf(':')), t = nice((TITLES[ch] || {}).en || '');
+    return `[P${i + 1}] ${cite(ref).cite}${t ? ' · chapter: ' + t : ''}\nARABIC: ${h.ar.slice(0, 500)}\nENGLISH (machine translation): ${h.en.slice(0, 1000)}`; }).join('\n\n');
+  const contents = hist.slice(0, -1).concat([{ role: 'user', parts: [{ text: (found.length ? `PASSAGES FOUND IN THE LIBRARY FOR THIS QUESTION\n\n${pass}\n\n` : pl.search ? 'PASSAGES FOUND IN THE LIBRARY FOR THIS QUESTION\n\n(The search found nothing.)\n\n' : '') + `QUESTION\n${q}` }] }]);
+  let text = await gemini({ systemInstruction: { parts: [{ text: SYSTEM2 }] }, contents, generationConfig: { temperature: 0.3, maxOutputTokens: 1200 } });
+  if (!text) return { text: 'Sorry, I could not answer that. Please rephrase your question.', refs: [] };
+  // "[P1, P3]" -> "[P1][P3]", then [P7] -> [1], [2] ... in the order first cited; unknown tags are dropped
+  text = text.replace(/\[\s*P\d+(?:\s*[,;&]\s*P?\d+)+\s*\]/g, (all) => (all.match(/\d+/g) || []).map((d) => `[P${d}]`).join(''));
+  const order = [], refs = [];
+  text = text.replace(/\s*\[P(\d+)\]/g, (all, d) => {
+    const ref = found[+d - 1]; if (!ref) return '';
+    let n = order.indexOf(ref) + 1;
+    if (!n) { order.push(ref); n = order.length; const h = HAD.get(ref); refs.push({ n, label: h.label, chapter: '', ar: h.ar, en: h.en, ref, ...cite(ref), book: true }); }
+    return `[${n}]`;
+  });
+  text = text.replace(/\[\[([a-z0-9-]+)\]\]/gi, (all, id) => (IDS.has(id) || /^(surah-\d{1,3}(-\d{1,3})?|juz-\d{1,2})$/.test(id) ? all : id));
+  console.log(new Date().toISOString(), `ask: ${pl.queries.length} searches${pl.book ? ' in ' + pl.book : ''}, ${found.length} passages, ${refs.length} cited`);
+  return { text, refs: refs.slice(0, 12) };
+}
+// With the books on this server, search here; without them, fall back to Gemini's own file search.
 async function ask(messages) {
+  if (!HAD.size) return askStore(messages);
+  try { return await askBooks(messages); }
+  catch (e) { console.error(new Date().toISOString(), 'book search path failed:', e.message); if (STORE) return askStore(messages); throw e; }
+}
+
+async function askStore(messages) {
   const contents = messages.slice(-12).map((m) => ({ role: m.role === 'assistant' ? 'model' : 'user', parts: [{ text: String(m.text || '').slice(0, 2000) }] }));
   const gen = async (system) => {
     const body = { systemInstruction: { parts: [{ text: system }] }, contents, generationConfig: { temperature: 0.3, maxOutputTokens: 1200 } };
@@ -276,4 +399,4 @@ http.createServer(async (req, res) => {
       send(res, 502, { error: 'The assistant is not available right now. Please try again shortly.' });
     }
   });
-}).listen(PORT, '127.0.0.1', () => console.log(`assistant on 127.0.0.1:${PORT} using ${MODEL}`));
+}).listen(PORT, '127.0.0.1', () => { for (const ref of HAD.keys()) { const b = ref.slice(0, ref.indexOf(':')); if (!BOOKS.has(b)) BOOKS.set(b, cite(ref).book || b); } if (HAD.size) setTimeout(buildIndex, 500); console.log(`assistant on 127.0.0.1:${PORT} using ${MODEL}`); });
