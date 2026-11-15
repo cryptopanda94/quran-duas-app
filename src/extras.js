@@ -1137,8 +1137,14 @@ function renderBook(ref){
   const hero=(path,t,ar,sub,top)=>`<div class="bk-ban${top?' top':''}" style="--c1:${B[7]};--c2:${B[8]}">${bkCover(B)}<div class="bk-bt">${path?`<small>${esc(path)}</small>`:''}<h1>${esc(t)}</h1>${ar?`<div class="bk-har">${esc(ar)}</div>`:''}${sub?`<p>${esc(sub)}</p>`:''}</div></div>`;
   const cached=bkCache.get(ref);
   if(!cached)app.innerHTML=hero('',B[1],B[2],B[3],true)+'<div class="bk-load">Opening the book…</div>';
+  // the server cleans these too; this keeps titles readable if an older server answers
+  const HON={asws:'(a.s.)',as:'(a.s.)',saww:'(s.a.w.a.)',sawa:'(s.a.w.a.)'};
+  const tclean=t=>{t=String(t||'').replace(/\s*<sup>\s*([A-Za-z.]{1,8})\s*<\/sup>/g,(m,k)=>' '+(HON[k.toLowerCase().replace(/\./g,'')]||'('+k.toLowerCase()+')')).replace(/<[a-zA-Z\/][^>]*>/g,'').replace(/&#(\d+);/g,(m,d)=>String.fromCodePoint(+d)).replace(/&nbsp;/g,' ').replace(/\s+/g,' ').trim();
+    const b=t.replace(/\([A-Za-z.]{1,10}\)/g,'');
+    return b===b.toUpperCase()&&/[A-Z]/.test(b)?t.toLowerCase().replace(/(^|[\s-])([a-z])/g,(m,x,y)=>x+y.toUpperCase()).replace(/\b(Of|And|The|In|On|To|From|For|With|About|A|An|Is|It|His)\b/g,(w,x,i)=>i?w.toLowerCase():w).replace(/\((A\.s\.|S\.a\.w\.a\.)\)/g,m=>m.toLowerCase()):t};
+  const tfix=j=>{if(j.title){j.title.en=tclean(j.title.en);j.title.ar=tclean(j.title.ar)}(j.children||[]).forEach(c=>{if(c.title){c.title.en=tclean(c.title.en);c.title.ar=tclean(c.title.ar)}});if(j.path)j.path=j.path.map(tclean);return j};
   const draw=j=>{
-    if(location.hash.slice(1)!=='book-'+ref)return;
+    if(location.hash.slice(1)!=='book-'+ref)return;tfix(j);
     const unit=j.unit||(slug==='nahj-al-balagha'?'Section':'Hadith'),many=n=>n.toLocaleString()+' '+(slug==='nahj-al-balagha'?(n===1?'section':'sections'):'hadith');
     const top=ref===slug;
     let h=hero(top?'':j.path.join(' · '),top?B[1]:j.title.en,top?B[2]:j.title.ar,top?B[3]+' · '+many(j.count):many(j.count),top);
