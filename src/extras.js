@@ -406,7 +406,7 @@ function renderDuas(g){
   setHeader(g?DCAT[g][0]:'<span class="lib-logo" role="img" aria-label=""></span>Library',!!g);
   const cnt=g=>g==='e'?LIST.filter(x=>x.grp==='e').length+1:g==='h'?99:g==='b'?BK.length:g==='r'?NOTEBOOKS.length:LIST.filter(x=>x.grp===g).length;
   const cats=`<div class="dcat-head"><b>Categories</b><div class="seg vseg"><button data-v="grid" class="${dView==='grid'?'on':''}">▦ Grid</button><button data-v="list" class="${dView==='list'?'on':''}">☰ List</button></div></div>
-   <div class="dcats ${dView}">${DTABS.filter(([k])=>k!=='b'||bkBase()).map(([k])=>{const c=DCAT[k];if(k==='b')return `<a class="dcat wide books" href="#duas-b"><span class="dcat-m" style="--t:${DTINT.b}"><svg viewBox="0 0 24 24" aria-hidden="true">${DICON.b}</svg></span><span class="dcat-t"><b>${c[0]}</b><small>${c[2]}</small><span class="dcat-u">${c[1]}</span></span><span class="bk-shelf" aria-hidden="true">${[0,4,16].map(i=>bkCover(BK[i])).join('')}</span><span class="dcat-n">${cnt(k)}</span><span class="dcat-go">›</span></a>`;return `<a class="dcat${k==='h'?' wide':''}" href="#duas-${k}"><span class="dcat-m" style="--t:${DTINT[k]}"><svg viewBox="0 0 24 24" aria-hidden="true">${DICON[k]}</svg></span><span class="dcat-t"><b>${c[0]}</b><small>${c[2]}</small></span><span class="dcat-u">${c[1]}</span><span class="dcat-n">${cnt(k)}</span><span class="dcat-go">›</span></a>`}).join('')}</div>`;
+   <div class="dcats ${dView}">${DTABS.filter(([k])=>k!=='b'||bkBase()).map(([k])=>{const c=DCAT[k];if(k==='b')return `<a class="dcat wide books" href="#duas-b"><span class="dcat-m" style="--t:${DTINT.b}"><svg viewBox="0 0 24 24" aria-hidden="true">${DICON.b}</svg></span><span class="dcat-t"><b>${c[0]}</b><small>${c[2]}</small><span class="dcat-u">${c[1]}</span></span><span class="bk-shelf" aria-hidden="true">${[0,4,16].map(i=>bkCover(BK[i])).join('')}</span><span class="dcat-n">${cnt(k)}</span><span class="dcat-go">›</span></a>`;return `<a class="dcat${k==='h'?' wide':''}" href="#duas-${k}"><span class="dcat-m" style="--t:${DTINT[k]}"><svg viewBox="0 0 24 24" aria-hidden="true">${DICON[k]}</svg></span><span class="dcat-t"><b>${c[0]}</b><small>${c[2]}</small></span><span class="dcat-u">${c[1]}</span><span class="dcat-n">${cnt(k)}</span><span class="dcat-go">›</span></a>`}).join('')}<a class="dcat" href="#fiqh"><span class="dcat-m" style="--t:#3b7a57"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3v18M5 7h14M5 7l-2.5 6a3 3 0 0 0 5 0zM19 7l-2.5 6a3 3 0 0 0 5 0zM8 21h8"/></svg></span><span class="dcat-t"><b>Fiqh</b><small>Islamic laws of the maraji</small></span><span class="dcat-u">فقہ</span><span class="dcat-n">2</span><span class="dcat-go">›</span></a></div>`;
   app.innerHTML=`${g?secBan(g,DCAT[g][0],DCAT[g][2],DCAT[g][1]):`${pgBan('اَلْمَكْتَبَة','Library','Duas, Ziyarat & Books')}
    <div class="ai-ban hy" role="button" tabindex="0" data-ask="1"><span class="td-pat" aria-hidden="true"></span>
      <span class="hy-top"><span class="hy-av" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M12 2.5l1.9 5.6 5.6 1.9-5.6 1.9L12 17.5l-1.9-5.6L4.5 10l5.6-1.9z"/><path d="M18.5 14.5l.9 2.6 2.6.9-2.6.9-.9 2.6-.9-2.6-2.6-.9 2.6-.9z"/></svg></span><span class="hy-n"><b>HYDER AI</b><small>Answers with references from ${BK.length} classical books</small></span></span>
@@ -1002,6 +1002,7 @@ function renderToday(){
      const fv=(S.favs||[]).length+(S.dfavs||[]).length,bm=(S.marks||[]).length,ai=window.QAsk&&QAsk.base;
      const T=[['#home',sv(IC.q,'#1d6fb0'),'Holy Quran','قرآن مجید',0,'surahs'],['#prayer',sv(IC.p,'#0f8f7a'),'Prayer','اوقات نماز'],['#qibla',sv(IC.k,'#c2742c'),'Qibla','قبلہ'],
        ai?['ask',sv(IC.ai,'#fff'),'HYDER AI','حیدر اے آئی',0,'','hy']:0,ai?cat('b'):0,cat('d'),cat('z'),cat('n'),cat('t'),cat('e'),cat('a'),cat('m'),cat('s'),cat('h'),
+       ['#fiqh',sv('<path d="M12 3v18M5 7h14M5 7l-2.5 6a3 3 0 0 0 5 0zM19 7l-2.5 6a3 3 0 0 0 5 0zM8 21h8"/>','#3b7a57'),'Fiqh','فقہ',2],
        ['tasbih',sv(IC.tb,'#b45a3c'),'Tasbih','تسبیح'],HFMT?['#calendar',sv(IC.cal,'#2a78d0'),'Calendar','کیلنڈر']:0,['#favs',sv(IC.fv,'#d1495b'),'Favourites','پسندیدہ',fv],['#marks',sv(IC.bm,'#1d6fb0'),'Bookmarks','نشانیاں',bm]].filter(Boolean);
      return T.map((t,i)=>`<a class="tg3i${t[6]?' '+t[6]:''}${i>5?' x':''}" href="${t[0][0]==='#'?t[0]:'#'}" data-tg="${t[0][0]==='#'?'':t[0]}" data-tab="${t[5]||''}">${t[1]}<b>${t[2]}</b><span class="tg-u">${t[3]}</span>${t[4]?`<span class="dcat-n">${t[4]}</span>`:''}</a>`).join('')})()}</div>
    <button type="button" class="tg-more" id="tgMore"></button>
@@ -1170,6 +1171,16 @@ function renderFavs(){
 }
 document.addEventListener('click',e=>{if(location.hash==='#favs'&&e.target.closest('[data-fav],[data-dfav]'))setTimeout(()=>{if(location.hash==='#favs'){const y=scrollY;renderFavs();scrollTo(0,y)}},60)});
 
+/* Fiqh: the law books of the maraji. The books belong to their publishers, so each tile opens the marja's own website. */
+function renderFiqh(){
+  setHeader('Fiqh',true);
+  const FQ='<path d="M12 3v18M5 7h14M5 7l-2.5 6a3 3 0 0 0 5 0zM19 7l-2.5 6a3 3 0 0 0 5 0zM8 21h8"/>';
+  const T=[['Islamic Laws','Ayatullah Sayyid Ali al-Sistani','آیت اللہ سیستانی','Fourth edition, English · on sistani.org','https://www.sistani.org/files-new/book-pdf/english-islamic-laws-2023.pdf','#1d6fb0'],
+           ['Practical Laws of Islam','Ayatullah Sayyid Ali Khamenei','آیت اللہ خامنہ ای','Questions and answers, English · on leader.ir','https://www.leader.ir/en/book/23','#3b7a57']];
+  app.innerHTML=`<div class="ai-ban td-ban pg-ban sb"><span class="td-pat" aria-hidden="true"></span><span class="td-top"><span class="sb-ic" aria-hidden="true"><svg viewBox="0 0 24 24">${FQ}</svg></span><span class="td-dt"><span class="td-wd">Islamic laws of the maraji</span><b>Fiqh</b><span class="sb-ur">فقہ</span></span></span></div>
+   <div class="fq-grid">${T.map(([t,by,ur,sub,url,c])=>`<a class="fq-t" href="${url}" target="_blank" rel="noopener"><span class="dcat-m" style="--t:${c}"><svg viewBox="0 0 24 24" aria-hidden="true">${FQ}</svg></span><span class="am-u">${ur}</span><b>${esc(t)}</b><small>${esc(by)}</small><em>${esc(sub)}</em><span class="fq-go">Open ›</span></a>`).join('')}</div>
+   <div class="hint" style="margin:16px 4px;line-height:1.6">Each book opens on the marja's own website, in your browser. For rulings, follow your own marja.</div>`;
+}
 function renderMarks(){
   setHeader('Bookmarks',true);
   const BM='<path d="M7 4h10a1 1 0 0 1 1 1v15l-6-4-6 4V5a1 1 0 0 1 1-1z"/>',n=(S.marks||[]).length;
@@ -1180,6 +1191,7 @@ window.XR=function(h){
   if(h===''||h==='today'){renderToday();return true}
   if(h==='calendar'){renderCalendar();return true}
   if(h==='favs'){renderFavs();return true}
+  if(h==='fiqh'){renderFiqh();return true}
   if(h==='marks'){renderMarks();return true}
   if(h!=='prayer'&&h!=='qibla')editing=false;
   if(h==='duas'){renderDuas();return true}
