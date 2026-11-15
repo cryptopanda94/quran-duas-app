@@ -8,7 +8,7 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Amiri+Quran&family=Noto+Nastaliq+Urdu:wght@400;500&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
 <style>
-@font-face{font-family:IndoPak;src:url(data:font/ttf;base64,__FONT__) format("truetype");font-display:block}
+@font-face{font-family:"Crimson Pro";font-weight:500;src:url(fonts/CrimsonPro-500-ext.woff2) format("woff2");font-display:swap;unicode-range:U+0100-02BA,U+02BD-02C5,U+02C7-02CC,U+02CE-02D7,U+02DD-02FF,U+0304,U+0308,U+0329,U+1D00-1DBF,U+1E00-1E9F,U+1EF2-1EFF,U+2020,U+20A0-20AB,U+20AD-20C0,U+2113,U+2C60-2C7F,U+A720-A7FF}@font-face{font-family:"Crimson Pro";font-weight:500;src:url(fonts/CrimsonPro-500.woff2) format("woff2");font-display:swap;unicode-range:U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD}@font-face{font-family:IndoPak;src:url(data:font/ttf;base64,__FONT__) format("truetype");font-display:block}
 :root{
   --bg:#f7f3ea;--card:#fffdf8;--ink:#2a2620;--muted:#7b7266;--line:#e7dfd0;
   --accent:#1f6f5c;--accent-soft:#e3efe9;--gold:#b08a3e;--hl:#fff3cf;--rule:#cfc4ae;
@@ -349,7 +349,7 @@ body.sheet-lock .ask-fab,body.as-on .ask-fab,body.reading .ask-fab{display:none}
 .bk-h{display:flex;flex-direction:column;gap:3px;padding:2px 44px 10px 4px;border-bottom:1px solid var(--line)}.bk-h small{color:var(--muted);font-size:12px;line-height:1.4}.bk-h b{font-size:17px}.bk-h span{font-family:IndoPak,serif;font-size:20px;direction:rtl;color:var(--muted)}
 .bk-list{flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch;overscroll-behavior:contain;padding:10px 2px;display:flex;flex-direction:column;gap:10px}
 .bk-it{border:1px solid var(--line);border-radius:14px;padding:10px 12px;background:var(--card)}.bk-it.on{border:2px solid var(--accent);background:var(--accent-soft)}
-.bk-it .no{font-size:12px;font-weight:700;color:var(--accent)}.bk-it .ar{font-family:IndoPak,serif;font-size:var(--bk-ar);line-height:2.15;direction:rtl;text-align:right;margin:4px 0 6px}.bk-it .en{font-family:"Iowan Old Style","Palatino Linotype",Palatino,Lora,"Noto Serif",Georgia,serif;font-size:calc(var(--bk-en) + 1px);line-height:1.8;letter-spacing:.005em;color:color-mix(in srgb,var(--text,#1c2b3a) 88%,transparent)}
+.bk-it .no{font-size:12px;font-weight:700;color:var(--accent)}.bk-it .ar{font-family:IndoPak,serif;font-size:var(--bk-ar);line-height:2.15;direction:rtl;text-align:right;margin:4px 0 6px}.bk-it .en{font-family:"Crimson Pro","Iowan Old Style",Georgia,serif;font-weight:500;font-size:calc(var(--bk-en) + 3px);line-height:1.7}
 .ask-ref .cite{display:block;font-size:13px;line-height:1.45;padding:8px 10px 2px}.ask-ref .cite i{font-style:normal;font-weight:700;color:var(--accent);margin-right:4px}
 .ask-ref .acts{display:flex;gap:8px;padding:4px 10px 9px}.ask-ref .acts button{font-size:12.5px;font-weight:600;padding:5px 10px;border-radius:999px;border:1px solid var(--line);background:var(--bg);color:var(--accent)}
 .dcats.grid .dcat.wide{grid-column:1/-1;flex-direction:row;align-items:center;gap:12px;min-height:0;padding:16px 14px}.dcats.grid .dcat.wide .dcat-u{margin-left:auto;padding-right:44px;font-size:17px}
