@@ -58,7 +58,10 @@ if (existsSync(cdir)) {
   // Urdu filled in later by translate_missing.mjs --urdu, with the same checks and a script check
   let exu = 0;
   for (const l of [...lines('added-ur.jsonl', false), ...lines('extra-ur.jsonl', false)]) { try { const j = JSON.parse(l), h = HAD.get(j.r), u = String(j.ur || '').trim(); if (h && u && !h.ur && realTr(h.ar, u) && arLetters(u) >= 3 && (u.match(/[A-Za-z]/g) || []).length <= u.length * 0.15) { h.ur = u; exu++; } } catch {} }
-  console.log(`books loaded: ${HAD.size} hadith in ${CHAP.size} chapters, ${ur} with Urdu, ${ex} English added later, ${exu} Urdu added later`);
+  // English by named translators, as published in Thaqalayn's library (CC BY 4.0, thaqalayn.com/terms). Used in place of the machine English, and always shown with the translator's name.
+  let hum = 0;
+  for (const l of lines('human-en.jsonl.gz', true)) { try { const j = JSON.parse(l), h = HAD.get(j.r), en = String(j.en || '').trim(); if (h && en && j.by) { h.en = en; h.by = String(j.by); hum++; } } catch {} }
+  console.log(`books loaded: ${HAD.size} hadith in ${CHAP.size} chapters, ${ur} with Urdu, ${ex} English added later, ${exu} Urdu added later, ${hum} English by named translators`);
 } else console.warn('corpus/ not found: references will be shorter and "View in book" is off');
 
 // table of contents: parent ref -> child refs (books > volumes > chapters), and how many hadith sit under each
@@ -97,7 +100,7 @@ function nodeTitle(ref) {
 }
 function chapterItems(ch) {
   const unit = ch.split(':')[0] === 'nahj-al-balagha' ? 'Section' : 'Hadith';
-  return { unit, items: (CHAP.get(ch) || []).map((r) => { const x = HAD.get(r); return { ref: r, n: r.split(':').pop(), ar: x.ar, en: x.en, ur: x.ur || '' }; }) };
+  return { unit, items: (CHAP.get(ch) || []).map((r) => { const x = HAD.get(r); return { ref: r, n: r.split(':').pop(), ar: x.ar, en: x.en, ur: x.ur || '', by: x.by || '' }; }) };
 }
 // one level of a book: its parts, or the hadith when the node is a chapter
 function toc(ref) {
@@ -251,12 +254,12 @@ Read the conversation and reply with JSON only: {"search": true or false, "queri
 }
 
 const LIB = `Your library
-With each question you are given passages that the app found in its library of 23 classical Shia hadith books (al-Kafi, Man La Yahduruhu al-Faqih, Tahdhib al-Ahkam, al-Istibsar, Nahj al-Balagha, the Amali of Saduq and Mufid, al-Khisal, al-Tawhid, Kamal al-Din, Uyun Akhbar al-Rida, Ma'ani al-Akhbar, Thawab al-A'mal, Kamil al-Ziyarat, Kitab al-Ghayba of Nu'mani and Tusi, and others). Each passage has a tag like [P3], its place in the book, the Arabic and an English machine translation.
+With each question you are given passages that the app found in its library of 23 classical Shia hadith books (al-Kafi, Man La Yahduruhu al-Faqih, Tahdhib al-Ahkam, al-Istibsar, Nahj al-Balagha, the Amali of Saduq and Mufid, al-Khisal, al-Tawhid, Kamal al-Din, Uyun Akhbar al-Rida, Ma'ani al-Akhbar, Thawab al-A'mal, Kamil al-Ziyarat, Kitab al-Ghayba of Nu'mani and Tusi, and others). Each passage has a tag like [P3], its place in the book, the Arabic and an English translation (by a named translator, or a machine translation).
 - Build the answer from the passages that really bear on the question. Ignore the ones that do not.
 - Put the tag straight after every statement you take from a passage, for example: The Imam (a.s.) said that patience is to faith as the head is to the body [P3]. Use several passages when they help.
 - Use only the tags you were given, written exactly like [P3]. Do not write a hadith's book-and-number yourself (such as "Al-Kafi 2:1:3:5"); the app shows the reference from the tag.
 - Never cite or quote a hadith that is not among the passages.
-- The English is a machine translation of the Arabic, so give a short faithful paraphrase instead of a long quotation.
+- Give a short faithful paraphrase instead of a long quotation; where the English is a machine translation, lean on the Arabic.
 - If none of the passages answers the question, say plainly that the books searched did not give a clear text on it. You may then add a short general answer, marked as general knowledge, without any hadith reference.
 `;
 const SYSTEM2 = SYSTEM.replace(/Your library[\s\S]*?\nHow to answer/, LIB + '\nHow to answer')
@@ -273,7 +276,7 @@ async function askBooks(messages) {
     for (let k = 0; k < 6 && found.length < 14; k++) for (const l of lists) { const x = l[k]; if (x && !found.includes(x.h.ref) && found.length < 14) found.push(x.h.ref); }
   }
   const pass = found.map((ref, i) => { const h = HAD.get(ref), ch = ref.slice(0, ref.lastIndexOf(':')), t = nice((TITLES[ch] || {}).en || '');
-    return `[P${i + 1}] ${cite(ref).cite}${t ? ' · chapter: ' + t : ''}\nARABIC: ${h.ar.slice(0, 500)}\nENGLISH (machine translation): ${h.en.slice(0, 1000)}`; }).join('\n\n');
+    return `[P${i + 1}] ${cite(ref).cite}${t ? ' · chapter: ' + t : ''}\nARABIC: ${h.ar.slice(0, 500)}\nENGLISH (${h.by ? 'translation by ' + h.by : 'machine translation'}): ${h.en.slice(0, 1000)}`; }).join('\n\n');
   const contents = hist.slice(0, -1).concat([{ role: 'user', parts: [{ text: (found.length ? `PASSAGES FOUND IN THE LIBRARY FOR THIS QUESTION\n\n${pass}\n\n` : pl.search ? 'PASSAGES FOUND IN THE LIBRARY FOR THIS QUESTION\n\n(The search found nothing.)\n\n' : '') + `QUESTION\n${q}` }] }]);
   let text = await gemini({ systemInstruction: { parts: [{ text: SYSTEM2 }] }, contents, generationConfig: { temperature: 0.3, maxOutputTokens: 1200 } });
   if (!text) return { text: 'Sorry, I could not answer that. Please rephrase your question.', refs: [] };
@@ -283,7 +286,7 @@ async function askBooks(messages) {
   text = text.replace(/\s*\[P(\d+)\]/g, (all, d) => {
     const ref = found[+d - 1]; if (!ref) return '';
     let n = order.indexOf(ref) + 1;
-    if (!n) { order.push(ref); n = order.length; const h = HAD.get(ref); refs.push({ n, label: h.label, chapter: '', ar: h.ar, en: h.en, ref, ...cite(ref), book: true }); }
+    if (!n) { order.push(ref); n = order.length; const h = HAD.get(ref); refs.push({ n, label: h.label, chapter: '', ar: h.ar, en: h.en, by: h.by || '', ref, ...cite(ref), book: true }); }
     return `[${n}]`;
   });
   text = text.replace(/\[\[([a-z0-9-]+)\]\]/gi, (all, id) => (IDS.has(id) || /^(surah-\d{1,3}(-\d{1,3})?|juz-\d{1,2})$/.test(id) ? all : id));
@@ -380,7 +383,7 @@ http.createServer(async (req, res) => {
     const ch = ref.slice(0, ref.lastIndexOf(':')), list = CHAP.get(ch) || [ref];
     const c = cite(ref), t = TITLES[ch] || {};
     return send(res, 200, { ref, book: c.book, path: c.parts.slice(0, -1), title: { en: nice(t.en) || c.parts[c.parts.length - 2] || '', ar: t.ar || '' },
-      items: list.map((r) => { const x = HAD.get(r); return { ref: r, n: r.split(':').pop(), ar: x.ar, en: x.en }; }) });
+      items: list.map((r) => { const x = HAD.get(r); return { ref: r, n: r.split(':').pop(), ar: x.ar, en: x.en, by: x.by || '' }; }) });
   }
   if (req.method !== 'POST' || req.url !== '/ask') return send(res, 404, { error: 'Not found' });
   let body = '';
