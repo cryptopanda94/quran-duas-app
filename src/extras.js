@@ -413,7 +413,7 @@ function renderDuas(g){
      <span class="hy-in"><span>Ask a question…</span><i aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M5 12h13M13 6l6 6-6 6"/></svg></i></span>
      <span class="hy-chips">${[['Patience','What did Imam Ali (a.s.) say about patience?'],['Visiting Imam Husain (a.s.)','What are the virtues of visiting Imam Husain (a.s.)?'],['Rights of parents','What are the rights of parents according to Imam Zayn al-Abidin (a.s.)?'],['The intellect','What did the Imams say about the intellect?']].map(([t,q])=>`<button type="button" data-askq="${esc(q)}">${esc(t)}</button>`).join('')}</span>
      ${bkBase()?`<span class="hy-foot"><a class="ai-nb" role="button" tabindex="0" id="aiBkT">View all books</a></span><div class="ai-bk" id="aiBk" hidden>${BK.map(b=>`<a href="#book-${b[0]}">${esc(b[1])}${BKX[b[0]]?' ('+BKX[b[0]]+')':''}</a>`).join('')}</div>`:''}</div>
-   ${duaSpot()}`}
+   `}
    <div class="search">${icon.search}<input id="dq" type="search" placeholder="${g==='b'?'Search by title or author…':'Search duas, ziyarat, namaz…'}" value="${esc(dQ)}" autocomplete="off"></div>
    ${g?'':`<div id="dcatw">${cats}</div>`}
    <div class="list" id="dlist"></div>
@@ -460,7 +460,8 @@ function renderDuas(g){
       if(dTab==='n'){
         const NS=[['Daily & Special Namaz','Namaz e Shab, Aayaat, Ghufaylah, Eid and more','#2f7dc4','<path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/><path d="M16 4.5l.6 1.7 1.7.6-1.7.6-.6 1.7-.6-1.7-1.7-.6 1.7-.6z"/>'],
           ['Namaz of the Masoomeen (a.s.)','The Holy Prophet, Lady Fatimah and the twelve Imams (a.s.)','#1f8a70','<path d="M12 3v2.5"/><path d="M6 20v-6a6 6 0 0 1 12 0v6"/><path d="M4 20h16M10 20v-3a2 2 0 0 1 4 0v3"/>'],
-          ['Namaz for Needs & Forgiveness','For needs, sustenance, forgiveness and difficulties','#b0568f','<path d="M7 20c-2-1.2-3-3.2-3-5.6V9.5a1.4 1.4 0 0 1 2.8 0V13l3.4-7.2a1.4 1.4 0 0 1 2.6 1.1L11 12"/><path d="M17 20c2-1.2 3-3.2 3-5.6V9.5a1.4 1.4 0 0 0-2.8 0V13l-3.4-7.2a1.4 1.4 0 0 0-2.6 1.1L13 12"/><path d="M7 20h10"/>']];
+          ['Namaz for Needs & Forgiveness','For needs, sustenance, forgiveness and difficulties','#b0568f','<path d="M7 20c-2-1.2-3-3.2-3-5.6V9.5a1.4 1.4 0 0 1 2.8 0V13l3.4-7.2a1.4 1.4 0 0 1 2.6 1.1L11 12"/><path d="M17 20c2-1.2 3-3.2 3-5.6V9.5a1.4 1.4 0 0 0-2.8 0V13l-3.4-7.2a1.4 1.4 0 0 0-2.6 1.1L13 12"/><path d="M7 20h10"/>'],
+          ['Protective Duas of the Imams (Hijab)','Imam Sadiq, Imam Kazim and Imam Taqi (a.s.)','#7a62c9','<path d="M12 3l7 3v5.5c0 4.3-2.9 7.6-7 9.5-4.1-1.9-7-5.2-7-9.5V6z"/><path d="M9 12l2.2 2.2L15 10.5"/>']];
         $('dlist').innerHTML=`<div class="accs">${NS.map(([sec,sub,c,ic],i)=>{const its=items.filter(x=>x.sec===sec);
           return row('n'+i,ic,c,esc(sec),sub,its[0]?its[0].secUr||'':'',its.length,its.map((d,j)=>`<a class="item dua-item snum nmrow" href="#dua-${d.id}"><div class="num"><span>${j+1}</span></div><div class="t"><b>${esc(d.name)}</b>${d.sub?`<small>${esc(d.sub)}</small>`:''}<span class="nm-ur">${d.ur||''}</span></div>${dfavBtn(d.id)}</a>`).join(''))}).join('')}</div>`;
       } else
@@ -473,8 +474,8 @@ function renderDuas(g){
       return}
     const tsx=!q&&dTab==='e'?todaySahifa():null;
     if(!q&&dTab==='e'){
-      $('dlist').innerHTML=`<div class="ed-lbl">Supplications of the day</div>`+DAY_IDS.map((id,i)=>{const x=LIST.find(z=>z.id===id),td=tsx&&tsx.i===i;return x?`<a class="item dua-item snum nmrow${td?' tday':''}" href="#dua-${x.id}"><div class="num"><span>${i+1}</span></div><div class="t"><b>Dua for ${DAY_EN[i]}${td?'<em class="ed-td">Today</em>':''}</b><span class="nm-ur">${DAY_UR[i]} کی دعا</span></div>${dfavBtn(x.id)}</a>`:''}).join('')+
-        `<div class="ed-lbl" style="margin-top:24px">Read every day</div>`+items.map((d,j)=>`<a class="item dua-item snum nmrow" href="#dua-${d.id}"><div class="num"><span>${j+1}</span></div><div class="t"><b>${esc(d.name)}</b>${d.sub?`<small>${esc(d.sub)}</small>`:''}<span class="nm-ur">${d.ur||''}</span></div>${dfavBtn(d.id)}</a>`).join('');
+      $('dlist').innerHTML=`<div class="ed-lbl">Supplications of the day</div><div class="am-grid">`+DAY_IDS.map((id,i)=>{const x=LIST.find(z=>z.id===id),td=tsx&&tsx.i===i;return x?`<a class="am-t${td?' on':''}" href="#dua-${x.id}">${td?'<em class="am-td">Today</em>':''}<span class="am-u">${DAY_UR[i]}</span><b>${DAY_EN[i]}</b><small>Dua for the day</small></a>`:''}).join('')+
+        items.map(d=>`<a class="am-t" href="#dua-${d.id}"><span class="am-u">${d.ur||''}</span><b>${esc(d.name.replace(/\s*\(.*\)/,''))}</b><small>Every day</small></a>`).join('')+'</div>';
       app.querySelectorAll('.dtabs .tab').forEach(b=>b.classList.toggle('on',b.dataset.g===dTab));return}
     $('dlist').innerHTML=(tsx&&tsx.d?`<a class="item dua-item tday" href="#dua-${tsx.d.id}"><div class="num"><span>${tsx.d.mark||'ص'}</span></div><div class="t"><b>Today's supplication · ${DAY_EN[tsx.i]}</b><small>Sahifa Sajjadiya · Imam Zainul Abideen (a.s.) · with Naqsh</small></div><div class="dur">${DAY_UR[tsx.i]} کی دعا</div></a>`:'')+items.map(d=>(d.sec&&!q&&d.sec!==lastSec?(lastSec=d.sec,`<div class="dsec"><b>${esc(d.sec)}</b><span>${d.secUr||''}</span></div>`):'')+(()=>{const m=d.grp==='s'&&/^(\d+)\.\s*(.*)$/.exec(d.name),sub=m?'':d.sub;
       return `<a class="item dua-item${m?' snum':''}" href="#dua-${d.id}"><div class="num"><span>${m?m[1]:(d.mark||'د')}</span></div><div class="t"><b>${esc(m?m[2]:d.name)}</b>${sub?`<small>${esc(sub)}</small>`:''}</div>`})()+`<div class="dur">${d.ur||''}</div>${dfavBtn(d.id)}</a>`).join('')
