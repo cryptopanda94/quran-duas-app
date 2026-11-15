@@ -443,6 +443,16 @@ function renderDuas(g){
       if('amszt'.includes(dTab)){
         const gs=[];items.forEach(d=>{if(d.sec&&(!gs.length||gs[gs.length-1].sec!==d.sec))gs.push({sec:d.sec,ur:d.secUr||'',its:[]});if(!gs.length)gs.push({sec:'',ur:'',its:[]});gs[gs.length-1].its.push(d)});
         if(gs.length<2){$('dlist').innerHTML=items.map(nrow).join('');app.querySelectorAll('.dtabs .tab').forEach(b=>b.classList.toggle('on',b.dataset.g===dTab));return}
+        if(dTab==='a'){
+          const cur=gs[+String(dSec).slice(1)];
+          if(/^g\d+$/.test(dSec)&&cur){
+            $('dlist').innerHTML=`<button type="button" class="am-back">‹ All months</button><div class="am-h"><b>${esc(cur.sec)}</b><span>${cur.ur}</span></div>`+cur.its.map(nrow).join('');
+            $('dlist').querySelector('.am-back').onclick=()=>{dSec='';draw();window.scrollTo(0,0)};
+          } else {
+            $('dlist').innerHTML=`<div class="am-grid">${gs.map((g2,i)=>`<button type="button" class="am-t" data-i="${i}"><span class="am-u">${g2.ur}</span><b>${esc(g2.sec.replace(/\s*\(.*\)/,''))}</b><small>${g2.its.length} ${g2.its.length>1?'aamaal':'amal'}</small></button>`).join('')}</div>`;
+            $('dlist').querySelectorAll('.am-t').forEach(b=>b.onclick=()=>{dSec='g'+b.dataset.i;draw();window.scrollTo(0,0)});
+          }
+          app.querySelectorAll('.dtabs .tab').forEach(b=>b.classList.toggle('on',b.dataset.g===dTab));return}
         const SD={'Supplications':'Duas 1–61','Supplications for the Days of the Week':'Sunday to Saturday','Fifteen Whispered Prayers':'Munajat 1–15 · Imam Zainul Abideen (a.s.)','Munajaat of Imam Ali (a.s.)':'In Masjid Kufa, and the Munajaat in verse'};
         const strip=n=>n.replace(/^\d+\.\s*/,'');const cut=(t,n)=>t.length>n?t.slice(0,n).replace(/\s+\S*$/,'')+'…':t;
         $('dlist').innerHTML=`<div class="accs">${gs.map((g2,i)=>row('g'+i,DICON[dTab],DTINT[dTab],esc(g2.sec),esc(SD[g2.sec]||(dTab==='a'?'':cut(strip(g2.its[0].name),44)+(g2.its.length>1?' and more':''))),g2.ur,g2.its.length,g2.its.map(nrow).join(''))).join('')}</div>`;

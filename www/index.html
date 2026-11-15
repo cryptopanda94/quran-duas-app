@@ -790,6 +790,13 @@ body .ayah-card .v-en{display:block!important}
 .ed-hero .ed-go svg{width:16px;height:16px;fill:none;stroke:currentColor;stroke-width:2.4;stroke-linecap:round;stroke-linejoin:round}
 .ed-lbl{margin:0 4px 10px;font-size:12.5px;font-weight:700;letter-spacing:.09em;text-transform:uppercase;color:var(--muted)}
 .dbody+.naqsh{margin:26px 0 8px}
+.am-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+.am-t{aspect-ratio:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;padding:8px 6px;border-radius:22px;background:var(--card);border:1px solid var(--line);box-shadow:0 4px 14px rgba(0,0,0,.04);color:var(--ink);text-align:center}
+.am-t:active{transform:scale(.97)}
+.am-t .am-u{font-family:"Noto Nastaliq Urdu",serif;font-size:21px;line-height:2;color:var(--accent)}
+.am-t b{font-size:13.5px;line-height:1.2}.am-t small{font-size:11.5px;color:var(--muted);margin-top:2px}
+.am-back{display:inline-block;width:auto;padding:8px 14px;border-radius:999px;border:1px solid var(--line);background:var(--card);color:var(--accent);font-weight:600;font-size:14px}
+.am-h{display:flex;justify-content:space-between;align-items:baseline;margin:16px 4px 12px}.am-h b{font-size:21px}.am-h span{font-family:"Noto Nastaliq Urdu",serif;font-size:18px;color:var(--accent)}
 </style>
 </head>
 <body>
@@ -2005,6 +2012,16 @@ function renderDuas(g){
       if('amszt'.includes(dTab)){
         const gs=[];items.forEach(d=>{if(d.sec&&(!gs.length||gs[gs.length-1].sec!==d.sec))gs.push({sec:d.sec,ur:d.secUr||'',its:[]});if(!gs.length)gs.push({sec:'',ur:'',its:[]});gs[gs.length-1].its.push(d)});
         if(gs.length<2){$('dlist').innerHTML=items.map(nrow).join('');app.querySelectorAll('.dtabs .tab').forEach(b=>b.classList.toggle('on',b.dataset.g===dTab));return}
+        if(dTab==='a'){
+          const cur=gs[+String(dSec).slice(1)];
+          if(/^g\d+$/.test(dSec)&&cur){
+            $('dlist').innerHTML=`<button type="button" class="am-back">‹ All months</button><div class="am-h"><b>${esc(cur.sec)}</b><span>${cur.ur}</span></div>`+cur.its.map(nrow).join('');
+            $('dlist').querySelector('.am-back').onclick=()=>{dSec='';draw();window.scrollTo(0,0)};
+          } else {
+            $('dlist').innerHTML=`<div class="am-grid">${gs.map((g2,i)=>`<button type="button" class="am-t" data-i="${i}"><span class="am-u">${g2.ur}</span><b>${esc(g2.sec.replace(/\s*\(.*\)/,''))}</b><small>${g2.its.length} ${g2.its.length>1?'aamaal':'amal'}</small></button>`).join('')}</div>`;
+            $('dlist').querySelectorAll('.am-t').forEach(b=>b.onclick=()=>{dSec='g'+b.dataset.i;draw();window.scrollTo(0,0)});
+          }
+          app.querySelectorAll('.dtabs .tab').forEach(b=>b.classList.toggle('on',b.dataset.g===dTab));return}
         const SD={'Supplications':'Duas 1–61','Supplications for the Days of the Week':'Sunday to Saturday','Fifteen Whispered Prayers':'Munajat 1–15 · Imam Zainul Abideen (a.s.)','Munajaat of Imam Ali (a.s.)':'In Masjid Kufa, and the Munajaat in verse'};
         const strip=n=>n.replace(/^\d+\.\s*/,'');const cut=(t,n)=>t.length>n?t.slice(0,n).replace(/\s+\S*$/,'')+'…':t;
         $('dlist').innerHTML=`<div class="accs">${gs.map((g2,i)=>row('g'+i,DICON[dTab],DTINT[dTab],esc(g2.sec),esc(SD[g2.sec]||(dTab==='a'?'':cut(strip(g2.its[0].name),44)+(g2.its.length>1?' and more':''))),g2.ur,g2.its.length,g2.its.map(nrow).join(''))).join('')}</div>`;
