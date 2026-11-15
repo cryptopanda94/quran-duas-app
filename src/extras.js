@@ -1,5 +1,5 @@
 (function(){
-const {AR,EN,UR,META,esc,setHeader,store,toast,app,$,ARX,BISMX,endMark,readbar,S,dfavBtn,icon,surahItem}=window.Q;
+const {AR,EN,UR,META,esc,setHeader,store,toast,app,$,ARX,BISMX,endMark,readbar,S,dfavBtn,icon,surahItem,marksHTML}=window.Q;
 const DU=JSON.parse(document.getElementById('ddata').textContent);
 const CI=JSON.parse(document.getElementById('cdata').textContent);
 const icons={
@@ -1002,7 +1002,7 @@ function renderToday(){
      const fv=(S.favs||[]).length+(S.dfavs||[]).length,bm=(S.marks||[]).length,ai=window.QAsk&&QAsk.base;
      const T=[['#home',sv(IC.q,'#1d6fb0'),'Holy Quran','قرآن مجید',0,'surahs'],['#prayer',sv(IC.p,'#0f8f7a'),'Prayer','اوقات نماز'],['#qibla',sv(IC.k,'#c2742c'),'Qibla','قبلہ'],
        ai?['ask',sv(IC.ai,'#fff'),'HYDER AI','حیدر اے آئی',0,'','hy']:0,ai?cat('b'):0,cat('d'),cat('z'),cat('n'),cat('t'),cat('e'),cat('a'),cat('m'),cat('s'),cat('h'),
-       ['tasbih',sv(IC.tb,'#b45a3c'),'Tasbih','تسبیح'],HFMT?['#calendar',sv(IC.cal,'#2a78d0'),'Calendar','کیلنڈر']:0,['#favs',sv(IC.fv,'#d1495b'),'Favourites','پسندیدہ',fv],['#home',sv(IC.bm,'#1d6fb0'),'Bookmarks','نشانیاں',bm,'marks']].filter(Boolean);
+       ['tasbih',sv(IC.tb,'#b45a3c'),'Tasbih','تسبیح'],HFMT?['#calendar',sv(IC.cal,'#2a78d0'),'Calendar','کیلنڈر']:0,['#favs',sv(IC.fv,'#d1495b'),'Favourites','پسندیدہ',fv],['#marks',sv(IC.bm,'#1d6fb0'),'Bookmarks','نشانیاں',bm]].filter(Boolean);
      return T.map((t,i)=>`<a class="tg3i${t[6]?' '+t[6]:''}${i>5?' x':''}" href="${t[0][0]==='#'?t[0]:'#'}" data-tg="${t[0][0]==='#'?'':t[0]}" data-tab="${t[5]||''}">${t[1]}<b>${t[2]}</b><span class="tg-u">${t[3]}</span>${t[4]?`<span class="dcat-n">${t[4]}</span>`:''}</a>`).join('')})()}</div>
    <button type="button" class="tg-more" id="tgMore"></button>
    <div class="th-lbl"><b>Ayah of the day</b><a href="#surah-${A.s}-${A.a}">${esc(META[A.s-1][1])} ${ref}</a></div>
@@ -1167,10 +1167,17 @@ function renderFavs(){
 }
 document.addEventListener('click',e=>{if(location.hash==='#favs'&&e.target.closest('[data-fav],[data-dfav]'))setTimeout(()=>{if(location.hash==='#favs'){const y=scrollY;renderFavs();scrollTo(0,y)}},60)});
 
+function renderMarks(){
+  setHeader('Bookmarks',true);
+  const BM='<path d="M7 4h10a1 1 0 0 1 1 1v15l-6-4-6 4V5a1 1 0 0 1 1-1z"/>',n=(S.marks||[]).length;
+  app.innerHTML=`<div class="ai-ban td-ban pg-ban sb"><span class="td-pat" aria-hidden="true"></span><span class="td-top"><span class="sb-ic" aria-hidden="true"><svg viewBox="0 0 24 24">${BM}</svg></span><span class="td-dt"><span class="td-wd">${n?n+' saved verse'+(n>1?'s':''):'Your saved verses'}</span><b>Bookmarks</b><span class="sb-ur">نشانیاں</span></span></span></div>`
+    +(marksHTML()||`<div class="fv-empty"><span class="sb-ic" aria-hidden="true"><svg viewBox="0 0 24 24">${BM}</svg></span><b>No bookmarks yet</b><p>Tap the bookmark icon on any verse of the Quran and it will be kept here, newest first.</p><div><a class="btn" href="#home">Open the Quran</a></div></div>`);
+}
 window.XR=function(h){
   if(h===''||h==='today'){renderToday();return true}
   if(h==='calendar'){renderCalendar();return true}
   if(h==='favs'){renderFavs();return true}
+  if(h==='marks'){renderMarks();return true}
   if(h!=='prayer'&&h!=='qibla')editing=false;
   if(h==='duas'){renderDuas();return true}
   if(h.startsWith('duas-')){renderDuas(h.slice(5));return true}
@@ -1181,5 +1188,5 @@ window.XR=function(h){
   return false;
 };
 setInterval(tick,1000);
-window.QX={duaFrom:h=>NAV.from[h]||'',tasbihOpen,pgBan,bookUp,meritsHTML,autoLocate,locateMe,get LOC(){return LOC},get ALERTS(){return ALERTS},timesFor,PR,nextPrayer,fmt,DAILY,LIST,UD,DU,slotFor,get AZ(){return AZ},playAlert,stopAlert,hijriToday:()=>HFMT?hijriToday():null,hijriStr,eventsOn,evTitle,HMU,HM};
+window.QX={renderMarks,duaFrom:h=>NAV.from[h]||'',tasbihOpen,pgBan,bookUp,meritsHTML,autoLocate,locateMe,get LOC(){return LOC},get ALERTS(){return ALERTS},timesFor,PR,nextPrayer,fmt,DAILY,LIST,UD,DU,slotFor,get AZ(){return AZ},playAlert,stopAlert,hijriToday:()=>HFMT?hijriToday():null,hijriStr,eventsOn,evTitle,HMU,HM};
 })();
