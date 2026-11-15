@@ -797,6 +797,17 @@ body .ayah-card .v-en{display:block!important}
 .am-t b{font-size:13.5px;line-height:1.2}.am-t small{font-size:11.5px;color:var(--muted);margin-top:2px}
 .am-back{display:inline-block;width:auto;padding:8px 14px;border-radius:999px;border:1px solid var(--line);background:var(--card);color:var(--accent);font-weight:600;font-size:14px}
 .am-h{display:flex;justify-content:space-between;align-items:baseline;margin:16px 4px 12px}.am-h b{font-size:21px}.am-h span{font-family:"Noto Nastaliq Urdu",serif;font-size:18px;color:var(--accent)}
+.sb.pg-ban{padding:18px 18px;border-radius:26px}.ai-ban.sb b{white-space:normal;font-size:22px;line-height:1.2}
+.sb .td-top{align-items:center;gap:14px}.sb .td-wd{white-space:normal}
+.sb-ic{flex:none;width:52px;height:52px;border-radius:17px;display:grid;place-items:center;background:rgba(255,255,255,.16);box-shadow:inset 0 0 0 1px rgba(255,255,255,.22)}
+.sb-ic svg{width:25px;height:25px;fill:none;stroke:#fff;stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round}
+.sb-ur{font-family:"Noto Nastaliq Urdu",serif;font-size:15px;line-height:2.1;opacity:.92}
+.sb.db{display:flex;flex-direction:column;align-items:center;text-align:center;gap:3px;padding:24px 20px 20px;margin-top:16px}
+.ai-ban.sb.db b{font-size:24px}.sb.db .sb-ur{font-size:19px;line-height:2.2}.sb.db small{font-size:13px;opacity:.85;line-height:1.45}
+.sb.db .fav.big{position:relative;margin-top:12px;background:rgba(255,255,255,.16);border:1px solid rgba(255,255,255,.3);color:#fff}
+.sb.db .fav.big svg{stroke:#fff}.sb.db .fav.big.on svg{fill:#fff}
+.ed-td{font-style:normal;margin-left:8px;padding:2px 8px;border-radius:999px;background:var(--fill,var(--accent));color:#fff;font-size:10.5px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;vertical-align:2px}
+.nmrow.tday{border-color:var(--accent)}
 </style>
 </head>
 <body>
@@ -1976,7 +1987,7 @@ function renderDuas(g){
   const cnt=g=>g==='e'?LIST.filter(x=>x.grp==='e').length+1:g==='h'?99:g==='b'?BK.length:g==='r'?NOTEBOOKS.length:LIST.filter(x=>x.grp===g).length;
   const cats=`<div class="dcat-head"><b>Categories</b><div class="seg vseg"><button data-v="grid" class="${dView==='grid'?'on':''}">▦ Grid</button><button data-v="list" class="${dView==='list'?'on':''}">☰ List</button></div></div>
    <div class="dcats ${dView}">${DTABS.filter(([k])=>k!=='b'||bkBase()).map(([k])=>{const c=DCAT[k];if(k==='b')return `<a class="dcat wide books" href="#duas-b"><span class="dcat-m" style="--t:${DTINT.b}"><svg viewBox="0 0 24 24" aria-hidden="true">${DICON.b}</svg></span><span class="dcat-t"><b>${c[0]}</b><small>${c[2]}</small><span class="dcat-u">${c[1]}</span></span><span class="bk-shelf" aria-hidden="true">${[0,4,16].map(i=>bkCover(BK[i])).join('')}</span><span class="dcat-n">${cnt(k)}</span><span class="dcat-go">›</span></a>`;return `<a class="dcat${k==='h'?' wide':''}" href="#duas-${k}"><span class="dcat-m" style="--t:${DTINT[k]}"><svg viewBox="0 0 24 24" aria-hidden="true">${DICON[k]}</svg></span><span class="dcat-t"><b>${c[0]}</b><small>${c[2]}</small></span><span class="dcat-u">${c[1]}</span><span class="dcat-n">${cnt(k)}</span><span class="dcat-go">›</span></a>`}).join('')}</div>`;
-  app.innerHTML=`${g?`<div class="lib-hero"><h1>${DCAT[g][0]}</h1><p>${esc(DCAT[g][2])}</p></div>`:`${pgBan('اَلْمَكْتَبَة','Library','Duas, Ziyarat & Books')}
+  app.innerHTML=`${g?secBan(g,DCAT[g][0],DCAT[g][2],DCAT[g][1]):`${pgBan('اَلْمَكْتَبَة','Library','Duas, Ziyarat & Books')}
    <div class="ai-ban hy" role="button" tabindex="0" data-ask="1"><span class="td-pat" aria-hidden="true"></span>
      <span class="hy-top"><span class="hy-av" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M12 2.5l1.9 5.6 5.6 1.9-5.6 1.9L12 17.5l-1.9-5.6L4.5 10l5.6-1.9z"/><path d="M18.5 14.5l.9 2.6 2.6.9-2.6.9-.9 2.6-.9-2.6-2.6-.9 2.6-.9z"/></svg></span><span class="hy-n"><b>HYDER AI</b><small>Answers with references from ${BK.length} classical books</small></span></span>
      <span class="hy-in"><span>Ask a question…</span><i aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M5 12h13M13 6l6 6-6 6"/></svg></i></span>
@@ -2042,8 +2053,8 @@ function renderDuas(g){
       return}
     const tsx=!q&&dTab==='e'?todaySahifa():null;
     if(!q&&dTab==='e'){
-      $('dlist').innerHTML=(tsx&&tsx.d?`<a class="ed-hero" href="#dua-${tsx.d.id}"><span class="ed-k">Today · ${DAY_EN[tsx.i]}</span><b>Dua for ${DAY_EN[tsx.i]}</b><span class="ed-u">${DAY_UR[tsx.i]} کی دعا</span><small>By Imam Zainul Abideen (a.s.), from Sahifa Sajjadiya. The Naqsh for the day is at the end.</small><span class="ed-go">Read now <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 6l6 6-6 6"/></svg></span></a>`:'')+
-        `<div class="ed-lbl">Read every day</div>`+items.map((d,j)=>`<a class="item dua-item snum nmrow" href="#dua-${d.id}"><div class="num"><span>${j+1}</span></div><div class="t"><b>${esc(d.name)}</b>${d.sub?`<small>${esc(d.sub)}</small>`:''}<span class="nm-ur">${d.ur||''}</span></div>${dfavBtn(d.id)}</a>`).join('');
+      $('dlist').innerHTML=`<div class="ed-lbl">Supplications of the day</div>`+DAY_IDS.map((id,i)=>{const x=LIST.find(z=>z.id===id),td=tsx&&tsx.i===i;return x?`<a class="item dua-item snum nmrow${td?' tday':''}" href="#dua-${x.id}"><div class="num"><span>${i+1}</span></div><div class="t"><b>Dua for ${DAY_EN[i]}${td?'<em class="ed-td">Today</em>':''}</b><span class="nm-ur">${DAY_UR[i]} کی دعا</span></div>${dfavBtn(x.id)}</a>`:''}).join('')+
+        `<div class="ed-lbl" style="margin-top:24px">Read every day</div>`+items.map((d,j)=>`<a class="item dua-item snum nmrow" href="#dua-${d.id}"><div class="num"><span>${j+1}</span></div><div class="t"><b>${esc(d.name)}</b>${d.sub?`<small>${esc(d.sub)}</small>`:''}<span class="nm-ur">${d.ur||''}</span></div>${dfavBtn(d.id)}</a>`).join('');
       app.querySelectorAll('.dtabs .tab').forEach(b=>b.classList.toggle('on',b.dataset.g===dTab));return}
     $('dlist').innerHTML=(tsx&&tsx.d?`<a class="item dua-item tday" href="#dua-${tsx.d.id}"><div class="num"><span>${tsx.d.mark||'ص'}</span></div><div class="t"><b>Today's supplication · ${DAY_EN[tsx.i]}</b><small>Sahifa Sajjadiya · Imam Zainul Abideen (a.s.) · with Naqsh</small></div><div class="dur">${DAY_UR[tsx.i]} کی دعا</div></a>`:'')+items.map(d=>(d.sec&&!q&&d.sec!==lastSec?(lastSec=d.sec,`<div class="dsec"><b>${esc(d.sec)}</b><span>${d.secUr||''}</span></div>`):'')+(()=>{const m=d.grp==='s'&&/^(\d+)\.\s*(.*)$/.exec(d.name),sub=m?'':d.sub;
       return `<a class="item dua-item${m?' snum':''}" href="#dua-${d.id}"><div class="num"><span>${m?m[1]:(d.mark||'د')}</span></div><div class="t"><b>${esc(m?m[2]:d.name)}</b>${sub?`<small>${esc(sub)}</small>`:''}</div>`})()+`<div class="dur">${d.ur||''}</div>${dfavBtn(d.id)}</a>`).join('')
@@ -2074,14 +2085,14 @@ function verseHTML(ar,tr,en,ur,end){
 const NLG=['a','n','h'];
 function renderDua(id){
   const d=LIST.find(x=>x.id===id)||PARTS.find(x=>x.id===id); if(!d) return false;
-  setHeader(`${esc(d.n?d.sub+' · '+d.name:d.name)}`,true); noJump();
+  setHeader(`${esc(d.n?d.sub+' · '+d.name:DAY_IDS.includes(d.id)?'Dua for '+DAY_EN[DAY_IDS.indexOf(d.id)]:d.name)}`,true); noJump();
   if(!d.parent&&d.key&&TPARTS[d.key]){
     const ps=PARTS.filter(x=>x.parent===d.id&&x.n),cut=(t,n)=>{t=String(t||'').replace(/<[^>]+>/g,' ').replace(/[,;:]$/,'');return t.length>n?t.slice(0,n).replace(/\s+\S*$/,'')+'…':t};
-    app.innerHTML=`<div class="s-head"><div class="ar" style="font-family:'Noto Nastaliq Urdu',serif;font-size:30px;line-height:2.2">${d.ur}</div><h2>${esc(d.name)}</h2><p>${esc(d.sub)} · ${ps.length} duas</p>${dfavBtn(d.id,true)}</div>${(d.intro||[]).map(x=>noteHTML(x.note,x.ur,false)).join('')}
+    app.innerHTML=`${duaBan(d,d.sub+' · '+ps.length+' duas')}${(d.intro||[]).map(x=>noteHTML(x.note,x.ur,false)).join('')}
      <div class="list tparts">${ps.map(x=>`<a class="item dua-item snum" href="#dua-${x.id}"><div class="num"><span>${x.n}</span></div><div class="t"><b>${esc(cut(x.title,70))}</b><small class="tp-ar">${cut(x.ar,46)}</small></div><span class="dcat-go">›</span></a>`).join('')}
      <a class="item dua-item" href="#dua-${d.id}~0"><div class="num"><span>≡</span></div><div class="t"><b>Read all together</b><small>Every dua on one page, one after another</small></div><span class="dcat-go">›</span></a></div>`;
     return true}
-  let h=`<div class="s-head"><div class="ar" style="font-family:'Noto Nastaliq Urdu',serif;font-size:30px;line-height:2.2">${d.ur}</div><h2>${esc(d.name)}</h2><p>${esc(d.sub)}</p>${dfavBtn(d.id,true)}</div>`;
+  let h=duaBan(d,d.n?'Dua '+d.n+' of '+d.of:d.sub);
   if(d.user){
     const U=UD[d.user];h+=readbar('dua',null);
     if(NLG.includes(d.grp)&&U.items.some(x=>x.note&&x.ur))h+=nlSeg();
@@ -2295,6 +2306,8 @@ function autoLocate(resume){
 }
 function route2(){if(location.hash==='#qibla')renderQibla();else renderPrayer()}
 let editing=false;
+const secBan=(g,title,sub,ur)=>`<div class="ai-ban td-ban pg-ban sb"><span class="td-pat" aria-hidden="true"></span><span class="td-top"><span class="sb-ic" aria-hidden="true"><svg viewBox="0 0 24 24">${DICON[g]||DICON.d}</svg></span><span class="td-dt"><span class="td-wd">${esc(sub)}</span><b>${title}</b>${ur?`<span class="sb-ur">${ur}</span>`:''}</span></span></div>`;
+const duaBan=(d,sub)=>{const di=DAY_IDS.indexOf(d.id),c=DCAT[d.grp];return `<div class="ai-ban td-ban pg-ban sb db"><span class="td-pat" aria-hidden="true"></span><span class="td-wd">${esc(di>=0?'Supplication of the day':c?c[0].replace(' Recitations','').replace(' e Namaz',''):'Dua')}</span><b>${esc(di>=0?'Dua for '+DAY_EN[di]:d.name)}</b>${d.ur?`<span class="sb-ur">${d.ur}</span>`:''}${sub?`<small>${esc(sub)}</small>`:''}${dfavBtn(d.id,true)}</div>`};
 const pgBan=(ar,title,sub)=>`<div class="ai-ban td-ban pg-ban"><span class="td-pat" aria-hidden="true"></span><span class="td-top"><span class="td-logo" role="img" aria-label=""></span><span class="td-dt"><span class="td-wd">${esc(sub)}</span><b>${esc(title)}</b></span><span class="pg-ar">${ar}</span></span></div>`;
 function renderPrayer(){
   setHeader('Prayer times',false);
