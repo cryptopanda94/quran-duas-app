@@ -65,7 +65,7 @@ else
 end
 
 # App Store version shown to users. Bump for each App Store release.
-app_ver = ENV['APP_VERSION'] || '1.7'
+app_ver = ENV['APP_VERSION'] || '1.8'
 app.build_configurations.each { |c| c.build_settings['MARKETING_VERSION'] = app_ver }
 widget.build_configurations.each do |c|
   s = c.build_settings
