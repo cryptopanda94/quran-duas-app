@@ -904,6 +904,14 @@ a.am-t{position:relative;text-decoration:none}.am-t.on{border-color:var(--accent
 .fv-empty .sb-ic{width:68px;height:68px;border-radius:24px;background:var(--accent-soft);box-shadow:none}.fv-empty .sb-ic svg{width:32px;height:32px;stroke:var(--accent)}
 .fv-empty b{font-size:21px;margin-top:10px}.fv-empty p{margin:0;color:var(--muted);font-size:15px;line-height:1.55;max-width:300px}
 .fv-empty div{display:flex;gap:10px;margin-top:14px;flex-wrap:wrap;justify-content:center}
+.bk-by{display:block;margin-top:6px;font-size:12px;color:var(--muted);font-style:normal}
+.bk-cr{margin:16px 2px;line-height:1.6}.bk-cr a,.hint a{color:var(--accent);font-weight:600}
+.fq-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;margin-top:4px}
+.fq-t{display:flex;flex-direction:column;align-items:center;text-align:center;gap:3px;padding:20px 12px 16px;border-radius:24px;background:var(--card);border:1px solid var(--line);box-shadow:0 4px 14px rgba(0,0,0,.04);color:var(--ink);text-decoration:none}
+.fq-t .am-u{font-family:"Noto Nastaliq Urdu",serif;font-size:17px;line-height:2.1;color:var(--accent);margin-top:8px}
+.fq-t b{font-size:16px;line-height:1.25}.fq-t small{font-size:12.5px;color:var(--muted);line-height:1.35}
+.fq-t em{font-style:normal;font-size:11.5px;color:var(--muted);margin-top:6px;line-height:1.4}
+.fq-go{margin-top:12px;padding:7px 16px;border-radius:999px;background:var(--accent-soft);color:var(--accent);font-size:13px;font-weight:700}
 </style>
 </head>
 <body>
@@ -1036,7 +1044,7 @@ a.am-t{position:relative;text-decoration:none}.am-t.on{border-color:var(--accent
   <div class="ask-log" id="askLog"></div>
   <form class="ask-in" id="askForm"><textarea id="askQ" rows="1" placeholder="Ask HYDER AI" maxlength="1500"></textarea><button type="button" id="askMic" class="ask-mic" aria-label="Ask by voice"><svg viewBox="0 0 24 24"><rect x="9" y="3" width="6" height="11" rx="3"/><path d="M5.5 11a6.5 6.5 0 0 0 13 0M12 17.5V21"/></svg></button><button id="askSend" aria-label="Send"><svg viewBox="0 0 24 24"><path d="M5 12h13M13 6l6 6-6 6"/></svg></button>
     <div class="ask-rec" id="askRec" hidden><button type="button" id="askRecX" aria-label="Cancel recording"><svg viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></svg></button><span class="rdot" aria-hidden="true"></span><b id="askRecT">0:00</b><span class="rlv" id="askRecLv" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i><i></i></span><small>Listening</small><button type="button" id="askRecGo" aria-label="Send recording"><svg viewBox="0 0 24 24"><path d="M5 12h13M13 6l6 6-6 6"/></svg></button></div></form>
-  <div class="ask-foot">English in the references is machine-translated from the Arabic. For rulings, follow your marja. <button type="button" id="askClear">Clear chat</button></div>
+  <div class="ask-foot">Where no translator is named, the English is a machine translation. For rulings, follow your marja. <button type="button" id="askClear">Clear chat</button></div>
 </div>
 <div class="sheet tsb" id="tsbSheet" role="dialog" aria-label="Tasbih">
   <div class="np-grab"></div>
@@ -1049,7 +1057,7 @@ a.am-t{position:relative;text-decoration:none}.am-t.on{border-color:var(--accent
   <button class="np-x" id="bookClose" aria-label="Back to the answer"><svg viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></svg></button>
   <div class="bk-h"><small id="bkPath"></small><b id="bkTitle"></b><span id="bkTitleAr"></span></div>
   <div class="bk-list" id="bkList"></div>
-  <div class="ask-foot">The Arabic is the original text; the English is a machine translation.</div>
+  <div class="ask-foot">The Arabic is the original text. Named translations are from Thaqalayn (CC BY 4.0); other English is a machine translation.</div>
 </div>
 <nav class="tabbar" id="tabbar">
   <a href="#today" data-tab="today"><svg viewBox="0 0 24 24"><path d="M4 11l8-6 8 6v8a1 1 0 0 1-1 1h-4v-6h-6v6H5a1 1 0 0 1-1-1z"/></svg>Today</a>
@@ -1465,7 +1473,7 @@ function setHeader(html,reader){{const b=$('jzBar');if(b)b.hidden=true;document.
 function route(){
   const h=location.hash.slice(1),m=h.match(/^surah-(\d{1,3})(?:-(\d{1,3}))?$/);
   closeSheets();
-  const tab=(h===''||h==='today'||h==='calendar'||h==='favs'||h==='marks')?'today':/^(dua|duas|book)/.test(h)?'duas':h==='prayer'?'prayer':h==='qibla'?'qibla':'quran';
+  const tab=(h===''||h==='today'||h==='calendar'||h==='favs'||h==='marks')?'today':h==='fiqh'?'duas':/^(dua|duas|book)/.test(h)?'duas':h==='prayer'?'prayer':h==='qibla'?'qibla':'quran';
   document.querySelectorAll('#tabbar a').forEach(a=>a.classList.toggle('on',a.dataset.tab===tab));
   if(obs&&tab!=='quran'){obs.disconnect();obs=null}
   if(window.XR&&window.XR(h)){window.scrollTo(0,0);return}
@@ -1510,7 +1518,7 @@ function closeSheets(){document.querySelectorAll('.sheet,.sheet-bg').forEach(x=>
   document.addEventListener('touchmove',e=>{if(!sh)return;dy=e.touches[0].clientY-y0;if(dy>0&&(sh.scrollTop<=0)){sh.classList.add('dragging');sh.style.transform=`translateX(-50%) translateY(${dy}px)`}else if(dy<0){sh.style.transform='';sh.classList.remove('dragging')}},{passive:true});
   document.addEventListener('touchend',()=>{if(!sh)return;const s=sh;sh=null;s.classList.remove('dragging');if(dy>110){s.classList.add('closing');s.style.transform='translateX(-50%) translateY(100%)';setTimeout(()=>{s.classList.remove('closing');if(s.id==='bookSheet'){s.classList.remove('open');s.style.transform=''}else closeSheets()},200)}else s.style.transform='';dy=0},{passive:true});
 })();
-$('backBtn').onclick=()=>{const c=location.hash.slice(1);let t='home';if(/^dua-.*~/.test(c))t=c.slice(0,c.indexOf('~'));else if(/^dua-/.test(c)){const d=LISTX().find(x=>x.id===c.slice(4)),f=window.QX&&QX.duaFrom&&QX.duaFrom(c);t=f||(d&&d.grp?'duas-'+d.grp:'duas')}else if(/^duas-/.test(c))t='duas';else if(/^book-/.test(c))t=window.QX&&QX.bookUp?QX.bookUp(decodeURIComponent(c.slice(5))):'duas-b';else if(c==='calendar'||c==='favs'||c==='marks')t='today';location.hash=t};
+$('backBtn').onclick=()=>{const c=location.hash.slice(1);let t='home';if(/^dua-.*~/.test(c))t=c.slice(0,c.indexOf('~'));else if(/^dua-/.test(c)){const d=LISTX().find(x=>x.id===c.slice(4)),f=window.QX&&QX.duaFrom&&QX.duaFrom(c);t=f||(d&&d.grp?'duas-'+d.grp:'duas')}else if(/^duas-/.test(c))t='duas';else if(/^book-/.test(c))t=window.QX&&QX.bookUp?QX.bookUp(decodeURIComponent(c.slice(5))):'duas-b';else if(c==='calendar'||c==='favs'||c==='marks')t='today';else if(c==='fiqh')t='duas';location.hash=t};
 $('setBtn').onclick=()=>openSheet('setSheet');
 /* reading settings for book pages */
 function bkSetDraw(){
@@ -1627,7 +1635,7 @@ function askDraw(){
   if(!ASK.log.length){L.innerHTML=`<div class="ask-hello"><span class="hy-orb big" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M12 2.5l1.9 5.6 5.6 1.9-5.6 1.9L12 17.5l-1.9-5.6L4.5 10l5.6-1.9z"/><path d="M18.5 14.5l.9 2.6 2.6.9-2.6.9-.9 2.6-.9-2.6-2.6-.9 2.6-.9z"/></svg></span><b>Assalamu alaykum</b><p>Ask about the Quran, hadith, duas, ziyarat or the Ahl al-Bayt (a.s.). I search the classical books and show you the references.</p></div>
     <div class="ask-ex">${['What did Imam Ali (a.s.) say about patience?','Virtues of visiting Imam Husain (a.s.)','What is the reward of Ziyarat Ashura?','اہل بیتؑ سے محبت کے بارے میں حدیث'].map(q=>`<button type="button" data-q="${esc(q)}">${esc(q)}</button>`).join('')}</div>`;return}
   L.innerHTML=ASK.log.map((m,i)=>m.role==='user'?`<div class="ask-m u">${esc(m.text)}</div>`:
-    `<div class="ask-m a" data-i="${i}"><span class="ask-who"><i class="hy-orb sm" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M12 2.5l1.9 5.6 5.6 1.9-5.6 1.9L12 17.5l-1.9-5.6L4.5 10l5.6-1.9z"/></svg></i>HYDER AI</span>${askFmt(m.text,m.refs)}${m.refs&&m.refs.length?`<div class="ask-refs"><b style="font-size:12.5px;color:var(--muted)">References</b>${m.refs.map(r=>`<div class="ask-ref" data-n="${r.n}"><span class="cite"><i>[${r.n}]</i>${esc(r.cite||r.label)}</span><div class="acts">${r.book&&r.ref?`<button type="button" data-book="${esc(r.ref)}">View in book ›</button>`:''}<button type="button" data-peek="1">Show text</button></div><div class="rb">${r.ar?`<div class="ar">${esc(r.ar)}</div>`:''}${r.en?`<div class="en">${esc(r.en)}</div><small class="mt">English: machine translation of the Arabic</small>`:''}</div></div>`).join('')}</div>`:''}</div>`).join('')
+    `<div class="ask-m a" data-i="${i}"><span class="ask-who"><i class="hy-orb sm" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M12 2.5l1.9 5.6 5.6 1.9-5.6 1.9L12 17.5l-1.9-5.6L4.5 10l5.6-1.9z"/></svg></i>HYDER AI</span>${askFmt(m.text,m.refs)}${m.refs&&m.refs.length?`<div class="ask-refs"><b style="font-size:12.5px;color:var(--muted)">References</b>${m.refs.map(r=>`<div class="ask-ref" data-n="${r.n}"><span class="cite"><i>[${r.n}]</i>${esc(r.cite||r.label)}</span><div class="acts">${r.book&&r.ref?`<button type="button" data-book="${esc(r.ref)}">View in book ›</button>`:''}<button type="button" data-peek="1">Show text</button></div><div class="rb">${r.ar?`<div class="ar">${esc(r.ar)}</div>`:''}${r.en?`<div class="en">${esc(r.en)}</div><small class="mt">${r.by?`Translation: ${esc(r.by)} · Thaqalayn, CC BY 4.0`:'English: machine translation of the Arabic'}</small>`:''}</div></div>`).join('')}</div>`:''}</div>`).join('')
     +(ASK.busy?'<div class="ask-m a"><span class="ask-who"><i class="hy-orb sm pulse" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M12 2.5l1.9 5.6 5.6 1.9-5.6 1.9L12 17.5l-1.9-5.6L4.5 10l5.6-1.9z"/></svg></i>Searching the books</span><span class="ask-dots"><i></i><i></i><i></i></span></div>':'');
   L.scrollTop=L.scrollHeight;
 }
@@ -1697,7 +1705,7 @@ async function bookOpen(ref){
   try{
     const r=await fetch(ASK_BASE.replace(/\/$/,'')+'/chapter?ref='+encodeURIComponent(ref));const j=await r.json();if(!r.ok)throw new Error(j.error||'');
     $('bkPath').textContent=[j.book,...(j.path||[]).slice(0,-1)].join(' · ');$('bkTitle').textContent=j.title.en||'';$('bkTitleAr').textContent=j.title.ar||'';
-    $('bkList').innerHTML=j.items.map(x=>`<div class="bk-it${x.ref===ref?' on':''}" data-r="${esc(x.ref)}"><span class="no">${j.book==='Nahj al-Balagha'?'Section':'Hadith'} ${esc(x.n)}</span>${x.ar?`<div class="ar">${esc(x.ar)}</div>`:''}${x.en?`<div class="en">${esc(x.en)}</div>`:''}</div>`).join('');
+    $('bkList').innerHTML=j.items.map(x=>`<div class="bk-it${x.ref===ref?' on':''}" data-r="${esc(x.ref)}"><span class="no">${j.book==='Nahj al-Balagha'?'Section':'Hadith'} ${esc(x.n)}</span>${x.ar?`<div class="ar">${esc(x.ar)}</div>`:''}${x.en?`<div class="en">${esc(x.en)}${x.by?`<small class="bk-by">Translation: ${esc(x.by)}</small>`:''}</div>`:''}</div>`).join('');
     const on=$('bkList').querySelector('.bk-it.on');if(on)setTimeout(()=>on.scrollIntoView({block:'start'}),60);
   }catch(e){$('bkList').innerHTML='<div class="bk-load">Could not open the book right now. Please try again.</div>'}
 }
@@ -2125,7 +2133,7 @@ function renderDuas(g){
   setHeader(g?DCAT[g][0]:'<span class="lib-logo" role="img" aria-label=""></span>Library',!!g);
   const cnt=g=>g==='e'?LIST.filter(x=>x.grp==='e').length+1:g==='h'?99:g==='b'?BK.length:g==='r'?NOTEBOOKS.length:LIST.filter(x=>x.grp===g).length;
   const cats=`<div class="dcat-head"><b>Categories</b><div class="seg vseg"><button data-v="grid" class="${dView==='grid'?'on':''}">▦ Grid</button><button data-v="list" class="${dView==='list'?'on':''}">☰ List</button></div></div>
-   <div class="dcats ${dView}">${DTABS.filter(([k])=>k!=='b'||bkBase()).map(([k])=>{const c=DCAT[k];if(k==='b')return `<a class="dcat wide books" href="#duas-b"><span class="dcat-m" style="--t:${DTINT.b}"><svg viewBox="0 0 24 24" aria-hidden="true">${DICON.b}</svg></span><span class="dcat-t"><b>${c[0]}</b><small>${c[2]}</small><span class="dcat-u">${c[1]}</span></span><span class="bk-shelf" aria-hidden="true">${[0,4,16].map(i=>bkCover(BK[i])).join('')}</span><span class="dcat-n">${cnt(k)}</span><span class="dcat-go">›</span></a>`;return `<a class="dcat${k==='h'?' wide':''}" href="#duas-${k}"><span class="dcat-m" style="--t:${DTINT[k]}"><svg viewBox="0 0 24 24" aria-hidden="true">${DICON[k]}</svg></span><span class="dcat-t"><b>${c[0]}</b><small>${c[2]}</small></span><span class="dcat-u">${c[1]}</span><span class="dcat-n">${cnt(k)}</span><span class="dcat-go">›</span></a>`}).join('')}</div>`;
+   <div class="dcats ${dView}">${DTABS.filter(([k])=>k!=='b'||bkBase()).map(([k])=>{const c=DCAT[k];if(k==='b')return `<a class="dcat wide books" href="#duas-b"><span class="dcat-m" style="--t:${DTINT.b}"><svg viewBox="0 0 24 24" aria-hidden="true">${DICON.b}</svg></span><span class="dcat-t"><b>${c[0]}</b><small>${c[2]}</small><span class="dcat-u">${c[1]}</span></span><span class="bk-shelf" aria-hidden="true">${[0,4,16].map(i=>bkCover(BK[i])).join('')}</span><span class="dcat-n">${cnt(k)}</span><span class="dcat-go">›</span></a>`;return `<a class="dcat${k==='h'?' wide':''}" href="#duas-${k}"><span class="dcat-m" style="--t:${DTINT[k]}"><svg viewBox="0 0 24 24" aria-hidden="true">${DICON[k]}</svg></span><span class="dcat-t"><b>${c[0]}</b><small>${c[2]}</small></span><span class="dcat-u">${c[1]}</span><span class="dcat-n">${cnt(k)}</span><span class="dcat-go">›</span></a>`}).join('')}<a class="dcat" href="#fiqh"><span class="dcat-m" style="--t:#3b7a57"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3v18M5 7h14M5 7l-2.5 6a3 3 0 0 0 5 0zM19 7l-2.5 6a3 3 0 0 0 5 0zM8 21h8"/></svg></span><span class="dcat-t"><b>Fiqh</b><small>Islamic laws of the maraji</small></span><span class="dcat-u">فقہ</span><span class="dcat-n">2</span><span class="dcat-go">›</span></a></div>`;
   app.innerHTML=`${g?secBan(g,DCAT[g][0],DCAT[g][2],DCAT[g][1]):`${pgBan('اَلْمَكْتَبَة','Library','Duas, Ziyarat & Books')}
    <div class="ai-ban hy" role="button" tabindex="0" data-ask="1"><span class="td-pat" aria-hidden="true"></span>
      <span class="hy-top"><span class="hy-av" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M12 2.5l1.9 5.6 5.6 1.9-5.6 1.9L12 17.5l-1.9-5.6L4.5 10l5.6-1.9z"/><path d="M18.5 14.5l.9 2.6 2.6.9-2.6.9-.9 2.6-.9-2.6-2.6-.9 2.6-.9z"/></svg></span><span class="hy-n"><b>HYDER AI</b><small>Answers with references from ${BK.length} classical books</small></span></span>
@@ -2721,6 +2729,7 @@ function renderToday(){
      const fv=(S.favs||[]).length+(S.dfavs||[]).length,bm=(S.marks||[]).length,ai=window.QAsk&&QAsk.base;
      const T=[['#home',sv(IC.q,'#1d6fb0'),'Holy Quran','قرآن مجید',0,'surahs'],['#prayer',sv(IC.p,'#0f8f7a'),'Prayer','اوقات نماز'],['#qibla',sv(IC.k,'#c2742c'),'Qibla','قبلہ'],
        ai?['ask',sv(IC.ai,'#fff'),'HYDER AI','حیدر اے آئی',0,'','hy']:0,ai?cat('b'):0,cat('d'),cat('z'),cat('n'),cat('t'),cat('e'),cat('a'),cat('m'),cat('s'),cat('h'),
+       ['#fiqh',sv('<path d="M12 3v18M5 7h14M5 7l-2.5 6a3 3 0 0 0 5 0zM19 7l-2.5 6a3 3 0 0 0 5 0zM8 21h8"/>','#3b7a57'),'Fiqh','فقہ',2],
        ['tasbih',sv(IC.tb,'#b45a3c'),'Tasbih','تسبیح'],HFMT?['#calendar',sv(IC.cal,'#2a78d0'),'Calendar','کیلنڈر']:0,['#favs',sv(IC.fv,'#d1495b'),'Favourites','پسندیدہ',fv],['#marks',sv(IC.bm,'#1d6fb0'),'Bookmarks','نشانیاں',bm]].filter(Boolean);
      return T.map((t,i)=>`<a class="tg3i${t[6]?' '+t[6]:''}${i>5?' x':''}" href="${t[0][0]==='#'?t[0]:'#'}" data-tg="${t[0][0]==='#'?'':t[0]}" data-tab="${t[5]||''}">${t[1]}<b>${t[2]}</b><span class="tg-u">${t[3]}</span>${t[4]?`<span class="dcat-n">${t[4]}</span>`:''}</a>`).join('')})()}</div>
    <button type="button" class="tg-more" id="tgMore"></button>
@@ -2830,7 +2839,7 @@ function drawBooks(q,norm){
    +`<div class="bkall"><span>All Books</span><i></i><span>${items.length}</span><button type="button" id="bkViewB" aria-label="Grid or list">${bkView==='grid'?'☰':'▦'}</button></div>
    <div class="bkchips">${BKCATS.map(([k,n])=>`<button type="button" data-c="${k}" class="${k===bkCat?'on':''}">${n}</button>`).join('')}</div>
    <div class="${bkView==='grid'?'bkgrid':'bklist'}">${items.map(b=>`<a class="bkcard" href="#book-${b[0]}">${bkCover(b)}<span class="t"><b>${esc(b[1])}</b><i>${esc(b[5])}</i><small>${esc(b[3])}</small></span></a>`).join('')||'<div class="bk-load">No book matches.</div>'}</div>
-   <div class="hint" style="margin:14px 2px">The Arabic is the original text. The English is a machine translation of it, so read it as a guide. The books load from the internet.</div></div>`;
+   <div class="hint" style="margin:14px 2px">The Arabic is the original text. Where a translator is named, the English is theirs, as published by <a href="https://thaqalayn.com" target="_blank" rel="noopener">Thaqalayn</a> under <a href="https://creativecommons.org/licenses/by/4.0/" target="_blank" rel="noopener">CC BY 4.0</a>. Other English, and all Urdu, are machine translations, so read them as a guide. The books load from the internet.</div></div>`;
   L.querySelectorAll('.bkchips [data-c]').forEach(c=>c.onclick=()=>{const x=L.querySelector('.bkchips').scrollLeft;bkCat=c.dataset.c;drawBooks(q,norm);L.querySelector('.bkchips').scrollLeft=x});
   $('bkViewB').onclick=()=>{bkView=bkView==='grid'?'list':'grid';store.set('bkView',bkView);drawBooks(q,norm)};
   if($('bkLastX'))$('bkLastX').onclick=()=>{store.set('bkLast',null);drawBooks(q,norm)};
@@ -2845,6 +2854,9 @@ async function bkGet(ref){
 }
 /* where the back button goes from a book page */
 function bookUp(ref){const j=bkCache.get(ref);if(j&&j.up)return 'book-'+j.up;return ref.includes(':')?'book-'+ref.slice(0,ref.lastIndexOf(':')):'duas-b'}
+/* Credit required by Thaqalayn's licence (CC BY 4.0), shown under every chapter. */
+function bkCredit(items){const by=[...new Set((items||[]).map(x=>x.by).filter(Boolean))];
+  return `<div class="hint bk-cr">The Arabic is the original text. ${by.length?`English translation: <b>${by.map(esc).join(', ')}</b>, as published by <a href="https://thaqalayn.com" target="_blank" rel="noopener">Thaqalayn</a> under <a href="https://creativecommons.org/licenses/by/4.0/" target="_blank" rel="noopener">CC BY 4.0</a>. English with no translator named, and all Urdu, are machine translations.`:`The English and Urdu are machine translations. Source of the texts: <a href="https://thaqalayn.com" target="_blank" rel="noopener">Thaqalayn</a>, <a href="https://creativecommons.org/licenses/by/4.0/" target="_blank" rel="noopener">CC BY 4.0</a>.`}</div>`}
 function renderBook(ref){
   const slug=ref.split(':')[0],B=BK.find(b=>b[0]===slug);
   if(!B||!bkBase())return false;
@@ -2858,7 +2870,7 @@ function renderBook(ref){
     const top=ref===slug;
     let h=hero(top?'':j.path.join(' · '),top?B[1]:j.title.en,top?B[2]:j.title.ar,top?B[3]+' · '+many(j.count):many(j.count),top);
     if(j.children&&j.children.length)h+='<div class="list">'+j.children.map((c,i)=>`<a class="item bk-row" href="#book-${esc(c.ref)}"><div class="num"><span>${i+1}</span></div><div class="t"><b>${esc(c.title.en)}</b><small>${many(c.count)}</small></div>${c.title.ar?`<div class="dur bk-ar">${esc(c.title.ar)}</div>`:''}<span class="dcat-go">›</span></a>`).join('')+'</div>';
-    if(j.items&&j.items.length)h+='<div class="bk-page">'+j.items.map(x=>`<div class="bk-it${x.en?'':' noen'}${x.ur?'':' nour'}"><span class="no">${unit} ${esc(x.n)}</span>${x.ar?`<div class="ar">${esc(x.ar)}</div>`:''}${x.en?`<div class="en">${esc(x.en)}</div>`:'<div class="noen-n">English is not available for this one yet.</div>'}${x.ur?`<div class="ur">${esc(x.ur)}</div>`:'<div class="nour-n">اس کا اردو ترجمہ ابھی دستیاب نہیں۔</div>'}</div>`).join('')+'</div><div class="hint" style="margin:14px 2px">The Arabic is the original text; the English and Urdu are machine translations.</div>';
+    if(j.items&&j.items.length)h+='<div class="bk-page">'+j.items.map(x=>`<div class="bk-it${x.en?'':' noen'}${x.ur?'':' nour'}"><span class="no">${unit} ${esc(x.n)}</span>${x.ar?`<div class="ar">${esc(x.ar)}</div>`:''}${x.en?`<div class="en">${esc(x.en)}${x.by?`<small class="bk-by">Translation: ${esc(x.by)}</small>`:''}</div>`:'<div class="noen-n">English is not available for this one yet.</div>'}${x.ur?`<div class="ur">${esc(x.ur)}</div>`:'<div class="nour-n">اس کا اردو ترجمہ ابھی دستیاب نہیں۔</div>'}</div>`).join('')+'</div>'+bkCredit(j.items);
     app.innerHTML=h;document.body.classList.toggle('bk-read',!!(j.items&&j.items.length));
     store.set('bkLast',{ref,slug,title:top?B[1]:j.title.en,t:Date.now()});
   };
@@ -2886,6 +2898,16 @@ function renderFavs(){
 }
 document.addEventListener('click',e=>{if(location.hash==='#favs'&&e.target.closest('[data-fav],[data-dfav]'))setTimeout(()=>{if(location.hash==='#favs'){const y=scrollY;renderFavs();scrollTo(0,y)}},60)});
 
+/* Fiqh: the law books of the maraji. The books belong to their publishers, so each tile opens the marja's own website. */
+function renderFiqh(){
+  setHeader('Fiqh',true);
+  const FQ='<path d="M12 3v18M5 7h14M5 7l-2.5 6a3 3 0 0 0 5 0zM19 7l-2.5 6a3 3 0 0 0 5 0zM8 21h8"/>';
+  const T=[['Islamic Laws','Ayatullah Sayyid Ali al-Sistani','آیت اللہ سیستانی','Fourth edition, English · on sistani.org','https://www.sistani.org/files-new/book-pdf/english-islamic-laws-2023.pdf','#1d6fb0'],
+           ['Practical Laws of Islam','Ayatullah Sayyid Ali Khamenei','آیت اللہ خامنہ ای','Questions and answers, English · on leader.ir','https://www.leader.ir/en/book/23','#3b7a57']];
+  app.innerHTML=`<div class="ai-ban td-ban pg-ban sb"><span class="td-pat" aria-hidden="true"></span><span class="td-top"><span class="sb-ic" aria-hidden="true"><svg viewBox="0 0 24 24">${FQ}</svg></span><span class="td-dt"><span class="td-wd">Islamic laws of the maraji</span><b>Fiqh</b><span class="sb-ur">فقہ</span></span></span></div>
+   <div class="fq-grid">${T.map(([t,by,ur,sub,url,c])=>`<a class="fq-t" href="${url}" target="_blank" rel="noopener"><span class="dcat-m" style="--t:${c}"><svg viewBox="0 0 24 24" aria-hidden="true">${FQ}</svg></span><span class="am-u">${ur}</span><b>${esc(t)}</b><small>${esc(by)}</small><em>${esc(sub)}</em><span class="fq-go">Open ›</span></a>`).join('')}</div>
+   <div class="hint" style="margin:16px 4px;line-height:1.6">Each book opens on the marja's own website, in your browser. For rulings, follow your own marja.</div>`;
+}
 function renderMarks(){
   setHeader('Bookmarks',true);
   const BM='<path d="M7 4h10a1 1 0 0 1 1 1v15l-6-4-6 4V5a1 1 0 0 1 1-1z"/>',n=(S.marks||[]).length;
@@ -2896,6 +2918,7 @@ window.XR=function(h){
   if(h===''||h==='today'){renderToday();return true}
   if(h==='calendar'){renderCalendar();return true}
   if(h==='favs'){renderFavs();return true}
+  if(h==='fiqh'){renderFiqh();return true}
   if(h==='marks'){renderMarks();return true}
   if(h!=='prayer'&&h!=='qibla')editing=false;
   if(h==='duas'){renderDuas();return true}
