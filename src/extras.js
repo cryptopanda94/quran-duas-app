@@ -1,5 +1,5 @@
 (function(){
-const {AR,EN,UR,META,esc,setHeader,store,toast,app,$,ARX,BISMX,endMark,readbar,S,dfavBtn,icon}=window.Q;
+const {AR,EN,UR,META,esc,setHeader,store,toast,app,$,ARX,BISMX,endMark,readbar,S,dfavBtn,icon,surahItem}=window.Q;
 const DU=JSON.parse(document.getElementById('ddata').textContent);
 const CI=JSON.parse(document.getElementById('cdata').textContent);
 const icons={
@@ -399,7 +399,7 @@ const DICON={"b": "<path d=\"M5 4h4v16H5zM9 4h4v16H9zM14.2 6.2l3.8-1 3.6 13.6-3.
 let dView=store.get('dView','grid');
 /* which list a dua page was opened from, so Back returns there */
 const NAV={cur:location.hash.slice(1),from:{}};
-window.addEventListener('hashchange',()=>{const n=location.hash.slice(1);if(/^dua-/.test(n)&&/^duas-/.test(NAV.cur))NAV.from[n]=NAV.cur;NAV.cur=n});
+window.addEventListener('hashchange',()=>{const n=location.hash.slice(1);if(/^dua-/.test(n)&&(/^duas-/.test(NAV.cur)||NAV.cur==='favs'))NAV.from[n]=NAV.cur;NAV.cur=n});
 function renderDuas(g){
   if(g&&!DCAT[g])g=null;
   if(g){if(g!==dTab||!/^dua-/.test(NAV.cur))dSec='';dTab=g;store.set('dTab',g)}
@@ -1002,7 +1002,7 @@ function renderToday(){
      const fv=(S.favs||[]).length+(S.dfavs||[]).length,bm=(S.marks||[]).length,ai=window.QAsk&&QAsk.base;
      const T=[['#home',sv(IC.q,'#1d6fb0'),'Holy Quran','قرآن مجید',0,'surahs'],['#prayer',sv(IC.p,'#0f8f7a'),'Prayer','اوقات نماز'],['#qibla',sv(IC.k,'#c2742c'),'Qibla','قبلہ'],
        ai?['ask',sv(IC.ai,'#fff'),'HYDER AI','حیدر اے آئی',0,'','hy']:0,ai?cat('b'):0,cat('d'),cat('z'),cat('n'),cat('t'),cat('e'),cat('a'),cat('m'),cat('s'),cat('h'),
-       ['tasbih',sv(IC.tb,'#b45a3c'),'Tasbih','تسبیح'],HFMT?['#calendar',sv(IC.cal,'#2a78d0'),'Calendar','کیلنڈر']:0,['#home',sv(IC.fv,'#d1495b'),'Favourites','پسندیدہ',fv,'favs'],['#home',sv(IC.bm,'#1d6fb0'),'Bookmarks','نشانیاں',bm,'marks']].filter(Boolean);
+       ['tasbih',sv(IC.tb,'#b45a3c'),'Tasbih','تسبیح'],HFMT?['#calendar',sv(IC.cal,'#2a78d0'),'Calendar','کیلنڈر']:0,['#favs',sv(IC.fv,'#d1495b'),'Favourites','پسندیدہ',fv],['#home',sv(IC.bm,'#1d6fb0'),'Bookmarks','نشانیاں',bm,'marks']].filter(Boolean);
      return T.map((t,i)=>`<a class="tg3i${t[6]?' '+t[6]:''}${i>5?' x':''}" href="${t[0][0]==='#'?t[0]:'#'}" data-tg="${t[0][0]==='#'?'':t[0]}" data-tab="${t[5]||''}">${t[1]}<b>${t[2]}</b><span class="tg-u">${t[3]}</span>${t[4]?`<span class="dcat-n">${t[4]}</span>`:''}</a>`).join('')})()}</div>
    <button type="button" class="tg-more" id="tgMore"></button>
    <div class="th-lbl"><b>Ayah of the day</b><a href="#surah-${A.s}-${A.a}">${esc(META[A.s-1][1])} ${ref}</a></div>
@@ -1147,9 +1147,30 @@ function renderBook(ref){
   else bkGet(ref).then(draw).catch(()=>{if(location.hash.slice(1)==='book-'+ref)app.innerHTML=hero('',B[1],B[2],B[3],true)+'<div class="bk-load">Could not open the book. Check your internet connection and try again.<br><button class="btn" id="bkRetry" style="margin-top:14px">Try again</button></div>';const b=$('bkRetry');if(b)b.onclick=()=>renderBook(ref)});
   return true;
 }
+/* Favourites: one page, grouped by where each favourite lives (Holy Quran, Duas, Ziyarat ...). */
+let fSec=null;
+function renderFavs(){
+  setHeader('Favourites',true);
+  const HEART='<path d="M12 20s-7-4.4-7-9.6A4 4 0 0 1 12 8a4 4 0 0 1 7 2.4C19 15.6 12 20 12 20z"/>',QUR='<path d="M4 5.5C6.5 4 9.5 4 12 6c2.5-2 5.5-2 8-.5V19c-2.5-1.5-5.5-1.5-8 .5-2.5-2-5.5-2-8-.5z"/><path d="M12 6v13.5"/>';
+  const ds=(S.dfavs||[]).map(id=>LIST.find(x=>x.id===id)||PARTS.find(x=>x.id===id)).filter(Boolean);
+  const cats=[];
+  if((S.favs||[]).length)cats.push({k:'q',name:'Holy Quran',sub:'Surahs',ur:'قرآن مجید',ic:QUR,t:'#1d6fb0',n:S.favs.length,body:S.favs.map(n=>surahItem(n-1)).join('')});
+  'edzntamsh'.split('').forEach(g=>{const its=ds.filter(d=>d.grp===g);if(!its.length)return;const c=DCAT[g];
+    cats.push({k:g,name:c[0].replace(' Recitations','').replace(' e Namaz','').replace(' Sajjadiya',''),sub:c[2],ur:c[1],ic:DICON[g],t:DTINT[g],n:its.length,
+      body:its.map((d,j)=>`<a class="item dua-item snum nmrow" href="#dua-${d.id}"><div class="num"><span>${j+1}</span></div><div class="t"><b>${esc(d.n?d.sub+' · '+d.name:d.name)}</b>${d.sub&&!d.n?`<small>${esc(d.sub)}</small>`:''}${d.ur?`<span class="nm-ur">${d.ur}</span>`:''}</div>${dfavBtn(d.id)}</a>`).join('')})});
+  const total=cats.reduce((a,c)=>a+c.n,0);
+  if(fSec===null||!cats.find(c=>c.k===fSec))fSec=cats.length===1?cats[0].k:(fSec===''?'':(cats[0]?cats[0].k:''));
+  const ban=`<div class="ai-ban td-ban pg-ban sb"><span class="td-pat" aria-hidden="true"></span><span class="td-top"><span class="sb-ic" aria-hidden="true"><svg viewBox="0 0 24 24">${HEART}</svg></span><span class="td-dt"><span class="td-wd">${total?total+' saved':'Your saved surahs and duas'}</span><b>Favourites</b><span class="sb-ur">پسندیدہ</span></span></span></div>`;
+  if(!cats.length){app.innerHTML=ban+`<div class="fv-empty"><span class="sb-ic" aria-hidden="true"><svg viewBox="0 0 24 24">${HEART}</svg></span><b>Nothing saved yet</b><p>Tap the heart next to any surah, dua, ziyarat or namaz and it will be kept here, under its own section.</p><div><a class="btn" href="#home">Open the Quran</a><a class="btn" href="#duas">Open the Library</a></div></div>`;return}
+  app.innerHTML=ban+`<div class="list"><div class="accs">${cats.map(c=>`<div class="acc${fSec===c.k?' open':''}" data-acc="${c.k}"><button type="button" class="acc-h" aria-expanded="${fSec===c.k}"><span class="dcat-m" style="--t:${c.t}"><svg viewBox="0 0 24 24" aria-hidden="true">${c.ic}</svg></span><span class="acc-t"><b>${esc(c.name)}</b><small>${esc(c.sub)}</small><span class="acc-u">${c.ur}</span></span><span class="dcat-n">${c.n}</span><svg class="acc-ch" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg></button>${fSec===c.k?`<div class="fv-body">${c.body}</div>`:''}</div>`).join('')}</div></div>`;
+  app.querySelectorAll('.acc-h').forEach(b=>b.onclick=()=>{const k=b.parentNode.dataset.acc;fSec=fSec===k?'':k;renderFavs()});
+}
+document.addEventListener('click',e=>{if(location.hash==='#favs'&&e.target.closest('[data-fav],[data-dfav]'))setTimeout(()=>{if(location.hash==='#favs'){const y=scrollY;renderFavs();scrollTo(0,y)}},60)});
+
 window.XR=function(h){
   if(h===''||h==='today'){renderToday();return true}
   if(h==='calendar'){renderCalendar();return true}
+  if(h==='favs'){renderFavs();return true}
   if(h!=='prayer'&&h!=='qibla')editing=false;
   if(h==='duas'){renderDuas();return true}
   if(h.startsWith('duas-')){renderDuas(h.slice(5));return true}
