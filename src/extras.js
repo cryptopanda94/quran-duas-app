@@ -379,7 +379,8 @@ LIST.forEach(d=>{if(!d.key)return;const segs=DU[d.key].segs,byH=HPARTS.includes(
   const cuts=[];let carry=[];st.map((a,i)=>segs.slice(a,st[i+1]||segs.length)).forEach(sl=>{if(sl.some(x=>x.ar)){cuts.push(carry.concat(sl));carry=[]}else carry=carry.concat(sl)});if(carry.length&&cuts.length)cuts[cuts.length-1]=cuts[cuts.length-1].concat(carry);
   if(cuts.length<2)return;
   if(byH){TPARTS[d.key]=st;d.intro=segs.slice(0,st[0]).filter(x=>x.note)}
-  PARTS.push({id:d.id+'~0',key:d.key,grp:d.grp,parent:d.id,n:0,name:d.name,sub:d.sub,ur:d.ur,mark:d.mark});
+  let k0=d.key;if(!DU[d.key].alt){k0=d.key+'~0';DU[k0]={...DU[d.key],segs:[].concat(...cuts.map((sl,i)=>[{div:i+1,of:cuts.length},...sl]))}}
+  PARTS.push({id:d.id+'~0',key:k0,grp:d.grp,parent:d.id,n:0,name:d.name,sub:d.sub,ur:d.ur,mark:d.mark});
   cuts.forEach((sl,i)=>{const k=d.key+'~'+(i+1),fa=sl.find(x=>x.ar)||{},hd=byH&&sl[0].note?String(sl[0].note).replace(/^\d+\.\s*/,''):'';
     DU[k]={name:'Dua '+(i+1),nameUr:d.ur,segs:sl};
     PARTS.push({id:d.id+'~'+(i+1),key:k,grp:d.grp,parent:d.id,n:i+1,of:cuts.length,name:'Dua '+(i+1),sub:d.name,ur:d.ur,mark:d.mark,title:hd||fa.en||'',ar:fa.ar||''})})});
@@ -392,7 +393,7 @@ function duaSpot(){const n=new Date(),day=n.getDay(),hr=n.getHours();
   const d=LIST.find(x=>x.id===pick[0]);if(!d)return'';
   return `<a class="continue dspot" href="#dua-${d.id}"><div class="t2"><small>${pick[1]}</small><b>${esc(d.name)}</b></div><div class="dsu">${d.ur}</div>${icon.arrow}</a>`}
 const DTABS=[['b','Books'],['h','99 Names'],['e','Every Day'],['t','Taqibaat'],['n','Namaz'],['d','Duas'],['z','Ziyarat'],['a','Aamaal'],['m','Munajaat'],['s','Sahifa']];
-const DCAT={e:['Every Day Recitations','روزانہ کے اعمال','Duas to read every day','ر'],t:['Taqibaat e Namaz','تعقیباتِ نماز','Duas and dhikr after each prayer','ت'],d:['Duas','دعائیں','Daily, weekly & special supplications','د'],z:['Ziyarat','زیارات','Salutations to the Prophet & Ahlul Bayt','ز'],s:['Sahifa Sajjadiya','صحیفۂ سجادیہ','Imam Zainul Abideen (a.s.) · 61 duas, 7 days, 15 munajat','ص'],a:['Aamaal','اعمال','Deeds for special days & nights','ع'],m:['Munajaat','مناجات','Whispered prayers of Imam Ali & Imam Sajjad (a.s.)','م'],n:['Namaz','نماز','Prayers, taqibaat & qunoot','ن'],h:['99 Names','اسمائے حسنیٰ','Names of Allah with meanings & benefits','ا'],b:['Books','کتابیں','23 classical hadith books · Arabic with English','ك'],r:['AI Research Notebooks','تحقیقی نوٹ بُکس','ShiaLM on Google NotebookLM · ask questions of classical books','✦']};
+const DCAT={e:['Every Day Recitations','روزانہ کے اعمال','Duas to read every day','ر'],t:['Taqibaat e Namaz','تعقیباتِ نماز','Duas and dhikr after each prayer','ت'],d:['Duas','دعائیں','Daily, weekly & special supplications','د'],z:['Ziyarat','زیارات','Salutations to the Prophet & Ahlul Bayt','ز'],s:['Sahifa Sajjadiya','صحیفۂ سجادیہ','Imam Zainul Abideen (a.s.) · 61 duas, 7 days, 15 munajat','ص'],a:['Aamaal','اعمال','Deeds for special days & nights','ع'],m:['Munajaat','مناجات','Whispered prayers of Imam Ali & Imam Sajjad (a.s.)','م'],n:['Namaz','نماز','Daily, special and recommended prayers','ن'],h:['99 Names','اسمائے حسنیٰ','Names of Allah with meanings & benefits','ا'],b:['Books','کتابیں','23 classical hadith books · Arabic with English','ك'],r:['AI Research Notebooks','تحقیقی نوٹ بُکس','ShiaLM on Google NotebookLM · ask questions of classical books','✦']};
 const NOTEBOOKS=[["991380e6-3141-43c5-8ff4-8882ede2326d", "Holy Quran · Tafseer", "Quranic commentary and exegesis"], ["7e16985a-b1c5-430d-8685-184a64a6980c", "Basa'ir al-Darajat", "al-Saffar on the virtues of the Ahlul Bayt (a.s.)"], ["bc110ba0-ecda-4c25-b738-b5154cf16c76", "Mir'at al-Uqool", "Allama Majlisi's commentary on al-Kafi · 24 volumes (Arabic)"], ["0c5d849e-a657-416a-b128-3c74a5035741", "Safinat al-Bihar", "Shaykh Abbas Qummi's index of Bihar al-Anwar · 8 volumes"], ["84c60541-e06d-4e83-ae44-3fe6614fd53d", "The Amali", "Dictations of Saduq, Mufid and Tusi"], ["49752979-f698-48ba-bcf5-64df6da1971f", "Shaykh Saduq (r.a.)", "Collected works of al-Shaykh al-Saduq"], ["a75a5426-4f2c-4895-8dd3-78ec0ab31e09", "Nahj al-Balagha", "Sermons, letters and sayings of Imam Ali (a.s.)"], ["8ae34cf8-c283-42ee-8f7f-b0ddd5b30bd1", "Virtues of the Five (a.s.)", "From the Sihah al-Sittah · 3 volumes"], ["06e04aab-714e-4475-92a0-007973a17ec1", "Mahdaviyat", "On Imam al-Mahdi (a.t.f.s.)"], ["21f14960-6d8b-47a5-92fc-ee4441e8c93b", "I'tiqadat", "Beliefs, by Saduq and Majlisi"], ["89ee2444-82fc-4f30-892d-c91202ac2359", "Bihar al-Anwar", "Allama Majlisi's hadith encyclopedia · 110 volumes"], ["3df041d1-9621-4501-b6c0-13fff62e3548", "Ayatullah Sistani", "Tauzeeh al-Masael and other books"], ["f9ad8a9b-b533-43aa-8de7-cc24fb628305", "A Shi'ite Encyclopedia", "Questions and answers on Shia beliefs"], ["14d5f383-c902-4400-8548-5e49775c2997", "Wasa'il al-Shi'a", "Hadith on law and practice · 30 volumes"], ["49c6f15f-f2f5-4b82-819e-3bc063c479e0", "Man La Yahduruhu al-Faqih", "Shaykh Saduq's hadith collection · 4 volumes"], ["f5c79bdb-a1ae-422b-b7f3-15dc87ebf106", "Usool al-Kafi", "Shaykh Kulayni's al-Kafi · 8 volumes"]];
 const DICON={"b": "<path d=\"M5 4h4v16H5zM9 4h4v16H9zM14.2 6.2l3.8-1 3.6 13.6-3.8 1z\"/>", "m": "<path d=\"M20 14.5A8 8 0 1 1 9.5 4a6.5 6.5 0 0 0 10.5 10.5z\"/><path d=\"M17 3.5l.6 1.4 1.4.6-1.4.6-.6 1.4-.6-1.4-1.4-.6 1.4-.6z\"/>", "d": "<path d=\"M8 13V6.5a1.5 1.5 0 0 1 3 0V12M11 11V4.5a1.5 1.5 0 0 1 3 0V12M14 11.5V6.5a1.5 1.5 0 0 1 3 0v7.5a6 6 0 0 1-6 6h-.5a5.5 5.5 0 0 1-4.6-2.5L4 14.5a1.5 1.5 0 0 1 2.5-1.6L8 15\"/>", "z": "<path d=\"M4 20h16M6 20v-7a6 6 0 0 1 12 0v7M12 7V4M10.5 4.5h3M9 20v-4a3 3 0 0 1 6 0v4\"/>", "s": "<path d=\"M4 5.5A2.5 2.5 0 0 1 6.5 3H20v15H6.5A2.5 2.5 0 0 0 4 20.5zM4 20.5A2.5 2.5 0 0 0 6.5 23H20v-5M9 8h7M9 11.5h5\"/>", "a": "<path d=\"M20 14.5A8 8 0 1 1 9.5 4a6.5 6.5 0 0 0 10.5 10.5zM17 3l.7 1.6 1.7.2-1.3 1.1.4 1.7-1.5-.9-1.5.9.4-1.7-1.3-1.1 1.7-.2z\"/>", "n": "<path d=\"M5 21V10l7-6 7 6v11zM9 21v-5a3 3 0 0 1 6 0v5M5 21h14\"/>", "h": "<path d=\"M12 2.5l2.4 5 5.4.7-4 3.8 1 5.4L12 14.8 7.2 17.4l1-5.4-4-3.8 5.4-.7z\"/>", "e": "<path d=\"M12 3v2M12 19v2M4.2 7l1.7 1M18.1 15l1.7 1M3 12h2M19 12h2M4.2 17l1.7-1M18.1 9l1.7-1\"/><circle cx=\"12\" cy=\"12\" r=\"4\"/>", "t": "<path d=\"M12 21a9 9 0 1 1 0-18 9 9 0 0 1 0 18zM12 7v5l3 2\"/>"};const DTINT={"b": "#b07a2a", "m": "#6c5ce7", "d": "#2f7dd1", "z": "#16a085", "s": "#8e44ad", "a": "#d68910", "n": "#c0392b", "h": "#2c7a7b", "e": "#e67e22", "t": "#3d5afe"};
 let dView=store.get('dView','grid');
@@ -447,11 +448,18 @@ function renderDuas(g){
       $('dlist').innerHTML=`<a class="item dua-item" href="#dua-asma-ul-husna"><div class="t"><b>Open with meanings &amp; benefits</b><small>Allah has the Most Beautiful Names, so call Him by them (7:180)</small></div><div class="ar" style="font-family:'Noto Nastaliq Urdu',serif;font-size:15px;line-height:2">اسمائے حسنیٰ</div></a>`+
         N.map((x,i)=>`<a class="item nm99" href="#dua-asma-ul-husna"><span class="nn">${i||''}</span><div class="t"><b>${esc(x.tr)}</b><small>${esc(x.en.replace(/^\d+\.\s*/,''))}</small></div><div class="ar nar">${x.ar}</div></a>`).join('');
       app.querySelectorAll('.dtabs .tab').forEach(b=>b.classList.toggle('on',b.dataset.g===dTab));return}
-    if(!q&&dTab==='d'){
+    if(!q&&(dTab==='d'||dTab==='n')){
       const CAL='<rect x="4" y="5" width="16" height="15" rx="3"/><path d="M4 10h16M8 3v4M16 3v4M8 14h2M14 14h2M8 17h2"/>';
       const wk=DAY_IDS.map((id,i)=>{const x=LIST.find(z=>z.id===id);return x?`<a class="item dua-item snum" href="#dua-${x.id}"><div class="num"><span>${i+1}</span></div><div class="t"><b>Supplication for ${DAY_EN[i]}</b><small>Imam Zainul Abideen (a.s.) · Sahifa Sajjadiya</small></div><div class="dur">${DAY_UR[i]} کی دعا</div>${dfavBtn(x.id)}</a>`:''}).join('');
       const all=items.map(d=>`<a class="item dua-item" href="#dua-${d.id}"><div class="num"><span>${d.mark||'د'}</span></div><div class="t"><b>${esc(d.name)}</b>${d.sub?`<small>${esc(d.sub)}</small>`:''}</div><div class="dur">${d.ur||''}</div>${dfavBtn(d.id)}</a>`).join('');
       const row=(k,ic,t,n,sub,ur,c,body)=>`<div class="acc${dSec===k?' open':''}" data-acc="${k}"><button type="button" class="acc-h" aria-expanded="${dSec===k}"><span class="dcat-m" style="--t:${t}"><svg viewBox="0 0 24 24" aria-hidden="true">${ic}</svg></span><span class="acc-t"><b>${n}</b><small>${sub}</small><span class="acc-u">${ur}</span></span><span class="dcat-n">${c}</span><svg class="acc-ch" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg></button>${dSec===k?`<div class="acc-sc"><div class="acc-body">${body}</div><span class="acc-bar" aria-hidden="true"><i></i></span><span class="acc-more" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg></span></div>`:''}</div>`;
+      if(dTab==='n'){
+        const NS=[['Daily & Special Namaz','Namaz e Shab, Aayaat, Ghufaylah, Eid and more','#2f7dc4','<path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/><path d="M16 4.5l.6 1.7 1.7.6-1.7.6-.6 1.7-.6-1.7-1.7-.6 1.7-.6z"/>'],
+          ['Namaz of the Masoomeen (a.s.)','The Holy Prophet, Lady Fatimah and the twelve Imams (a.s.)','#1f8a70','<path d="M12 3v2.5"/><path d="M6 20v-6a6 6 0 0 1 12 0v6"/><path d="M4 20h16M10 20v-3a2 2 0 0 1 4 0v3"/>'],
+          ['Namaz for Needs & Forgiveness','For needs, sustenance, forgiveness and difficulties','#b0568f','<path d="M12 20s-7-4.4-7-9.6A4 4 0 0 1 12 8a4 4 0 0 1 7 2.4C19 15.6 12 20 12 20z"/>']];
+        $('dlist').innerHTML=`<div class="accs">${NS.map(([sec,sub,c,ic],i)=>{const its=items.filter(x=>x.sec===sec);
+          return row('n'+i,ic,c,esc(sec),sub,its[0]?its[0].secUr||'':'',its.length,its.map((d,j)=>`<a class="item dua-item snum nmrow" href="#dua-${d.id}"><div class="num"><span>${j+1}</span></div><div class="t"><b>${esc(d.name)}</b>${d.sub?`<small>${esc(d.sub)}</small>`:''}<span class="nm-ur">${d.ur||''}</span></div>${dfavBtn(d.id)}</a>`).join(''))}).join('')}</div>`;
+      } else
       $('dlist').innerHTML=`<div class="accs">${row('week',CAL,'#c2742c','Duas for each day of the week','Sunday to Saturday','ہفتے کے دنوں کی دعائیں',7,wk)}${row('all',DICON.d,DTINT.d,'Duas','Kumayl, Tawassul, Nudba, Qunoot and more','دعائیں',items.length,all)}</div>`;
       $('dlist').querySelectorAll('.acc-h').forEach(b=>b.onclick=()=>{const k=b.parentNode.dataset.acc;dSec=dSec===k?'':k;draw();const o=$('dlist').querySelector('.acc.open');if(o){const r=o.getBoundingClientRect();if(r.top<70||r.bottom>innerHeight-86)window.scrollTo({top:scrollY+r.top-78,behavior:'smooth'})}});
       const sc=$('dlist').querySelector('.acc-sc');
@@ -523,7 +531,7 @@ function renderDua(id){
     if(NLG.includes(d.grp)&&D.segs.some(x=>x.note!=null&&x.ur))h+=nlSeg();
     if(D.merits) h+=meritsHTML(D,d.id);
     if(NAQSH[d.key]) h+=naqshHTML(d.key);
-    h+='<div class="dbody">';
+    h+=`<div class="dbody${d.grp==='n'?' steps':''}">`;
     if(useAlt&&D.alt.style==='own'){
       const segs=D.segs,L=D.alt.lines,noteH=s=>noteHTML(s.note,s.ur,s.h);
       let ptr=0;
@@ -536,7 +544,7 @@ function renderDua(id){
       });
       for(;ptr<segs.length;ptr++){const s2=segs[ptr];h+=s2.note!=null?noteH(s2):verseHTML(s2.ar,s2.tr,s2.en,s2.ur)}
     } else
-    h+=D.segs.map((s,i)=>s.note!=null
+    h+=D.segs.map((s,i)=>s.div?`<div class="dv"><span>Dua ${s.div} of ${s.of}</span></div>`:s.note!=null
       ? noteHTML(s.note,s.ur,s.h)
       : (para?verseHTML(s.ar,s.tr,'',s.ur)+(after[i]?`<div class="v-en v-enp">${esc(after[i])}</div>`:'')
              :verseHTML(s.ar,s.tr,useAlt?(after[i]||''):s.en,s.ur))).join('');
@@ -755,6 +763,7 @@ function renderPrayer(){
       if(st.perm&&st.perm!=='granted')bad.push('⚠️ Notifications are blocked for this app — turn them on in phone Settings.');
       if(st.exact&&st.exact!=='granted')bad.push('⚠️ “Alarms &amp; reminders” is off — alerts may come late. Turn it on in Settings → Apps → Quran &amp; Duas.');
       if(!st.loc)bad.push('⚠️ No location set — tap Change above.');
+      if(NH.platform==='ios'&&st.mode==='notif'&&store.get('alertSound',true))bad.push('⚠️ Alarms are not allowed for this app, so the azan is silent when your iPhone is on silent or in a Focus. Turn Azan alerts off and on again and choose Allow, or allow it in Settings → Apps → Quran &amp; Duas.');
       const total=Math.max(st.pending,st.alarms);
       if(!total&&st.loc)bad.push('⚠️ No alerts are scheduled yet. Turn alerts off and on again.');
       const nx=st.next?new Date(st.next).toLocaleString([], {weekday:'short',hour:'numeric',minute:'2-digit'}):'';

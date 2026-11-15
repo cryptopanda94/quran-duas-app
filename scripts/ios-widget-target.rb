@@ -29,6 +29,16 @@ unless app_group.files.any? { |f| f.path == 'App.entitlements' }
   app_group.new_reference('App.entitlements')
 end
 
+# Azan sounds in the app bundle itself. AlarmKit only plays custom sounds from the main bundle
+# (files in Library/Sounds fall back to the default tone), so the alarm needs them here.
+Dir[File.join(root, 'native', 'shared', '*.wav')].sort.each do |f|
+  name = File.basename(f)
+  FileUtils.cp(f, File.join(ios, 'App', name))
+  ref = app_group.files.find { |x| x.path == name } || app_group.new_reference(name)
+  app.resources_build_phase.add_file_reference(ref, true) unless app.resources_build_phase.files_references.include?(ref)
+end
+puts '  ✓ azan sounds added to the app bundle'
+
 widget = proj.targets.find { |t| t.name == WNAME }
 unless widget
   widget = proj.new_target(:app_extension, WNAME, :ios, '17.0', nil, :swift)
