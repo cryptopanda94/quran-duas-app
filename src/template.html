@@ -899,6 +899,8 @@ a.am-t{position:relative;text-decoration:none}.am-t.on{border-color:var(--accent
 .fv-empty .sb-ic{width:68px;height:68px;border-radius:24px;background:var(--accent-soft);box-shadow:none}.fv-empty .sb-ic svg{width:32px;height:32px;stroke:var(--accent)}
 .fv-empty b{font-size:21px;margin-top:10px}.fv-empty p{margin:0;color:var(--muted);font-size:15px;line-height:1.55;max-width:300px}
 .fv-empty div{display:flex;gap:10px;margin-top:14px;flex-wrap:wrap;justify-content:center}
+.bk-by{display:block;margin-top:6px;font-size:12px;color:var(--muted);font-style:normal}
+.bk-cr{margin:16px 2px;line-height:1.6}.bk-cr a,.hint a{color:var(--accent);font-weight:600}
 </style>
 </head>
 <body>
@@ -1031,7 +1033,7 @@ a.am-t{position:relative;text-decoration:none}.am-t.on{border-color:var(--accent
   <div class="ask-log" id="askLog"></div>
   <form class="ask-in" id="askForm"><textarea id="askQ" rows="1" placeholder="Ask HYDER AI" maxlength="1500"></textarea><button type="button" id="askMic" class="ask-mic" aria-label="Ask by voice"><svg viewBox="0 0 24 24"><rect x="9" y="3" width="6" height="11" rx="3"/><path d="M5.5 11a6.5 6.5 0 0 0 13 0M12 17.5V21"/></svg></button><button id="askSend" aria-label="Send"><svg viewBox="0 0 24 24"><path d="M5 12h13M13 6l6 6-6 6"/></svg></button>
     <div class="ask-rec" id="askRec" hidden><button type="button" id="askRecX" aria-label="Cancel recording"><svg viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></svg></button><span class="rdot" aria-hidden="true"></span><b id="askRecT">0:00</b><span class="rlv" id="askRecLv" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i><i></i></span><small>Listening</small><button type="button" id="askRecGo" aria-label="Send recording"><svg viewBox="0 0 24 24"><path d="M5 12h13M13 6l6 6-6 6"/></svg></button></div></form>
-  <div class="ask-foot">English in the references is machine-translated from the Arabic. For rulings, follow your marja. <button type="button" id="askClear">Clear chat</button></div>
+  <div class="ask-foot">Where no translator is named, the English is a machine translation. For rulings, follow your marja. <button type="button" id="askClear">Clear chat</button></div>
 </div>
 <div class="sheet tsb" id="tsbSheet" role="dialog" aria-label="Tasbih">
   <div class="np-grab"></div>
@@ -1044,7 +1046,7 @@ a.am-t{position:relative;text-decoration:none}.am-t.on{border-color:var(--accent
   <button class="np-x" id="bookClose" aria-label="Back to the answer"><svg viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></svg></button>
   <div class="bk-h"><small id="bkPath"></small><b id="bkTitle"></b><span id="bkTitleAr"></span></div>
   <div class="bk-list" id="bkList"></div>
-  <div class="ask-foot">The Arabic is the original text; the English is a machine translation.</div>
+  <div class="ask-foot">The Arabic is the original text. Named translations are from Thaqalayn (CC BY 4.0); other English is a machine translation.</div>
 </div>
 <nav class="tabbar" id="tabbar">
   <a href="#today" data-tab="today"><svg viewBox="0 0 24 24"><path d="M4 11l8-6 8 6v8a1 1 0 0 1-1 1h-4v-6h-6v6H5a1 1 0 0 1-1-1z"/></svg>Today</a>
@@ -1622,7 +1624,7 @@ function askDraw(){
   if(!ASK.log.length){L.innerHTML=`<div class="ask-hello"><span class="hy-orb big" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M12 2.5l1.9 5.6 5.6 1.9-5.6 1.9L12 17.5l-1.9-5.6L4.5 10l5.6-1.9z"/><path d="M18.5 14.5l.9 2.6 2.6.9-2.6.9-.9 2.6-.9-2.6-2.6-.9 2.6-.9z"/></svg></span><b>Assalamu alaykum</b><p>Ask about the Quran, hadith, duas, ziyarat or the Ahl al-Bayt (a.s.). I search the classical books and show you the references.</p></div>
     <div class="ask-ex">${['What did Imam Ali (a.s.) say about patience?','Virtues of visiting Imam Husain (a.s.)','What is the reward of Ziyarat Ashura?','اہل بیتؑ سے محبت کے بارے میں حدیث'].map(q=>`<button type="button" data-q="${esc(q)}">${esc(q)}</button>`).join('')}</div>`;return}
   L.innerHTML=ASK.log.map((m,i)=>m.role==='user'?`<div class="ask-m u">${esc(m.text)}</div>`:
-    `<div class="ask-m a" data-i="${i}"><span class="ask-who"><i class="hy-orb sm" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M12 2.5l1.9 5.6 5.6 1.9-5.6 1.9L12 17.5l-1.9-5.6L4.5 10l5.6-1.9z"/></svg></i>HYDER AI</span>${askFmt(m.text,m.refs)}${m.refs&&m.refs.length?`<div class="ask-refs"><b style="font-size:12.5px;color:var(--muted)">References</b>${m.refs.map(r=>`<div class="ask-ref" data-n="${r.n}"><span class="cite"><i>[${r.n}]</i>${esc(r.cite||r.label)}</span><div class="acts">${r.book&&r.ref?`<button type="button" data-book="${esc(r.ref)}">View in book ›</button>`:''}<button type="button" data-peek="1">Show text</button></div><div class="rb">${r.ar?`<div class="ar">${esc(r.ar)}</div>`:''}${r.en?`<div class="en">${esc(r.en)}</div><small class="mt">English: machine translation of the Arabic</small>`:''}</div></div>`).join('')}</div>`:''}</div>`).join('')
+    `<div class="ask-m a" data-i="${i}"><span class="ask-who"><i class="hy-orb sm" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M12 2.5l1.9 5.6 5.6 1.9-5.6 1.9L12 17.5l-1.9-5.6L4.5 10l5.6-1.9z"/></svg></i>HYDER AI</span>${askFmt(m.text,m.refs)}${m.refs&&m.refs.length?`<div class="ask-refs"><b style="font-size:12.5px;color:var(--muted)">References</b>${m.refs.map(r=>`<div class="ask-ref" data-n="${r.n}"><span class="cite"><i>[${r.n}]</i>${esc(r.cite||r.label)}</span><div class="acts">${r.book&&r.ref?`<button type="button" data-book="${esc(r.ref)}">View in book ›</button>`:''}<button type="button" data-peek="1">Show text</button></div><div class="rb">${r.ar?`<div class="ar">${esc(r.ar)}</div>`:''}${r.en?`<div class="en">${esc(r.en)}</div><small class="mt">${r.by?`Translation: ${esc(r.by)} · Thaqalayn, CC BY 4.0`:'English: machine translation of the Arabic'}</small>`:''}</div></div>`).join('')}</div>`:''}</div>`).join('')
     +(ASK.busy?'<div class="ask-m a"><span class="ask-who"><i class="hy-orb sm pulse" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M12 2.5l1.9 5.6 5.6 1.9-5.6 1.9L12 17.5l-1.9-5.6L4.5 10l5.6-1.9z"/></svg></i>Searching the books</span><span class="ask-dots"><i></i><i></i><i></i></span></div>':'');
   L.scrollTop=L.scrollHeight;
 }
@@ -1692,7 +1694,7 @@ async function bookOpen(ref){
   try{
     const r=await fetch(ASK_BASE.replace(/\/$/,'')+'/chapter?ref='+encodeURIComponent(ref));const j=await r.json();if(!r.ok)throw new Error(j.error||'');
     $('bkPath').textContent=[j.book,...(j.path||[]).slice(0,-1)].join(' · ');$('bkTitle').textContent=j.title.en||'';$('bkTitleAr').textContent=j.title.ar||'';
-    $('bkList').innerHTML=j.items.map(x=>`<div class="bk-it${x.ref===ref?' on':''}" data-r="${esc(x.ref)}"><span class="no">${j.book==='Nahj al-Balagha'?'Section':'Hadith'} ${esc(x.n)}</span>${x.ar?`<div class="ar">${esc(x.ar)}</div>`:''}${x.en?`<div class="en">${esc(x.en)}</div>`:''}</div>`).join('');
+    $('bkList').innerHTML=j.items.map(x=>`<div class="bk-it${x.ref===ref?' on':''}" data-r="${esc(x.ref)}"><span class="no">${j.book==='Nahj al-Balagha'?'Section':'Hadith'} ${esc(x.n)}</span>${x.ar?`<div class="ar">${esc(x.ar)}</div>`:''}${x.en?`<div class="en">${esc(x.en)}${x.by?`<small class="bk-by">Translation: ${esc(x.by)}</small>`:''}</div>`:''}</div>`).join('');
     const on=$('bkList').querySelector('.bk-it.on');if(on)setTimeout(()=>on.scrollIntoView({block:'start'}),60);
   }catch(e){$('bkList').innerHTML='<div class="bk-load">Could not open the book right now. Please try again.</div>'}
 }

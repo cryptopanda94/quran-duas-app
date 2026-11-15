@@ -1111,7 +1111,7 @@ function drawBooks(q,norm){
    +`<div class="bkall"><span>All Books</span><i></i><span>${items.length}</span><button type="button" id="bkViewB" aria-label="Grid or list">${bkView==='grid'?'☰':'▦'}</button></div>
    <div class="bkchips">${BKCATS.map(([k,n])=>`<button type="button" data-c="${k}" class="${k===bkCat?'on':''}">${n}</button>`).join('')}</div>
    <div class="${bkView==='grid'?'bkgrid':'bklist'}">${items.map(b=>`<a class="bkcard" href="#book-${b[0]}">${bkCover(b)}<span class="t"><b>${esc(b[1])}</b><i>${esc(b[5])}</i><small>${esc(b[3])}</small></span></a>`).join('')||'<div class="bk-load">No book matches.</div>'}</div>
-   <div class="hint" style="margin:14px 2px">The Arabic is the original text. The English is a machine translation of it, so read it as a guide. The books load from the internet.</div></div>`;
+   <div class="hint" style="margin:14px 2px">The Arabic is the original text. Where a translator is named, the English is theirs, as published by <a href="https://thaqalayn.com" target="_blank" rel="noopener">Thaqalayn</a> under <a href="https://creativecommons.org/licenses/by/4.0/" target="_blank" rel="noopener">CC BY 4.0</a>. Other English, and all Urdu, are machine translations, so read them as a guide. The books load from the internet.</div></div>`;
   L.querySelectorAll('.bkchips [data-c]').forEach(c=>c.onclick=()=>{const x=L.querySelector('.bkchips').scrollLeft;bkCat=c.dataset.c;drawBooks(q,norm);L.querySelector('.bkchips').scrollLeft=x});
   $('bkViewB').onclick=()=>{bkView=bkView==='grid'?'list':'grid';store.set('bkView',bkView);drawBooks(q,norm)};
   if($('bkLastX'))$('bkLastX').onclick=()=>{store.set('bkLast',null);drawBooks(q,norm)};
@@ -1126,6 +1126,9 @@ async function bkGet(ref){
 }
 /* where the back button goes from a book page */
 function bookUp(ref){const j=bkCache.get(ref);if(j&&j.up)return 'book-'+j.up;return ref.includes(':')?'book-'+ref.slice(0,ref.lastIndexOf(':')):'duas-b'}
+/* Credit required by Thaqalayn's licence (CC BY 4.0), shown under every chapter. */
+function bkCredit(items){const by=[...new Set((items||[]).map(x=>x.by).filter(Boolean))];
+  return `<div class="hint bk-cr">The Arabic is the original text. ${by.length?`English translation: <b>${by.map(esc).join(', ')}</b>, as published by <a href="https://thaqalayn.com" target="_blank" rel="noopener">Thaqalayn</a> under <a href="https://creativecommons.org/licenses/by/4.0/" target="_blank" rel="noopener">CC BY 4.0</a>, shown unchanged. English with no translator named, and all Urdu, are machine translations.`:`The English and Urdu are machine translations. Source of the texts: <a href="https://thaqalayn.com" target="_blank" rel="noopener">Thaqalayn</a>, <a href="https://creativecommons.org/licenses/by/4.0/" target="_blank" rel="noopener">CC BY 4.0</a>.`}</div>`}
 function renderBook(ref){
   const slug=ref.split(':')[0],B=BK.find(b=>b[0]===slug);
   if(!B||!bkBase())return false;
@@ -1139,7 +1142,7 @@ function renderBook(ref){
     const top=ref===slug;
     let h=hero(top?'':j.path.join(' · '),top?B[1]:j.title.en,top?B[2]:j.title.ar,top?B[3]+' · '+many(j.count):many(j.count),top);
     if(j.children&&j.children.length)h+='<div class="list">'+j.children.map((c,i)=>`<a class="item bk-row" href="#book-${esc(c.ref)}"><div class="num"><span>${i+1}</span></div><div class="t"><b>${esc(c.title.en)}</b><small>${many(c.count)}</small></div>${c.title.ar?`<div class="dur bk-ar">${esc(c.title.ar)}</div>`:''}<span class="dcat-go">›</span></a>`).join('')+'</div>';
-    if(j.items&&j.items.length)h+='<div class="bk-page">'+j.items.map(x=>`<div class="bk-it${x.en?'':' noen'}${x.ur?'':' nour'}"><span class="no">${unit} ${esc(x.n)}</span>${x.ar?`<div class="ar">${esc(x.ar)}</div>`:''}${x.en?`<div class="en">${esc(x.en)}</div>`:'<div class="noen-n">English is not available for this one yet.</div>'}${x.ur?`<div class="ur">${esc(x.ur)}</div>`:'<div class="nour-n">اس کا اردو ترجمہ ابھی دستیاب نہیں۔</div>'}</div>`).join('')+'</div><div class="hint" style="margin:14px 2px">The Arabic is the original text; the English and Urdu are machine translations.</div>';
+    if(j.items&&j.items.length)h+='<div class="bk-page">'+j.items.map(x=>`<div class="bk-it${x.en?'':' noen'}${x.ur?'':' nour'}"><span class="no">${unit} ${esc(x.n)}</span>${x.ar?`<div class="ar">${esc(x.ar)}</div>`:''}${x.en?`<div class="en">${esc(x.en)}${x.by?`<small class="bk-by">Translation: ${esc(x.by)}</small>`:''}</div>`:'<div class="noen-n">English is not available for this one yet.</div>'}${x.ur?`<div class="ur">${esc(x.ur)}</div>`:'<div class="nour-n">اس کا اردو ترجمہ ابھی دستیاب نہیں۔</div>'}</div>`).join('')+'</div>'+bkCredit(j.items);
     app.innerHTML=h;document.body.classList.toggle('bk-read',!!(j.items&&j.items.length));
     store.set('bkLast',{ref,slug,title:top?B[1]:j.title.en,t:Date.now()});
   };
