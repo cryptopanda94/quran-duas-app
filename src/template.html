@@ -1352,11 +1352,12 @@ function markersBefore(s,v,noJuzBan){
   return `<div class="rub${i.part===2?' hz':''}"><i><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="5" y="5" width="14" height="14" rx="1.2"/><rect x="5" y="5" width="14" height="14" rx="1.2" transform="rotate(45 12 12)"/><circle cx="12" cy="12" r="2.6"/></svg></i><div><b>${QN[i.part]} · Juz ${i.juz}</b><span>${['','One quarter','Half','Three quarters'][i.part]} of this Para completed</span></div><em class="ar">${PARTAR[i.part]}</em></div>`}
 function rukuAfter(s,v){const a=RK[s]||[1],n=META[s-1][4];const k=a.indexOf(v+1);const isEnd=k>0||v===n;if(!isEnd)return'';
   const idx=v===n?a.length:k,start=a[idx-1],len=v-start+1;
-  return `<div class="rk"><span class="rk-ar">ع</span><span>End of Ruku ${idx}${a.length>1?' of '+a.length:''} · ${len} verse${len>1?'s':''}${curJ?` · Juz ${juzOfKey(s*1000+v)} Ruku ${juzRukuNo(s,v)}`:''}</span></div>`}
+  const sr=`Ruku ${idx}${a.length>1?' of '+a.length:''}`,jz=juzOfKey(s*1000+v);
+  return `<div class="rk"><span class="rk-ar">ع</span><span>${curJ?`End of Juz ${jz} Ruku ${juzRukuNo(s,v)} of ${rukusInJuz(jz)} · ${len} verse${len>1?'s':''} · ${esc(META[s-1][1])} ${sr}`:`End of ${sr} · ${len} verse${len>1?'s':''}`}</span></div>`}
 function sajdaTag(s,v){const w=SJ.get(QK(s,v));return w==null?'':`<span class="sj${w?' w':''}">۩ ${w?'Wajib':'Mustahab'} Sajda</span>`}
 function sajdaNote(s,v){const w=SJ.get(QK(s,v));if(w==null)return'';
   return `<div class="sjn${w?' w':''}"><b>${w?'Wajib (obligatory) Sajda':'Mustahab (recommended) Sajda'}</b><span>${w?'Prostrate immediately on reciting or listening to this verse.':'It is recommended to prostrate on reciting or hearing this verse.'}</span><span class="ur">${w?'اس آیت کی تلاوت کرنے یا سننے پر فوراً سجدہ واجب ہے۔':'اس آیت کی تلاوت یا سننے پر سجدہ مستحب ہے۔'}</span></div>`}
-function posText(s,v){const i=qInfo(quarterOf(s,v));const a=RK[s]||[1];if(!curJ)return `<b>${esc(META[s-1][1])}</b><i></i>Ruku ${rukuOf(s,v)}/${a.length}`;return `<b class="jzs">${esc(META[s-1][1])}</b><i></i><b>Juz ${i.juz}</b><i></i>${QN[i.part]}<i></i>Ruku ${rukuOf(s,v)}/${a.length}`}
+function posText(s,v){const i=qInfo(quarterOf(s,v));const a=RK[s]||[1];if(!curJ)return `<b>${esc(META[s-1][1])}</b><i></i>Ruku ${rukuOf(s,v)}/${a.length}`;return `<b class="jzs">${esc(META[s-1][1])}</b><i></i><b>Juz ${i.juz}</b><i></i>${QN[i.part]}<i></i>Ruku ${(k=>RKEND.filter(x=>x<k&&juzOfKey(x)===juzOfKey(k)).length+1)(s*1000+v)}/${rukusInJuz(juzOfKey(s*1000+v))}`}
 function setPos(s,v){const b=$('jzBar');if(b){b.innerHTML=(curJ?'<span class="jzmode">Juz mode</span>':'<span class="jzmode smode">Surah mode</span>')+posText(s,v);b.hidden=false}}
 
 document.addEventListener('click',e=>{const a=e.target.closest('a[href^="#surah-"]');if(!a)return;
