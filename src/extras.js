@@ -10,17 +10,17 @@ function noJump(){$('jumpBtn').style.display='none'}
 
 /* ================= DUAS ================= */
 const LIST=[
+  {id:'duas-qunoot',key:'N_qunoot-quran',grp:'d',sub:'Quranic duas, Imam Husain (a.s.) & Witr qunoot',mark:'ق'},
+  {id:'dua-imam-zamana',user:'faraj-kun',grp:'d',sub:'For Imam al-Mahdi (a.t.f.s.) · after every prayer',mark:'ف'},
   {id:'ayat-kursi',name:'Ayat ul Kursi',ur:'آیت الکرسی',sub:'Al-Baqarah 2:255–257',mark:'آ',grp:'d'},
   {id:'dua-e-ahad',user:'ahad',grp:'d',sub:'Covenant with Imam al-Mahdi (a.t.f.s.) · every morning',mark:'ع'},
   {id:'dua-kumayl',user:'kumayl',grp:'d',sub:'Taught by Imam Ali (a.s.) · Thursday nights',mark:'ک'},
   {id:'dua-tawassul',key:'E24',grp:'d',sub:'Recited especially on Tuesday nights',mark:'ت'},
   {id:'dua-nudba',key:'E34',grp:'d',sub:'Friday mornings & Eids',mark:'ن'},
   {id:'dua-faraj',user:'faraj-ilahi',grp:'d',sub:'Taught by Imam al-Mahdi (a.t.f.s.) · for relief',mark:'ف'},
-  {id:'dua-imam-zamana',user:'faraj-kun',grp:'d',sub:'For Imam al-Mahdi (a.t.f.s.) · after every prayer',mark:'ف'},
   {id:'hadees-kisa',user:'kisa',grp:'d',sub:'Narrated by Bibi Fatima (s.a.)',mark:'ح'},
   {id:'dua-mujeer',user:'mujeer',grp:'d',sub:'13th–15th Ramadan · for forgiveness & relief',mark:'م'},
   {id:'dua-alqamah',key:'N_alqama',grp:'d',sub:'Recited after Ziyarat Ashura',mark:'ع'},
-  {id:'duas-qunoot',key:'N_qunoot-quran',grp:'d',sub:'Quranic duas, Imam Husain (a.s.) & Witr qunoot',mark:'ق'},
   {id:'dua-safar-sakhkhara',key:'N_safar-sakhkhara',grp:'d',sub:'When getting into a car, plane or any ride · Quran 43:13–14',mark:'س'},
   {id:'dua-safar',key:'N_dua-safar',grp:'d',sub:'Travel duas: setting out, boarding, arriving, returning',mark:'س'},
   {id:'munajat-safar',key:'N_munajat-safar',grp:'d',sub:'Imam Muhammad Taqi (a.s.) · before a journey',mark:'م'},
