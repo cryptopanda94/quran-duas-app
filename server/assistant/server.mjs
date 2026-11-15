@@ -16,6 +16,7 @@ import http from 'node:http';
 import { readFileSync, readdirSync, existsSync } from 'node:fs';
 import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
+import { gunzipSync } from 'node:zlib';
 
 const KEY = process.env.GEMINI_API_KEY;
 if (!KEY) { console.error('Set GEMINI_API_KEY'); process.exit(1); }
@@ -45,7 +46,12 @@ if (existsSync(cdir)) {
       if (!CHAP.has(ch)) CHAP.set(ch, []); CHAP.get(ch).push(ref);
     }
   }
-  console.log(`books loaded: ${HAD.size} hadith in ${CHAP.size} chapters`);
+  // Urdu (the source data's own machine translation) and English filled in later by translate_missing.mjs
+  let ur = 0, ex = 0;
+  const lines = (f, gz) => { if (!existsSync(join(here, f))) return []; const b = readFileSync(join(here, f)); return (gz ? gunzipSync(b) : b).toString('utf8').split('\n').filter(Boolean); };
+  for (const l of lines('urdu.jsonl.gz', true)) { try { const j = JSON.parse(l), h = HAD.get(j.r); if (h && j.u) { h.ur = j.u; ur++; } } catch {} }
+  for (const l of [...lines('added-en.jsonl', false), ...lines('extra-en.jsonl', false)]) { try { const j = JSON.parse(l), h = HAD.get(j.r); if (h && j.en && !h.en) { h.en = String(j.en).trim(); ex++; } } catch {} }
+  console.log(`books loaded: ${HAD.size} hadith in ${CHAP.size} chapters, ${ur} with Urdu, ${ex} English added later`);
 } else console.warn('corpus/ not found: references will be shorter and "View in book" is off');
 
 // table of contents: parent ref -> child refs (books > volumes > chapters), and how many hadith sit under each
@@ -84,7 +90,7 @@ function nodeTitle(ref) {
 }
 function chapterItems(ch) {
   const unit = ch.split(':')[0] === 'nahj-al-balagha' ? 'Section' : 'Hadith';
-  return { unit, items: (CHAP.get(ch) || []).map((r) => { const x = HAD.get(r); return { ref: r, n: r.split(':').pop(), ar: x.ar, en: x.en }; }) };
+  return { unit, items: (CHAP.get(ch) || []).map((r) => { const x = HAD.get(r); return { ref: r, n: r.split(':').pop(), ar: x.ar, en: x.en, ur: x.ur || '' }; }) };
 }
 // one level of a book: its parts, or the hadith when the node is a chapter
 function toc(ref) {

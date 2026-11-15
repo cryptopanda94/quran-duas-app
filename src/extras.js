@@ -928,10 +928,7 @@ function renderToday(){
    </div>
    ${last?`<a class="continue" href="#surah-${last.s}-${last.v}"><div style="flex:1"><small>Continue reading</small><b>${esc(META[last.s-1][1])} · Verse ${last.v}</b></div>›</a>`:''}
    ${HFMT?`<div class="tcard tcal" id="tcal"></div>`:''}
-   <div class="tlabel" style="margin:20px 4px 10px">Recommended for today</div>
-   <div class="recs">${(()=>{const EM={z:'🕌',d:'🤲',s:'📖',m:'🌙',a:'✨',n:'🧎',t:'📿',e:'☀️'};const t=todaySahifa();
-     const card=(d,k)=>`<a class="rec" href="#dua-${d.id}"><span class="rec-e">${EM[d.grp]||'🤲'}</span><span class="t">${k?`<small class="rec-k">${k}</small>`:''}<b>${esc(d.name)}</b>${d.sub?`<small>${esc(d.sub)}</small>`:''}</span>${d.ur?`<span class="rec-u">${d.ur}</span>`:''}<span class="dcat-go">›</span></a>`;
-     return (t.d?card(t.d,"Today's supplication"):'')+todays.map(id=>{const d=LIST.find(x=>x.id===id);return d?card(d,''):''}).join('')})()}</div>
+   <div class="tgrid">${[['#home','📖','Holy Quran','قرآن مجید','Read, listen and bookmark'],['#duas','🤲','Library','دعائیں اور زیارات','Duas, ziyarat and books'],['#prayer','🕌','Prayer','اوقات نماز','Prayer times and azan'],['#qibla','🧭','Qibla','قبلہ','Compass to the Kaaba']].map(t=>`<a class="tgi" href="${t[0]}"><span class="rec-e">${t[1]}</span><b>${t[2]}</b><small>${t[4]}</small><span class="rec-u">${t[3]}</span></a>`).join('')}${window.QAsk&&QAsk.base?`<a class="tgi hy" href="#" id="tgAsk"><span class="rec-e">✨</span><span class="tg-t"><b>HYDER AI</b><small>Ask a question, get answers with references</small></span><span class="dcat-go">›</span></a>`:''}</div>
    <div class="tlabel" style="margin:20px 4px 10px">Recommended acts</div>
    <div class="card acts" id="acts">${(()=>{const dk='acts:'+civ(new Date()).join('-'),done=store.get(dk,{});
      const A=[['zahra','Tasbih of Fatima Zahra (s.a.)','34 Allahu Akbar · 33 Alhamdulillah · 33 SubhanAllah','t:zahra'],['kursi','Ayat ul Kursi','Surah al-Baqarah 2:255','h:dua-ayat-kursi'],['ikhlas','Surah al-Ikhlas','Surah 112','h:surah-112'],['salawat','Salawat','Blessings on Muhammad and his family','t:salawat'],['istighfar','Istighfar','Astaghfirullaha Rabbi wa atubu ilayh','t:istighfar'],['shukr','Sajdah of gratitude','Say "Shukran lillah" three times in sajdah','']];
@@ -940,6 +937,7 @@ function renderToday(){
    ${dediHTML()}
    ${window.NH?`<div class="card hint" style="margin-top:16px"><b style="color:var(--ink)">Widgets:</b> add the Next Prayer and Ayah of the Day widgets to your home or lock screen — touch and hold an empty spot, tap <b>+</b> (iPhone) or <b>Widgets</b> (Android), and search “Quran & Duas”.</div>`:`<div class="card hint" style="margin-top:16px"><b style="color:var(--ink)">Widgets:</b> lock-screen and home-screen widgets need an app installed from the App Store, so this web app can't add one. This Today page shows the same things — next prayer and the ayah of the day.</div>`}`;
   if($('tcal'))todayCal();
+  if($('tgAsk'))$('tgAsk').onclick=e=>{e.preventDefault();window.QAsk&&QAsk.open()};
   if($('acts')){$('acts').querySelectorAll('[data-act]').forEach(b=>b.onclick=()=>{const a=b.dataset.act;if(a[0]==='t')tasbihOpen(a.slice(2));else location.hash=a.slice(2)});
     $('acts').querySelectorAll('[data-done]').forEach(b=>b.onclick=()=>{const dk='acts:'+civ(new Date()).join('-'),d=store.get(dk,{});d[b.dataset.done]=!d[b.dataset.done];store.set(dk,d);b.closest('.act').classList.toggle('ok',!!d[b.dataset.done]);b.setAttribute('aria-pressed',d[b.dataset.done]?'true':'false')})}
   $('ayPlay').onclick=()=>{Q.playVerse(A.s,A.a)};
@@ -1049,7 +1047,7 @@ function renderBook(ref){
     const top=ref===slug;
     let h=hero(top?'':j.path.join(' · '),top?B[1]:j.title.en,top?B[2]:j.title.ar,top?B[3]+' · '+many(j.count):many(j.count));
     if(j.children&&j.children.length)h+='<div class="list">'+j.children.map((c,i)=>`<a class="item bk-row" href="#book-${esc(c.ref)}"><div class="num"><span>${i+1}</span></div><div class="t"><b>${esc(c.title.en)}</b><small>${many(c.count)}</small></div>${c.title.ar?`<div class="dur bk-ar">${esc(c.title.ar)}</div>`:''}<span class="dcat-go">›</span></a>`).join('')+'</div>';
-    if(j.items&&j.items.length)h+='<div class="bk-page">'+j.items.map(x=>`<div class="bk-it"><span class="no">${unit} ${esc(x.n)}</span>${x.ar?`<div class="ar">${esc(x.ar)}</div>`:''}${x.en?`<div class="en">${esc(x.en)}</div>`:''}</div>`).join('')+'</div><div class="hint" style="margin:14px 2px">The Arabic is the original text; the English is a machine translation.</div>';
+    if(j.items&&j.items.length)h+='<div class="bk-page">'+j.items.map(x=>`<div class="bk-it${x.en?'':' noen'}${x.ur?'':' nour'}"><span class="no">${unit} ${esc(x.n)}</span>${x.ar?`<div class="ar">${esc(x.ar)}</div>`:''}${x.en?`<div class="en">${esc(x.en)}</div>`:'<div class="noen-n">English is not available for this one yet.</div>'}${x.ur?`<div class="ur">${esc(x.ur)}</div>`:'<div class="nour-n">اس کا اردو ترجمہ ابھی دستیاب نہیں۔</div>'}</div>`).join('')+'</div><div class="hint" style="margin:14px 2px">The Arabic is the original text; the English and Urdu are machine translations.</div>';
     app.innerHTML=h;document.body.classList.toggle('bk-read',!!(j.items&&j.items.length));
     store.set('bkLast',{ref,slug,title:top?B[1]:j.title.en,t:Date.now()});
   };
