@@ -367,6 +367,22 @@ const LIST=[
 const UD=JSON.parse(document.getElementById('udata').textContent);
 LIST.forEach(d=>{if(d.key){d.name=DU[d.key].name;d.ur=DU[d.key].nameUr}if(d.user){d.name=UD[d.user].name;d.ur=UD[d.user].nameUr}});
 LIST.find(x=>x.id==='ziyarat-warith').name='Ziyarat Warith (Mafatih)';
+/* Taqibaat that hold several duas: the line where each dua starts. Opening one shows a numbered list; each dua opens on its own page. */
+const TPARTS={T_taqibaat_general:[0,21,23,27,30,32,34,42,47,52,68,75,80,87,91,93,95,98,101,104,107,110,125,130,139,142,145,165,173,177,180,198,210],
+  T_taqibaat_fajr_1:[0,3,10,12,17,19,24,25,49,51,60,72,76],T_taqibaat_zuhr:[0,3,17,20,26],T_taqibaat_asr:[0,10,15,18],T_taqibaat_maghrib:[0,5,12,18,21,28]};
+/* Entries that hold several duas under their own headings: each heading starts a dua. */
+const HPARTS=['N_qunoot-quran','N_dua-safar','N_leaving-home','N_ashura-husain'];
+const PARTS=[];
+LIST.forEach(d=>{if(!d.key)return;const segs=DU[d.key].segs,byH=HPARTS.includes(d.key);
+  let st=TPARTS[d.key];if(byH){st=[];segs.forEach((x,i)=>{if(x.h)st.push(i)})}
+  if(!st||!st.length)return;
+  const cuts=[];let carry=[];st.map((a,i)=>segs.slice(a,st[i+1]||segs.length)).forEach(sl=>{if(sl.some(x=>x.ar)){cuts.push(carry.concat(sl));carry=[]}else carry=carry.concat(sl)});if(carry.length&&cuts.length)cuts[cuts.length-1]=cuts[cuts.length-1].concat(carry);
+  if(cuts.length<2)return;
+  if(byH){TPARTS[d.key]=st;d.intro=segs.slice(0,st[0]).filter(x=>x.note)}
+  PARTS.push({id:d.id+'~0',key:d.key,grp:d.grp,parent:d.id,n:0,name:d.name,sub:d.sub,ur:d.ur,mark:d.mark});
+  cuts.forEach((sl,i)=>{const k=d.key+'~'+(i+1),fa=sl.find(x=>x.ar)||{},hd=byH&&sl[0].note?String(sl[0].note).replace(/^\d+\.\s*/,''):'';
+    DU[k]={name:'Dua '+(i+1),nameUr:d.ur,segs:sl};
+    PARTS.push({id:d.id+'~'+(i+1),key:k,grp:d.grp,parent:d.id,n:i+1,of:cuts.length,name:'Dua '+(i+1),sub:d.name,ur:d.ur,mark:d.mark,title:hd||fa.en||'',ar:fa.ar||''})})});
 let dTab=store.get('dTab','d'), dQ='', dSec='';
 function duaSpot(){const n=new Date(),day=n.getDay(),hr=n.getHours();
   const pick=(day===4&&hr>=16)||(day===5&&hr<5)?['dua-kumayl','Recommended tonight · Thursday night']
@@ -432,6 +448,7 @@ function renderDuas(g){
     $('dlist').innerHTML=(tsx&&tsx.d?`<a class="item dua-item tday" href="#dua-${tsx.d.id}"><div class="num"><span>${tsx.d.mark||'ص'}</span></div><div class="t"><b>Today's supplication · ${DAY_EN[tsx.i]}</b><small>Sahifa Sajjadiya · Imam Zainul Abideen (a.s.) · with Naqsh</small></div><div class="dur">${DAY_UR[tsx.i]} کی دعا</div></a>`:'')+items.map(d=>(d.sec&&!q&&d.sec!==lastSec?(lastSec=d.sec,`<div class="dsec"><b>${esc(d.sec)}</b><span>${d.secUr||''}</span></div>`):'')+(()=>{const m=d.grp==='s'&&/^(\d+)\.\s*(.*)$/.exec(d.name),sub=m?'':d.sub;
       return `<a class="item dua-item${m?' snum':''}" href="#dua-${d.id}"><div class="num"><span>${m?m[1]:(d.mark||'د')}</span></div><div class="t"><b>${esc(m?m[2]:d.name)}</b>${sub?`<small>${esc(sub)}</small>`:''}</div>`})()+`<div class="dur">${d.ur||''}</div>${dfavBtn(d.id)}</a>`).join('')
       ||'<div class="hint" style="padding:20px 4px;text-align:center">Nothing found — try another name (e.g. Kumayl, Ashura, Kisa).</div>';
+    if(!q&&dTab==='d')$('dlist').insertAdjacentHTML('afterbegin',`<div class="dsec"><b>Duas for each day of the week</b><span>ہفتے کے دنوں کی دعائیں</span></div>`+DAY_IDS.map((id,i)=>{const x=LIST.find(z=>z.id===id);return x?`<a class="item dua-item snum" href="#dua-${x.id}"><div class="num"><span>${i+1}</span></div><div class="t"><b>Supplication for ${DAY_EN[i]}</b><small>Imam Zainul Abideen (a.s.) · Sahifa Sajjadiya</small></div><div class="dur">${DAY_UR[i]} کی دعا</div>${dfavBtn(x.id)}</a>`:''}).join('')+`<div class="dsec"><b>Duas</b><span>دعائیں</span></div>`);
     app.querySelectorAll('.dtabs .tab').forEach(b=>b.classList.toggle('on',!q&&b.dataset.g===dTab));
   };
   app.querySelectorAll('.dtabs .tab').forEach(b=>b.onclick=()=>{dTab=b.dataset.g;dSec='';store.set('dTab',dTab);dQ='';$('dq').value='';draw()});
@@ -457,8 +474,14 @@ function verseHTML(ar,tr,en,ur,end){
 }
 const NLG=['a','n','h'];
 function renderDua(id){
-  const d=LIST.find(x=>x.id===id); if(!d) return false;
-  setHeader(`${esc(d.name)}`,true); noJump();
+  const d=LIST.find(x=>x.id===id)||PARTS.find(x=>x.id===id); if(!d) return false;
+  setHeader(`${esc(d.n?d.sub+' · '+d.name:d.name)}`,true); noJump();
+  if(!d.parent&&d.key&&TPARTS[d.key]){
+    const ps=PARTS.filter(x=>x.parent===d.id&&x.n),cut=(t,n)=>{t=String(t||'').replace(/<[^>]+>/g,' ').replace(/[,;:]$/,'');return t.length>n?t.slice(0,n).replace(/\s+\S*$/,'')+'…':t};
+    app.innerHTML=`<div class="s-head"><div class="ar" style="font-family:'Noto Nastaliq Urdu',serif;font-size:30px;line-height:2.2">${d.ur}</div><h2>${esc(d.name)}</h2><p>${esc(d.sub)} · ${ps.length} duas</p>${dfavBtn(d.id,true)}</div>${(d.intro||[]).map(x=>noteHTML(x.note,x.ur,false)).join('')}
+     <div class="list tparts">${ps.map(x=>`<a class="item dua-item snum" href="#dua-${x.id}"><div class="num"><span>${x.n}</span></div><div class="t"><b>${esc(cut(x.title,70))}</b><small class="tp-ar">${cut(x.ar,46)}</small></div><span class="dcat-go">›</span></a>`).join('')}
+     <a class="item dua-item" href="#dua-${d.id}~0"><div class="num"><span>≡</span></div><div class="t"><b>Read all together</b><small>Every dua on one page, one after another</small></div><span class="dcat-go">›</span></a></div>`;
+    return true}
   let h=`<div class="s-head"><div class="ar" style="font-family:'Noto Nastaliq Urdu',serif;font-size:30px;line-height:2.2">${d.ur}</div><h2>${esc(d.name)}</h2><p>${esc(d.sub)}</p>${dfavBtn(d.id,true)}</div>`;
   if(d.user){
     const U=UD[d.user];h+=readbar('dua',null);
@@ -505,6 +528,8 @@ function renderDua(id){
              :verseHTML(s.ar,s.tr,useAlt?(after[i]||''):s.en,s.ur))).join('');
   }
   if(d.id!=='ayat-kursi')h+='</div>';
+  if(d.n){const pv=PARTS.find(x=>x.parent===d.parent&&x.n===d.n-1&&x.n),nx=PARTS.find(x=>x.parent===d.parent&&x.n===d.n+1);
+    h+=`<div class="tp-nav">${pv?`<a href="#dua-${pv.id}">‹ Dua ${pv.n}</a>`:'<span></span>'}<a href="#dua-${d.parent}">All ${d.of} duas</a>${nx?`<a href="#dua-${nx.id}">Dua ${nx.n} ›</a>`:'<span></span>'}</div>`}
   app.innerHTML=h;
   return true;
 }
@@ -928,7 +953,14 @@ function renderToday(){
    </div>
    ${last?`<a class="continue" href="#surah-${last.s}-${last.v}"><div style="flex:1"><small>Continue reading</small><b>${esc(META[last.s-1][1])} · Verse ${last.v}</b></div>›</a>`:''}
    ${HFMT?`<div class="tcard tcal" id="tcal"></div>`:''}
-   <div class="tgrid">${[['#home','📖','Holy Quran','قرآن مجید','Read, listen and bookmark'],['#duas','🤲','Library','دعائیں اور زیارات','Duas, ziyarat and books'],['#prayer','🕌','Prayer','اوقات نماز','Prayer times and azan'],['#qibla','🧭','Qibla','قبلہ','Compass to the Kaaba']].map(t=>`<a class="tgi" href="${t[0]}"><span class="rec-e">${t[1]}</span><b>${t[2]}</b><small>${t[4]}</small><span class="rec-u">${t[3]}</span></a>`).join('')}${window.QAsk&&QAsk.base?`<a class="tgi hy" href="#" id="tgAsk"><span class="rec-e">✨</span><span class="tg-t"><b>HYDER AI</b><small>Ask a question, get answers with references</small></span><span class="dcat-go">›</span></a>`:''}</div>
+   <div class="tg3">${(()=>{
+     const em=(e,t)=>`<span class="tg-i" style="--t:${t||'#2f7fc4'}">${e}</span>`,sv=k=>`<span class="tg-i sv" style="--t:${DTINT[k]}"><svg viewBox="0 0 24 24" aria-hidden="true">${DICON[k]}</svg></span>`;
+     const cat=k=>[`#duas-${k}`,sv(k),DCAT[k][0].replace(' Recitations','').replace(' e Namaz','').replace(' Sajjadiya',''),DCAT[k][1],k==='b'?BK.length:k==='h'?99:k==='e'?LIST.filter(x=>x.grp==='e').length+1:LIST.filter(x=>x.grp===k).length];
+     const fv=(S.favs||[]).length+(S.dfavs||[]).length,bm=(S.marks||[]).length,ai=window.QAsk&&QAsk.base;
+     const T=[['#home',em('📖'),'Holy Quran','قرآن مجید',0,'surahs'],['#prayer',em('🕌'),'Prayer','اوقات نماز'],['#qibla',em('🧭'),'Qibla','قبلہ'],
+       ai?['ask',em('✨'),'HYDER AI','حیدر اے آئی',0,'','hy']:0,ai?cat('b'):0,cat('h'),...['e','t','n','d','z','a','m','s'].map(cat),
+       ['tasbih',em('📿'),'Tasbih','تسبیح'],HFMT?['#calendar',em('🗓️'),'Calendar','کیلنڈر']:0,['#home',em('❤️'),'Favourites','پسندیدہ',fv,'favs'],['#home',em('🔖'),'Bookmarks','نشانیاں',bm,'marks']].filter(Boolean);
+     return T.map(t=>`<a class="tg3i${t[6]?' '+t[6]:''}" href="${t[0][0]==='#'?t[0]:'#'}" data-tg="${t[0][0]==='#'?'':t[0]}" data-tab="${t[5]||''}">${t[1]}<b>${t[2]}</b><span class="tg-u">${t[3]}</span>${t[4]?`<span class="dcat-n">${t[4]}</span>`:''}</a>`).join('')})()}</div>
    <div class="tlabel" style="margin:20px 4px 10px">Recommended acts</div>
    <div class="card acts" id="acts">${(()=>{const dk='acts:'+civ(new Date()).join('-'),done=store.get(dk,{});
      const A=[['zahra','Tasbih of Fatima Zahra (s.a.)','34 Allahu Akbar · 33 Alhamdulillah · 33 SubhanAllah','t:zahra'],['kursi','Ayat ul Kursi','Surah al-Baqarah 2:255','h:dua-ayat-kursi'],['ikhlas','Surah al-Ikhlas','Surah 112','h:surah-112'],['salawat','Salawat','Blessings on Muhammad and his family','t:salawat'],['istighfar','Istighfar','Astaghfirullaha Rabbi wa atubu ilayh','t:istighfar'],['shukr','Sajdah of gratitude','Say "Shukran lillah" three times in sajdah','']];
@@ -937,7 +969,7 @@ function renderToday(){
    ${dediHTML()}
    ${window.NH?`<div class="card hint" style="margin-top:16px"><b style="color:var(--ink)">Widgets:</b> add the Next Prayer and Ayah of the Day widgets to your home or lock screen — touch and hold an empty spot, tap <b>+</b> (iPhone) or <b>Widgets</b> (Android), and search “Quran & Duas”.</div>`:`<div class="card hint" style="margin-top:16px"><b style="color:var(--ink)">Widgets:</b> lock-screen and home-screen widgets need an app installed from the App Store, so this web app can't add one. This Today page shows the same things — next prayer and the ayah of the day.</div>`}`;
   if($('tcal'))todayCal();
-  if($('tgAsk'))$('tgAsk').onclick=e=>{e.preventDefault();window.QAsk&&QAsk.open()};
+  app.querySelectorAll('.tg3i').forEach(b=>b.onclick=e=>{const g=b.dataset.tg,t=b.dataset.tab;if(t)S.tab=t;if(g){e.preventDefault();if(g==='ask')window.QAsk&&QAsk.open();else if(g==='tasbih')tasbihOpen()}});
   if($('acts')){$('acts').querySelectorAll('[data-act]').forEach(b=>b.onclick=()=>{const a=b.dataset.act;if(a[0]==='t')tasbihOpen(a.slice(2));else location.hash=a.slice(2)});
     $('acts').querySelectorAll('[data-done]').forEach(b=>b.onclick=()=>{const dk='acts:'+civ(new Date()).join('-'),d=store.get(dk,{});d[b.dataset.done]=!d[b.dataset.done];store.set(dk,d);b.closest('.act').classList.toggle('ok',!!d[b.dataset.done]);b.setAttribute('aria-pressed',d[b.dataset.done]?'true':'false')})}
   $('ayPlay').onclick=()=>{Q.playVerse(A.s,A.a)};
