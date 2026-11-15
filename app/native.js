@@ -430,6 +430,18 @@
     };
   }
 
+  // People who set the app up before alarms existed: ask for the alarm permission once, so the azan can ring on silent.
+  async function askAlarmOnce() {
+    if (platform !== 'ios' || !alertsOn || store.get('alarmAsked', false)) return;
+    try {
+      if (!WB.alarmStatus) return;
+      const s = await WB.alarmStatus();
+      if (!s.supported || s.state !== 'prompt') return;
+      store.set('alarmAsked', true);
+      if (await alarmReady(true)) await schedule();
+    } catch (e) {}
+  }
+
   /* ---------------- iOS: ask for an App Store rating now and then ---------------- */
   // iOS shows the system rating pop-up at most three times a year and decides itself whether to show it.
   // We only ask after the app has been opened on 5 different days, at least 3 days after the first launch, once per app version.
@@ -474,6 +486,6 @@
   } catch (e) {}
 
   setTimeout(() => { try { WB.stopHeading().then(() => console.log('QD WB ok')).catch((e) => console.log('QD WB fail ' + ((e && e.message) || e))); } catch (e) { console.log('QD WB throw ' + e); } }, 1500);
-  const boot = () => setTimeout(async () => { await ensureChannel(); refresh(); if (needsWelcome()) welcome(); else { window.QX && QX.autoLocate && QX.autoLocate(false); maybeAskReview(); } }, 800);
+  const boot = () => setTimeout(async () => { await ensureChannel(); refresh(); if (needsWelcome()) welcome(); else { askAlarmOnce(); window.QX && QX.autoLocate && QX.autoLocate(false); maybeAskReview(); } }, 800);
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', boot); else boot();
 })();
