@@ -1,2 +1,4 @@
 corpus/
 extra-en.jsonl
+extra-ur.jsonl
+*.bak

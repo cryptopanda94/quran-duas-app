@@ -55,7 +55,10 @@ if (existsSync(cdir)) {
   const lines = (f, gz) => { if (!existsSync(join(here, f))) return []; const b = readFileSync(join(here, f)); return (gz ? gunzipSync(b) : b).toString('utf8').split('\n').filter(Boolean); };
   for (const l of lines('urdu.jsonl.gz', true)) { try { const j = JSON.parse(l), h = HAD.get(j.r); if (h && j.u) { h.ur = j.u; ur++; } } catch {} }
   for (const l of [...lines('added-en.jsonl', false), ...lines('extra-en.jsonl', false)]) { try { const j = JSON.parse(l), h = HAD.get(j.r), en = String(j.en || '').trim(); if (h && en && !h.en && realTr(h.ar, en)) { h.en = en; ex++; } } catch {} }
-  console.log(`books loaded: ${HAD.size} hadith in ${CHAP.size} chapters, ${ur} with Urdu, ${ex} English added later`);
+  // Urdu filled in later by translate_missing.mjs --urdu, with the same checks and a script check
+  let exu = 0;
+  for (const l of lines('extra-ur.jsonl', false)) { try { const j = JSON.parse(l), h = HAD.get(j.r), u = String(j.ur || '').trim(); if (h && u && !h.ur && realTr(h.ar, u) && arLetters(u) >= 3 && (u.match(/[A-Za-z]/g) || []).length <= u.length * 0.15) { h.ur = u; exu++; } } catch {} }
+  console.log(`books loaded: ${HAD.size} hadith in ${CHAP.size} chapters, ${ur} with Urdu, ${ex} English added later, ${exu} Urdu added later`);
 } else console.warn('corpus/ not found: references will be shorter and "View in book" is off');
 
 // table of contents: parent ref -> child refs (books > volumes > chapters), and how many hadith sit under each
