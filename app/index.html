@@ -780,6 +780,23 @@ body .ayah-card .v-en{display:block!important}
 .dv:before,.dv:after{content:"";flex:1;height:1px;background:var(--line)}
 .dv span{padding:6px 14px;border-radius:999px;background:var(--accent-soft);color:var(--accent);font-size:12.5px;font-weight:700;letter-spacing:.04em}
 .nmrow .nm-ur{display:block;font-family:"Noto Nastaliq Urdu",serif;direction:rtl;text-align:left;font-size:13.5px;line-height:2.1;color:var(--muted);margin-top:2px}
+.ed-hero{position:relative;overflow:hidden;display:flex;flex-direction:column;align-items:flex-start;margin:4px 0 22px;padding:20px 20px 18px;border-radius:26px;color:#fff;text-decoration:none;background:linear-gradient(140deg,color-mix(in srgb,var(--fill,var(--accent)) 86%,#000),color-mix(in srgb,var(--fill,var(--accent)) 58%,#000));box-shadow:0 16px 34px color-mix(in srgb,var(--accent) 28%,transparent),inset 0 1px 0 rgba(255,255,255,.18)}
+.ed-hero:after{content:"";position:absolute;right:-50px;top:-60px;width:190px;height:190px;border-radius:50%;background:rgba(255,255,255,.09)}
+.ed-hero .ed-k{font-size:11.5px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;opacity:.85}
+.ed-hero b{font-size:25px;line-height:1.2;margin-top:6px;letter-spacing:-.01em}
+.ed-hero .ed-u{font-family:"Noto Nastaliq Urdu",serif;font-size:17px;line-height:2.1;opacity:.95}
+.ed-hero small{font-size:13.5px;line-height:1.5;opacity:.88;max-width:300px}
+.ed-hero .ed-go{position:relative;z-index:1;display:inline-flex;align-items:center;gap:4px;margin-top:14px;padding:9px 12px 9px 16px;border-radius:999px;background:#fff;color:var(--accent);font-size:14px;font-weight:700}
+.ed-hero .ed-go svg{width:16px;height:16px;fill:none;stroke:currentColor;stroke-width:2.4;stroke-linecap:round;stroke-linejoin:round}
+.ed-lbl{margin:0 4px 10px;font-size:12.5px;font-weight:700;letter-spacing:.09em;text-transform:uppercase;color:var(--muted)}
+.dbody+.naqsh{margin:26px 0 8px}
+.am-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+.am-t{aspect-ratio:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;padding:8px 6px;border-radius:22px;background:var(--card);border:1px solid var(--line);box-shadow:0 4px 14px rgba(0,0,0,.04);color:var(--ink);text-align:center}
+.am-t:active{transform:scale(.97)}
+.am-t .am-u{font-family:"Noto Nastaliq Urdu",serif;font-size:21px;line-height:2;color:var(--accent)}
+.am-t b{font-size:13.5px;line-height:1.2}.am-t small{font-size:11.5px;color:var(--muted);margin-top:2px}
+.am-back{display:inline-block;width:auto;padding:8px 14px;border-radius:999px;border:1px solid var(--line);background:var(--card);color:var(--accent);font-weight:600;font-size:14px}
+.am-h{display:flex;justify-content:space-between;align-items:baseline;margin:16px 4px 12px}.am-h b{font-size:21px}.am-h span{font-family:"Noto Nastaliq Urdu",serif;font-size:18px;color:var(--accent)}
 </style>
 </head>
 <body>
@@ -1982,29 +1999,33 @@ function renderDuas(g){
     if(!q&&g==='r'){const TG=['Quran & Tafseer','Virtues','24 volumes','8 volumes','Hadith dictations','Primary sources','Imam Ali (a.s.)','3 volumes','Imam al-Mahdi','Beliefs','110 volumes','Fiqh','Q & A','30 volumes','4 volumes','8 volumes'];$('dlist').innerHTML=`<div class="hint" style="margin:0 2px 14px">Public notebooks on Google NotebookLM, shared by Divine Pearls (ya-mahdi.net) as ShiaLM. Each opens in your browser and needs a Google account.</div><div class="nbgrid">`+NOTEBOOKS.map(([id,t,d],i)=>`<a class="nbc" href="https://notebook.google.com/notebook/${id}" target="_blank" rel="noopener"><div class="nbc-top"><span class="nbc-i">✦</span><span class="nbc-tag">${esc(TG[i]||'')}</span></div><b>${esc(t)}</b><small>${esc(d)}</small><span class="nbc-btn">Open NotebookLM →</span></a>`).join('')+'</div>';return}
     const items=q?LIST.filter((d,i,A)=>norm(d.name+' '+d.sub+' '+d.ur+' '+d.id).includes(q)&&(!d.key||A.findIndex(x=>x.key===d.key)===i)):LIST.filter(d=>d.grp===dTab);
     let lastSec='';
-    if(!q&&dTab==='s'){
-      const secs=[];LIST.filter(x=>x.grp==='s'&&x.sec).forEach(x=>{if(!secs.find(y=>y[0]===x.sec))secs.push([x.sec,x.secUr||'',(()=>{let c=0,on=false;LIST.forEach(z=>{if(z.grp!=='s')return;if(z.sec)on=z.sec===x.sec;if(on)c++});return c})()])});
-      const SD={'Supplications':'Duas 1–61','Supplications for the Days of the Week':'Sunday to Saturday','Fifteen Whispered Prayers':'Munajat 1–15'};
-      if(!dSec||!secs.find(y=>y[0]===dSec)){
-        $('dlist').innerHTML=secs.map(([n,u,c],i)=>`<div class="item sec-card" data-sec="${i}" role="button" tabindex="0"><div class="num"><span>${c}</span></div><div class="t"><b>${esc(n)}</b><small>${esc(SD[n]||'')}</small></div><div class="dur">${u}</div><span class="dcat-go">›</span></div>`).join('');
-        $('dlist').querySelectorAll('.sec-card').forEach(c=>c.onclick=()=>{dSec=secs[+c.dataset.sec][0];draw();window.scrollTo(0,0)});
-        return}
-      const cur=secs.find(y=>y[0]===dSec);
-      const its=LIST.filter(d=>d.grp==='s'&&d.sec===dSec||(d.grp==='s'&&!d.sec&&inSec(d,dSec)));
-      function inSec(d,n){const idx=LIST.indexOf(d);let sc='';for(let i=idx;i>=0;i--){if(LIST[i].grp==='s'&&LIST[i].sec){sc=LIST[i].sec;break}}return sc===n}
-      $('dlist').innerHTML=`<div class="sec-back" role="button" tabindex="0">‹ Sahifa Sajjadiya</div><div class="dsec"><b>${esc(cur[0])}</b><span>${cur[1]}</span></div>`+its.map(d=>{const m=/^(\d+)\.\s*(.*)$/.exec(d.name),sub=m?'':d.sub;
-        return `<a class="item dua-item${m?' snum':''}" href="#dua-${d.id}"><div class="num"><span>${m?m[1]:(d.mark||'د')}</span></div><div class="t"><b>${esc(m?m[2]:d.name)}</b>${sub?`<small>${esc(sub)}</small>`:''}</div><div class="dur">${d.ur||''}</div>${dfavBtn(d.id)}</a>`}).join('');
-      $('dlist').querySelector('.sec-back').onclick=()=>{dSec='';draw();window.scrollTo(0,0)};
-      return}
     if(!q&&dTab==='h'){const N=DU['N_names-99'].segs.filter(x=>x.ar);
       $('dlist').innerHTML=`<a class="item dua-item" href="#dua-asma-ul-husna"><div class="t"><b>Open with meanings &amp; benefits</b><small>Allah has the Most Beautiful Names, so call Him by them (7:180)</small></div><div class="ar" style="font-family:'Noto Nastaliq Urdu',serif;font-size:15px;line-height:2">اسمائے حسنیٰ</div></a>`+
         N.map((x,i)=>`<a class="item nm99" href="#dua-asma-ul-husna"><span class="nn">${i||''}</span><div class="t"><b>${esc(x.tr)}</b><small>${esc(x.en.replace(/^\d+\.\s*/,''))}</small></div><div class="ar nar">${x.ar}</div></a>`).join('');
       app.querySelectorAll('.dtabs .tab').forEach(b=>b.classList.toggle('on',b.dataset.g===dTab));return}
-    if(!q&&(dTab==='d'||dTab==='n')){
+    if(!q&&'dnamszt'.includes(dTab)){
       const CAL='<rect x="4" y="5" width="16" height="15" rx="3"/><path d="M4 10h16M8 3v4M16 3v4M8 14h2M14 14h2M8 17h2"/>';
       const wk=DAY_IDS.map((id,i)=>{const x=LIST.find(z=>z.id===id);return x?`<a class="item dua-item snum" href="#dua-${x.id}"><div class="num"><span>${i+1}</span></div><div class="t"><b>Supplication for ${DAY_EN[i]}</b><small>Imam Zainul Abideen (a.s.) · Sahifa Sajjadiya</small></div><div class="dur">${DAY_UR[i]} کی دعا</div>${dfavBtn(x.id)}</a>`:''}).join('');
       const all=items.map(d=>`<a class="item dua-item" href="#dua-${d.id}"><div class="num"><span>${d.mark||'د'}</span></div><div class="t"><b>${esc(d.name)}</b>${d.sub?`<small>${esc(d.sub)}</small>`:''}</div><div class="dur">${d.ur||''}</div>${dfavBtn(d.id)}</a>`).join('');
       const row=(k,ic,t,n,sub,ur,c,body)=>`<div class="acc${dSec===k?' open':''}" data-acc="${k}"><button type="button" class="acc-h" aria-expanded="${dSec===k}"><span class="dcat-m" style="--t:${t}"><svg viewBox="0 0 24 24" aria-hidden="true">${ic}</svg></span><span class="acc-t"><b>${n}</b><small>${sub}</small><span class="acc-u">${ur}</span></span><span class="dcat-n">${c}</span><svg class="acc-ch" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg></button>${dSec===k?`<div class="acc-sc"><div class="acc-body">${body}</div><span class="acc-bar" aria-hidden="true"><i></i></span><span class="acc-more" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg></span></div>`:''}</div>`;
+      const nrow=(d,j)=>{const m=/^(\d+)\.\s*(.*)$/.exec(d.name);return `<a class="item dua-item snum nmrow" href="#dua-${d.id}"><div class="num"><span>${m?m[1]:j+1}</span></div><div class="t"><b>${esc(m?m[2]:d.name)}</b>${d.sub&&!m&&dTab!=='a'?`<small>${esc(d.sub)}</small>`:''}${d.ur?`<span class="nm-ur">${d.ur}</span>`:''}</div>${dfavBtn(d.id)}</a>`};
+      if('amszt'.includes(dTab)){
+        const gs=[];items.forEach(d=>{if(d.sec&&(!gs.length||gs[gs.length-1].sec!==d.sec))gs.push({sec:d.sec,ur:d.secUr||'',its:[]});if(!gs.length)gs.push({sec:'',ur:'',its:[]});gs[gs.length-1].its.push(d)});
+        if(gs.length<2){$('dlist').innerHTML=items.map(nrow).join('');app.querySelectorAll('.dtabs .tab').forEach(b=>b.classList.toggle('on',b.dataset.g===dTab));return}
+        if(dTab==='a'){
+          const cur=gs[+String(dSec).slice(1)];
+          if(/^g\d+$/.test(dSec)&&cur){
+            $('dlist').innerHTML=`<button type="button" class="am-back">‹ All months</button><div class="am-h"><b>${esc(cur.sec)}</b><span>${cur.ur}</span></div>`+cur.its.map(nrow).join('');
+            $('dlist').querySelector('.am-back').onclick=()=>{dSec='';draw();window.scrollTo(0,0)};
+          } else {
+            $('dlist').innerHTML=`<div class="am-grid">${gs.map((g2,i)=>`<button type="button" class="am-t" data-i="${i}"><span class="am-u">${g2.ur}</span><b>${esc(g2.sec.replace(/\s*\(.*\)/,''))}</b><small>${g2.its.length} ${g2.its.length>1?'aamaal':'amal'}</small></button>`).join('')}</div>`;
+            $('dlist').querySelectorAll('.am-t').forEach(b=>b.onclick=()=>{dSec='g'+b.dataset.i;draw();window.scrollTo(0,0)});
+          }
+          app.querySelectorAll('.dtabs .tab').forEach(b=>b.classList.toggle('on',b.dataset.g===dTab));return}
+        const SD={'Supplications':'Duas 1–61','Supplications for the Days of the Week':'Sunday to Saturday','Fifteen Whispered Prayers':'Munajat 1–15 · Imam Zainul Abideen (a.s.)','Munajaat of Imam Ali (a.s.)':'In Masjid Kufa, and the Munajaat in verse'};
+        const strip=n=>n.replace(/^\d+\.\s*/,'');const cut=(t,n)=>t.length>n?t.slice(0,n).replace(/\s+\S*$/,'')+'…':t;
+        $('dlist').innerHTML=`<div class="accs">${gs.map((g2,i)=>row('g'+i,DICON[dTab],DTINT[dTab],esc(g2.sec),esc(SD[g2.sec]||(dTab==='a'?'':cut(strip(g2.its[0].name),44)+(g2.its.length>1?' and more':''))),g2.ur,g2.its.length,g2.its.map(nrow).join(''))).join('')}</div>`;
+      } else
       if(dTab==='n'){
         const NS=[['Daily & Special Namaz','Namaz e Shab, Aayaat, Ghufaylah, Eid and more','#2f7dc4','<path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/><path d="M16 4.5l.6 1.7 1.7.6-1.7.6-.6 1.7-.6-1.7-1.7-.6 1.7-.6z"/>'],
           ['Namaz of the Masoomeen (a.s.)','The Holy Prophet, Lady Fatimah and the twelve Imams (a.s.)','#1f8a70','<path d="M12 3v2.5"/><path d="M6 20v-6a6 6 0 0 1 12 0v6"/><path d="M4 20h16M10 20v-3a2 2 0 0 1 4 0v3"/>'],
@@ -2020,6 +2041,10 @@ function renderDuas(g){
       app.querySelectorAll('.dtabs .tab').forEach(b=>b.classList.toggle('on',b.dataset.g===dTab));
       return}
     const tsx=!q&&dTab==='e'?todaySahifa():null;
+    if(!q&&dTab==='e'){
+      $('dlist').innerHTML=(tsx&&tsx.d?`<a class="ed-hero" href="#dua-${tsx.d.id}"><span class="ed-k">Today · ${DAY_EN[tsx.i]}</span><b>Dua for ${DAY_EN[tsx.i]}</b><span class="ed-u">${DAY_UR[tsx.i]} کی دعا</span><small>By Imam Zainul Abideen (a.s.), from Sahifa Sajjadiya. The Naqsh for the day is at the end.</small><span class="ed-go">Read now <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 6l6 6-6 6"/></svg></span></a>`:'')+
+        `<div class="ed-lbl">Read every day</div>`+items.map((d,j)=>`<a class="item dua-item snum nmrow" href="#dua-${d.id}"><div class="num"><span>${j+1}</span></div><div class="t"><b>${esc(d.name)}</b>${d.sub?`<small>${esc(d.sub)}</small>`:''}<span class="nm-ur">${d.ur||''}</span></div>${dfavBtn(d.id)}</a>`).join('');
+      app.querySelectorAll('.dtabs .tab').forEach(b=>b.classList.toggle('on',b.dataset.g===dTab));return}
     $('dlist').innerHTML=(tsx&&tsx.d?`<a class="item dua-item tday" href="#dua-${tsx.d.id}"><div class="num"><span>${tsx.d.mark||'ص'}</span></div><div class="t"><b>Today's supplication · ${DAY_EN[tsx.i]}</b><small>Sahifa Sajjadiya · Imam Zainul Abideen (a.s.) · with Naqsh</small></div><div class="dur">${DAY_UR[tsx.i]} کی دعا</div></a>`:'')+items.map(d=>(d.sec&&!q&&d.sec!==lastSec?(lastSec=d.sec,`<div class="dsec"><b>${esc(d.sec)}</b><span>${d.secUr||''}</span></div>`):'')+(()=>{const m=d.grp==='s'&&/^(\d+)\.\s*(.*)$/.exec(d.name),sub=m?'':d.sub;
       return `<a class="item dua-item${m?' snum':''}" href="#dua-${d.id}"><div class="num"><span>${m?m[1]:(d.mark||'د')}</span></div><div class="t"><b>${esc(m?m[2]:d.name)}</b>${sub?`<small>${esc(sub)}</small>`:''}</div>`})()+`<div class="dur">${d.ur||''}</div>${dfavBtn(d.id)}</a>`).join('')
       ||'<div class="hint" style="padding:20px 4px;text-align:center">Nothing found — try another name (e.g. Kumayl, Ashura, Kisa).</div>';
@@ -2082,7 +2107,6 @@ function renderDua(id){
     h+=readbar('dua',useAlt?D.alt.label:null);
     if(NLG.includes(d.grp)&&D.segs.some(x=>x.note!=null&&x.ur))h+=nlSeg();
     if(D.merits) h+=meritsHTML(D,d.id);
-    if(NAQSH[d.key]) h+=naqshHTML(d.key);
     h+=`<div class="dbody${d.grp==='n'?' steps':''}">`;
     if(useAlt&&D.alt.style==='own'){
       const segs=D.segs,L=D.alt.lines,noteH=s=>noteHTML(s.note,s.ur,s.h);
@@ -2102,6 +2126,7 @@ function renderDua(id){
              :verseHTML(s.ar,s.tr,useAlt?(after[i]||''):s.en,s.ur))).join('');
   }
   if(d.id!=='ayat-kursi')h+='</div>';
+  if(d.key&&NAQSH[d.key])h+=naqshHTML(d.key);
   if(d.n){const pv=PARTS.find(x=>x.parent===d.parent&&x.n===d.n-1&&x.n),nx=PARTS.find(x=>x.parent===d.parent&&x.n===d.n+1);
     h+=`<div class="tp-nav">${pv?`<a href="#dua-${pv.id}">‹ Dua ${pv.n}</a>`:'<span></span>'}<a href="#dua-${d.parent}">All ${d.of} duas</a>${nx?`<a href="#dua-${nx.id}">Dua ${nx.n} ›</a>`:'<span></span>'}</div>`}
   app.innerHTML=h;
