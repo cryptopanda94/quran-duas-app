@@ -57,7 +57,7 @@ if (existsSync(cdir)) {
   for (const l of [...lines('added-en.jsonl', false), ...lines('extra-en.jsonl', false)]) { try { const j = JSON.parse(l), h = HAD.get(j.r), en = String(j.en || '').trim(); if (h && en && !h.en && realTr(h.ar, en)) { h.en = en; ex++; } } catch {} }
   // Urdu filled in later by translate_missing.mjs --urdu, with the same checks and a script check
   let exu = 0;
-  for (const l of lines('extra-ur.jsonl', false)) { try { const j = JSON.parse(l), h = HAD.get(j.r), u = String(j.ur || '').trim(); if (h && u && !h.ur && realTr(h.ar, u) && arLetters(u) >= 3 && (u.match(/[A-Za-z]/g) || []).length <= u.length * 0.15) { h.ur = u; exu++; } } catch {} }
+  for (const l of [...lines('added-ur.jsonl', false), ...lines('extra-ur.jsonl', false)]) { try { const j = JSON.parse(l), h = HAD.get(j.r), u = String(j.ur || '').trim(); if (h && u && !h.ur && realTr(h.ar, u) && arLetters(u) >= 3 && (u.match(/[A-Za-z]/g) || []).length <= u.length * 0.15) { h.ur = u; exu++; } } catch {} }
   console.log(`books loaded: ${HAD.size} hadith in ${CHAP.size} chapters, ${ur} with Urdu, ${ex} English added later, ${exu} Urdu added later`);
 } else console.warn('corpus/ not found: references will be shorter and "View in book" is off');
 
@@ -364,6 +364,12 @@ async function transcribe(audio) {
 http.createServer(async (req, res) => {
   if (req.method === 'OPTIONS') return send(res, 204, {});
   if (req.method === 'GET' && req.url === '/health') return send(res, 200, { ok: true, model: MODEL, hadith: HAD.size });
+  // which hadith still have no English or no Urdu (only those with real Arabic text)
+  if (req.method === 'GET' && req.url === '/missing') {
+    const real = (h) => (h.ar.match(/[\u0621-\u064A\u0671-\u06D3]/g) || []).length >= 6, en = [], ur = [];
+    for (const h of HAD.values()) { if (!real(h)) continue; if (!h.en) en.push(h.ref); if (!h.ur) ur.push(h.ref); }
+    return send(res, 200, { en, ur });
+  }
   if (req.method === 'GET' && req.url.startsWith('/toc?')) {
     const t = toc(new URL(req.url, 'http://x').searchParams.get('ref') || '');
     return t ? send(res, 200, t) : send(res, 404, { error: 'Not found' });
