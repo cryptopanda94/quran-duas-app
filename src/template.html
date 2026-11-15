@@ -836,6 +836,50 @@ body .ayah-card .v-en{display:block!important}
 .qs .switch.on{background:var(--fill,var(--accent))}
 a.am-t{position:relative;text-decoration:none}.am-t.on{border-color:var(--accent);background:var(--accent-soft)}
 .am-td{position:absolute;top:8px;right:8px;font-style:normal;padding:2px 7px;border-radius:999px;background:var(--fill,var(--accent));color:#fff;font-size:9.5px;font-weight:700;letter-spacing:.06em;text-transform:uppercase}
+/* HYDER AI: assistant look */
+.sheet.ask{padding:8px 16px calc(10px + env(safe-area-inset-bottom));background:var(--bg);border-radius:28px 28px 0 0}
+.ask-h.hy2{flex-direction:row;align-items:center;gap:12px;padding:4px 48px 12px 2px;border-bottom:1px solid var(--line)}
+.ask-h.hy2>span:last-child{display:flex;flex-direction:column;gap:1px}.ask-h.hy2 b{font-size:18px;letter-spacing:.01em}
+.hy-orb{flex:none;width:42px;height:42px;border-radius:50%;display:grid;place-items:center;font-style:normal;background:radial-gradient(circle at 30% 25%,color-mix(in srgb,var(--fill,var(--accent)) 70%,#fff),var(--fill,var(--accent)) 55%,color-mix(in srgb,var(--fill,var(--accent)) 60%,#000));box-shadow:0 0 0 5px color-mix(in srgb,var(--accent) 12%,transparent),0 8px 20px color-mix(in srgb,var(--accent) 35%,transparent)}
+.hy-orb svg{width:21px;height:21px;fill:#fff;stroke:none}
+.hy-orb.big{width:72px;height:72px;box-shadow:0 0 0 10px color-mix(in srgb,var(--accent) 10%,transparent),0 0 0 22px color-mix(in srgb,var(--accent) 5%,transparent),0 14px 34px color-mix(in srgb,var(--accent) 38%,transparent);animation:hyb 4s ease-in-out infinite}.hy-orb.big svg{width:34px;height:34px}
+.hy-orb.sm{width:24px;height:24px;box-shadow:none}.hy-orb.sm svg{width:13px;height:13px}.hy-orb.pulse{animation:hyb 1.2s ease-in-out infinite}
+@keyframes hyb{50%{transform:scale(1.06)}}
+.ask-hello{display:flex;flex-direction:column;align-items:center;text-align:center;gap:6px;padding:34px 12px 10px}
+.ask-hello b{font-size:24px;letter-spacing:-.01em;margin-top:22px}.ask-hello p{margin:0;color:var(--muted);font-size:15.5px;line-height:1.55;max-width:320px}
+.ask-ex{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:14px}
+.ask-ex button{padding:13px 14px;border-radius:18px;background:var(--card);border:1px solid var(--line);font-size:14.5px;line-height:1.4;color:var(--ink);box-shadow:0 3px 12px rgba(0,0,0,.04)}
+.ask-log{gap:18px;padding:16px 2px}
+.ask-m{font-size:16.5px;line-height:1.6}
+.ask-m.u{max-width:84%;padding:11px 16px;border-radius:22px;border-bottom-right-radius:7px;background:linear-gradient(135deg,var(--fill,var(--accent)),color-mix(in srgb,var(--fill,var(--accent)) 72%,#000))}
+.ask-m.a{max-width:100%;align-self:stretch;background:none;border:0;padding:0 2px;border-radius:0}
+.ask-who{display:flex;align-items:center;gap:8px;margin-bottom:8px;font-size:13px;font-weight:700;letter-spacing:.04em;color:var(--accent)}
+.ask-m.a p{margin:0 0 10px}.ask-m.a h4{margin:16px 0 8px;font-size:17.5px;letter-spacing:-.01em}.ask-m.a h4:first-of-type{margin-top:4px}
+.ask-m.a ul{margin:4px 0 10px;padding-left:22px}.ask-m.a li{margin:0 0 6px}.ask-m.a li::marker{color:var(--accent)}
+.ask-m sup button{font-size:11.5px;min-width:20px;height:20px;border-radius:999px}
+.ask-refs{border-top:0;margin-top:14px;padding-top:0;gap:8px}
+.ask-ref{border-radius:16px;box-shadow:0 3px 12px rgba(0,0,0,.04)}.ask-ref .cite{font-size:14px;padding:11px 13px 4px}.ask-ref .acts{padding:6px 12px 11px}.ask-ref .acts button{font-size:13px;padding:6px 12px}
+.ask-in{position:relative;border-top:0;padding-top:6px}
+.ask-in textarea{min-height:54px;padding:15px 58px 15px 20px;border-radius:28px;font-size:16.5px;background:var(--card);border:1.5px solid var(--line);box-shadow:0 6px 22px rgba(0,0,0,.07);outline:0;transition:border-color .2s,box-shadow .2s}
+.ask-in textarea:focus{border-color:var(--accent);box-shadow:0 0 0 4px color-mix(in srgb,var(--accent) 14%,transparent),0 6px 22px rgba(0,0,0,.07)}
+.ask-in button{position:absolute;right:7px;bottom:7px;width:40px;height:40px;background:linear-gradient(135deg,var(--fill,var(--accent)),color-mix(in srgb,var(--fill,var(--accent)) 66%,#000))}
+.ask-in svg{transform:rotate(-90deg)}
+.ask-foot{text-align:center;font-size:11px;padding:8px 4px 0}.ask-foot button{float:none;display:block;margin:4px auto 0}
+/* Prayer page: alerts and azan cards */
+.azc{padding:16px}.azc-h{margin:0 2px 10px;font-size:11.5px;font-weight:700;letter-spacing:.09em;text-transform:uppercase;color:var(--muted)}
+.azc .aprefs{gap:0}
+.azc .arow{border:0;background:none;border-radius:0;padding:13px 2px;gap:14px}.azc .arow+.arow{border-top:1px solid var(--line)}
+.azc .arow b{font-size:16px}.azc .arow small{font-size:13px;line-height:1.45;margin-top:3px}
+.ar-ic{flex:none;width:42px;height:42px;border-radius:14px;display:grid;place-items:center;background:var(--accent-soft)}
+.ar-ic svg{width:21px;height:21px;fill:none;stroke:var(--accent);stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round}
+.azc #alstat{margin:10px 0 0;padding:10px 14px;border-radius:14px;background:color-mix(in srgb,var(--accent) 6%,transparent);font-size:13px;line-height:1.5}
+.azc .azseg{border-radius:999px;padding:4px;gap:2px;background:var(--bg)}
+.azc .azseg button{border-radius:999px;padding:9px 2px;font-size:13.5px;font-weight:600;color:var(--muted)}
+.azc .azseg button.on{background:var(--card);color:var(--accent);box-shadow:0 2px 8px rgba(0,0,0,.1)}
+.azc .azlist{border-top:0;display:flex;flex-direction:column;gap:8px;margin-top:6px}
+.azc .azrow{border:1px solid var(--line);border-radius:18px;padding:12px 12px 12px 14px;background:var(--card);transition:background .2s,border-color .2s}
+.azc .azrow.sel{border-color:var(--accent);background:var(--accent-soft)}
+.azc .azrow .azplay{width:38px;height:38px;padding:0;border-radius:50%;display:grid;place-items:center;font-size:13px;color:var(--accent)}
 </style>
 </head>
 <body>
@@ -962,9 +1006,9 @@ a.am-t{position:relative;text-decoration:none}.am-t.on{border-color:var(--accent
 <div class="sheet ask" id="askSheet" role="dialog" aria-label="HYDER AI">
   <div class="np-grab"></div>
   <button class="np-x" id="askClose" aria-label="Close"><svg viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></svg></button>
-  <div class="ask-h"><b>HYDER AI</b><small>Answers from classical hadith books, with references</small></div>
+  <div class="ask-h hy2"><span class="hy-orb" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M12 2.5l1.9 5.6 5.6 1.9-5.6 1.9L12 17.5l-1.9-5.6L4.5 10l5.6-1.9z"/><path d="M18.5 14.5l.9 2.6 2.6.9-2.6.9-.9 2.6-.9-2.6-2.6-.9 2.6-.9z"/></svg></span><span><b>HYDER AI</b><small>AI assistant · answers with references</small></span></div>
   <div class="ask-log" id="askLog"></div>
-  <form class="ask-in" id="askForm"><textarea id="askQ" rows="1" placeholder="Ask in English or اردو…" maxlength="1500"></textarea><button id="askSend" aria-label="Send"><svg viewBox="0 0 24 24"><path d="M5 12h13M13 6l6 6-6 6"/></svg></button></form>
+  <form class="ask-in" id="askForm"><textarea id="askQ" rows="1" placeholder="Ask HYDER AI" maxlength="1500"></textarea><button id="askSend" aria-label="Send"><svg viewBox="0 0 24 24"><path d="M5 12h13M13 6l6 6-6 6"/></svg></button></form>
   <div class="ask-foot">English in the references is machine-translated from the Arabic. For rulings, follow your marja. <button type="button" id="askClear">Clear chat</button></div>
 </div>
 <div class="sheet tsb" id="tsbSheet" role="dialog" aria-label="Tasbih">
@@ -1542,17 +1586,18 @@ function askFmt(t,refs){
   h=h.replace(/\[\[([a-z0-9-]+)\]\]/gi,(a,id)=>`<a class="alink" href="${askLinkHref(id)}" data-close="1">${esc(askLinkName(id))}</a>`);
   h=h.replace(/((?:\[\d{1,2}\])+)/g,g=>'<sup>'+g.match(/\d+/g).filter(n=>refs&&refs.some(r=>r.n==n)).map(n=>`<button type="button" data-ref="${n}">${n}</button>`).join('')+'</sup>');
   h=h.replace(/\*\*([^*]+)\*\*/g,'<b>$1</b>');
+  h=h.replace(/(^|[^*\w])\*([^*\n]+)\*(?![*\w])/g,'$1<i>$2</i>');
   const out=[];let ul=false;
-  h.split(/\n/).forEach(l=>{const m=l.match(/^\s*[-*•]\s+(.*)/);if(m){if(!ul){out.push('<ul>');ul=true}out.push('<li>'+m[1]+'</li>')}else{if(ul){out.push('</ul>');ul=false}if(l.trim())out.push('<p>'+l+'</p>')}});
+  h.split(/\n/).forEach(l=>{const m=l.match(/^\s*[-*•]\s+(.*)/);if(m){if(!ul){out.push('<ul>');ul=true}out.push('<li>'+m[1]+'</li>')}else{if(ul){out.push('</ul>');ul=false}const hm=l.match(/^\s*#{1,6}\s+(.*)/);if(hm)out.push('<h4>'+hm[1]+'</h4>');else if(l.trim())out.push('<p>'+l+'</p>')}});
   if(ul)out.push('</ul>');return out.join('');
 }
 function askDraw(){
   const L=$('askLog');
-  if(!ASK.log.length){L.innerHTML=`<div class="ask-m a"><p>Assalamu alaykum. I am HYDER AI. Ask me anything about the Quran, hadith, duas, ziyarat or the Ahl al-Bayt (a.s.). I search classical books such as al-Kafi, Nahj al-Balagha and Man La Yahduruhu al-Faqih and show you the references.</p></div>
+  if(!ASK.log.length){L.innerHTML=`<div class="ask-hello"><span class="hy-orb big" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M12 2.5l1.9 5.6 5.6 1.9-5.6 1.9L12 17.5l-1.9-5.6L4.5 10l5.6-1.9z"/><path d="M18.5 14.5l.9 2.6 2.6.9-2.6.9-.9 2.6-.9-2.6-2.6-.9 2.6-.9z"/></svg></span><b>Assalamu alaykum</b><p>Ask about the Quran, hadith, duas, ziyarat or the Ahl al-Bayt (a.s.). I search the classical books and show you the references.</p></div>
     <div class="ask-ex">${['What did Imam Ali (a.s.) say about patience?','Virtues of visiting Imam Husain (a.s.)','What is the reward of Ziyarat Ashura?','اہل بیتؑ سے محبت کے بارے میں حدیث'].map(q=>`<button type="button" data-q="${esc(q)}">${esc(q)}</button>`).join('')}</div>`;return}
   L.innerHTML=ASK.log.map((m,i)=>m.role==='user'?`<div class="ask-m u">${esc(m.text)}</div>`:
-    `<div class="ask-m a" data-i="${i}">${askFmt(m.text,m.refs)}${m.refs&&m.refs.length?`<div class="ask-refs"><b style="font-size:12.5px;color:var(--muted)">References</b>${m.refs.map(r=>`<div class="ask-ref" data-n="${r.n}"><span class="cite"><i>[${r.n}]</i>${esc(r.cite||r.label)}</span><div class="acts">${r.book&&r.ref?`<button type="button" data-book="${esc(r.ref)}">View in book ›</button>`:''}<button type="button" data-peek="1">Show text</button></div><div class="rb">${r.ar?`<div class="ar">${esc(r.ar)}</div>`:''}${r.en?`<div class="en">${esc(r.en)}</div><small class="mt">English: machine translation of the Arabic</small>`:''}</div></div>`).join('')}</div>`:''}</div>`).join('')
-    +(ASK.busy?'<div class="ask-m a"><span class="ask-dots"><i></i><i></i><i></i></span></div>':'');
+    `<div class="ask-m a" data-i="${i}"><span class="ask-who"><i class="hy-orb sm" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M12 2.5l1.9 5.6 5.6 1.9-5.6 1.9L12 17.5l-1.9-5.6L4.5 10l5.6-1.9z"/></svg></i>HYDER AI</span>${askFmt(m.text,m.refs)}${m.refs&&m.refs.length?`<div class="ask-refs"><b style="font-size:12.5px;color:var(--muted)">References</b>${m.refs.map(r=>`<div class="ask-ref" data-n="${r.n}"><span class="cite"><i>[${r.n}]</i>${esc(r.cite||r.label)}</span><div class="acts">${r.book&&r.ref?`<button type="button" data-book="${esc(r.ref)}">View in book ›</button>`:''}<button type="button" data-peek="1">Show text</button></div><div class="rb">${r.ar?`<div class="ar">${esc(r.ar)}</div>`:''}${r.en?`<div class="en">${esc(r.en)}</div><small class="mt">English: machine translation of the Arabic</small>`:''}</div></div>`).join('')}</div>`:''}</div>`).join('')
+    +(ASK.busy?'<div class="ask-m a"><span class="ask-who"><i class="hy-orb sm pulse" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M12 2.5l1.9 5.6 5.6 1.9-5.6 1.9L12 17.5l-1.9-5.6L4.5 10l5.6-1.9z"/></svg></i>Searching the books</span><span class="ask-dots"><i></i><i></i><i></i></span></div>':'');
   L.scrollTop=L.scrollHeight;
 }
 async function askSend(q){

@@ -745,15 +745,18 @@ function renderPrayer(){
    <div class="card ptable">${PR.map(([k,n,u,main])=>`<div class="pr${main?'':' minor'}${np&&np.k===k?' now':''}"><span>${n}</span><span class="ur">${u}</span><b>${fmt(LOC,T[k])}</b>
       ${main?`<button class="bell${ALERTS[k]?' on':''}" data-k="${k}" aria-hidden="true" tabindex="-1">${ALERTS[k]?icons.bell:icons.belloff}</button><button class="ios-sw sm${ALERTS[k]?' on':''}" data-k="${k}" role="switch" aria-checked="${ALERTS[k]?'true':'false'}" aria-label="Azan alert for ${n}"></button>`:'<span class="pr-gap"></span>'}</div>`).join('')}</div>
    <button class="card tsb-open" id="tsbOpen" type="button"><span class="tsb-ic"><svg viewBox="0 0 24 24"><circle cx="12" cy="4" r="1.6"/><circle cx="17.2" cy="6.2" r="1.6"/><circle cx="19.4" cy="11.4" r="1.6"/><circle cx="17.2" cy="16.6" r="1.6"/><circle cx="6.8" cy="6.2" r="1.6"/><circle cx="4.6" cy="11.4" r="1.6"/><circle cx="6.8" cy="16.6" r="1.6"/><circle cx="12" cy="18.8" r="1.6"/><path d="M12 20.4v2.6"/></svg></span><span class="t"><b>Tasbih</b><small>Counter for the Tasbih of Fatima Zahra (s.a.), salawat and dhikr</small></span><span class="dcat-go" style="display:block">›</span></button>
-   <div class="card">
-     <div style="margin-bottom:10px"><b>Choose azan</b></div>
-     <div class="aprefs" style="margin-bottom:14px">
-        <button class="arow" id="arm" role="switch" aria-checked="${(window.NH?NH.alertsOn():armed)?'true':'false'}"><span><b>🔔 Azan alerts</b><small>${(window.NH?NH.alertsOn():armed)?'On for the prayers you switched on above':'Off — turn on to hear the azan at prayer time'}</small></span><i class="ios-sw${(window.NH?NH.alertsOn():armed)?' on':''}"></i></button>
-        ${(window.NH?NH.alertsOn():armed)?`<button class="arow" data-pref="alertSound"><span><b>🔊 Sound</b><small>${window.NH&&NH.platform==='ios'?'Plays the azan you chose, like an alarm — even when your iPhone is on silent':'Plays the azan you chose for each prayer'}</small></span><i class="ios-sw${store.get('alertSound',true)?' on':''}"></i></button>
-        <button class="arow" data-pref="alertVib"><span><b>📳 Vibrate</b><small>${window.NH&&NH.platform==='ios'?'With sound on, vibration follows your iPhone\'s Sounds &amp; Haptics settings':'Vibrates when the alert arrives'}</small></span><i class="ios-sw${store.get('alertVib',true)?' on':''}"></i></button>
+   <div class="card azc">
+     <div class="azc-h">Alerts</div>
+     <div class="aprefs">
+        <button class="arow" id="arm" role="switch" aria-checked="${(window.NH?NH.alertsOn():armed)?'true':'false'}"><i class="ar-ic" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M6 9a6 6 0 0 1 12 0c0 6 2.5 7 2.5 7h-17S6 15 6 9z"/><path d="M10 20a2 2 0 0 0 4 0"/></svg></i><span><b>Azan alerts</b><small>${(window.NH?NH.alertsOn():armed)?'On for the prayers you switched on above':'Off — turn on to hear the azan at prayer time'}</small></span><i class="ios-sw${(window.NH?NH.alertsOn():armed)?' on':''}"></i></button>
+        ${(window.NH?NH.alertsOn():armed)?`<button class="arow" data-pref="alertSound"><i class="ar-ic" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M4 10v4h3l5 4V6L7 10z"/><path d="M16 9a4 4 0 0 1 0 6M18.5 6.5a8 8 0 0 1 0 11"/></svg></i><span><b>Sound</b><small>${window.NH&&NH.platform==='ios'?'Plays the azan you chose, like an alarm — even when your iPhone is on silent':'Plays the azan you chose for each prayer'}</small></span><i class="ios-sw${store.get('alertSound',true)?' on':''}"></i></button>
+        <button class="arow" data-pref="alertVib"><i class="ar-ic" aria-hidden="true"><svg viewBox="0 0 24 24"><rect x="8" y="3" width="8" height="18" rx="2"/><path d="M4 9v6M20 9v6"/></svg></i><span><b>Vibrate</b><small>${window.NH&&NH.platform==='ios'?'With sound on, vibration follows your iPhone\'s Sounds &amp; Haptics settings':'Vibrates when the alert arrives'}</small></span><i class="ios-sw${store.get('alertVib',true)?' on':''}"></i></button>
         ${window.NH&&NH.alertStatus?`<div class="hint" id="alstat">Checking alerts on this phone…</div>`:''}
         ${window.NH?'':`<div class="hint">In the web version, alerts ring <b>only while this page is open</b>. Install the app for alerts with the phone locked.</div>`}`:''}
      </div>
+   </div>
+   <div class="card azc">
+     <div class="azc-h">Choose azan</div>
      <div class="seg azseg">${AZK.map(([k,n])=>`<button data-tgt="${k}" class="${azTarget===k?'on':''}">${n}</button>`).join('')}</div>
      <div class="hint" style="margin:8px 0 6px">Tap an azan to use it for <b>${AZK.find(x=>x[0]===azTarget)[1]}</b>. ▶ plays it.<br>${AZK.map(([k,n])=>`<span class="azsum">${n}: ${(SLOTS.find(x=>x[0]===AZP[k])||SLOTS[0])[1]}</span>`).join(' ')}</div>
      <div class="azlist">${SLOTS.map(([k,n,sub])=>{const have=AZ[k],sel=AZP[azTarget]===k;
