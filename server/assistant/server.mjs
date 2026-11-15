@@ -33,6 +33,18 @@ const IDS = new Set(CAT.map((c) => c[0]));
 
 // --- the books, for readable references and "View in book" (corpus/*.txt from corpus.tar.gz, titles.json) ---
 const TITLES = existsSync(join(here, 'titles.json')) ? JSON.parse(readFileSync(join(here, 'titles.json'), 'utf8')) : {};
+// The source data has stray web markup in places (mostly al-Kafi volume 8): tags, numeric entities, honorifics as <sup>asws</sup>.
+const HON = { asws: '(a.s.)', as: '(a.s.)', saww: '(s.a.w.a.)', sawa: '(s.a.w.a.)' };
+const clean = (t) => String(t || '')
+  .replace(/"\]\)<\/script><script>self\.__next_f\.push\(\[1,"/g, '')
+  .replace(/\s*<sup>\s*([A-Za-z.]{1,8})\s*<\/sup>/g, (m, k) => ' ' + (HON[k.toLowerCase().replace(/\./g, '')] || '(' + k.toLowerCase() + ')'))
+  .replace(/<q>/gi, '“').replace(/<\/q>/gi, '”').replace(/<br\s*\/?>/gi, ' ')
+  .replace(/<\/?(a|span|sup|sub|b|i|em|strong|p|div|font|u)(\s[^>]*)?>/gi, '')
+  .replace(/&#(\d+);/g, (m, d) => String.fromCodePoint(+d)).replace(/&nbsp;/g, ' ').replace(/&amp;/g, '&').replace(/&quot;/g, '"').replace(/&lsquo;/g, '‘').replace(/&rsquo;/g, '’')
+  .replace(/[ \u00a0]+/g, ' ').trim();
+for (const k of Object.keys(TITLES)) { const t = TITLES[k]; if (t.en) t.en = clean(t.en); if (t.ar) t.ar = clean(t.ar); }
+// the first section of al-Kafi volume 8 carries a hadith's opening words as its title in the source
+if (TITLES['al-kafi:8:1:1']) TITLES['al-kafi:8:1:1'].en = 'The Epistle of Abu Abdullah (a.s.) to His Companions';
 const HAD = new Map(), CHAP = new Map(), LABEL = new Map();   // ref -> hadith, chapterRef -> [ref], label -> ref
 const cdir = join(here, 'corpus');
 if (existsSync(cdir)) {
@@ -41,7 +53,7 @@ if (existsSync(cdir)) {
       const label = (block.match(/^\[([^\]]+)\]/) || [])[1], ref = (block.match(/\nREF: (\S+)/) || [])[1];
       if (!label || !ref) continue;
       const ar = (block.match(/\nARABIC \[[^\]]+\]: (.*)/) || [])[1] || '', en = (block.match(/\nENGLISH \[[^\]]+\] \(machine translation\): (.*)/) || [])[1] || '';
-      HAD.set(ref, { ref, label, ar: ar.trim(), en: en.trim() }); LABEL.set(label, ref);
+      HAD.set(ref, { ref, label, ar: clean(ar).replace(/^\d+\s*-\s*/, ''), en: clean(en) }); LABEL.set(label, ref);
       const ch = ref.slice(0, ref.lastIndexOf(':'));
       if (!CHAP.has(ch)) CHAP.set(ch, []); CHAP.get(ch).push(ref);
     }
@@ -53,14 +65,14 @@ if (existsSync(cdir)) {
   // Urdu (the source data's own machine translation) and English filled in later by translate_missing.mjs
   let ur = 0, ex = 0;
   const lines = (f, gz) => { if (!existsSync(join(here, f))) return []; const b = readFileSync(join(here, f)); return (gz ? gunzipSync(b) : b).toString('utf8').split('\n').filter(Boolean); };
-  for (const l of lines('urdu.jsonl.gz', true)) { try { const j = JSON.parse(l), h = HAD.get(j.r); if (h && j.u) { h.ur = j.u; ur++; } } catch {} }
+  for (const l of lines('urdu.jsonl.gz', true)) { try { const j = JSON.parse(l), h = HAD.get(j.r); if (h && j.u) { h.ur = clean(j.u); ur++; } } catch {} }
   for (const l of [...lines('added-en.jsonl', false), ...lines('extra-en.jsonl', false)]) { try { const j = JSON.parse(l), h = HAD.get(j.r), en = String(j.en || '').trim(); if (h && en && !h.en && realTr(h.ar, en)) { h.en = en; ex++; } } catch {} }
   // Urdu filled in later by translate_missing.mjs --urdu, with the same checks and a script check
   let exu = 0;
   for (const l of [...lines('added-ur.jsonl', false), ...lines('extra-ur.jsonl', false)]) { try { const j = JSON.parse(l), h = HAD.get(j.r), u = String(j.ur || '').trim(); if (h && u && !h.ur && realTr(h.ar, u) && arLetters(u) >= 3 && (u.match(/[A-Za-z]/g) || []).length <= u.length * 0.15) { h.ur = u; exu++; } } catch {} }
   // English by named translators, as published in Thaqalayn's library (CC BY 4.0, thaqalayn.com/terms). Used in place of the machine English, and always shown with the translator's name.
   let hum = 0;
-  for (const l of lines('human-en.jsonl.gz', true)) { try { const j = JSON.parse(l), h = HAD.get(j.r), en = String(j.en || '').trim(); if (h && en && j.by) { h.en = en; h.by = String(j.by); hum++; } } catch {} }
+  for (const l of lines('human-en.jsonl.gz', true)) { try { const j = JSON.parse(l), h = HAD.get(j.r), en = String(j.en || '').trim(); if (h && en && j.by) { h.en = clean(en); h.by = String(j.by); hum++; } } catch {} }
   console.log(`books loaded: ${HAD.size} hadith in ${CHAP.size} chapters, ${ur} with Urdu, ${ex} English added later, ${exu} Urdu added later, ${hum} English by named translators`);
 } else console.warn('corpus/ not found: references will be shorter and "View in book" is off');
 
@@ -77,7 +89,7 @@ for (const [ch, list] of CHAP) {
 const byNum = (a, b) => { const x = a.split(':'), y = b.split(':'); return (+x[x.length - 1] || 0) - (+y[y.length - 1] || 0); };
 const kids = (ref) => [...(KIDS.get(ref) || [])].sort(byNum);
 
-const nice = (t) => (t && t === t.toUpperCase() && /[A-Z]/.test(t) ? t.toLowerCase().replace(/(^|[\s-])([a-z])/g, (m, a, b) => a + b.toUpperCase()).replace(/\b(Of|And|The|In|On|To|From|For|With|About|A|An)\b/g, (w, x, i) => (i ? w.toLowerCase() : w)) : t || '');
+const nice = (t) => (t && t.replace(/\([A-Za-z.]{1,10}\)/g, '') === t.replace(/\([A-Za-z.]{1,10}\)/g, '').toUpperCase() && /[A-Z]/.test(t) ? t.toLowerCase().replace(/(^|[\s-])([a-z])/g, (m, a, b) => a + b.toUpperCase()).replace(/\b(Of|And|The|In|On|To|From|For|With|About|A|An)\b/g, (w, x, i) => (i ? w.toLowerCase() : w)) : t || '');
 // "al-kafi:1:1:1:2" -> { book, parts:[...], cite:"Al-Kafi · Volume One · The Book of Intellect and Ignorance · Chapter 1 · Hadith 2" }
 function cite(ref) {
   const [slug, ...nums] = ref.split(':');
