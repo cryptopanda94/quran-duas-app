@@ -46,11 +46,15 @@ if (existsSync(cdir)) {
       if (!CHAP.has(ch)) CHAP.set(ch, []); CHAP.get(ch).push(ref);
     }
   }
+  // never show a "translation" of Arabic that is only a dash or a stray word, or a reply that is not a translation
+  const arLetters = (t) => (t.match(/[\u0621-\u064A\u0671-\u06D3]/g) || []).length;
+  const notTr = /please provide|provide the (arabic|text|hadith)|no (arabic )?text (was|is|has been)|text (is|was) (missing|not provided|empty)|you (have not|haven't|did not|didn't) provided?|i (cannot|can't|am unable to) translate|there is no (arabic|text)/i;
+  const realTr = (ar, en) => arLetters(ar) >= 6 && !notTr.test(en) && en.length <= ar.length * 4 + 120;
   // Urdu (the source data's own machine translation) and English filled in later by translate_missing.mjs
   let ur = 0, ex = 0;
   const lines = (f, gz) => { if (!existsSync(join(here, f))) return []; const b = readFileSync(join(here, f)); return (gz ? gunzipSync(b) : b).toString('utf8').split('\n').filter(Boolean); };
   for (const l of lines('urdu.jsonl.gz', true)) { try { const j = JSON.parse(l), h = HAD.get(j.r); if (h && j.u) { h.ur = j.u; ur++; } } catch {} }
-  for (const l of [...lines('added-en.jsonl', false), ...lines('extra-en.jsonl', false)]) { try { const j = JSON.parse(l), h = HAD.get(j.r); if (h && j.en && !h.en) { h.en = String(j.en).trim(); ex++; } } catch {} }
+  for (const l of [...lines('added-en.jsonl', false), ...lines('extra-en.jsonl', false)]) { try { const j = JSON.parse(l), h = HAD.get(j.r), en = String(j.en || '').trim(); if (h && en && !h.en && realTr(h.ar, en)) { h.en = en; ex++; } } catch {} }
   console.log(`books loaded: ${HAD.size} hadith in ${CHAP.size} chapters, ${ur} with Urdu, ${ex} English added later`);
 } else console.warn('corpus/ not found: references will be shorter and "View in book" is off');
 
