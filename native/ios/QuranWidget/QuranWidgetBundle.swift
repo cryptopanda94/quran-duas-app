@@ -9,6 +9,11 @@ private let cream = Color(red: 0.97, green: 0.98, blue: 1.0)           // #f7fbf
 private let ink   = Color(red: 0.08, green: 0.19, blue: 0.29)          // #15314a
 private let gold  = Color(red: 0.73, green: 0.51, blue: 0.15)          // #b98326
 private let skyGrad = LinearGradient(colors: [brand, deep], startPoint: .topLeading, endPoint: .bottomTrailing)
+private let paleGold = Color(red: 0.95, green: 0.81, blue: 0.54)      // #f2cf8a
+private let nightGrad = LinearGradient(colors: [Color(red: 0.16, green: 0.50, blue: 0.78),
+                                                Color(red: 0.08, green: 0.31, blue: 0.50),
+                                                Color(red: 0.04, green: 0.18, blue: 0.31)],
+                                       startPoint: .topLeading, endPoint: .bottomTrailing)
 private let paleGrad = LinearGradient(colors: [Color.white, Color(red: 0.91, green: 0.95, blue: 0.98)], startPoint: .top, endPoint: .bottom)
 
 // MARK: - Data written by the app
@@ -40,6 +45,17 @@ extension View {
             self
         } else {
             self.padding().background(color)
+        }
+    }
+}
+
+extension View {
+    /// Same as widgetBackground, for a background that is a view (gradient plus a soft glow).
+    @ViewBuilder func widgetBackgroundView<V: View>(@ViewBuilder _ bg: () -> V) -> some View {
+        if #available(iOSApplicationExtension 17.0, *) {
+            self.containerBackground(for: .widget) { bg() }
+        } else {
+            self.padding().background(bg())
         }
     }
 }
@@ -226,19 +242,86 @@ struct AyahWidgetView: View {
     let entry: AyahEntry
 
     var body: some View {
-        content.widgetBackground(paleGrad, accessory: isAccessory(family))
+        if family == .systemLarge {
+            content.widgetBackgroundView {
+                ZStack {
+                    Rectangle().fill(nightGrad)
+                    RadialGradient(colors: [Color.white.opacity(0.16), Color.white.opacity(0)],
+                                   center: .topTrailing, startRadius: 0, endRadius: 190)
+                }
+            }
+        } else {
+            content.widgetBackground(paleGrad, accessory: isAccessory(family))
+        }
+    }
+
+    /// Arabic over English at one pair of sizes. `fit` makes the texts report their full height,
+    /// so ViewThatFits can tell whether this pair fits the widget.
+    private func ayahTexts(_ a: WAyah, _ ar: CGFloat, _ en: CGFloat, fit: Bool) -> some View {
+        VStack(spacing: 0) {
+            Text(a.ar).font(.custom("QDAyah-Regular", fixedSize: ar))
+                .multilineTextAlignment(.center)
+                .environment(\.layoutDirection, .rightToLeft)
+                .foregroundColor(.white)
+                .frame(maxWidth: .infinity)
+                .fixedSize(horizontal: false, vertical: fit)
+            HStack(spacing: 8) {
+                Rectangle().fill(paleGold.opacity(0.6)).frame(width: 54, height: 1)
+                Rectangle().fill(paleGold).frame(width: 6, height: 6).rotationEffect(.degrees(45))
+                Rectangle().fill(paleGold.opacity(0.6)).frame(width: 54, height: 1)
+            }
+            .padding(.vertical, 9)
+            Text(a.en).font(.system(size: en, weight: .regular, design: .serif))
+                .multilineTextAlignment(.center)
+                .foregroundColor(.white.opacity(0.9))
+                .frame(maxWidth: .infinity)
+                .fixedSize(horizontal: false, vertical: fit)
+        }
+    }
+
+    /// The large home-screen widget: the whole verse, as big as it can be shown in full.
+    private func largeAyah(_ a: WAyah) -> some View {
+        VStack(spacing: 0) {
+            HStack {
+                Text("✦  AYAH OF THE DAY").font(.system(size: 11, weight: .bold)).tracking(1.5)
+                    .foregroundColor(paleGold).lineLimit(1)
+                Spacer(minLength: 0)
+            }
+            ViewThatFits(in: .vertical) {
+                ayahTexts(a, 27, 15.5, fit: true)
+                ayahTexts(a, 24, 14.5, fit: true)
+                ayahTexts(a, 21, 13.5, fit: true)
+                ayahTexts(a, 18.5, 12.5, fit: true)
+                ayahTexts(a, 16.5, 11.5, fit: true)
+                ayahTexts(a, 14.5, 10.5, fit: true)
+                ayahTexts(a, 13, 9.5, fit: false).minimumScaleFactor(0.6)
+            }
+            .frame(maxWidth: .infinity, maxHeight: .infinity)
+            .padding(.vertical, 6)
+            .layoutPriority(1)
+            HStack {
+                Text(a.ref).font(.system(size: 12.5, weight: .semibold)).foregroundColor(.white).lineLimit(1)
+                    .padding(.horizontal, 11).padding(.vertical, 5)
+                    .background(Capsule().fill(Color.white.opacity(0.14)))
+                Spacer(minLength: 6)
+                Text("Quran & Duas").font(.system(size: 11.5, weight: .medium)).foregroundColor(.white.opacity(0.65)).lineLimit(1)
+            }
+        }
+        .frame(maxWidth: .infinity, maxHeight: .infinity)
     }
 
     @ViewBuilder var content: some View {
         if let a = entry.ayah {
             switch family {
+            case .systemLarge:
+                largeAyah(a)
             case .accessoryRectangular:
                 VStack(alignment: .leading, spacing: 1) {
                     Text(a.ref).font(.system(size: 12, weight: .semibold)).opacity(0.8)
                     Text(a.en).font(.system(size: 14)).lineLimit(3)
                 }
             default:
-                let large = family == .systemLarge
+                let large = false
                 VStack(alignment: .center, spacing: large ? 12 : 6) {
                     Text("AYAH OF THE DAY · \(a.ref.uppercased())").font(.system(size: 11, weight: .bold)).foregroundColor(gold).lineLimit(1)
                     Text(a.ar).font(.system(size: large ? 34 : 26, weight: .medium))
@@ -257,6 +340,7 @@ struct AyahWidgetView: View {
         } else {
             Text("Open Quran & Duas once to load today's ayah")
                 .font(.system(size: 15)).multilineTextAlignment(.center)
+                .foregroundColor(family == .systemLarge ? .white : ink)
         }
     }
 }
@@ -268,7 +352,7 @@ struct AyahWidget: Widget {
             AyahWidgetView(entry: entry)
         }
         .configurationDisplayName("Ayah of the Day")
-        .description("A verse of the Quran every day, in Arabic and English.")
+        .description("A verse of the Quran every day, in Arabic and English. The large size shows the whole verse.")
         .supportedFamilies(ayahFamilies)
     }
     private var ayahFamilies: [WidgetFamily] {
