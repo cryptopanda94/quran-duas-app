@@ -17,7 +17,7 @@ nat    = File.join(root, 'native', 'ios')
 # files on disk
 wdir = File.join(ios, 'QuranWidget')
 FileUtils.mkdir_p(wdir)
-%w[QuranWidgetBundle.swift Info.plist QuranWidget.entitlements QDAyah-Regular.ttf].each { |f| FileUtils.cp(File.join(nat, 'QuranWidget', f), File.join(wdir, f)) }
+%w[QuranWidgetBundle.swift Info.plist QuranWidget.entitlements].each { |f| FileUtils.cp(File.join(nat, 'QuranWidget', f), File.join(wdir, f)) }
 FileUtils.cp(File.join(nat, 'App', 'App.entitlements'), File.join(ios, 'App', 'App.entitlements'))
 
 proj = Xcodeproj::Project.open(proj_p)
@@ -63,14 +63,6 @@ unless widget
 else
   puts '  ✓ QuranWidgetExtension target already present'
 end
-
-# Arabic font for the Ayah of the Day widget (listed in the widget's Info.plist under UIAppFonts)
-wgrp = proj.main_group.find_subpath('QuranWidget', false) || proj.main_group.new_group('QuranWidget', 'QuranWidget')
-%w[QDAyah-Regular.ttf].each do |name|
-  ref = wgrp.files.find { |x| x.path == name } || wgrp.new_reference(name)
-  widget.resources_build_phase.add_file_reference(ref, true) unless widget.resources_build_phase.files_references.include?(ref)
-end
-puts '  ✓ widget font added'
 
 # App Store version shown to users. Bump for each App Store release.
 app_ver = ENV['APP_VERSION'] || '1.8'
