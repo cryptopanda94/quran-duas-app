@@ -279,6 +279,76 @@ struct AyahWidget: Widget {
     }
 }
 
+// MARK: - Ayah of the day across two lock screen widgets (English only)
+
+/// A lock screen widget cannot be wider than half the row, so the verse runs across two of them:
+/// the first widget holds the opening words, the second carries on and ends with the reference.
+private func ayahParts(_ text: String, first: Int = 88) -> (String, String) {
+    let words = text.split(separator: " ").map { String($0) }
+    var head = ""
+    var i = 0
+    while i < words.count {
+        let w = words[i]
+        if !head.isEmpty && head.count + w.count + 1 > first { break }
+        head = head.isEmpty ? w : head + " " + w
+        i += 1
+    }
+    let tail = words[i...].joined(separator: " ")
+    return (head, tail)
+}
+
+struct AyahHalfView: View {
+    let entry: AyahEntry
+    let second: Bool
+
+    var body: some View {
+        content.widgetBackground(Color.clear, accessory: true)
+    }
+
+    @ViewBuilder var content: some View {
+        if let a = entry.ayah {
+            let parts = ayahParts(a.en)
+            VStack(alignment: .leading, spacing: 1) {
+                if second {
+                    if !parts.1.isEmpty {
+                        Text(parts.1).font(.system(size: 13, weight: .medium)).lineLimit(3).minimumScaleFactor(0.85)
+                    }
+                    Text(a.ref).font(.system(size: 11, weight: .semibold)).opacity(0.75).lineLimit(1).minimumScaleFactor(0.8)
+                } else {
+                    Text(parts.0).font(.system(size: 13, weight: .medium)).lineLimit(4).minimumScaleFactor(0.85)
+                }
+            }
+            .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topLeading)
+        } else {
+            Text(second ? "" : "Open Quran & Duas").font(.system(size: 13))
+        }
+    }
+}
+
+struct AyahLeftWidget: Widget {
+    let kind = "AyahLeftWidget"
+    var body: some WidgetConfiguration {
+        StaticConfiguration(kind: kind, provider: AyahProvider()) { entry in
+            AyahHalfView(entry: entry, second: false)
+        }
+        .configurationDisplayName("Ayah · Lock Screen 1 of 2")
+        .description("Put this on the left of your Lock Screen and \"2 of 2\" on the right. The verse reads across both.")
+        .supportedFamilies([.accessoryRectangular])
+    }
+}
+
+struct AyahRightWidget: Widget {
+    let kind = "AyahRightWidget"
+    var body: some WidgetConfiguration {
+        StaticConfiguration(kind: kind, provider: AyahProvider()) { entry in
+            AyahHalfView(entry: entry, second: true)
+        }
+        .configurationDisplayName("Ayah · Lock Screen 2 of 2")
+        .description("Put this on the right of your Lock Screen, next to \"1 of 2\". It carries on the verse and shows the reference.")
+        .supportedFamilies([.accessoryRectangular])
+    }
+}
+
 // MARK: - Bundle
 
 @main
@@ -286,5 +356,7 @@ struct QuranWidgetBundle: WidgetBundle {
     var body: some Widget {
         PrayerWidget()
         AyahWidget()
+        AyahLeftWidget()
+        AyahRightWidget()
     }
 }
