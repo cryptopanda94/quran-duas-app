@@ -2531,7 +2531,7 @@ function renderPrayer(){
         ${(window.NH?NH.alertsOn():armed)?`<button class="arow" data-pref="alertSound"><i class="ar-ic" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M4 10v4h3l5 4V6L7 10z"/><path d="M16 9a4 4 0 0 1 0 6M18.5 6.5a8 8 0 0 1 0 11"/></svg></i><span><b>Sound</b><small>${window.NH&&NH.platform==='ios'?'Plays the opening of the azan you chose, once. Tap the alert to hear the full azan':'Plays the azan you chose for each prayer'}</small></span><i class="ios-sw${store.get('alertSound',true)?' on':''}"></i></button>
         <button class="arow" data-pref="alertVib"><i class="ar-ic" aria-hidden="true"><svg viewBox="0 0 24 24"><rect x="8" y="3" width="8" height="18" rx="2"/><path d="M4 9v6M20 9v6"/></svg></i><span><b>Vibrate</b><small>${window.NH&&NH.platform==='ios'?'With sound on, vibration follows your iPhone\'s Sounds &amp; Haptics settings':'Vibrates when the alert arrives'}</small></span><i class="ios-sw${store.get('alertVib',true)?' on':''}"></i></button>
         ${window.NH&&NH.platform==='ios'?`<button class="arow" data-pref="alertAlarm"><i class="ar-ic" aria-hidden="true"><svg viewBox="0 0 24 24"><circle cx="12" cy="13" r="7"/><path d="M12 9.5V13l2.5 1.5M5 4 2.5 6.5M19 4l2.500 2.500"/></svg></i><span><b>Ring as an alarm</b><small>Rings even on silent or in a Focus, and repeats until you press Stop</small></span><i class="ios-sw${store.get('alertAlarm',false)?' on':''}"></i></button>`:''}
-        ${window.NH&&NH.alertStatus?`<div class="hint" id="alstat">Checking alerts on this phone…</div>`:''}
+        ${window.NH&&NH.alertStatus?`<div class="hint" id="alstat" hidden></div>`:''}
         ${window.NH?'':`<div class="hint">In the web version, alerts ring <b>only while this page is open</b>. Install the app for alerts with the phone locked.</div>`}`:''}
      </div>
    </div>
@@ -2560,8 +2560,9 @@ function renderPrayer(){
       if(NH.platform==='ios'&&st.mode==='notif'&&store.get('alertSound',true)&&store.get('alertAlarm',false))bad.push('⚠️ Alarms are not allowed for this app, so the azan plays once as a notification and is silent when your iPhone is on silent or in a Focus. Allow alarms in Settings → Apps → Quran &amp; Duas.');
       const total=Math.max(st.pending,st.alarms);
       if(!total&&st.loc)bad.push('⚠️ No alerts are scheduled yet. Turn alerts off and on again.');
-      const nx=st.next?new Date(st.next).toLocaleString([], {weekday:'short',hour:'numeric',minute:'2-digit'}):'';
-      el.innerHTML=(bad.length?bad.join('<br>')+'<br>':'')+`${total} alerts scheduled${st.alarms?` (${st.alarms} as alarms)`:''}${nx?` · next: ${nx}`:''}${st.err?`<br>Error: ${esc(st.err)}`:''}`}).catch(()=>{});
+      if(st.err)bad.push('Error: '+esc(st.err));
+      /* only shown when something needs the reader's attention */
+      el.hidden=!bad.length;el.innerHTML=bad.join('<br>')}).catch(()=>{});
   }}
   else $('arm').onclick=()=>{
     if(armed){armed=false;renderPrayer();return}
