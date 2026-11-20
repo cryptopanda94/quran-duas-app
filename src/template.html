@@ -975,6 +975,7 @@ a.am-t{position:relative;text-decoration:none}.am-t.on{border-color:var(--accent
     <div class="srow"><span>Transliteration</span><button class="switch" id="trSw" aria-label="Transliteration"></button></div>
     <div class="shead tra">Translation voice</div>
     <div class="pill tra" id="trASeg"><button data-v="off">Off</button><button data-v="en">English</button><button data-v="ur">اردو</button></div>
+    <div class="srow tra" id="trOnlyRow"><span>Translation only<small class="ssub">Skip the Arabic recitation and hear just the translation</small></span><button class="switch" id="trOnlySw" aria-label="Translation only"></button></div>
     <div class="hint tra" style="font-size:12.5px;line-height:1.45;margin:8px 2px 0">After each verse is recited, its translation is read aloud. Needs internet.<br>English: Saheeh International, read by Ibrahim Walk.<br>Urdu: Fateh Muhammad Jalandhari, read by Shamshad Ali Khan. To read the same words, choose Fateh Muhammad Jalandhari in the Urdu list above.</div>
   </div>
   <div class="spane" data-p="th">
@@ -1097,7 +1098,7 @@ const $=id=>document.getElementById(id), app=$('app');
 /* storage (safe) */
 const store={get(k,d){try{const v=localStorage.getItem('qr_'+k);return v==null?d:JSON.parse(v)}catch(e){return d}},
              set(k,v){try{localStorage.setItem('qr_'+k,JSON.stringify(v))}catch(e){}}};
-const S={trAud:store.get('trAud','off'),arSize:store.get('arSize',40),tr:store.get('tr','off'),bk:store.get('bkShow2','e'),bkAr:store.get('bkAr',25),bkEn:store.get('bkEn',17),
+const S={trAud:store.get('trAud','off'),trOnly:store.get('trOnly',false),arSize:store.get('arSize',40),tr:store.get('tr','off'),bk:store.get('bkShow2','e'),bkAr:store.get('bkAr',25),bkEn:store.get('bkEn',17),
          theme:store.get('theme','sky'),
          marks:store.get('marks',[]),ctx:store.get('ctx',null),favs:store.get('favs',[]),dfavs:store.get('dfavs',[]),showTr:store.get('showTr',false),enSize:store.get('enSize',16),rules:store.get('rules',false),font:store.get('font','indopak'),ensrc:store.get('ensrc2','alt'),rec:store.get('rec','mujawwad'),urT:store.get('urT','junagarhi'),enT:store.get('enT','sahih'),last:store.get('last',null),tab:'surahs',q:''};
 
@@ -1130,7 +1131,7 @@ function applySettings(){
   document.body.classList.toggle('no-rule',!S.rules);
   $('trSw').classList.toggle('on',S.showTr);$('ruleSw').classList.toggle('on',S.rules);
   [...$('fontSeg').children].forEach(b=>b.classList.toggle('on',b.dataset.v===S.font));
-  [...$('enSeg').children].forEach(b=>b.classList.toggle('on',b.dataset.v===S.tr));[...$('trASeg').children].forEach(b=>b.classList.toggle('on',b.dataset.v===S.trAud));[...$('enTSeg').children].forEach(b=>b.classList.toggle('on',b.dataset.v===S.enT));[...$('urTSeg').children].forEach(b=>b.classList.toggle('on',b.dataset.v===S.urT));document.querySelectorAll('#setSheet [data-lang]').forEach(x=>x.style.display=(S.tr==='both'||S.tr===x.dataset.lang)?'':'none');
+  [...$('enSeg').children].forEach(b=>b.classList.toggle('on',b.dataset.v===S.tr));[...$('trASeg').children].forEach(b=>b.classList.toggle('on',b.dataset.v===S.trAud));$('trOnlySw').classList.toggle('on',!!S.trOnly);$('trOnlyRow').style.display=S.trAud==='off'?'none':'';[...$('enTSeg').children].forEach(b=>b.classList.toggle('on',b.dataset.v===S.enT));[...$('urTSeg').children].forEach(b=>b.classList.toggle('on',b.dataset.v===S.urT));document.querySelectorAll('#setSheet [data-lang]').forEach(x=>x.style.display=(S.tr==='both'||S.tr===x.dataset.lang)?'':'none');
   document.querySelectorAll('[data-trtog]').forEach(b=>{const on=S.tr!=='off';b.classList.toggle('on',on);b.setAttribute('aria-checked',on);b.querySelector('b').textContent=on?'On':'Off'});
   if(S.tr!=='off')store.set('trLast',S.tr);
   [...$('thSeg').children].forEach(b=>b.classList.toggle('on',b.dataset.v===S.theme));
@@ -1288,6 +1289,7 @@ function setSrc(s,k,cb){
 }
 function playVerse(s,v){
   const A=AUD[s-1],a=A&&A.a[v-1];if(!a)return;trStop();
+  if(traOn()&&S.trOnly){P.s=s;P.v=v;P.on=true;playTr(s,v);showBar();return}   // translation only: no Arabic
   const k=partFor(s,a[0]);P.s=s;P.v=v;P.on=true;
   const seek=()=>{const off=Math.max(0,(a[0]-A.p[k][1])/1000);
     try{P.el.currentTime=off}catch(e){}P.el.play().catch(()=>{});
@@ -1602,10 +1604,11 @@ $('setReset').onclick=()=>{Object.assign(S,{theme:'sky',font:'indopak',arSize:40
 $('urTSeg').onclick=e=>{const b=e.target.closest('button');if(!b)return;S.urT=b.dataset.v;store.set('urT',S.urT);UR=urFor(S.urT);applySettings();rerender()};
 $('enTSeg').onclick=e=>{const b=e.target.closest('button');if(!b)return;S.enT=b.dataset.v;store.set('enT',S.enT);EN=S.enT==='qarai'?EN_Q:EN_S;rerender()};
 $('enSeg').onclick=e=>{const b=e.target.closest('button');if(!b)return;S.tr=b.dataset.v;store.set('tr',S.tr);applySettings()};
-$('trASeg').onclick=e=>{const b=e.target.closest('button');if(!b)return;S.trAud=b.dataset.v;store.set('trAud',S.trAud);if(S.trAud==='off')trStop();applySettings();toast(S.trAud==='off'?'Translation voice off':'The translation will be read after each verse')};
+$('trOnlySw').onclick=()=>{S.trOnly=!S.trOnly;store.set('trOnly',S.trOnly);applySettings();toast(S.trOnly?'Only the translation will be read':'Arabic first, then the translation');if(P.on)playVerse(P.s,P.v)};
+$('trASeg').onclick=e=>{const b=e.target.closest('button');if(!b)return;S.trAud=b.dataset.v;store.set('trAud',S.trAud);const was=P.on&&(P.trBusy||S.trOnly);if(S.trAud==='off')trStop();applySettings();if(was)playVerse(P.s,P.v);toast(S.trAud==='off'?'Translation voice off':'The translation will be read after each verse')};
 $('thSeg').onclick=e=>{const b=e.target.closest('button');if(!b)return;S.theme=b.dataset.v;store.set('theme',S.theme);applySettings();window.NH&&NH.setIcon&&NH.setIcon(S.theme)};
 $('pPlay').innerHTML=icon.play2;
-$('pPlay').onclick=()=>{if(!P.s)return;if(P.trBusy){if(P.tr.paused)P.tr.play().catch(()=>{});else P.tr.pause();return}if(P.el.paused){P.on=true;P.el.play().catch(()=>{})}else P.el.pause()};
+$('pPlay').onclick=()=>{if(!P.s)return;if(P.trBusy){if(P.tr.paused)P.tr.play().catch(()=>{});else P.tr.pause();return}if(traOn()&&S.trOnly){playVerse(P.s,P.v);return}if(P.el.paused){P.on=true;P.el.play().catch(()=>{})}else P.el.pause()};
 $('pPrev').onclick=()=>stepVerse(-1);$('pNext').onclick=()=>stepVerse(1);
 $('pRep').onclick=()=>{P.repeat=!P.repeat;showBar()};
 P.rate=+store.get('rate',1)||1;
