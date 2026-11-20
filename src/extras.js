@@ -369,7 +369,7 @@ LIST.forEach(d=>{if(d.key){d.name=DU[d.key].name;d.ur=DU[d.key].nameUr}if(d.user
 LIST.find(x=>x.id==='ziyarat-warith').name='Ziyarat Warith (Mafatih)';
 /* Taqibaat that hold several duas: the line where each dua starts. Opening one shows a numbered list; each dua opens on its own page. */
 const TPARTS={T_taqibaat_general:[0,21,23,27,30,32,34,42,47,52,68,75,80,87,91,93,95,98,101,104,107,110,125,130,139,142,145,165,173,177,180,198,210],
-  T_taqibaat_fajr_1:[0,3,10,12,17,19,24,25,49,51,60,72,76],T_taqibaat_zuhr:[0,3,17,20,26],T_taqibaat_asr:[0,10,15,18],T_taqibaat_maghrib:[0,5,12,18,21,28]};
+  T_taqibaat_fajr_1:[0,3,10,12,17,19,24,25,49,51,60],T_taqibaat_zuhr:[0,3,17,20,26],T_taqibaat_asr:[0,10],T_taqibaat_maghrib:[0,5,12,18,21]};
 /* Entries that hold several duas under their own headings: each heading starts a dua. */
 const HPARTS=['N_qunoot-quran','N_dua-safar','N_leaving-home','N_ashura-husain'];
 const PARTS=[];
