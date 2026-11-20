@@ -33,7 +33,8 @@
   };
   const soundFor = (k) => SOUNDS[(window.QX && QX.slotFor(k))] || SOUNDS.builtin;
   // user prefs: sound on/off, vibrate on/off (Android: one channel per sound x vibration, since channels can't change)
-  const prefs = () => ({ sound: store.get('alertSound', true), vib: store.get('alertVib', true) });
+  // alarm: ring as an iOS alarm (also on silent, repeats until stopped). Off by default: the azan plays once as a notification.
+  const prefs = () => ({ sound: store.get('alertSound', true), vib: store.get('alertVib', true), alarm: store.get('alertAlarm', false) });
   function alertFor(k) {
     const { sound, vib } = prefs();
     if (sound) { const s = soundFor(k); return { file: s.file, ch: `${s.ch}_v${vib ? 1 : 0}` }; }
@@ -95,7 +96,7 @@
         list.push({
           id: d * 10 + i + 1,
           title: `${n} · ${u}`,
-          body: `It's time for ${n} prayer — ${QX.LOC.name}`,
+          body: `It's time for ${n} prayer — ${QX.LOC.name}` + (platform === 'ios' ? '. Tap to hear the full azan' : ''),
           schedule: { at: new Date(at), allowWhileIdle: true },
           ...(alertFor(k).file ? { sound: alertFor(k).file } : {}),
           channelId: alertFor(k).ch,
@@ -104,7 +105,7 @@
       });
     }
     // Sound on + alarms allowed (iOS 26+): ring like an alarm, even on silent — next 7 days
-    if (prefs().sound && await alarmReady(false)) {
+    if (prefs().sound && prefs().alarm && await alarmReady(false)) {
       const items = list.filter((n) => n.schedule.at.getTime() < now + 7 * 864e5)
         .map((n) => ({ at: n.schedule.at.getTime(), title: n.title, sound: soundFor(n.extra.k).file }));
       try {
@@ -179,7 +180,7 @@
       }
     } catch (e) { console.warn('perm', e); }
     alertsOn = true; store.set('nativeAlerts', true);
-    await alarmReady(true);
+    if (prefs().alarm) await alarmReady(true);
     await ensureChannel();
     await schedule();
     toast('Azan notifications on');
@@ -314,7 +315,7 @@
       { enableHighAccuracy: false, timeout: 20000, maximumAge: 600000 }));
   }
 
-  async function setPref(key, val) { store.set(key, val); await schedule(); }
+  async function setPref(key, val) { store.set(key, val); if (key === 'alertAlarm' && val) await alarmReady(true); await schedule(); }
 
   // Home-screen icon follows the theme (iOS alternate icons; maroon = main icon)
   async function setIcon(theme) {
@@ -432,7 +433,7 @@
 
   // People who set the app up before alarms existed: ask for the alarm permission once, so the azan can ring on silent.
   async function askAlarmOnce() {
-    if (platform !== 'ios' || !alertsOn || store.get('alarmAsked', false)) return;
+    if (platform !== 'ios' || !alertsOn || !prefs().alarm || store.get('alarmAsked', false)) return;
     try {
       if (!WB.alarmStatus) return;
       const s = await WB.alarmStatus();

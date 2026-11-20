@@ -765,8 +765,9 @@ function renderPrayer(){
      <div class="azc-h">Alerts</div>
      <div class="aprefs">
         <button class="arow" id="arm" role="switch" aria-checked="${(window.NH?NH.alertsOn():armed)?'true':'false'}"><i class="ar-ic" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M6 9a6 6 0 0 1 12 0c0 6 2.5 7 2.5 7h-17S6 15 6 9z"/><path d="M10 20a2 2 0 0 0 4 0"/></svg></i><span><b>Azan alerts</b><small>${(window.NH?NH.alertsOn():armed)?'On for the prayers you switched on above':'Off — turn on to hear the azan at prayer time'}</small></span><i class="ios-sw${(window.NH?NH.alertsOn():armed)?' on':''}"></i></button>
-        ${(window.NH?NH.alertsOn():armed)?`<button class="arow" data-pref="alertSound"><i class="ar-ic" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M4 10v4h3l5 4V6L7 10z"/><path d="M16 9a4 4 0 0 1 0 6M18.5 6.5a8 8 0 0 1 0 11"/></svg></i><span><b>Sound</b><small>${window.NH&&NH.platform==='ios'?'Plays the azan you chose, like an alarm — even when your iPhone is on silent':'Plays the azan you chose for each prayer'}</small></span><i class="ios-sw${store.get('alertSound',true)?' on':''}"></i></button>
+        ${(window.NH?NH.alertsOn():armed)?`<button class="arow" data-pref="alertSound"><i class="ar-ic" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M4 10v4h3l5 4V6L7 10z"/><path d="M16 9a4 4 0 0 1 0 6M18.5 6.5a8 8 0 0 1 0 11"/></svg></i><span><b>Sound</b><small>${window.NH&&NH.platform==='ios'?'Plays the opening of the azan you chose, once. Tap the alert to hear the full azan':'Plays the azan you chose for each prayer'}</small></span><i class="ios-sw${store.get('alertSound',true)?' on':''}"></i></button>
         <button class="arow" data-pref="alertVib"><i class="ar-ic" aria-hidden="true"><svg viewBox="0 0 24 24"><rect x="8" y="3" width="8" height="18" rx="2"/><path d="M4 9v6M20 9v6"/></svg></i><span><b>Vibrate</b><small>${window.NH&&NH.platform==='ios'?'With sound on, vibration follows your iPhone\'s Sounds &amp; Haptics settings':'Vibrates when the alert arrives'}</small></span><i class="ios-sw${store.get('alertVib',true)?' on':''}"></i></button>
+        ${window.NH&&NH.platform==='ios'?`<button class="arow" data-pref="alertAlarm"><i class="ar-ic" aria-hidden="true"><svg viewBox="0 0 24 24"><circle cx="12" cy="13" r="7"/><path d="M12 9.5V13l2.5 1.5M5 4 2.5 6.5M19 4l2.500 2.500"/></svg></i><span><b>Ring as an alarm</b><small>Rings even on silent or in a Focus, and repeats until you press Stop</small></span><i class="ios-sw${store.get('alertAlarm',false)?' on':''}"></i></button>`:''}
         ${window.NH&&NH.alertStatus?`<div class="hint" id="alstat">Checking alerts on this phone…</div>`:''}
         ${window.NH?'':`<div class="hint">In the web version, alerts ring <b>only while this page is open</b>. Install the app for alerts with the phone locked.</div>`}`:''}
      </div>
@@ -793,7 +794,7 @@ function renderPrayer(){
       if(st.perm&&st.perm!=='granted')bad.push('⚠️ Notifications are blocked for this app — turn them on in phone Settings.');
       if(st.exact&&st.exact!=='granted')bad.push('⚠️ “Alarms &amp; reminders” is off — alerts may come late. Turn it on in Settings → Apps → Quran &amp; Duas.');
       if(!st.loc)bad.push('⚠️ No location set — tap Change above.');
-      if(NH.platform==='ios'&&st.mode==='notif'&&store.get('alertSound',true))bad.push('⚠️ Alarms are not allowed for this app, so the azan is silent when your iPhone is on silent or in a Focus. Turn Azan alerts off and on again and choose Allow, or allow it in Settings → Apps → Quran &amp; Duas.');
+      if(NH.platform==='ios'&&st.mode==='notif'&&store.get('alertSound',true)&&store.get('alertAlarm',false))bad.push('⚠️ Alarms are not allowed for this app, so the azan plays once as a notification and is silent when your iPhone is on silent or in a Focus. Allow alarms in Settings → Apps → Quran &amp; Duas.');
       const total=Math.max(st.pending,st.alarms);
       if(!total&&st.loc)bad.push('⚠️ No alerts are scheduled yet. Turn alerts off and on again.');
       const nx=st.next?new Date(st.next).toLocaleString([], {weekday:'short',hour:'numeric',minute:'2-digit'}):'';
@@ -805,9 +806,9 @@ function renderPrayer(){
     const u=AZ[slotFor('dhuhr')]||AZ[slotFor('fajr')];if(u){const a=new Audio(u.url);a.volume=0;a.play().then(()=>a.pause()).catch(()=>{})}
     try{if(window.Notification&&Notification.permission==='default')Notification.requestPermission().catch(()=>{})}catch(e){}
     armed=true;toast('Azan alerts on — keep this page open');renderPrayer()};
-  app.querySelectorAll('[data-pref]').forEach(b=>b.onclick=async()=>{const k=b.dataset.pref,v=!store.get(k,true);
+  app.querySelectorAll('[data-pref]').forEach(b=>b.onclick=async()=>{const k=b.dataset.pref,v=!store.get(k,k!=='alertAlarm');
     b.querySelector('.ios-sw').classList.toggle('on',v);if(window.NH)await NH.setPref(k,v);else store.set(k,v);
-    toast((k==='alertSound'?'Sound ':'Vibrate ')+(v?'on':'off'))});
+    toast(k==='alertAlarm'?(v?'The azan will ring as an alarm':'The azan will play once'):(k==='alertSound'?'Sound ':'Vibrate ')+(v?'on':'off'));if(k==='alertAlarm')renderPrayer()});
   app.querySelectorAll('[data-add]').forEach(inp=>inp.onchange=async e=>{const f=e.target.files[0];if(!f)return;const k=inp.dataset.add;
     if(AZ[k])URL.revokeObjectURL(AZ[k].url);AZ[k]={url:URL.createObjectURL(f),name:f.name};
     try{await idbPut('azan:'+k,{blob:f,name:f.name})}catch(err){toast('Saved for this visit only')}
