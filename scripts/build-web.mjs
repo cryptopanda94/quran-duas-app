@@ -57,7 +57,7 @@ must('</body>', '<script src="capacitor.js"></script>\n<script src="native.js"><
 t = t
   .replace('__DATA__', json('data/data.json'))
   .replace('__ENQ__', json('data/en_qarai.json'))
-  .replace('__URX__', JSON.stringify({ jawadi: JSON.parse(rd('data/ur_jawadi.json')).e, najafi: JSON.parse(rd('data/ur_najafi.json')).e, roman: JSON.parse(rd('data/ur_roman.json')).e }).replace(/<\//g, '<\\/'))
+  .replace('__URX__', JSON.stringify({ jawadi: JSON.parse(rd('data/ur_jawadi.json')).e, najafi: JSON.parse(rd('data/ur_najafi.json')).e, jalandhari: JSON.parse(rd('data/ur_jalandhari.json')).e, roman: JSON.parse(rd('data/ur_roman.json')).e }).replace(/<\//g, '<\\/'))
   .replace('__TL__', json('data/translit.json'))
   .replace('__QMARKS__', json('data/qmarks.json'))
   .replace('__AUD__', aud)
