@@ -399,7 +399,12 @@ const DICON={"b": "<path d=\"M5 4h4v16H5zM9 4h4v16H9zM14.2 6.2l3.8-1 3.6 13.6-3.
 let dView=store.get('dView','grid');
 /* which list a dua page was opened from, so Back returns there */
 const NAV={cur:location.hash.slice(1),from:{}};
-window.addEventListener('hashchange',()=>{const n=location.hash.slice(1);if(/^dua-/.test(n)&&(/^duas-/.test(NAV.cur)||NAV.cur==='favs'))NAV.from[n]=NAV.cur;NAV.cur=n});
+const qBase=h=>(String(h).match(/^(surah|juz)-\d+/)||[''])[0];
+window.addEventListener('hashchange',()=>{const n=location.hash.slice(1),list=!/^(dua|surah|juz)-/.test(NAV.cur);
+  if(/^dua-/.test(n)){if(/^duas-/.test(NAV.cur)||NAV.cur==='favs')NAV.from[n]=NAV.cur;else if(list)delete NAV.from[n]}
+  /* a surah or juz opened from Favorites or Bookmarks goes back to that list */
+  const qb=qBase(n);if(qb&&qb!==qBase(NAV.cur)){if(NAV.cur==='favs'||NAV.cur==='marks')NAV.from[qb]=NAV.cur;else if(list)delete NAV.from[qb]}
+  NAV.cur=n});
 function renderDuas(g){
   if(g&&!DCAT[g])g=null;
   if(g){if(g!==dTab||!/^dua-/.test(NAV.cur))dSec='';dTab=g;store.set('dTab',g)}
@@ -1241,5 +1246,5 @@ window.XR=function(h){
   return false;
 };
 setInterval(tick,1000);
-window.QX={renderMarks,duaFrom:h=>NAV.from[h]||'',tasbihOpen,pgBan,bookUp,meritsHTML,autoLocate,locateMe,get LOC(){return LOC},get ALERTS(){return ALERTS},timesFor,PR,nextPrayer,fmt,DAILY,LIST,UD,DU,slotFor,get AZ(){return AZ},playAlert,stopAlert,hijriToday:()=>HFMT?hijriToday():null,hijriStr,eventsOn,evTitle,HMU,HM};
+window.QX={renderMarks,duaFrom:h=>NAV.from[h]||NAV.from[qBase(h)]||'',tasbihOpen,pgBan,bookUp,meritsHTML,autoLocate,locateMe,get LOC(){return LOC},get ALERTS(){return ALERTS},timesFor,PR,nextPrayer,fmt,DAILY,LIST,UD,DU,slotFor,get AZ(){return AZ},playAlert,stopAlert,hijriToday:()=>HFMT?hijriToday():null,hijriStr,eventsOn,evTitle,HMU,HM};
 })();
