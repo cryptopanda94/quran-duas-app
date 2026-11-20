@@ -603,7 +603,7 @@ body.playing .wrap{padding-bottom:198px}
 .offa .bar{height:6px;border-radius:3px;background:var(--line);margin-top:10px;overflow:hidden}.offa .bar i{display:block;height:100%;background:var(--fill,var(--accent));transition:width .3s}
 .qs.ctx-dua .offa{display:none!important}
 .qs #bkSeg{display:none}.qs.ctx-book #bkSeg{display:flex}
-.qs.ctx-book :is([data-lang],.shead-rec,#recList,#fontSeg,#enSeg,.offa){display:none!important}
+.qs.ctx-book :is([data-lang],.shead-rec,#recList,#fontSeg,#enSeg,.offa,.tra){display:none!important}
 .qs .pill.multi button.on{color:var(--accent)}
 body.bk-xen .bk-it :is(.en,.noen-n),body.bk-xur .bk-it :is(.ur,.nour-n),body.bk-xar .bk-it .ar{display:none}
 body.bk-xar.bk-xur .bk-it.noen .ar,body.bk-xar.bk-xen .bk-it.nour .ar,body.bk-xar:not(.bk-xen):not(.bk-xur) .bk-it.noen.nour .ar{display:block}
@@ -973,6 +973,9 @@ a.am-t{position:relative;text-decoration:none}.am-t.on{border-color:var(--accent
     <div class="clist" data-lang="ur" id="urTSeg"><button data-v="junagarhi"><i></i>Maulana Muhammad Junagarhi</button><button data-v="jawadi"><i></i>Allama Zeeshan Haider Jawadi</button><button data-v="najafi"><i></i>Shaykh Muhammad Hussain Najafi</button><button data-v="roman"><i></i>Roman Urdu · Maulana Junagarhi</button></div>
     <div class="srow"><span>Font size</span><div class="stepper"><button data-step="en" data-d="-1" aria-label="Smaller translation">—</button><b id="enLvl"></b><button data-step="en" data-d="1" aria-label="Larger translation">+</button></div></div>
     <div class="srow"><span>Transliteration</span><button class="switch" id="trSw" aria-label="Transliteration"></button></div>
+    <div class="shead tra">Translation voice</div>
+    <div class="pill tra" id="trASeg"><button data-v="off">Off</button><button data-v="en">English</button><button data-v="ur">اردو</button></div>
+    <div class="hint tra" style="font-size:12.5px;line-height:1.45;margin:8px 2px 0">After each verse is recited, its translation is read aloud. Needs internet.<br>English: Saheeh International, read by Ibrahim Walk.<br>Urdu: Fateh Muhammad Jalandhari, read by Shamshad Ali Khan. It may differ from the Urdu shown on screen.</div>
   </div>
   <div class="spane" data-p="th">
     <div class="themes" id="thSeg">
@@ -1094,7 +1097,7 @@ const $=id=>document.getElementById(id), app=$('app');
 /* storage (safe) */
 const store={get(k,d){try{const v=localStorage.getItem('qr_'+k);return v==null?d:JSON.parse(v)}catch(e){return d}},
              set(k,v){try{localStorage.setItem('qr_'+k,JSON.stringify(v))}catch(e){}}};
-const S={arSize:store.get('arSize',40),tr:store.get('tr','off'),bk:store.get('bkShow2','e'),bkAr:store.get('bkAr',25),bkEn:store.get('bkEn',17),
+const S={trAud:store.get('trAud','off'),arSize:store.get('arSize',40),tr:store.get('tr','off'),bk:store.get('bkShow2','e'),bkAr:store.get('bkAr',25),bkEn:store.get('bkEn',17),
          theme:store.get('theme','sky'),
          marks:store.get('marks',[]),ctx:store.get('ctx',null),favs:store.get('favs',[]),dfavs:store.get('dfavs',[]),showTr:store.get('showTr',false),enSize:store.get('enSize',16),rules:store.get('rules',false),font:store.get('font','indopak'),ensrc:store.get('ensrc2','alt'),rec:store.get('rec','mujawwad'),urT:store.get('urT','junagarhi'),enT:store.get('enT','sahih'),last:store.get('last',null),tab:'surahs',q:''};
 
@@ -1127,7 +1130,7 @@ function applySettings(){
   document.body.classList.toggle('no-rule',!S.rules);
   $('trSw').classList.toggle('on',S.showTr);$('ruleSw').classList.toggle('on',S.rules);
   [...$('fontSeg').children].forEach(b=>b.classList.toggle('on',b.dataset.v===S.font));
-  [...$('enSeg').children].forEach(b=>b.classList.toggle('on',b.dataset.v===S.tr));[...$('enTSeg').children].forEach(b=>b.classList.toggle('on',b.dataset.v===S.enT));[...$('urTSeg').children].forEach(b=>b.classList.toggle('on',b.dataset.v===S.urT));document.querySelectorAll('#setSheet [data-lang]').forEach(x=>x.style.display=(S.tr==='both'||S.tr===x.dataset.lang)?'':'none');
+  [...$('enSeg').children].forEach(b=>b.classList.toggle('on',b.dataset.v===S.tr));[...$('trASeg').children].forEach(b=>b.classList.toggle('on',b.dataset.v===S.trAud));[...$('enTSeg').children].forEach(b=>b.classList.toggle('on',b.dataset.v===S.enT));[...$('urTSeg').children].forEach(b=>b.classList.toggle('on',b.dataset.v===S.urT));document.querySelectorAll('#setSheet [data-lang]').forEach(x=>x.style.display=(S.tr==='both'||S.tr===x.dataset.lang)?'':'none');
   document.querySelectorAll('[data-trtog]').forEach(b=>{const on=S.tr!=='off';b.classList.toggle('on',on);b.setAttribute('aria-checked',on);b.querySelector('b').textContent=on?'On':'Off'});
   if(S.tr!=='off')store.set('trLast',S.tr);
   [...$('thSeg').children].forEach(b=>b.classList.toggle('on',b.dataset.v===S.theme));
@@ -1251,8 +1254,26 @@ if(!AUD_ALL[S.rec])S.rec='alafasy';
 let AUD=AUD_ALL[S.rec];
 const recName=()=>(RECS.find(r=>r[0]===S.rec)||RECS[0])[1];
 /* ---------- In-app recitation player (Mishary Alafasy) ---------- */
-const P=window.__P={el:new Audio(),s:0,v:0,part:-1,on:false,repeat:false,cont:true,blobs:{}};
+const P=window.__P={el:new Audio(),tr:new Audio(),trBusy:false,s:0,v:0,part:-1,on:false,repeat:false,cont:true,blobs:{}};
 P.el.preload='auto';
+/* Translation voice: after a verse's Arabic, its translation is read (one MP3 per verse, streamed from everyayah.com) */
+const TRA_SRC={en:'https://everyayah.com/data/English/Sahih_Intnl_Ibrahim_Walk_192kbps/',ur:'https://everyayah.com/data/translations/urdu_shamshad_ali_khan_46kbps/'};
+const traOn=()=>!!TRA_SRC[S.trAud];
+function trStop(){P.trBusy=false;try{P.tr.pause()}catch(e){}}
+function surahEnd(){
+  if(P.cont&&P.s<114){const ns=P.s+1;if(location.hash.startsWith('#surah-')&&curS===P.s)location.hash='surah-'+ns;else if(curJ&&!vEl(ns,1)&&vEl(P.s,P.v)&&curJ<30)location.hash='juz-'+(curJ+1);playVerse(ns,1)}else stopPlayer()}
+function trAfter(s,v){P.trBusy=false;if(!P.on||P.s!==s||P.v!==v)return;
+  if(P.repeat)playVerse(s,v);else if(v<AUD[s-1].a.length)playVerse(s,v+1);else surahEnd()}
+function playTr(s,v){
+  P.trBusy=true;P.el.pause();P.v=v;markPlaying(true);
+  P.tr.onended=()=>trAfter(s,v);
+  P.tr.onerror=()=>{if(!P.trWarned){P.trWarned=true;toast('The translation voice needs internet')}trAfter(s,v)};
+  P.tr.src=TRA_SRC[S.trAud]+p3(s)+p3(v)+'.mp3';
+  try{P.tr.playbackRate=P.rate||1}catch(e){}
+  P.tr.play().catch(()=>{});
+}
+const playIcon=()=>{const playing=P.trBusy?!P.tr.paused:!P.el.paused;$('pPlay').innerHTML=playing?icon.pause:icon.play2;const n=$('npPlay');if(n)n.innerHTML=playing?icon.pause:icon.play2};
+P.tr.addEventListener('play',playIcon);P.tr.addEventListener('pause',playIcon);
 function partFor(s,ms){const ps=AUD[s-1].p;let k=0;for(let i=0;i<ps.length;i++)if(ps[i][1]<=ms)k=i;return k}
 function setSrc(s,k,cb){
   const name=AUD[s-1].p[k][0],url=/^https?:/.test(name)?name:'audio/'+name;P.part=k;P.srcS=s;
@@ -1266,7 +1287,7 @@ function setSrc(s,k,cb){
   if(OA)OA.played(url);
 }
 function playVerse(s,v){
-  const A=AUD[s-1],a=A&&A.a[v-1];if(!a)return;
+  const A=AUD[s-1],a=A&&A.a[v-1];if(!a)return;trStop();
   const k=partFor(s,a[0]);P.s=s;P.v=v;P.on=true;
   const seek=()=>{const off=Math.max(0,(a[0]-A.p[k][1])/1000);
     try{P.el.currentTime=off}catch(e){}P.el.play().catch(()=>{});
@@ -1276,22 +1297,24 @@ function playVerse(s,v){
   if(P.srcS===s&&P.part===k&&P.el.src&&P.el.readyState>=1)seek();else setSrc(s,k,seek);
   showBar();markPlaying(true);
 }
-function stopPlayer(){P.el.pause();P.on=false;$('pbar').classList.remove('show');document.body.classList.remove('playing');markPlaying()}
+function stopPlayer(){trStop();P.el.pause();P.on=false;$('pbar').classList.remove('show');document.body.classList.remove('playing');markPlaying()}
 function curMs(){return AUD[P.s-1].p[P.part][1]+P.el.currentTime*1000}
 function curVerse(){const A=AUD[P.s-1],ms=curMs();let v=1;for(let i=0;i<A.a.length;i++)if(A.a[i][0]<=ms+30)v=i+1;return v}
 P.el.addEventListener('timeupdate',()=>{
-  if(!P.on||P.part<0)return;const A=AUD[P.s-1];
+  if(!P.on||P.part<0||P.trBusy)return;const A=AUD[P.s-1];
+  if(traOn()&&!P.el.paused&&curMs()>=A.a[P.v-1][1]-80){playTr(P.s,P.v);return}
   if(P.repeat&&curMs()>=A.a[P.v-1][1]-80){playVerse(P.s,P.v);return}
   const v=curVerse();if(v!==P.v){P.v=v;markPlaying(true);showBar()}
 });
 P.el.addEventListener('ended',()=>{
-  if(!P.on)return;const A=AUD[P.s-1];
+  if(!P.on||P.trBusy)return;const A=AUD[P.s-1];
+  if(traOn()){playTr(P.s,P.v);return}   // the file ended on this verse: read its translation, then carry on
   if(P.repeat){playVerse(P.s,P.v);return}
   if(P.part+1<A.p.length){setSrc(P.s,P.part+1,()=>{P.el.play().catch(()=>{})});return}
-  if(P.cont&&P.s<114){const ns=P.s+1;if(location.hash.startsWith('#surah-')&&curS===P.s)location.hash='surah-'+ns;else if(curJ&&!vEl(ns,1)&&vEl(P.s,P.v)&&curJ<30)location.hash='juz-'+(curJ+1);playVerse(ns,1)}else stopPlayer();
+  surahEnd();
 });
-P.el.addEventListener('play',()=>{$('pPlay').innerHTML=icon.pause});
-P.el.addEventListener('pause',()=>{$('pPlay').innerHTML=icon.play2});
+P.el.addEventListener('play',playIcon);
+P.el.addEventListener('pause',playIcon);
 function showBar(){
   $('pbar').classList.add('show');document.body.classList.add('playing');
   $('pTitle').textContent=`${META[P.s-1][1]} · ${P.s}:${P.v}`;
@@ -1579,9 +1602,10 @@ $('setReset').onclick=()=>{Object.assign(S,{theme:'sky',font:'indopak',arSize:40
 $('urTSeg').onclick=e=>{const b=e.target.closest('button');if(!b)return;S.urT=b.dataset.v;store.set('urT',S.urT);UR=urFor(S.urT);applySettings();rerender()};
 $('enTSeg').onclick=e=>{const b=e.target.closest('button');if(!b)return;S.enT=b.dataset.v;store.set('enT',S.enT);EN=S.enT==='qarai'?EN_Q:EN_S;rerender()};
 $('enSeg').onclick=e=>{const b=e.target.closest('button');if(!b)return;S.tr=b.dataset.v;store.set('tr',S.tr);applySettings()};
+$('trASeg').onclick=e=>{const b=e.target.closest('button');if(!b)return;S.trAud=b.dataset.v;store.set('trAud',S.trAud);if(S.trAud==='off')trStop();applySettings();toast(S.trAud==='off'?'Translation voice off':'The translation will be read after each verse')};
 $('thSeg').onclick=e=>{const b=e.target.closest('button');if(!b)return;S.theme=b.dataset.v;store.set('theme',S.theme);applySettings();window.NH&&NH.setIcon&&NH.setIcon(S.theme)};
 $('pPlay').innerHTML=icon.play2;
-$('pPlay').onclick=()=>{if(!P.s)return;if(P.el.paused){P.on=true;P.el.play().catch(()=>{})}else P.el.pause()};
+$('pPlay').onclick=()=>{if(!P.s)return;if(P.trBusy){if(P.tr.paused)P.tr.play().catch(()=>{});else P.tr.pause();return}if(P.el.paused){P.on=true;P.el.play().catch(()=>{})}else P.el.pause()};
 $('pPrev').onclick=()=>stepVerse(-1);$('pNext').onclick=()=>stepVerse(1);
 $('pRep').onclick=()=>{P.repeat=!P.repeat;showBar()};
 P.rate=+store.get('rate',1)||1;
