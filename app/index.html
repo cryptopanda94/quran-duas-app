@@ -1527,7 +1527,7 @@ function closeSheets(){document.querySelectorAll('.sheet,.sheet-bg').forEach(x=>
   document.addEventListener('touchmove',e=>{if(!sh)return;dy=e.touches[0].clientY-y0;if(dy>0&&(sh.scrollTop<=0)){sh.classList.add('dragging');sh.style.transform=`translateX(-50%) translateY(${dy}px)`}else if(dy<0){sh.style.transform='';sh.classList.remove('dragging')}},{passive:true});
   document.addEventListener('touchend',()=>{if(!sh)return;const s=sh;sh=null;s.classList.remove('dragging');if(dy>110){s.classList.add('closing');s.style.transform='translateX(-50%) translateY(100%)';setTimeout(()=>{s.classList.remove('closing');if(s.id==='bookSheet'){s.classList.remove('open');s.style.transform=''}else closeSheets()},200)}else s.style.transform='';dy=0},{passive:true});
 })();
-$('backBtn').onclick=()=>{const c=location.hash.slice(1);let t='home';if(/^dua-.*~/.test(c))t=c.slice(0,c.indexOf('~'));else if(/^dua-/.test(c)){const d=LISTX().find(x=>x.id===c.slice(4)),f=window.QX&&QX.duaFrom&&QX.duaFrom(c);t=f||(d&&d.grp?'duas-'+d.grp:'duas')}else if(/^duas-/.test(c))t='duas';else if(/^book-/.test(c))t=window.QX&&QX.bookUp?QX.bookUp(decodeURIComponent(c.slice(5))):'duas-b';else if(c==='calendar'||c==='favs'||c==='marks')t='today';else if(c==='fiqh')t='duas';else if(c==='fiqh-k')t='fiqh';else if(/^fiqh-k-\d+-\d+$/.test(c))t=c.replace(/-\d+$/,'');else if(/^fiqh-k-\d+$/.test(c))t='fiqh-k';location.hash=t};
+$('backBtn').onclick=()=>{const c=location.hash.slice(1);let t='home';if(/^dua-.*~/.test(c))t=c.slice(0,c.indexOf('~'));else if(/^dua-/.test(c)){const d=LISTX().find(x=>x.id===c.slice(4)),f=window.QX&&QX.duaFrom&&QX.duaFrom(c);t=f||(d&&d.grp?'duas-'+d.grp:'duas')}else if(/^(surah|juz)-/.test(c)){t=(window.QX&&QX.duaFrom&&QX.duaFrom(c))||'home'}else if(/^duas-/.test(c))t='duas';else if(/^book-/.test(c))t=window.QX&&QX.bookUp?QX.bookUp(decodeURIComponent(c.slice(5))):'duas-b';else if(c==='calendar'||c==='favs'||c==='marks')t='today';else if(c==='fiqh')t='duas';else if(c==='fiqh-k')t='fiqh';else if(/^fiqh-k-\d+-\d+$/.test(c))t=c.replace(/-\d+$/,'');else if(/^fiqh-k-\d+$/.test(c))t='fiqh-k';location.hash=t};
 $('setBtn').onclick=()=>openSheet('setSheet');
 /* reading settings for book pages */
 function bkSetDraw(){
@@ -2105,7 +2105,7 @@ LIST.forEach(d=>{if(d.key){d.name=DU[d.key].name;d.ur=DU[d.key].nameUr}if(d.user
 LIST.find(x=>x.id==='ziyarat-warith').name='Ziyarat Warith (Mafatih)';
 /* Taqibaat that hold several duas: the line where each dua starts. Opening one shows a numbered list; each dua opens on its own page. */
 const TPARTS={T_taqibaat_general:[0,21,23,27,30,32,34,42,47,52,68,75,80,87,91,93,95,98,101,104,107,110,125,130,139,142,145,165,173,177,180,198,210],
-  T_taqibaat_fajr_1:[0,3,10,12,17,19,24,25,49,51,60,72,76],T_taqibaat_zuhr:[0,3,17,20,26],T_taqibaat_asr:[0,10,15,18],T_taqibaat_maghrib:[0,5,12,18,21,28]};
+  T_taqibaat_fajr_1:[0,3,10,12,17,19,24,25,49,51,60],T_taqibaat_zuhr:[0,3,17,20,26],T_taqibaat_asr:[0,10],T_taqibaat_maghrib:[0,5,12,18,21]};
 /* Entries that hold several duas under their own headings: each heading starts a dua. */
 const HPARTS=['N_qunoot-quran','N_dua-safar','N_leaving-home','N_ashura-husain'];
 const PARTS=[];
@@ -2135,7 +2135,12 @@ const DICON={"b": "<path d=\"M5 4h4v16H5zM9 4h4v16H9zM14.2 6.2l3.8-1 3.6 13.6-3.
 let dView=store.get('dView','grid');
 /* which list a dua page was opened from, so Back returns there */
 const NAV={cur:location.hash.slice(1),from:{}};
-window.addEventListener('hashchange',()=>{const n=location.hash.slice(1);if(/^dua-/.test(n)&&(/^duas-/.test(NAV.cur)||NAV.cur==='favs'))NAV.from[n]=NAV.cur;NAV.cur=n});
+const qBase=h=>(String(h).match(/^(surah|juz)-\d+/)||[''])[0];
+window.addEventListener('hashchange',()=>{const n=location.hash.slice(1),list=!/^(dua|surah|juz)-/.test(NAV.cur);
+  if(/^dua-/.test(n)){if(/^duas-/.test(NAV.cur)||NAV.cur==='favs')NAV.from[n]=NAV.cur;else if(list)delete NAV.from[n]}
+  /* a surah or juz opened from Favorites or Bookmarks goes back to that list */
+  const qb=qBase(n);if(qb&&qb!==qBase(NAV.cur)){if(NAV.cur==='favs'||NAV.cur==='marks')NAV.from[qb]=NAV.cur;else if(list)delete NAV.from[qb]}
+  NAV.cur=n});
 function renderDuas(g){
   if(g&&!DCAT[g])g=null;
   if(g){if(g!==dTab||!/^dua-/.test(NAV.cur))dSec='';dTab=g;store.set('dTab',g)}
@@ -2977,7 +2982,7 @@ window.XR=function(h){
   return false;
 };
 setInterval(tick,1000);
-window.QX={renderMarks,duaFrom:h=>NAV.from[h]||'',tasbihOpen,pgBan,bookUp,meritsHTML,autoLocate,locateMe,get LOC(){return LOC},get ALERTS(){return ALERTS},timesFor,PR,nextPrayer,fmt,DAILY,LIST,UD,DU,slotFor,get AZ(){return AZ},playAlert,stopAlert,hijriToday:()=>HFMT?hijriToday():null,hijriStr,eventsOn,evTitle,HMU,HM};
+window.QX={renderMarks,duaFrom:h=>NAV.from[h]||NAV.from[qBase(h)]||'',tasbihOpen,pgBan,bookUp,meritsHTML,autoLocate,locateMe,get LOC(){return LOC},get ALERTS(){return ALERTS},timesFor,PR,nextPrayer,fmt,DAILY,LIST,UD,DU,slotFor,get AZ(){return AZ},playAlert,stopAlert,hijriToday:()=>HFMT?hijriToday():null,hijriStr,eventsOn,evTitle,HMU,HM};
 })();
 
 </script>
