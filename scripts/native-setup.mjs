@@ -123,6 +123,8 @@ function setupAndroid() {
   const addStr = (name, val) => { if (!s.includes(`name="${name}"`)) s = s.replace('</resources>', `    <string name="${name}">${val}</string>\n</resources>`); };
   addStr('widget_prayer_desc', 'Next prayer time with a countdown');
   addStr('widget_ayah_desc', 'Ayah of the day in Arabic and English');
+  addStr('widget_prayer_large_desc', 'Next prayer, countdown and the next five prayer times');
+  addStr('widget_ayah_large_desc', 'Ayah of the day, large: the whole verse in Arabic and English');
   s = s.replace(/(<string name="app_name">)[^<]*(<\/string>)/, '$1Quran &amp; Duas$2')
        .replace(/(<string name="title_activity_main">)[^<]*(<\/string>)/, '$1Quran &amp; Duas$2');
   writeFileSync(strings, s);
@@ -141,6 +143,8 @@ function setupAndroid() {
         </receiver>`;
   if (!m.includes('.PrayerWidget')) m = m.replace('</application>', receiver('PrayerWidget', 'Next Prayer', 'prayer_widget_info') + '\n    </application>');
   if (!m.includes('.AyahWidget')) m = m.replace('</application>', receiver('AyahWidget', 'Ayah of the Day', 'ayah_widget_info') + '\n    </application>');
+  if (!m.includes('.PrayerWidgetLarge"')) m = m.replace('</application>', receiver('PrayerWidgetLarge', 'Prayer Times · Large', 'prayer_widget_large_info') + '\n    </application>');
+  if (!m.includes('.AyahWidgetLarge"')) m = m.replace('</application>', receiver('AyahWidgetLarge', 'Ayah of the Day · Large', 'ayah_widget_large_info') + '\n    </application>');
   writeFileSync(man, m);
   ok('AndroidManifest: widgets, notification & alarm permissions');
 }

@@ -66,11 +66,13 @@ public final class WidgetData {
         return android.text.format.DateFormat.getTimeFormat(ctx).format(new Date(t));
     }
 
-    /** Redraw both widgets. */
+    /** Redraw every widget. */
     static void refreshAll(Context ctx) {
         AppWidgetManager m = AppWidgetManager.getInstance(ctx);
         PrayerWidget.updateAll(ctx, m, m.getAppWidgetIds(new ComponentName(ctx, PrayerWidget.class)));
         AyahWidget.updateAll(ctx, m, m.getAppWidgetIds(new ComponentName(ctx, AyahWidget.class)));
+        AyahWidget.updateAll(ctx, m, m.getAppWidgetIds(new ComponentName(ctx, AyahWidgetLarge.class)));
+        PrayerWidgetLarge.updateAll(ctx, m, m.getAppWidgetIds(new ComponentName(ctx, PrayerWidgetLarge.class)));
     }
 
     /** Wake up at the next prayer time (or next midnight) to redraw. Inexact is fine for a widget. */

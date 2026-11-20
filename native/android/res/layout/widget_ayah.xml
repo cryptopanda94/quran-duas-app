@@ -19,26 +19,35 @@
         android:gravity="center"
         android:letterSpacing="0.06" />
 
+    <!-- autoSize (Android 8+): the text takes the largest size that fits its share of the widget -->
     <TextView
         android:id="@+id/wa_ar"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="0dp"
+        android:layout_weight="5"
         android:layout_marginTop="6dp"
         android:ellipsize="end"
         android:gravity="center"
-        android:maxLines="4"
         android:textDirection="rtl"
         android:textColor="#15314A"
-        android:textSize="27sp" />
+        android:textSize="22sp"
+        android:autoSizeTextType="uniform"
+        android:autoSizeMinTextSize="10sp"
+        android:autoSizeMaxTextSize="34sp"
+        android:autoSizeStepGranularity="1sp" />
 
     <TextView
         android:id="@+id/wa_en"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="0dp"
+        android:layout_weight="4"
         android:layout_marginTop="6dp"
         android:ellipsize="end"
-        android:maxLines="6"
         android:gravity="center"
         android:textColor="#2C4560"
-        android:textSize="16sp" />
+        android:textSize="14sp"
+        android:autoSizeTextType="uniform"
+        android:autoSizeMinTextSize="9sp"
+        android:autoSizeMaxTextSize="20sp"
+        android:autoSizeStepGranularity="1sp" />
 </LinearLayout>

@@ -229,16 +229,55 @@ struct AyahWidgetView: View {
         content.widgetBackground(paleGrad, accessory: isAccessory(family))
     }
 
+    /// Arabic over English at one pair of sizes. `fit` makes the texts report their full height,
+    /// so ViewThatFits can tell whether this pair fits the widget.
+    private func ayahTexts(_ a: WAyah, _ ar: CGFloat, _ en: CGFloat, fit: Bool) -> some View {
+        VStack(alignment: .center, spacing: 12) {
+            Text(a.ar).font(.system(size: ar, weight: .medium))
+                .multilineTextAlignment(.center)
+                .environment(\.layoutDirection, .rightToLeft)
+                .foregroundColor(ink)
+                .frame(maxWidth: .infinity)
+                .fixedSize(horizontal: false, vertical: fit)
+            Text(a.en).font(.system(size: en))
+                .multilineTextAlignment(.center)
+                .foregroundColor(ink.opacity(0.85))
+                .frame(maxWidth: .infinity)
+                .fixedSize(horizontal: false, vertical: fit)
+        }
+    }
+
+    /// Large size: the whole verse, at the biggest text size that still fits.
+    private func largeAyah(_ a: WAyah) -> some View {
+        VStack(alignment: .center, spacing: 8) {
+            Text("AYAH OF THE DAY · \(a.ref.uppercased())").font(.system(size: 11, weight: .bold)).foregroundColor(gold).lineLimit(1)
+            ViewThatFits(in: .vertical) {
+                ayahTexts(a, 34, 18, fit: true)
+                ayahTexts(a, 29, 16.5, fit: true)
+                ayahTexts(a, 25, 15, fit: true)
+                ayahTexts(a, 21.5, 13.5, fit: true)
+                ayahTexts(a, 18.5, 12.5, fit: true)
+                ayahTexts(a, 16, 11.5, fit: true)
+                ayahTexts(a, 14, 10.5, fit: false).minimumScaleFactor(0.6)
+            }
+            .frame(maxWidth: .infinity, maxHeight: .infinity)
+            .layoutPriority(1)
+        }
+        .frame(maxWidth: .infinity, maxHeight: .infinity)
+    }
+
     @ViewBuilder var content: some View {
         if let a = entry.ayah {
             switch family {
+            case .systemLarge:
+                largeAyah(a)
             case .accessoryRectangular:
                 VStack(alignment: .leading, spacing: 1) {
                     Text(a.ref).font(.system(size: 12, weight: .semibold)).opacity(0.8)
                     Text(a.en).font(.system(size: 14)).lineLimit(3)
                 }
             default:
-                let large = family == .systemLarge
+                let large = false
                 VStack(alignment: .center, spacing: large ? 12 : 6) {
                     Text("AYAH OF THE DAY · \(a.ref.uppercased())").font(.system(size: 11, weight: .bold)).foregroundColor(gold).lineLimit(1)
                     Text(a.ar).font(.system(size: large ? 34 : 26, weight: .medium))
@@ -268,7 +307,7 @@ struct AyahWidget: Widget {
             AyahWidgetView(entry: entry)
         }
         .configurationDisplayName("Ayah of the Day")
-        .description("A verse of the Quran every day, in Arabic and English.")
+        .description("A verse of the Quran every day, in Arabic and English. The large size shows the whole verse.")
         .supportedFamilies(ayahFamilies)
     }
     private var ayahFamilies: [WidgetFamily] {
