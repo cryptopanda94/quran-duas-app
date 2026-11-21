@@ -97,6 +97,8 @@ def submit():
     if notes:
         _, j = call('GET', f'/v1/appStoreVersions/{vid}/appStoreVersionLocalizations?limit=50')
         for loc in j.get('data', []):
+            if (loc['attributes'].get('whatsNew') or '').strip():      # already written in App Store Connect: leave it
+                print("What's New already filled for", loc['attributes']['locale'], '- kept'); continue
             c, _ = call('PATCH', f"/v1/appStoreVersionLocalizations/{loc['id']}", {'data': {'type': 'appStoreVersionLocalizations', 'id': loc['id'], 'attributes': {'whatsNew': notes}}})
             print("What's New set for", loc['attributes']['locale'], '' if c < 300 else '(failed)')
 
