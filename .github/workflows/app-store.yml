@@ -1,0 +1,40 @@
+name: App Store
+on:
+  workflow_dispatch:
+    inputs:
+      mode:
+        description: "status = only look; submit = attach the build and submit for review"
+        type: choice
+        options: [status, submit]
+        default: status
+      version:
+        description: "App Store version (for submit), e.g. 1.8"
+        default: ""
+      build:
+        description: "Build number (for submit), e.g. 159"
+        default: ""
+      whats_new:
+        description: "What's New text (for submit). Use \\n for a new line"
+        default: ""
+jobs:
+  asc:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: App Store Connect
+        env:
+          ASC_KEY_ID: ${{ secrets.ASC_KEY_ID }}
+          ASC_ISSUER_ID: ${{ secrets.ASC_ISSUER_ID }}
+          ASC_KEY_P8: ${{ secrets.ASC_KEY_P8 }}
+          MODE: ${{ inputs.mode }}
+          VERSION: ${{ inputs.version }}
+          BUILD: ${{ inputs.build }}
+          WHATS_NEW_RAW: ${{ inputs.whats_new }}
+        run: |
+          pip install -q pyjwt cryptography
+          printf '%s\n' "$ASC_KEY_P8" > "$RUNNER_TEMP/AuthKey.p8"
+          export ASC_KEY_PATH="$RUNNER_TEMP/AuthKey.p8"
+          export WHATS_NEW="$(printf '%b' "$WHATS_NEW_RAW")"
+          python3 scripts/asc.py; rc=$?
+          rm -f "$RUNNER_TEMP/AuthKey.p8"
+          exit $rc
