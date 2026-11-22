@@ -1,0 +1,7 @@
+User-agent: *
+Allow: /
+Disallow: /app/
+Disallow: /audio/
+Disallow: /download/
+
+Sitemap: https://quranduas.app/sitemap.xml
