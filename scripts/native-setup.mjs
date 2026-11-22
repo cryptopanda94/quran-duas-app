@@ -134,6 +134,8 @@ function setupAndroid() {
   let m = read(man);
   const perms = ['android.permission.ACCESS_COARSE_LOCATION', 'android.permission.ACCESS_FINE_LOCATION', 'android.permission.POST_NOTIFICATIONS', 'android.permission.SCHEDULE_EXACT_ALARM', 'android.permission.RECEIVE_BOOT_COMPLETED', 'android.permission.WAKE_LOCK', 'android.permission.RECORD_AUDIO', 'android.permission.MODIFY_AUDIO_SETTINGS'];
   for (const pm of perms) if (!m.includes(`"${pm}"`)) m = m.replace(/(<manifest[^>]*>)/, `$1\n    <uses-permission android:name="${pm}" />`);
+  // RECORD_AUDIO (HYDER AI voice questions) would make a microphone required on Google Play; the app works without one.
+  if (!m.includes('android.hardware.microphone')) m = m.replace(/(<manifest[^>]*>)/, `$1\n    <uses-feature android:name="android.hardware.microphone" android:required="false" />`);
   const receiver = (cls, label, info) => `
         <receiver android:name=".${cls}" android:label="${label}" android:exported="true">
             <intent-filter>
